@@ -1,5 +1,5 @@
 # ing-sw-2020-Bianchimani-Dani-Declich
-numero gruppo: **21**  
+numero gruppo: **11**  
 scaglione: **Margara**  
 componenti del gruppo:  
 **Bianchimani**     Chiara            888297  10567718  chiara.bianchimani@mail.polimi.it   
