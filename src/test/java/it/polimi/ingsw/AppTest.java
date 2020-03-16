@@ -1,4 +1,4 @@
-package it.polimi.ingsoft;
+package it.polimi.ingsw;
 
 import static org.junit.Assert.assertTrue;
 
