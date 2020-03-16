@@ -7,6 +7,7 @@
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
         <module name="Progetto Ingegneria del Software" />
+        <module name="AM11" />
         <module name="Progetto-Ingegneria-del-Software" />
       </profile>
     </annotationProcessing>
