@@ -1,0 +1,11 @@
+{
+"fromWhichLevelCanIBuildDomes": 3,
+"howManyMoves": 1,
+"chooseOpponentsCell": 1,
+"winCondition": 1,
+"limitOpponentsWinCondition": 1,
+"canIBuildTwice": 2,
+"canIBuildBeforeMove": 1,
+"canIBuildUnderMyself": false,
+"canOpponentsMoveUpAfterIDid": true
+}
