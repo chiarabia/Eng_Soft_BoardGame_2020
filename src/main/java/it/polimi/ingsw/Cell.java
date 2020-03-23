@@ -40,7 +40,7 @@ public class Cell {
         return dome;
     }
 
-    public boolean isPerimetral() {
+    public boolean isPerimetral() { //Questo metodo verifica se la cella si trova sul perimetro
         if (getY()==4 || getY()==0 ||getX() == 0 || getX() == 4)
             return true;
         else
@@ -49,8 +49,9 @@ public class Cell {
 
     public Player getPlayer() {
         return player;
-    }
+    } //Todo: Probabilmente basta salvarsi l'identificativo del player e non un riferimento a Player
 
+    /* Una serie di setter poichè tutti gli attributi tranne la posizione possono essere modificati*/
     public void setWorker(boolean worker) {
         this.worker = worker;
     }
@@ -67,6 +68,9 @@ public class Cell {
         this.dome = dome;
     }
 
+    /* Metodi per avere la posizione della cella,
+     non sono necessari ma velocizzano la scrittura di altri metodi
+     */
     public int getX() {
         return cellPosition.getX();
     }
@@ -77,6 +81,11 @@ public class Cell {
         return cellPosition.getX();
     }
 
+    /* Ridefinisco Equals guardando solo alla posizione, gli altri attributi non li
+    guardo anche perchè noi dobbiamo essere sicuri di non avere duplicati. Il set va a vedere se due
+    oggetti sono dublicati attraverso questo metodo. Se mettessi anche gli altri campi,
+     che non sono final rischierei di avere duplicati o magari più versioni della stessa cella con campi modificati.
+     */
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;

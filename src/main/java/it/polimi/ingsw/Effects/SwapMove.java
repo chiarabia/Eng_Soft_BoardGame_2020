@@ -11,12 +11,13 @@ public class SwapMove extends StandardBuild {
     public Set<Cell> move(Cell workerCell, Board board) {
         final Set<Cell> collect = board.getStream()
                 .filter(a -> a.isFree() || a.isWorker())
+                //TODO: togliere l'altro worker dall'insieme di caselle disponibili
                 .filter(a -> !a.equals(workerCell))
-                .filter(a -> a.getCellPosition().getX() <= workerCell.getCellPosition().getX() + 1)
-                .filter(a -> a.getCellPosition().getX() >= workerCell.getCellPosition().getX() - 1)
-                .filter(a -> a.getCellPosition().getY() <= workerCell.getCellPosition().getX() + 1)
-                .filter(a -> a.getCellPosition().getY() >= workerCell.getCellPosition().getX() - 1)
-                .filter(a -> diffheight(workerCell.getZ(), a.getZ()) <= 1)
+                .filter(a -> a.getX()<=workerCell.getX()+1)
+                .filter(a -> a.getX()>=workerCell.getX()-1)
+                .filter(a -> a.getY()<=workerCell.getX()+1)
+                .filter(a -> a.getY()>=workerCell.getX()-1)
+                .filter(a -> heightsdifference(workerCell.getZ(), a.getZ()) <= 1)
                 .collect(Collectors.toSet());
         return collect;
     }
