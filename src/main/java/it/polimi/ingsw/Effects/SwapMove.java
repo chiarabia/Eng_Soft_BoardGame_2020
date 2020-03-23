@@ -6,7 +6,7 @@ import it.polimi.ingsw.Cell;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-public class SwapMove extends StandardBuild {
+public class SwapMove extends StandardMove {
     @Override
     public Set<Cell> move(Cell workerCell, Board board) {
         final Set<Cell> collect = board.getStream()
@@ -15,9 +15,9 @@ public class SwapMove extends StandardBuild {
                 .filter(a -> !a.equals(workerCell))
                 .filter(a -> a.getX()<=workerCell.getX()+1)
                 .filter(a -> a.getX()>=workerCell.getX()-1)
-                .filter(a -> a.getY()<=workerCell.getX()+1)
-                .filter(a -> a.getY()>=workerCell.getX()-1)
-                .filter(a -> heightsdifference(workerCell.getZ(), a.getZ()) <= 1)
+                .filter(a -> a.getY()<=workerCell.getY()+1)
+                .filter(a -> a.getY()>=workerCell.getY()-1)
+                .filter(a -> heightsDifference(workerCell.getZ(), a.getZ()) <= 1)
                 .collect(Collectors.toSet());
         return collect;
     }

@@ -6,7 +6,7 @@ import it.polimi.ingsw.Cell;
 import java.util.Set;
 import java.util.stream.Stream;
 
-public class UnlimitedPerimetralMove extends StandardBuild  {
+public class UnlimitedPerimetralMove extends StandardMove  {
 
 
     public Set<Cell> unlimitedMove(Cell workerCell, Board board) {

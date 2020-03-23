@@ -22,11 +22,10 @@ public class Board {
     }
 
     public boolean completeTower(int x, int y) {
-        /* questo metodo ha lo scopo di evitare di muoversi in una cella, in cui è già stato tutto costruito, o è
-        presente una cupola a qualsiasi livello, o ancora corrisponde ad una cella non valida
+        /* this method checks if a tower is complete
          */
             if (x <0 || y <0)
-                return true;
+                return false;
             long count = board.stream()
                     .filter(a -> a.getX() == x && a.getY() == y)
                     .filter(Cell::isFree) //per costruzione degli altri metodi, se metto una cupola non ci possono essere caselle libere nella colonna
@@ -34,7 +33,7 @@ public class Board {
             if (count == 0.0)
                 return true;
             else
-                return true;
+                return false;
 
         }
     }
