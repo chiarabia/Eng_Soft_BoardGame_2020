@@ -22,13 +22,19 @@ public class Board {
     }
 
     public boolean completeTower(int x, int y) {
-            if (x <0 ||y <0)
-                return false;
-            long count = board.stream().filter(a -> a.getX() == x && a.getY() == y).filter(a -> a.isWorker() || a.isBuilding() || a.isDome()).count();
+        /* questo metodo ha lo scopo di evitare di muoversi in una cella, in cui è già stato tutto costruito, o è
+        presente una cupola a qualsiasi livello, o ancora corrisponde ad una cella non valida
+         */
+            if (x <0 || y <0)
+                return true;
+            long count = board.stream()
+                    .filter(a -> a.getX() == x && a.getY() == y)
+                    .filter(Cell::isFree) //per costruzione degli altri metodi, se metto una cupola non ci possono essere caselle libere nella colonna
+                    .count();
             if (count == 0.0)
                 return true;
             else
-                return false;
+                return true;
 
         }
     }
