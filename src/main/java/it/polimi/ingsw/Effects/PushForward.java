@@ -15,33 +15,22 @@ public class PushForward extends StandardMove{
                 .getStream()
                 .filter(a -> a.isFree()||a.isWorker())
                 /* in questo metodo vanno bene lavoratori e caselle libere*/
-                //TODO: Creare un metodo di Cell che restituisca l'id del Player del turno :D
                 //Dobbiamo togliere i lavoratori del giocatore del turno in corso
                 .filter(a -> a.getX()<=workerCell.getX()+1)
                 .filter(a -> a.getX()>=workerCell.getX()-1)
                 .filter(a -> a.getY()<=workerCell.getY()+1)
                 .filter(a -> a.getY()>=workerCell.getY()-1)
                 .filter( a -> heightsDifference(workerCell.getZ(), a.getZ()) <= 1)
-                /*Filtriamo le caselle di lavoratori, ci vanno bene solo i lavoratori avversai che hanno una casella libera
+                /*Filtriamo le caselle di lavoratori, ci vanno bene solo i lavoratori avversari che hanno una casella libera
                 alle loro spalle in cui possano essere spinti */
                 .filter(a -> a.isFree()
                     || (a.isWorker()
-                        && !a.isPerimetral()
-                                && !board.completeTower
+                        && a.getWorkerID() != workerCell.getWorkerID() // specifica che il lavoratore deve essere avversario
+                            && !a.isPerimetral()
+                                && board.isFreeZone
                                     (behindWorker_x(workerCell.getX(), a.getX()),
                                             behindWorker_y(workerCell.getY(), a.getY()))))
                 .collect(Collectors.toSet());
-
-    }
-    private int behindWorker_y (int myWorker_y, int opponentsWorker_y) {
-        if (myWorker_y == opponentsWorker_y) {
-            return opponentsWorker_y;
-        }
-        else if(myWorker_y>opponentsWorker_y) {
-            return opponentsWorker_y-1;
-        }
-        else
-            return opponentsWorker_y+1;
     }
     private int behindWorker_x (int myWorker_x, int opponentsWorker_x) {
         if (myWorker_x == opponentsWorker_x) {
@@ -52,5 +41,15 @@ public class PushForward extends StandardMove{
         }
         else
             return opponentsWorker_x+1;
+    }
+    private int behindWorker_y (int myWorker_y, int opponentsWorker_y) {
+        if (myWorker_y == opponentsWorker_y) {
+            return opponentsWorker_y;
+        }
+        else if(myWorker_y>opponentsWorker_y) {
+            return opponentsWorker_y-1;
+        }
+        else
+            return opponentsWorker_y+1;
     }
 }
