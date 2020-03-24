@@ -2,6 +2,7 @@ package it.polimi.ingsw.Effects;
 
 import it.polimi.ingsw.Board;
 import it.polimi.ingsw.Cell;
+import it.polimi.ingsw.Turn;
 
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -9,7 +10,7 @@ import java.util.stream.Collectors;
 
 public class PushForward extends StandardMove{
     @Override
-    public Set<Cell> move(Cell workerCell, Board board) {
+    public Set<Cell> move(Cell workerCell, Board board, Turn turn) {
         return board
                 .getStream()
                 .filter(a -> a.isFree()||a.isWorker())
@@ -22,15 +23,13 @@ public class PushForward extends StandardMove{
                 .filter(a -> a.getY()>=workerCell.getY()-1)
                 .filter( a -> heightsDifference(workerCell.getZ(), a.getZ()) <= 1)
                 /*Filtriamo le caselle di lavoratori, ci vanno bene solo i lavoratori avversai che hanno una casella libera
-                * alle loro spalle in cui possano essere spinti */
-                .filter(a -> a.isFree() //non vogliamo perdere le normali caselle, quindi accettiamo quelle libere
-                        || a.isWorker() //vogliamo i lavoratori per cui
-                            && !board.completeTower //la cella alle loro spalle non è completa
-                                //tx e ty sono metodi che calcolano la x e la y della casella alle spalle del lavoratoe
-                                // se la casella alle spalle non esiste perchè fuori dalla mappa il metodo completeTower resituisce
-                                //true come se ci fosse una casella completa
+                alle loro spalle in cui possano essere spinti */
+                .filter(a -> a.isFree()
+                    || (a.isWorker()
+                        && !a.isPerimetral()
+                                && !board.completeTower
                                     (behindWorker_x(workerCell.getX(), a.getX()),
-                                            behindWorker_y(workerCell.getY(), a.getY())))
+                                            behindWorker_y(workerCell.getY(), a.getY()))))
                 .collect(Collectors.toSet());
 
     }
