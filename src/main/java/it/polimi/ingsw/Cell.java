@@ -8,7 +8,7 @@ public class Cell {
     private boolean worker;
     private boolean building;
     private boolean dome;
-    private final Player player;
+    private Player player;
 
     public Cell(int x, int y, int z) {
         cellPosition = new Position(x, y, z);
@@ -18,9 +18,7 @@ public class Cell {
         player = null;
     }
 
-    public Position getCellPosition() {
-        return cellPosition;
-    }
+    public Position getCellPosition() {return cellPosition; }
 
     public boolean isWorker() {
         return worker;
@@ -42,12 +40,12 @@ public class Cell {
         return (getY()==4 || getY()==0 ||getX() == 0 || getX() == 4);
     }
 
-   public int getWorkerID ()  {
-        if (!isWorker()) return 0;
-        return player.getId();
-    }
+    public Player getPlayer(){return player;}
 
     /* Una serie di setter poichè tutti gli attributi tranne la posizione possono essere modificati*/
+
+    public void setPlayer(Player player){this.player = player;}
+
     public void setWorker(boolean worker) {
         this.worker = worker;
     }
@@ -60,9 +58,9 @@ public class Cell {
         this.dome = dome;
     }
 
-    /* Metodi per avere la posizione della cella,
-     non sono necessari ma velocizzano la scrittura di altri metodi
-     */
+    /* Metodi per avere la posizione della cella e id,
+     non sono necessari ma velocizzano la scrittura di altri metodi */
+
     public int getX() {
         return cellPosition.getX();
     }
@@ -71,6 +69,11 @@ public class Cell {
     }
     public int getZ() {
         return cellPosition.getZ();
+    }
+
+    public int getWorkerID ()  {
+        if (!isWorker()) return 0;
+        return player.getId();
     }
 
     /* Ridefinisco Equals guardando solo alla posizione, gli altri attributi non li
@@ -84,10 +87,5 @@ public class Cell {
         if (!(o instanceof Cell)) return false;
         Cell cell = (Cell) o;
         return getCellPosition().equals(cell.getCellPosition());
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(getCellPosition(), isWorker(), isBuilding(), isDome(), getWorkerID());
     }
 }
