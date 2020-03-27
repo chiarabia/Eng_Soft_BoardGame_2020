@@ -2,6 +2,10 @@ package it.polimi.ingsw;
 
 import java.util.Objects;
 
+/**
+ * This class sets the coordinates for the Positions on the board
+ */
+
 public class Position {
     private final int x;
     private final int y;

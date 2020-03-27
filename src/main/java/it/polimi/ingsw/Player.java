@@ -1,9 +1,24 @@
 package it.polimi.ingsw;
 
+/**
+ *  This class defines the player
+ *  <p> the player id will be a number from 1 to 3, in private final int id
+ *  the Cell in which the workers are will be stored in private Cell workerCell[],
+ *  with workerCell[0] the first worker and workerCell[1] the second worker
+ */
+
+
 public class Player {
     private final String name;
-    private final int id; // convenzione: usiamo come id 1, 2 ed eventualmente 3
-    private Cell workerCell[]; // convenzione: usiamo worker 1 (in posizione 0 dell'array) e 2 (in posizione 1 dell'array)
+    private final int id;
+    private Cell workerCell[];
+
+    public Player (String name, int id){
+        this.id = id;
+        this.name = name;
+        workerCell = new Cell[2];
+    }
+
 
     public int getId() {
         return id;
@@ -17,12 +32,18 @@ public class Player {
         return workerCell[whichWorker - 1];
     }
 
-    public void newWorkerCell(Cell cell, int whichWorker){ // da usare per spostare il worker
-        // spegne il bit "worker" alla cella attuale e lo accende a quella ventura
+    /**
+     * Upgrades the value in workerCell[] after a movement
+     *
+     * <p>If workerCell exist the worker is deleted from that Cell.
+     * A new workerCell with the worker of the right Player is then created.
+     * @param cell the new Cell
+     * @param whichWorker 1 for worker one and 2 for worker two
+     */
+
+    public void newWorkerCell(Cell cell, int whichWorker){
         if (workerCell[whichWorker - 1]!=null) workerCell[whichWorker - 1].setWorker(false);
-        workerCell[whichWorker - 1] = cell;
-        workerCell[whichWorker - 1].setWorker(true);
-        workerCell[whichWorker - 1].setPlayer(this); // crea collegamento biunivoco fra player e cella
+        setWorkerCell(cell, whichWorker);
     }
 
     public void setWorkerCell(Cell cell, int whichWorker){
@@ -31,16 +52,10 @@ public class Player {
         workerCell[whichWorker - 1].setPlayer(this);
     }
 
+    //Removes the workers from the Cells
     public void removeWorkerCells(){
         workerCell[0].setWorker(false);
         workerCell[1].setWorker(false);
-        // inutile settare player a null nelle Cell, viene in ogni caso sovrascritto
-        // nonappena un nuovo worker sopraggiunge
     }
 
-    public Player (String name, int id){
-        this.id = id;
-        this.name = name;
-        workerCell = new Cell[2];
-    }
 }
