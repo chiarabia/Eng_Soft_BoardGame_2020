@@ -3,6 +3,10 @@ package it.polimi.ingsw;
 
 import java.util.Objects;
 
+/**
+ * This class creates the Cell for the board
+ */
+
 public class Cell {
     private final Position cellPosition;
     private boolean worker;
@@ -10,6 +14,15 @@ public class Cell {
     private boolean dome;
     private Player player;
 
+    /**
+     * Constructor for the Cell
+     *
+     * <p>The cell starts without a worker, a building, a player or a dome
+     *
+     * @param x coordinate x of the Cell
+     * @param y coordinate y of the Cell
+     * @param z coordinate z of the Cell
+     */
     public Cell(int x, int y, int z) {
         cellPosition = new Position(x, y, z);
         worker = false;
@@ -24,6 +37,11 @@ public class Cell {
         return worker;
     }
 
+    /**
+     * This method checks if the Cell is occupied by a worker, a building or a dome
+     * @return true if the Cell is free, false otherwise
+     */
+
     public boolean isFree() {
         return !(worker || building || dome);
     }
@@ -36,13 +54,18 @@ public class Cell {
         return dome;
     }
 
-    public boolean isPerimetral() { //Questo metodo verifica se la cella si trova sul perimetro
+    /**
+     * This method checks if the Cell is on the perimeter of the board
+     * @return true if the Cell is on the perimeter, false otherwise
+     */
+
+    public boolean isPerimetral() {
         return (getY()==4 || getY()==0 ||getX() == 0 || getX() == 4);
     }
 
     public Player getPlayer(){return player;}
 
-    /* Una serie di setter poichè tutti gli attributi tranne la posizione possono essere modificati*/
+    //Setters
 
     public void setPlayer(Player player){this.player = player;}
 
@@ -58,8 +81,7 @@ public class Cell {
         this.dome = dome;
     }
 
-    /* Metodi per avere la posizione della cella e id,
-     non sono necessari ma velocizzano la scrittura di altri metodi */
+    //Getters for coordinates
 
     public int getX() {
         return cellPosition.getX();
@@ -71,10 +93,20 @@ public class Cell {
         return cellPosition.getZ();
     }
 
-    public int getWorkerID ()  {
+    /**
+     * This method gives us the Player Id
+     * @return 0 if there is no worker, the Id of the worker's Player if a worker is present
+     */
+    public int getPlayerID ()  {
         if (!isWorker()) return 0;
         return player.getId();
     }
+
+    /**
+     *
+     * @param o
+     * @return
+     */
 
     /* Ridefinisco Equals guardando solo alla posizione, gli altri attributi non li
     guardo anche perchè noi dobbiamo essere sicuri di non avere duplicati. Il set va a vedere se due
