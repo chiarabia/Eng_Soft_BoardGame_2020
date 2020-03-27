@@ -18,7 +18,7 @@ public class SwapMove extends StandardMove {
                 .filter(a -> a.getY()<=workerCell.getY()+1)
                 .filter(a -> a.getY()>=workerCell.getY()-1)
                 .filter(a -> heightsDifference(workerCell.getZ(), a.getZ()) <= 1)
-                .filter(a -> !(a.getWorkerID()==workerCell.getWorkerID())) // toglie l'altro worker dall'insieme di caselle disponibili
+                .filter(a -> !(a.getPlayerID()==workerCell.getPlayerID())) // toglie l'altro worker dall'insieme di caselle disponibili
                 .collect(Collectors.toSet());
         return collect;
     }

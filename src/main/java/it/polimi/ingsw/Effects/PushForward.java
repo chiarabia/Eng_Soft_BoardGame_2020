@@ -25,7 +25,7 @@ public class PushForward extends StandardMove{
                 alle loro spalle in cui possano essere spinti */
                 .filter(a -> a.isFree()
                     || (a.isWorker()
-                        && a.getWorkerID() != workerCell.getWorkerID() // specifica che il lavoratore deve essere avversario
+                        && a.getPlayerID() != workerCell.getPlayerID() // specifica che il lavoratore deve essere avversario
                             && !a.isPerimetral()
                                 && board.isFreeZone
                                     (behindWorker_x(workerCell.getX(), a.getX()),
