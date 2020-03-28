@@ -1,8 +1,6 @@
 package it.polimi.ingsw;
 
-import java.util.List;
-import java.util.Optional;
-import java.util.Set;
+import java.util.*;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -12,14 +10,14 @@ import java.util.stream.Stream;
  */
 
 public class Board {
-    private Set<Cell> board;
+    private Set<Cell> board = new HashSet<>();
 
     /**
      * Constructs the board as a 5x5 table. Each cell has a Cell object
      * with coordinates xyz.
      */
     public Board() {
-        int x = 0, y = 0;
+        int x, y;
         for (x = 0; x<5; x++)
             for(y = 0; y<5; y++) board.add(new Cell(x, y, 0));
     }
@@ -29,7 +27,7 @@ public class Board {
     }
 
     //not clear
-    public int getZoneLevel(int x, int y){
+    /*public int getZoneLevel(int x, int y){
         Set <Cell> streamZone = board.stream().filter(a->a.getX()==x)
                                               .filter(a->a.getY()==y)
                                               .collect(Collectors.toSet());
@@ -41,7 +39,7 @@ public class Board {
         int maxHeight = -1;
         for (Cell i: streamBuilding) if (i.getZ() > maxHeight) maxHeight = i.getZ();
         return maxHeight;
-    }
+    }*/
 
     /**
      * This method tells us if a Cell is free
