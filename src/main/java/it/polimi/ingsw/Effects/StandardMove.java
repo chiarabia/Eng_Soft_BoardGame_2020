@@ -30,8 +30,7 @@ public class StandardMove {
                 .filter(a -> a.getY() <= workerCell.getY() + 1)
                 .filter(a -> a.getY() >= workerCell.getY() - 1)
                 //the worker can move up only by one level, but can move down without limitations
-                .filter(a -> heightsDifference(workerCell.getZ(), a.getZ()) <= 1
-                        || workerCell.getZ() > a.getZ())
+                .filter(a -> heightsDifference(workerCell.getZ(), a.getZ()) <= 1 | workerCell.getZ() > a.getZ())
                 .collect(Collectors.toSet());
         return collect;
     }
