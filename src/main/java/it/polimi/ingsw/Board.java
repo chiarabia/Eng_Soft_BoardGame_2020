@@ -6,9 +6,18 @@ import java.util.Set;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
+/**
+ * This class sets the board of the game.
+ *
+ */
+
 public class Board {
     private Set<Cell> board;
 
+    /**
+     * Constructs the board as a 5x5 table. Each cell has a Cell object
+     * with coordinates xyz.
+     */
     public Board() {
         int x = 0, y = 0;
         for (x = 0; x<5; x++)
@@ -19,7 +28,8 @@ public class Board {
         return board.stream();
     }
 
-    public int getZoneLevel(int x, int y){ // restituisce l'ultimo livello occupato
+    //not clear
+    public int getZoneLevel(int x, int y){
         Set <Cell> streamZone = board.stream().filter(a->a.getX()==x)
                                               .filter(a->a.getY()==y)
                                               .collect(Collectors.toSet());
@@ -33,11 +43,19 @@ public class Board {
         return maxHeight;
     }
 
+    /**
+     * This method tells us if a Cell is free
+     * @param x coordinate x of the Cell
+     * @param y coordinate y of the Cell
+     * @return true if the Cell is free, false otherwise
+     */
     public boolean isFreeZone(int x, int y) {
-            if (x <0 || y <0) return false;
+            if (x <0 || y <0) return false; //the Cell is outside the limits of the board
+
+            //counting the elements present in the stream in the selected Cell
             long count = board.stream()
                     .filter(a -> a.getX() == x && a.getY() == y)
-                    .filter(Cell::isFree) //per costruzione degli altri metodi, se metto una cupola non ci possono essere caselle libere nella colonna
+                    .filter(Cell::isFree) //the cell has no domes
                     .count();
             return !(count == 0.0);
     }
