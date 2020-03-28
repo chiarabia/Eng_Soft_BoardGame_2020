@@ -30,7 +30,7 @@ public class StandardMove {
                 .filter(a -> a.getY() <= workerCell.getY() + 1)
                 .filter(a -> a.getY() >= workerCell.getY() - 1)
                 //the worker can move up only by one level, but can move down without limitations
-                .filter(a -> heightsDifference(workerCell.getZ(), a.getZ()) <= 1 | workerCell.getZ() > a.getZ())
+                .filter(a -> heightsDifference(workerCell.getZ(), a.getZ()) <= 1)
                 .collect(Collectors.toSet());
         return collect;
     }
@@ -41,7 +41,7 @@ public class StandardMove {
      *
      * @param z_worker the position of the worker in the z axis
      * @param z_cell the position of the cell in the z axis
-     * @returnthe difference in the Z axis between the worker and the possible destination Cells
+     * @returnthe difference in the Z axis between the possible destination Cells and the worker
      */
     protected int heightsDifference (int z_worker, int z_cell)  {
         final int i = z_cell - z_worker;
