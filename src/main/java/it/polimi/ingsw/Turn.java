@@ -51,6 +51,9 @@ public class Turn {
         return player_id;
     }
 
+    public Position getWorkerstartingposition() {
+        return workerstartingposition;
+    }
 
     //this method must be invocated after a move action, and this will modify the parameters to track the actions made
     //by the current player
@@ -93,7 +96,7 @@ public class Turn {
         Position buildingposition = buildingCell.getCellPosition();
 
         //set up the parameters after the standard build
-        if (build_times == 0 & !buildaftermove && movebeforebuild && firstbuildingposition == null) {
+        if (!buildaftermove && movebeforebuild) {
             buildaftermove = true;
             firstbuildingposition = buildingposition;
         }
