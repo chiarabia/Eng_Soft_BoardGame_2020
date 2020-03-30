@@ -8,8 +8,8 @@ import java.util.HashSet;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-public class BuildAgainButNotIntheSamePosition extends StandardBuild{
-    public BuildAgainButNotIntheSamePosition(int builds) {
+public class NotOnTheSamePosition extends StandardBuild{
+    public NotOnTheSamePosition(int builds) {
         super(builds);
     }
 
@@ -21,7 +21,7 @@ public class BuildAgainButNotIntheSamePosition extends StandardBuild{
             if(turn.getBuild_times()>0) {
                 return board.getStream()
                         .filter(a -> a.isFree())
-                        .filter(a -> !a.getCellPosition().equals(turn.getFirstbuildingposition()))
+                        .filter(a -> !a.getCellPosition().equals(turn.getFirstbuildingposition())) //ho già costruito tolgo la casella su cui ho già costruito
                         .filter(a -> a.getX() <= workerCell.getX() + 1)
                         .filter(a -> a.getX() >= workerCell.getX() - 1)
                         .filter(a -> a.getY() <= workerCell.getY() + 1)

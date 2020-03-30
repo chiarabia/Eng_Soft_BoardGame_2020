@@ -1,4 +1,4 @@
-package it.polimi.ingsw.Effects;
+package it.polimi.ingsw.Effects.WinCondition;
 
 
 import it.polimi.ingsw.Cell;

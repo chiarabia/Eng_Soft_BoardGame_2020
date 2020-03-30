@@ -83,6 +83,10 @@ public class Cell {
         this.dome = dome;
     }
 
+    public void setWorkerId(int workerId) {
+        this.workerId = workerId;
+    }
+
     //Getters for coordinates
 
     public int getX() {

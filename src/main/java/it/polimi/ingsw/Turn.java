@@ -55,6 +55,10 @@ public class Turn {
         return workerstartingposition;
     }
 
+    public Position getFirstbuildingposition() {
+        return firstbuildingposition;
+    }
+
     //this method must be invocated after a move action, and this will modify the parameters to track the actions made
     //by the current player
     public void updateTurnInfoAfterMove (Cell workerStartingCell, Cell workerDestinationCell) {
