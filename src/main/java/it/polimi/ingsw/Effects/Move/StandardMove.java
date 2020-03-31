@@ -1,9 +1,10 @@
-package it.polimi.ingsw.Effects;
+package it.polimi.ingsw.Effects.Move;
 
 import it.polimi.ingsw.Board;
 import it.polimi.ingsw.Cell;
 import it.polimi.ingsw.Turn;
 
+import java.util.HashSet;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -12,6 +13,7 @@ import java.util.stream.Collectors;
  */
 
 public class StandardMove {
+    protected final int moves;
 
     /**
      * The general move method
@@ -21,6 +23,9 @@ public class StandardMove {
      * @return a Set<Cell> collect that only has the cells where the player can move to
      */
     public Set<Cell> move (Cell workerCell, Board board, Turn turn) {
+        if (!canImove(workerCell, turn)) {
+            return new HashSet<Cell>();
+        }
         final Set<Cell> collect = board.getStream()
                 //only free Cells
                 .filter(Cell::isFree)
@@ -46,6 +51,27 @@ public class StandardMove {
     protected int heightsDifference (int z_worker, int z_cell)  {
         final int i = z_cell - z_worker;
         return i;
+    }
+
+    protected boolean canImove (Cell workercell, Turn turn) {
+        if (!workercell.isWorker()) //robusto, devo invocare il metodo su un worker
+            return false;
+
+        if (workercell.getPlayerID() != turn.getPlayer_id()) //il player deve essere uguale
+            return false;
+
+        if (turn.getWorkerused() == 0) //nessun worker è stato mosso, tutti i worker devorebbero potersi muovere
+            return (turn.getMove_times() < moves);
+
+        if (workercell.getWorkerId() != turn.getWorkerused()) //if the id doesn't match, false
+            return false;
+
+        else
+            return (turn.getMove_times() < moves);
+    }
+
+    public StandardMove(int moves) {
+        this.moves = moves;
     }
 }
 

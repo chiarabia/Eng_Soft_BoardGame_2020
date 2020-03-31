@@ -11,12 +11,12 @@ package it.polimi.ingsw;
 public class Player {
     private final String name;
     private final int id;
-    private Cell workerCell[];
+    /*private Cell workerCell[];*/
 
     public Player (String name, int id){
         this.id = id;
         this.name = name;
-        workerCell = new Cell[2];
+        /*workerCell = new Cell[2];*/
     }
 
 
@@ -27,10 +27,10 @@ public class Player {
     public String getName() {
         return name;
     }
-
+    /*
     public Cell getWorkerCell(int whichWorker){
         return workerCell[whichWorker - 1];
-    }
+    }*/
 
     /**
      * Upgrades the value in workerCell[] after a movement
@@ -40,7 +40,7 @@ public class Player {
      * @param cell the new Cell
      * @param whichWorker 1 for worker one and 2 for worker two
      */
-
+    /*
     public void newWorkerCell(Cell cell, int whichWorker){
         if (workerCell[whichWorker - 1]!=null) workerCell[whichWorker - 1].setWorker(false);
         setWorkerCell(cell, whichWorker);
@@ -57,5 +57,5 @@ public class Player {
         workerCell[0].setWorker(false);
         workerCell[1].setWorker(false);
     }
-
+    */
 }

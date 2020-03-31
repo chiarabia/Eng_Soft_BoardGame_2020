@@ -1,6 +1,5 @@
 package it.polimi.ingsw;
 
-
 import java.util.Objects;
 
 /**
@@ -13,6 +12,7 @@ public class Cell {
     private boolean building;
     private boolean dome;
     private Player player;
+    private int workerId;
 
     /**
      * Constructor for the Cell
@@ -65,6 +65,8 @@ public class Cell {
 
     public Player getPlayer(){return player;}
 
+    public int getWorkerId() {return workerId;}
+
     //Setters
 
     public void setPlayer(Player player){this.player = player;}
@@ -79,6 +81,10 @@ public class Cell {
 
     public void setDome(boolean dome) {
         this.dome = dome;
+    }
+
+    public void setWorkerId(int workerId) {
+        this.workerId = workerId;
     }
 
     //Getters for coordinates
@@ -119,5 +125,10 @@ public class Cell {
         if (!(o instanceof Cell)) return false;
         Cell cell = (Cell) o;
         return getCellPosition().equals(cell.getCellPosition());
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(getCellPosition());
     }
 }
