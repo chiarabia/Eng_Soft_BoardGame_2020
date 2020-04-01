@@ -1,4 +1,4 @@
-package it.polimi.ingsw.Effects;
+package it.polimi.ingsw.Effects.WinCondition;
 
 import it.polimi.ingsw.Cell;
 
@@ -15,7 +15,7 @@ public class WinMovingDownTwoOrMoreLevel extends StandardWinCondition {
 
     @Override
     public boolean win (Cell workerCell, Cell destinationCell){
-        if((workerCell.getZ() - destinationCell.getZ()) == 2 ) return true;
+        if((workerCell.getZ() - destinationCell.getZ()) >= 2 ) return true;
         else  return false;
     }
 }
