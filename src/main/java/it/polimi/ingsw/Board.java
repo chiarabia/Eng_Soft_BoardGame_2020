@@ -26,7 +26,8 @@ public class Board {
         return board.stream();
     }
 
-    public Cell getCell(int x, int y, int z) { //metodo per ottenere la Cell sapendo le coordinate
+    //getter for the Cell from a known position
+    public Cell getCell(int x, int y, int z) {
         Position temp_position = new Position(x, y, z);
 
         for (int i = 0; i < board.size(); i++) {
@@ -41,14 +42,25 @@ public class Board {
         return getCell(position.getX(), position.getY(), position.getY());
     }
 
-    public void newCell(int x, int y, int z) { //Per aggiungere nuove celle
-        if (getCell(x, y, z) == null) //evito di creare duplicati
+
+    //This method adds new Cells
+    public void newCell(int x, int y, int z) {
+        //check for duplicates
+        if (getCell(x, y, z) == null)
             return;
         else {
             Cell temp_cell = new Cell(x, y, z);
             board.add(temp_cell);
         }
     }
+
+    /**
+     *
+     *
+     * @param x
+     * @param y
+     * @return
+     */
 
     public int getZoneLevel(int x, int y) {
         return getStream()

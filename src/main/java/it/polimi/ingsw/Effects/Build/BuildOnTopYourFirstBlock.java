@@ -9,6 +9,11 @@ import java.util.HashSet;
 import java.util.Set;
 import java.util.stream.Collectors;
 
+/**
+ * This class defines
+ */
+
+
 public class BuildOnTopYourFirstBlock extends StandardBuild {
     public BuildOnTopYourFirstBlock(int builds) {
         super(builds);
@@ -16,9 +21,9 @@ public class BuildOnTopYourFirstBlock extends StandardBuild {
 
     @Override
     public Set<Cell> build(Cell workerCell, Board board, Turn turn) {
-        Position first_block = turn.getFirstbuildingposition();
+        Position first_block = turn.getFirstBuildingPosition();
         if (turn.getBuild_times()>0) {
-            if (!canIbuild(workerCell, turn))
+            if (!checkBuildConditions(workerCell, turn))
                 return new HashSet<>();
             else
                 return board.getStream()

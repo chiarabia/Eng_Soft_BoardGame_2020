@@ -15,13 +15,13 @@ public class NotOnTheSamePosition extends StandardBuild{
 
     @Override
     public Set<Cell> build(Cell workerCell, Board board, Turn turn) {
-        if (!canIbuild(workerCell, turn))
+        if (!checkBuildConditions(workerCell, turn))
             return new HashSet<>();
         else
             if(turn.getBuild_times()>0) {
                 return board.getStream()
                         .filter(a -> a.isFree())
-                        .filter(a -> !a.getCellPosition().equals(turn.getFirstbuildingposition())) //ho già costruito tolgo la casella su cui ho già costruito
+                        .filter(a -> !a.getCellPosition().equals(turn.getFirstBuildingPosition())) //ho già costruito tolgo la casella su cui ho già costruito
                         .filter(a -> a.getX() <= workerCell.getX() + 1)
                         .filter(a -> a.getX() >= workerCell.getX() - 1)
                         .filter(a -> a.getY() <= workerCell.getY() + 1)

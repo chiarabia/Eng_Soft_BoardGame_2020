@@ -16,7 +16,7 @@ public class PushForward extends StandardMove{
 
     @Override
     public Set<Cell> move(Cell workerCell, Board board, Turn turn) {
-        if (!canImove(workerCell, turn))
+        if (!checkMoveConditions(workerCell, turn))
             return new HashSet<Cell>();
         else{
             return board

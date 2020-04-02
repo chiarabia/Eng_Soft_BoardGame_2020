@@ -15,7 +15,7 @@ public class SwapMove extends StandardMove {
 
     @Override
     public Set<Cell> move(Cell workerCell, Board board, Turn turn) {
-        if (!canImove(workerCell, turn)) return new HashSet<Cell>();
+        if (!checkMoveConditions(workerCell, turn)) return new HashSet<Cell>();
 
         else {
             final Set<Cell> collect = board.getStream()
