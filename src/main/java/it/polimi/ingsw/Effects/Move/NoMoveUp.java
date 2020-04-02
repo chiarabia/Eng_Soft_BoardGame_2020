@@ -8,7 +8,11 @@ import java.util.HashSet;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-//userei questa classe solo per gli avversari influenzati da Athena
+/**
+ * This class defines a movement that cannot be a move up action
+ */
+
+
 public class NoMoveUp extends StandardMove {
     private StandardMove decoratedMove;
 
@@ -24,7 +28,7 @@ public class NoMoveUp extends StandardMove {
 
     @Override
     public Set<Cell> move(Cell workerCell, Board board, Turn turn) {
-        if (!canImove(workerCell, turn)) return new HashSet<Cell>();
+        if (!checkMoveConditions(workerCell, turn)) return new HashSet<Cell>();
         else {
             Set<Cell> standardMove = decoratedMove.move(workerCell, board, turn);
             return standardMove.stream()

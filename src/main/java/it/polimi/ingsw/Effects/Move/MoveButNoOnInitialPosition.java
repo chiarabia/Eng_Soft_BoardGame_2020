@@ -9,30 +9,48 @@ import java.util.HashSet;
 import java.util.Set;
 import java.util.stream.Collectors;
 
+
+/**
+ * This class defines a move where the worker can't move on the original
+ * position
+ */
+
 public class MoveButNoOnInitialPosition extends StandardMove{
     public MoveButNoOnInitialPosition(int moves) {
         super(moves);
     }
 
+    /**
+     * @param workerCell the worker's Cell
+     * @param board the board
+     * @param turn the player's turn
+     * @return a Set<Cell> collect that only has the cells where the player can move
+     * without the initialPosition
+     */
+
     @Override
     public Set<Cell> move(Cell workerCell, Board board, Turn turn) {
-        if (!canImove(workerCell, turn)) return new HashSet<Cell>();
+        if (!checkMoveConditions(workerCell, turn)) return new HashSet<>();
         else {
-            Position initialposition = turn.getWorkerstartingposition();
-            if (initialposition != null) { //Se mi sono già mosso, allora escludo la cella iniziale
+            Position initialPosition = turn.getWorkerStartingPosition();
+            if (initialPosition != null) {
                 return super.move(workerCell, board, turn)
                         .stream()
-                        .filter(a -> !a.getCellPosition().equals(initialposition))
+                        .filter(a -> !a.getCellPosition().equals(initialPosition))
                         .collect(Collectors.toSet());
-            } else return super.move(workerCell, board, turn); //se non mi sono mosso, eseguo una mossa normale
+            }
+            //if the player didn't already move they can move normally
+            else return super.move(workerCell, board, turn);
         }
     }
 
+
+    //The player needs to move two times in a row
     @Override
-    protected boolean canImove(Cell workercell, Turn turn) {
-        if (turn.getMove_times() != 0) return false; //posso muovermi due volte, ma di seguito (non posso muovermi/costruire/muvoermi)
+    protected boolean checkMoveConditions(Cell workerCell, Turn turn) {
+        if (turn.getMove_times() != 0) return false;
         else {
-            return super.canImove(workercell, turn);
+            return super.checkMoveConditions(workerCell, turn);
         }
     }
 }

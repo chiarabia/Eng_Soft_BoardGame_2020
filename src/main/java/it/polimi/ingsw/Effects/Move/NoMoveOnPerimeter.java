@@ -6,6 +6,12 @@ import it.polimi.ingsw.Turn;
 
 import java.util.Set;
 
+/**
+ * This class defines a movement action that cannot end on a cell on the
+ * perimeter of the board
+ */
+
+
 public class NoMoveOnPerimeter extends StandardMove {
     public NoMoveOnPerimeter(int moves) { //per convenzione metterei 1, tanto basta che possa muoversi almeno una volta il player per non perdere il turno
         super(moves);
@@ -17,21 +23,25 @@ public class NoMoveOnPerimeter extends StandardMove {
     }
 
     @Override
-    protected boolean canImove(Cell workercell, Turn turn) {
-        if (!workercell.isWorker()) //robusto, devo invocare il metodo su un worker
+    protected boolean checkMoveConditions(Cell workerCell, Turn turn) {
+        //the Cell needs to have a worker
+        if (!workerCell.isWorker())
             return false;
 
-        if (workercell.getPlayerID() != turn.getPlayer_id()) //il player deve essere uguale
+        //the player id of this turn must be the same of the worker
+        if (workerCell.getPlayerID() != turn.getPlayer_id())
             return false;
 
-        if (turn.getWorkerused() == 0) //nessun worker è stato mosso, tutti i worker devorebbero potersi muovere
+        //if no worker has been moved yet, all workers can be moved
+        if (turn.getWorkerUsed() == 0)
             return (turn.getMove_times() < moves);
 
-        if (workercell.getWorkerId() != turn.getWorkerused()) //if the id doesn't match, false
+        if (workerCell.getWorkerId() != turn.getWorkerUsed()) //if the id doesn't match, false
             return false;
 
         else {
-            if (workercell.isPerimetral())
+            //the
+            if (workerCell.isPerimetral())
                 return true;
             else
                 return (turn.getMove_times() < moves);

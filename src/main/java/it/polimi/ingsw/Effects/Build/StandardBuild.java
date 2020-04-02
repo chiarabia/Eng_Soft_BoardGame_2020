@@ -8,6 +8,10 @@ import java.util.HashSet;
 import java.util.Set;
 import java.util.stream.Collectors;
 
+/**
+ * This class defines the general rules of building
+ */
+
 public class StandardBuild {
     protected final int builds; //parametrizzo il metodo
 
@@ -15,8 +19,16 @@ public class StandardBuild {
         this.builds = builds;
     }
 
+    /**
+     * The general build method
+     * @param workerCell the worker's Cell
+     * @param board the board
+     * @param turn the player's turn
+     * @return a Set<Cell> collect that only has the cells where the player can build in
+     */
+
     public Set<Cell> build(Cell workerCell, Board board, Turn turn) {
-        if (!canIbuild(workerCell, turn))
+        if (!checkBuildConditions(workerCell, turn))
             return new HashSet<>();
         else
         return board.getStream()
@@ -28,21 +40,33 @@ public class StandardBuild {
                 .collect(Collectors.toSet());
     }
 
-    protected boolean canIbuild (Cell workercell, Turn turn) {
-        if (!workercell.isWorker()) //robusto, devo invocare il metodo su un worker
+    /**
+     * This method determines if the worker can build
+     *
+     * @param workerCell the worker's Cell
+     * @param turn the player's turn
+     * @return
+     */
+
+    protected boolean checkBuildConditions(Cell workerCell, Turn turn) {
+        //the Cell needs to have a worker
+        if (!workerCell.isWorker())
             return false;
 
-        if (workercell.getPlayerID() != turn.getPlayer_id()) //il player deve essere uguale
+        //the player id of this turn must be the same of the worker
+        if (workerCell.getPlayerID() != turn.getPlayer_id())
             return false;
 
-        if (turn.getMove_times()==0) // se non mi sono mosso;
+        //if the player has moved a worker yet
+        if (turn.getMove_times()==0)
             return false;
 
-        if (workercell.getWorkerId() != turn.getWorkerused()) //if the id doesn't match, false
+        //if the id of the worker is not the same of the id of the worker used in the turn
+        if (workerCell.getWorkerId() != turn.getWorkerUsed())
             return false;
 
         else {
-            if (turn.isMovebeforebuild()) //se mi sono mosso, allora posso costruire
+            if (turn.isMoveBeforeBuild()) //se mi sono mosso, allora posso costruire
                 return (turn.getBuild_times() < builds);
             else
                 return false;

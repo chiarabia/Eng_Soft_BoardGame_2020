@@ -9,7 +9,7 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 /**
- * This classe defines the general rules of movement
+ * This class defines the general rules of movement
  */
 
 public class StandardMove {
@@ -20,11 +20,13 @@ public class StandardMove {
      * @param workerCell the worker's Cell
      * @param board the board
      * @param turn the player's turn
-     * @return a Set<Cell> collect that only has the cells where the player can move to
+     * @return a Set<Cell> collect that only has the cells where the player can move to or
+     * a HashSet<Cell> if the worker can't move
+     *
      */
     public Set<Cell> move (Cell workerCell, Board board, Turn turn) {
-        if (!canImove(workerCell, turn)) {
-            return new HashSet<Cell>();
+        if (!checkMoveConditions(workerCell, turn)) {
+            return new HashSet<>();
         }
         final Set<Cell> collect = board.getStream()
                 //only free Cells
@@ -53,17 +55,28 @@ public class StandardMove {
         return i;
     }
 
-    protected boolean canImove (Cell workercell, Turn turn) {
-        if (!workercell.isWorker()) //robusto, devo invocare il metodo su un worker
+    /**
+     * This method determines if the worker can move
+     *
+     * @param workerCell the worker's Cell
+     * @param turn the player's turn
+     * @return false if the the player cannot move its workers,
+     */
+
+    protected boolean checkMoveConditions(Cell workerCell, Turn turn) {
+        //the Cell needs to have a worker
+        if (!workerCell.isWorker())
             return false;
 
-        if (workercell.getPlayerID() != turn.getPlayer_id()) //il player deve essere uguale
+        //the player id of this turn must be the same of the worker
+        if (workerCell.getPlayerID() != turn.getPlayer_id())
             return false;
 
-        if (turn.getWorkerused() == 0) //nessun worker è stato mosso, tutti i worker devorebbero potersi muovere
+        //if no worker has been moved yet, all workers can be moved
+        if (turn.getWorkerUsed() == 0)
             return (turn.getMove_times() < moves);
 
-        if (workercell.getWorkerId() != turn.getWorkerused()) //if the id doesn't match, false
+        if (workerCell.getWorkerId() != turn.getWorkerUsed()) //if the id doesn't match, false
             return false;
 
         else
