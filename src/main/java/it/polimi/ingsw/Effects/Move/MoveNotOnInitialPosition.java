@@ -15,8 +15,8 @@ import java.util.stream.Collectors;
  * position
  */
 
-public class MoveButNoOnInitialPosition extends StandardMove{
-    public MoveButNoOnInitialPosition(int moves) {
+public class MoveNotOnInitialPosition extends StandardMove{
+    public MoveNotOnInitialPosition(int moves) {
         super(moves);
     }
 

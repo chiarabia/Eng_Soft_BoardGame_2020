@@ -8,8 +8,8 @@ import java.util.HashSet;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-public class NotOnTheSamePosition extends StandardBuild{
-    public NotOnTheSamePosition(int builds) {
+public class NotOnSamePosition extends StandardBuild{
+    public NotOnSamePosition(int builds) {
         super(builds);
     }
 

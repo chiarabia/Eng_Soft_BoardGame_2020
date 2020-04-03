@@ -14,8 +14,8 @@ import java.util.stream.Collectors;
  */
 
 
-public class BuildOnTopYourFirstBlock extends StandardBuild {
-    public BuildOnTopYourFirstBlock(int builds) {
+public class OnSamePositionBlockOnly extends StandardBuild {
+    public OnSamePositionBlockOnly(int builds) {
         super(builds);
     }
 

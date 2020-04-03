@@ -1,11 +1,12 @@
 {
-"fromWhichLevelCanIBuildDomes": 3,
-"howManyMoves": 1,
-"chooseOpponentsCell": 2,
-"winCondition": 1,
-"limitOpponentsWinCondition": 1,
-"canIBuildTwice": 1,
-"canIBuildBeforeMove": 1,
-"canIBuildUnderMyself": false,
-"canOpponentsMoveUpAfterIDid": true
+"move": "swap",
+"build": "",
+"consolidateBuild": "",
+"consolidateMove": "swapWorker",
+"positiveWinConditions": "",
+"negativeWinConditions": "",
+"loseConditions": "",
+"NewTurn": "",
+"numOfMoves": 1,
+ "numOfBuilds": 1
 }

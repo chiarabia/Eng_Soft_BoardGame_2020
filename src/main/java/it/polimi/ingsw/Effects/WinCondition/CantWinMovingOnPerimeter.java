@@ -3,7 +3,7 @@ package it.polimi.ingsw.Effects.WinCondition;
 import it.polimi.ingsw.Cell;
 
 
-public class CannotWinMovingOnPerimeter extends StandardWinCondition {
+public class CantWinMovingOnPerimeter extends StandardWinCondition {
 
     /** This method is used for the win condition that blocks the worker to win
      * on a perimeter cell of the board
@@ -16,10 +16,6 @@ public class CannotWinMovingOnPerimeter extends StandardWinCondition {
 
     @Override
     public boolean win(Cell workerCell, Cell destinationCell) {
-        if (destinationCell.isPerimetral() == true)
-            return false;
-        else
-            return true;
-
+        return (!destinationCell.isPerimetral());
     }
 }
