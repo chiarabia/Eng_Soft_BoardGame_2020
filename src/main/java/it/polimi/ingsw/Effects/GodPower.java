@@ -6,6 +6,7 @@ import it.polimi.ingsw.Effects.Build.StandardBuild;
 import it.polimi.ingsw.Effects.ConsolidateBuild.StandardConsolidateBuild;
 import it.polimi.ingsw.Effects.ConsolidateMove.StandardConsolidateMove;
 import it.polimi.ingsw.Effects.Move.StandardMove;
+import it.polimi.ingsw.Effects.Turn.NewTurn;
 import it.polimi.ingsw.Effects.WinCondition.StandardLoseCondition;
 import it.polimi.ingsw.Effects.WinCondition.StandardWinCondition;
 import it.polimi.ingsw.Position;
@@ -22,7 +23,9 @@ public class GodPower {
     private StandardLoseCondition loseCondition;
     private List<StandardWinCondition> positiveWinConditions;
     private List<StandardWinCondition> negativeWinConditions;
-    //Manca classe per fare nuovi turni;
+    private NewTurn newTurn;
+    private boolean askToBuildDomes = false;
+    private boolean askToBuildBeforeMoveAndNotMoveUp = false;
 
     public Set<Cell> move (Cell workerCell, Board board, Turn turn)  {
         return move.move(workerCell, board, turn);
@@ -60,18 +63,6 @@ public class GodPower {
         return temp;
     }
 
-        //Scheletro del costruttore standard, lasciato commentato per ora per usar il default constructor incopyGodPower
-    /*public GodPower() {
-        this.move = new StandardMove(1);
-        this.build = new StandardBuild(1);
-        this.consolidateMove = new StandardConsolidateMove();
-        this.consolidateBuild = new StandardConsolidateBuild();
-        this.loseCondition = new StandardLoseCondition();
-        this.positiveWinConditions = new ArrayList<StandardWinCondition>();
-        positiveWinConditions.add(new StandardWinCondition());
-        this.negativeWinConditions = new ArrayList<StandardWinCondition>(); //lascio vuota
-        this.loseCondition = new StandardLoseCondition();
-    }*/
 
     //Da usare nell'effetto di Athena
     public GodPower copyGodPower (GodPower godPower) {
@@ -144,4 +135,20 @@ public class GodPower {
     public void setNegativeWinConditions(List<StandardWinCondition> negativeWinConditions) {
         this.negativeWinConditions = negativeWinConditions;
     }
+
+    public void setNewTurn(NewTurn newTurn) { this.newTurn = newTurn; }
+
+    public NewTurn getNewTurn() { return newTurn; }
+
+    public void setAskToBuildDomes(boolean askToBuildDomes) {
+        this.askToBuildDomes = askToBuildDomes;
+    }
+
+    public void setAskToBuildBeforeMoveAndNotMoveUp(boolean askToBuildBeforeMoveAndNotMoveUp) {
+        this.askToBuildBeforeMoveAndNotMoveUp = askToBuildBeforeMoveAndNotMoveUp;
+    }
+
+    public boolean isAskToBuildDomes() {return askToBuildDomes; }
+
+    public boolean isAskToBuildBeforeMoveAndNotMoveUp() {return askToBuildBeforeMoveAndNotMoveUp; }
 }

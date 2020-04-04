@@ -1,11 +1,12 @@
 {
-"fromWhichLevelCanIBuildDomes": 3,
-"howManyMoves": 1,
-"chooseOpponentsCell": 1,
-"winCondition": 2,
-"limitOpponentsWinCondition": 1,
-"canIBuildTwice": 1,
-"canIBuildBeforeMove": 1,
-"canIBuildUnderMyself": false,
-"canOpponentsMoveUpAfterIDid": true
+  "move": "",
+  "build": "",
+  "consolidateBuild": "",
+  "consolidateMove": "",
+  "positiveWinConditions": "winMovingDownTwoOrMoreLevels",
+  "negativeWinConditions": "",
+  "loseConditions": "",
+  "newTurn": "",
+  "numOfMoves": 1,
+  "numOfBuilds": 1
 }

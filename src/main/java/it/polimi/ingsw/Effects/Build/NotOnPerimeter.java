@@ -9,7 +9,7 @@ import java.util.HashSet;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-public class NoBuildOnPerimeter extends StandardBuild {
+public class NotOnPerimeter extends StandardBuild {
     public Set<Cell> build(Cell workerCell, Board board, Turn turn) {
         Set<Cell> temp_cells = super.build(workerCell, board, turn);
 
@@ -20,7 +20,7 @@ public class NoBuildOnPerimeter extends StandardBuild {
         else return temp_cells;
     }
 
-    public NoBuildOnPerimeter(int builds) {
+    public NotOnPerimeter(int builds) {
         super(builds);
     }
 }
