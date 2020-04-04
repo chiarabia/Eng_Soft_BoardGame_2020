@@ -19,19 +19,42 @@ import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
 import java.io.FileReader;
 import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
+import java.util.stream.Stream;
 
 public class GodPowerManager {
     /*valori per tenere memoria dell'eventuale giocatore che modifica il gioco avversario (Hera ed Athena)
-    * 0 significa nessuno, altrimenti 1, 2 o eventualmente 3*/
+     * 0 significa nessuno, altrimenti 1, 2 o eventualmente 3*/
     private static int opponentsCantMoveUpAfterIDidPlayer;
     private static int opponentsCantWinOnPerimeterPlayer;
 
+    private final static String root = "src\\main\\java\\it\\polimi\\ingsw\\Cards\\";
+
+    /* estrae 'numOfPlayers' carte diverse sotto forma di List <String>,
+     * indipendentemente da nomi e/o numero di carte presenti nella cartella Cards*/
+    private static List <String> chooseGodFiles (int numOfPlayers) throws IOException {
+        List <String> cards = new ArrayList();
+        Stream<Path> paths = Files.walk(Paths.get(root));
+        paths.filter(Files::isRegularFile).forEach(x->{cards.add(x.toString().substring(root.length()));});
+        // adesso la lista cards contiene tutte le 14 stringhe di nomi dei file JSON (es. "ApolloCard.json")
+
+        Random rand = new Random();
+        int numOfAvailableCards = cards.size();
+        for (int i = numOfAvailableCards; i > numOfPlayers; i--) cards.remove(rand.nextInt(i));
+        // adesso nella lista cards sono rimaste solo 'numOfPlayers' stringhe casuali
+
+        return cards;
+    }
+
     /*Restituisce un GodPower completo di funzioni leggendo dai file JSON*/
-    private static GodPower power (String nameOfDivinity, int numOfPlayer) throws IOException, ParseException {
+    private static GodPower power (String nameOfFile, int numOfPlayer) throws IOException, ParseException {
         GodPower godPower = new GodPower();
-        FileReader fileReader = new FileReader("src\\main\\java\\it\\polimi\\ingsw\\Cards\\" + nameOfDivinity + "Card.json");
+        FileReader fileReader = new FileReader(root + nameOfFile);
         JSONObject jsonObject = (JSONObject) (new JSONParser()).parse(fileReader);
         String move = (String) jsonObject.get("move");
         String build = (String) jsonObject.get("build");
@@ -45,9 +68,6 @@ public class GodPowerManager {
         int numOfMoves = Math.toIntExact((Long) jsonObject.get("numOfMoves"));
 
         switch (move) {
-            case "opponentsCantMoveUpAfterIDid":
-                opponentsCantMoveUpAfterIDidPlayer = numOfPlayer;
-                godPower.setMove(new StandardMove(numOfMoves)); break;
             case "unlimitedPerimetralMove":
                 // todo: sistemare
             case "pushForward":
@@ -110,6 +130,11 @@ public class GodPowerManager {
         godPower.setLoseCondition(new StandardLoseCondition());
 
         godPower.setNewTurn(new NewTurn());
+        switch (newTurn) {
+            case "opponentsCantMoveUpAfterIDid":
+                opponentsCantMoveUpAfterIDidPlayer = numOfPlayer; break;
+            case "": break;
+        }
 
         return godPower;
     }
@@ -121,10 +146,10 @@ public class GodPowerManager {
         opponentsCantMoveUpAfterIDidPlayer = 0;
         opponentsCantWinOnPerimeterPlayer = 0;
         List <GodPower> godPowerList = new ArrayList();
+        List <String> godFiles = chooseGodFiles(numOfPlayers);
 
-        // todo: variare casualmente nomi divinità per le carte da scegliere
         for (int i = 1; i <= numOfPlayers; i++)
-            godPowerList.add(power("Apollo", i));
+            godPowerList.add(power(godFiles.get(i-1), i));
 
         for (int i = 1; i <= numOfPlayers; i++) {
             if (opponentsCantWinOnPerimeterPlayer!=0 && numOfPlayers!=opponentsCantWinOnPerimeterPlayer){

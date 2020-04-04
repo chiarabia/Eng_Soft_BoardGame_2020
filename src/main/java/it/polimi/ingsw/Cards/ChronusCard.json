@@ -6,7 +6,7 @@
   "positiveWinConditions": "fiveTowersCompleted",
   "negativeWinConditions": "",
   "loseConditions": "",
-  "NewTurn": "",
+  "newTurn": "",
   "numOfMoves": 1,
   "numOfBuilds": 1
 }

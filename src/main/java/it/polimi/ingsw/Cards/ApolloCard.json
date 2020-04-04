@@ -1,12 +1,12 @@
 {
-"move": "swap",
-"build": "",
-"consolidateBuild": "",
-"consolidateMove": "swapWorker",
-"positiveWinConditions": "",
-"negativeWinConditions": "",
-"loseConditions": "",
-"NewTurn": "",
-"numOfMoves": 1,
+ "move": "swap",
+ "build": "",
+ "consolidateBuild": "",
+ "consolidateMove": "swapWorker",
+ "positiveWinConditions": "",
+ "negativeWinConditions": "",
+ "loseConditions": "",
+ "newTurn": "",
+ "numOfMoves": 1,
  "numOfBuilds": 1
 }

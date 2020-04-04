@@ -6,7 +6,7 @@
   "positiveWinConditions": "",
   "negativeWinConditions": "opponentsCantWinOnPerimeter",
   "loseConditions": "",
-  "NewTurn": "",
+  "newTurn": "",
   "numOfMoves": 1,
   "numOfBuilds": 1
 }
