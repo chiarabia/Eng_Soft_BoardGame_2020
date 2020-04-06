@@ -20,12 +20,7 @@ public class StandardLoseCondition {
      */
 
     public boolean lose (Set<Cell> collectMove, Set<Cell> collectBuild){
-
-        if(collectMove.isEmpty() == true && collectBuild.isEmpty() == true)
-            return true;
-        else if(collectMove.isEmpty() == true)
-            return true;
-        else
-            return false;
+        if(collectMove.isEmpty()) return true;
+        return collectBuild.isEmpty();
     }
 }

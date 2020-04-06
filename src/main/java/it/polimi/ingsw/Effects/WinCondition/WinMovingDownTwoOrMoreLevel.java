@@ -15,7 +15,6 @@ public class WinMovingDownTwoOrMoreLevel extends StandardWinCondition {
 
     @Override
     public boolean win (Cell workerCell, Cell destinationCell){
-        if((workerCell.getZ() - destinationCell.getZ()) >= 2 ) return true;
-        else  return false;
+        return ((workerCell.getZ() - destinationCell.getZ()) >= 2);
     }
 }

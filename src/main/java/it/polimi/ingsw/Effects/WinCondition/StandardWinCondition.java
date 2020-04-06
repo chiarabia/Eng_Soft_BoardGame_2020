@@ -14,9 +14,6 @@ import it.polimi.ingsw.Cell;
          */
 
         public boolean win (Cell workerCell, Cell destinationCell) {
-            if (workerCell.getZ() == 2 & destinationCell.getZ() == 3)
-                return true;
-            else
-                return false;
+            return (workerCell.getZ() == 2 && destinationCell.getZ() == 3);
         }
     }
