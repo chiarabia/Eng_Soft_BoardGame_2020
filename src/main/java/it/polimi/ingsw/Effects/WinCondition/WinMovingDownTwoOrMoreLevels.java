@@ -11,6 +11,7 @@ public class WinMovingDownTwoOrMoreLevels extends StandardWinCondition {
      * @return true if the Player has won
      * @return false if the win condition is not met yet
      * @param workerCell the worker's Cell before the move
+     * @param board the board of the game
      * @param destinationCell the worker's Cell after the move
      */
 

@@ -27,7 +27,7 @@ import java.util.stream.Stream;
 public class GodPowerManager {
     /*valori per tenere memoria dell'eventuale giocatore che modifica il gioco avversario (Hera ed Athena)
      * 0 significa nessuno, altrimenti 1, 2 o eventualmente 3*/
-    private static int opponentsCantMoveUpAfterIDidPlayer;
+    private static int opponentsCantMoveUpAfterIDPlayer;
     private static int opponentsCantWinOnPerimeterPlayer;
 
     private final static String root = "src\\main\\java\\it\\polimi\\ingsw\\Cards\\";
@@ -129,7 +129,7 @@ public class GodPowerManager {
         godPower.setNewTurn(new NewTurn());
         switch (newTurn) {
             case "opponentsCantMoveUpAfterIDid":
-                opponentsCantMoveUpAfterIDidPlayer = numOfPlayer; break;
+                opponentsCantMoveUpAfterIDPlayer = numOfPlayer; break;
             case "": break;
         }
 
@@ -140,7 +140,7 @@ public class GodPowerManager {
     /* crea una lista di godPowers in base al numero di giocatori: deve generare due/tre carte casuali differenti,
        dopo averle costruite modifica alcune funzioni in presenza di divinità che modificano il comportamento degli avversari */
     public static List<GodPower> createGodPowers (int numOfPlayers) throws ParseException, IOException {
-        opponentsCantMoveUpAfterIDidPlayer = 0;
+        opponentsCantMoveUpAfterIDPlayer = 0;
         opponentsCantWinOnPerimeterPlayer = 0;
         List <GodPower> godPowerList = new ArrayList();
         List <String> godFiles = chooseGodFiles(numOfPlayers);
@@ -152,7 +152,7 @@ public class GodPowerManager {
             if (opponentsCantWinOnPerimeterPlayer!=0 && numOfPlayers!=opponentsCantWinOnPerimeterPlayer){
                 godPowerList.get(i-1).getNegativeWinConditions().add(new CantWinMovingOnPerimeter()); // modifica il potere degli avversari di Hera
             }
-            if (opponentsCantMoveUpAfterIDidPlayer!=0 && numOfPlayers!=opponentsCantMoveUpAfterIDidPlayer){
+            if (opponentsCantMoveUpAfterIDPlayer!=0 && numOfPlayers!=opponentsCantMoveUpAfterIDPlayer){
                 //todo: modificare il potere degli avversari di Athena
             }
         }

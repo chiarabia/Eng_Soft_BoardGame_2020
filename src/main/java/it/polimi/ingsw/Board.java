@@ -55,18 +55,16 @@ public class Board {
     }
 
     /**
-     *
-     *
-     * @param x
-     * @param y
-     * @return
+     * @param x coordinate x of a cell
+     * @param y coordinate y of a cell
+     * @return z coordinate that represents the building height
      */
 
     public int getZoneLevel(int x, int y) {
         return getStream()
                 .filter(a -> a.getX() == x && a.getY() == y)
                 .mapToInt(e -> 1)
-                .reduce(-1, (a, b) -> a + b); //Ottengo la massima z di una colonna
+                .reduce(-1, (a, b) -> a + b);
     }
 
     /**
@@ -86,6 +84,9 @@ public class Board {
                 .count();
         return !(count == 0.0);
     }
+
+
+    //Getters
 
     public List<Cell> getWorkers() {
         return board.stream()
