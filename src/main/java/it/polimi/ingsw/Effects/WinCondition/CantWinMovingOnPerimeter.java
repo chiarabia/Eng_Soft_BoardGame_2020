@@ -1,5 +1,6 @@
 package it.polimi.ingsw.Effects.WinCondition;
 
+import it.polimi.ingsw.Board;
 import it.polimi.ingsw.Cell;
 
 
@@ -15,7 +16,7 @@ public class CantWinMovingOnPerimeter extends StandardWinCondition {
      */
 
     @Override
-    public boolean win(Cell workerCell, Cell destinationCell) {
+    public boolean win(Cell workerCell, Cell destinationCell, Board board) {
         return (!destinationCell.isPerimetral());
     }
 }

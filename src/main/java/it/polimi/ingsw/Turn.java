@@ -14,17 +14,17 @@ public class Turn {
     private boolean moveBeforeBuild = false;
     private boolean buildAfterMove = false;
 
-    private boolean move_Up = false;
-    private boolean move_Down = false;
+    private boolean moveUp = false;
+    private boolean moveDown = false;
 
-    private int move_times = 0;
-    private int build_times = 0;
+    private int moveTimes = 0;
+    private int buildTimes = 0;
 
     private int workerUsed;
-    private final int player_id;
+    private final int playerId;
 
     public Turn(Player player) {
-        this.player_id = player.getId();
+        this.playerId = player.getId();
     }
 
     public boolean isMoveBeforeBuild() {
@@ -35,28 +35,28 @@ public class Turn {
         return buildAfterMove;
     }
 
-    public boolean isMove_Up() {
-        return move_Up;
+    public boolean isMoveUp() {
+        return moveUp;
     }
 
-    public boolean isMove_Down() {
-        return move_Down;
+    public boolean isMoveDown() {
+        return moveDown;
     }
 
-    public int getMove_times() {
-        return move_times;
+    public int getMoveTimes() {
+        return moveTimes;
     }
 
-    public int getBuild_times() {
-        return build_times;
+    public int getBuildTimes() {
+        return buildTimes;
     }
 
     public int getWorkerUsed() {
         return workerUsed;
     }
 
-    public int getPlayer_id() {
-        return player_id;
+    public int getPlayerId() {
+        return playerId;
     }
 
     public Position getWorkerStartingPosition() {
@@ -80,7 +80,7 @@ public class Turn {
         Position destinationPosition = workerDestinationCell.getCellPosition();
 
         //saving the the worker_id to ensure only this player will do something again in this turn
-        if (move_times == 0 && !moveBeforeBuild) {
+        if (moveTimes == 0 && !moveBeforeBuild) {
             this.workerStartingPosition = startingPosition;
             this.workerUsed = workerDestinationCell.getWorkerId();
         }
@@ -91,13 +91,13 @@ public class Turn {
 
         //Verify if at least one time the worker has moved up
         if (verifyMoveUp(startingPosition.getZ(), startingPosition. getZ()))
-            this.move_Up = true;
+            this.moveUp = true;
 
         //Verify if at least one time the worker has moved down
         if (verifyMoveDown(startingPosition.getZ(), startingPosition. getZ()))
-            this.move_Down = true;
+            this.moveDown = true;
 
-        this.move_times ++; //without condition, this method has to be call after a move action
+        this.moveTimes ++; //without condition, this method has to be call after a move action
     }
 
 
@@ -138,7 +138,7 @@ public class Turn {
             buildAfterMove = true;
             firstBuildingPosition = buildingPosition;
         }
-        build_times ++;
+        buildTimes ++;
     }
 }
 

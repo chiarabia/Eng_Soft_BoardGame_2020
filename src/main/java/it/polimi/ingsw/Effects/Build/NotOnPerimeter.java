@@ -13,7 +13,7 @@ public class NotOnPerimeter extends StandardBuild {
     public Set<Cell> build(Cell workerCell, Board board, Turn turn) {
         Set<Cell> temp_cells = super.build(workerCell, board, turn);
 
-        if(turn.getBuild_times()>0)
+        if(turn.getBuildTimes()>0)
             return temp_cells.stream()
                             .filter(a->!a.isPerimetral())
                             .collect(Collectors.toSet());

@@ -69,18 +69,18 @@ public class StandardMove {
             return false;
 
         //the player id of this turn must be the same of the worker
-        if (workerCell.getPlayerID() != turn.getPlayer_id())
+        if (workerCell.getPlayerID() != turn.getPlayerId())
             return false;
 
         //if no worker has been moved yet, all workers can be moved
         if (turn.getWorkerUsed() == 0)
-            return (turn.getMove_times() < moves);
+            return (turn.getMoveTimes() < moves);
 
         if (workerCell.getWorkerId() != turn.getWorkerUsed()) //if the id doesn't match, false
             return false;
 
         else
-            return (turn.getMove_times() < moves);
+            return (turn.getMoveTimes() < moves);
     }
 
     public StandardMove(int moves) {

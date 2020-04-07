@@ -10,10 +10,7 @@ import it.polimi.ingsw.Effects.Move.PushForward;
 import it.polimi.ingsw.Effects.Move.StandardMove;
 import it.polimi.ingsw.Effects.Move.SwapMove;
 import it.polimi.ingsw.Effects.Turn.NewTurn;
-import it.polimi.ingsw.Effects.WinCondition.CantWinMovingOnPerimeter;
-import it.polimi.ingsw.Effects.WinCondition.StandardLoseCondition;
-import it.polimi.ingsw.Effects.WinCondition.StandardWinCondition;
-import it.polimi.ingsw.Effects.WinCondition.WinMovingDownTwoOrMoreLevel;
+import it.polimi.ingsw.Effects.WinCondition.*;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
@@ -114,9 +111,9 @@ public class GodPowerManager {
         godPower.getPositiveWinConditions().add(new StandardWinCondition());
         switch (positiveWinConditions) {
             case "winMovingDownTwoOrMoreLevels":
-                godPower.getPositiveWinConditions().add(new WinMovingDownTwoOrMoreLevel()); break;
-            case "fiveTowersCompleted":
-                // todo: sistemare
+                godPower.getPositiveWinConditions().add(new WinMovingDownTwoOrMoreLevels()); break;
+            case "fiveCompletedTowers":
+                godPower.getPositiveWinConditions().add(new FiveCompletedTowers()); break;
             case "": break;
         }
 

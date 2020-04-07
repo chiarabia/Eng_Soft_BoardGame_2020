@@ -37,7 +37,7 @@ public class BuildBeforeMove extends StandardBuild {
         if (!workercell.isWorker()) //robusto, devo invocare il metodo su un worker
             return false;
 
-        if (workercell.getPlayerID() != turn.getPlayer_id()) //il player deve essere uguale
+        if (workercell.getPlayerID() != turn.getPlayerId()) //il player deve essere uguale
             return false;
 
         //Posso costruire prima di muovermi
@@ -46,8 +46,8 @@ public class BuildBeforeMove extends StandardBuild {
             return false;
 
         else {
-            if (turn.isMoveBeforeBuild()||turn.getMove_times()==0) //se mi sono mosso, allora posso costruire OPPURE, posso costruire se non mi sono ancora mosso)
-                return (turn.getBuild_times() < builds);
+            if (turn.isMoveBeforeBuild()||turn.getMoveTimes()==0) //se mi sono mosso, allora posso costruire OPPURE, posso costruire se non mi sono ancora mosso)
+                return (turn.getBuildTimes() < builds);
             else
                 return false;
         }

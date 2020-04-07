@@ -1,9 +1,10 @@
 package it.polimi.ingsw.Effects.WinCondition;
 
+import it.polimi.ingsw.Board;
 import it.polimi.ingsw.Cell;
 
 
-public class WinMovingDownTwoOrMoreLevel extends StandardWinCondition {
+public class WinMovingDownTwoOrMoreLevels extends StandardWinCondition {
 
     /** This method is used for the win condition that enables the worker to also win
      *  by going down two levels
@@ -14,7 +15,7 @@ public class WinMovingDownTwoOrMoreLevel extends StandardWinCondition {
      */
 
     @Override
-    public boolean win (Cell workerCell, Cell destinationCell){
+    public boolean win (Cell workerCell, Cell destinationCell, Board board){
         return ((workerCell.getZ() - destinationCell.getZ()) >= 2);
     }
 }
