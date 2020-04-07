@@ -47,16 +47,16 @@ public class GodPower {
         return  loseCondition.lose(collectMove, collectBuild);
     }
 
-    public boolean win (Cell workerCell, Cell destinationCell) {
+    public boolean win (Cell workerCell, Cell destinationCell, Board board) {
         boolean temp = false; //parto dall'idea di non aver vinto
 
         for (int i =0; i<positiveWinConditions.size(); i++) { //se una delle mie win condition, mi dice che ho vinto, setto a true
-           if (positiveWinConditions.get(i).win(workerCell, destinationCell))
+           if (positiveWinConditions.get(i).win(workerCell, destinationCell, board))
                temp = true;
         }
 
         for (int j=0; j<negativeWinConditions.size(); j++) {//porto a false temp, se ho un malus alla win condition
-            if(negativeWinConditions.get(j).win(workerCell, destinationCell)){
+            if(negativeWinConditions.get(j).win(workerCell, destinationCell, board)){
                 temp = false;
             }
         }

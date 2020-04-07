@@ -18,7 +18,7 @@ public class NotOnSamePosition extends StandardBuild{
         if (!checkBuildConditions(workerCell, turn))
             return new HashSet<>();
         else
-            if(turn.getBuild_times()>0) {
+            if(turn.getBuildTimes()>0) {
                 return board.getStream()
                         .filter(a -> a.isFree())
                         .filter(a -> !a.getCellPosition().equals(turn.getFirstBuildingPosition())) //ho già costruito tolgo la casella su cui ho già costruito

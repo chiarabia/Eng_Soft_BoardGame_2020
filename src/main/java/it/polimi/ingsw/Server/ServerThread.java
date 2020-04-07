@@ -1,28 +1,35 @@
 package it.polimi.ingsw.Server;
 
 import it.polimi.ingsw.Exceptions.ClientStoppedWorkingException;
+import it.polimi.ingsw.Game;
+import org.json.simple.parser.ParseException;
+
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.net.Socket;
+import java.util.ArrayList;
 import java.util.List;
 
 public class ServerThread extends Thread {
     private int numOfPlayers;
     private List<Socket> playersList;
+    private List<String> playersNames;
     private ServerWaitingList waitingList;
     private void returnListToWaitingList(){
         if (numOfPlayers == 2) waitingList.importTwoPlayersList(playersList);
         if (numOfPlayers == 3) waitingList.importThreePlayersList(playersList);
     }
-    private void scanList(String message) throws IOException {
+    private List <String> scanList(String message) throws IOException {
+        List <String> tempList = new ArrayList();
         for (int i = 0; i < playersList.size(); i++) {
             try{
-                sendAndWaitForReply(message, i, 1);
+                tempList.add(sendAndWaitForReply(message, i, 1));
             } catch(ClientStoppedWorkingException e){
                 playersList.remove(i);
                 i--;
             }
         }
+        return tempList;
     }
     public void sendMessage(String message, int player) throws IOException {
         PrintWriter out = new PrintWriter(playersList.get(player).getOutputStream());
@@ -36,10 +43,16 @@ public class ServerThread extends Thread {
     public void initializeGame(){
         try {
             for (int i = 0; i < numOfPlayers; i++) sendMessage("Server is ready", i);
-        }catch(IOException e){return;}
+            playersNames = scanList("Player's name");
+            if (playersList.size() < numOfPlayers){
+                scanList ("Close");
+                return;
+            }
+            Game game = new Game(this, numOfPlayers, playersNames);
 
-        // Here the game begins //
+            // Here the game begins //
 
+        }catch(IOException | ParseException e){}
     }
     public void run(){
         try{

@@ -22,7 +22,7 @@ public class OnSamePositionBlockOnly extends StandardBuild {
     @Override
     public Set<Cell> build(Cell workerCell, Board board, Turn turn) {
         Position first_block = turn.getFirstBuildingPosition();
-        if (turn.getBuild_times()>0) {
+        if (turn.getBuildTimes()>0) {
             if (!checkBuildConditions(workerCell, turn))
                 return new HashSet<>();
             else

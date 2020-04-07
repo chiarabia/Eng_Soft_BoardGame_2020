@@ -3,7 +3,7 @@
   "build": "",
   "consolidateBuild": "",
   "consolidateMove": "",
-  "positiveWinConditions": "fiveTowersCompleted",
+  "positiveWinConditions": "fiveCompletedTowers",
   "negativeWinConditions": "",
   "loseConditions": "",
   "newTurn": "",
