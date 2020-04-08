@@ -7,12 +7,10 @@ import java.util.Objects;
  */
 
 public class Cell {
-    private final Position cellPosition;
-    private boolean worker;
+    private final Position position;
     private boolean building;
     private boolean dome;
-    private Player player;
-    private int workerId;
+    private Worker worker;
 
     /**
      * Constructor for the Cell
@@ -24,18 +22,12 @@ public class Cell {
      * @param z coordinate z of the Cell
      */
     public Cell(int x, int y, int z) {
-        cellPosition = new Position(x, y, z);
-        worker = false;
+        position = new Position(x, y, z);
+        worker = null;
         building = false;
         dome = false;
-        player = null;
     }
 
-    public Position getCellPosition() {return cellPosition; }
-
-    public boolean isWorker() {
-        return worker;
-    }
 
     /**
      * This method checks if the Cell is occupied by a worker, a building or a dome
@@ -43,16 +35,13 @@ public class Cell {
      */
 
     public boolean isFree() {
-        return !(worker || building || dome);
+        return !(worker!=null || building || dome);
     }
-
     public boolean isBuilding() {
         return building;
     }
-
-    public boolean isDome() {
-        return dome;
-    }
+    public boolean isDome() { return dome; }
+    public boolean isWorker() { return worker!=null; }
 
     /**
      * This method checks if the Cell is on the perimeter of the board
@@ -62,57 +51,34 @@ public class Cell {
     public boolean isPerimetral() {
         return (getY()==4 || getY()==0 ||getX() == 0 || getX() == 4);
     }
-
-    public Player getPlayer(){return player;}
-
-    public int getWorkerId() {return workerId;}
+    public Worker getWorker(){return worker;}
+    public Player getPlayer(){return worker.getPlayer();}
+    public int getWorkerId() {return worker.getWorkerId();}
+    public int getPlayerId() {return worker.getPlayerId();}
 
     //Setters
-
-    public void setPlayer(Player player){this.player = player;}
-
-    public void setWorker(boolean worker) {
+    public void setWorker(Worker worker) {
         this.worker = worker;
     }
-
     public void setBuilding(boolean building) {
         this.building = building;
     }
-
     public void setDome(boolean dome) {
         this.dome = dome;
     }
 
-    public void setWorkerId(int workerId) {
-        this.workerId = workerId;
-    }
-
     //Getters for coordinates
-
     public int getX() {
-        return cellPosition.getX();
+        return position.getX();
     }
     public int getY() {
-        return cellPosition.getY();
+        return position.getY();
     }
     public int getZ() {
-        return cellPosition.getZ();
+        return position.getZ();
     }
+    public Position getPosition() {return position; }
 
-    /**
-     * This method gives us the Player Id
-     * @return 0 if there is no worker, the Id of the worker's Player if a worker is present
-     */
-    public int getPlayerID ()  {
-        if (!isWorker()) return 0;
-        return player.getId();
-    }
-
-    /**
-     *
-     * @param o
-     * @return
-     */
 
     /* Ridefinisco Equals guardando solo alla posizione, gli altri attributi non li
     guardo anche perchè noi dobbiamo essere sicuri di non avere duplicati. Il set va a vedere se due
@@ -124,11 +90,11 @@ public class Cell {
         if (this == o) return true;
         if (!(o instanceof Cell)) return false;
         Cell cell = (Cell) o;
-        return getCellPosition().equals(cell.getCellPosition());
+        return getPosition().equals(cell.getPosition());
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(getCellPosition());
+        return Objects.hash(getPosition());
     }
 }

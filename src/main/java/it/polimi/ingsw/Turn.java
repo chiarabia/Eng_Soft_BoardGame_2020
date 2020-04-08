@@ -76,8 +76,8 @@ public class Turn {
      */
 
     public void updateTurnInfoAfterMove (Cell workerStartingCell, Cell workerDestinationCell) {
-        Position startingPosition = workerStartingCell.getCellPosition();
-        Position destinationPosition = workerDestinationCell.getCellPosition();
+        Position startingPosition = workerStartingCell.getPosition();
+        Position destinationPosition = workerDestinationCell.getPosition();
 
         //saving the the worker_id to ensure only this player will do something again in this turn
         if (moveTimes == 0 && !moveBeforeBuild) {
@@ -131,7 +131,7 @@ public class Turn {
      */
 
     public void updateTurnInfoAfterBuild ( Cell buildingCell) {
-        Position buildingPosition = buildingCell.getCellPosition();
+        Position buildingPosition = buildingCell.getPosition();
 
         //set up the parameters after the standard build
         if (!buildAfterMove && moveBeforeBuild) {
