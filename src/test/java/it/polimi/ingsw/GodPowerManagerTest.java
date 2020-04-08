@@ -1,7 +1,7 @@
 package it.polimi.ingsw;
 
-import it.polimi.ingsw.Effects.GodPower;
-import it.polimi.ingsw.Effects.GodPowerManager;
+import it.polimi.ingsw.effects.GodPower;
+import it.polimi.ingsw.effects.GodPowerManager;
 import org.json.simple.parser.ParseException;
 import org.junit.jupiter.api.Test;
 import java.io.IOException;
