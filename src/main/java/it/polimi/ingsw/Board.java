@@ -31,7 +31,7 @@ public class Board {
         Position temp_position = new Position(x, y, z);
 
         for (int i = 0; i < board.size(); i++) {
-            if (board.get(i).getCellPosition().equals(temp_position))
+            if (board.get(i).getPosition().equals(temp_position))
                 return board.get(i);
         }
 
@@ -97,21 +97,21 @@ public class Board {
     public List<Cell> getPlayerWorkers(Player player) {
         return board.stream()
                 .filter(Cell::isWorker)
-                .filter(a -> a.getPlayerID() == player.getId())
+                .filter(a -> a.getPlayerId() == player.getId())
                 .collect(Collectors.toList());
     }
 
     public List<Cell> getPlayerWorkers(int player_id) {
         return board.stream()
                 .filter(Cell::isWorker)
-                .filter(a -> a.getPlayerID() == player_id)
+                .filter(a -> a.getPlayerId() == player_id)
                 .collect(Collectors.toList());
     }
 
     public Cell getPlayerWorker(Player player, int worker_id) {
         for (int i = 0; i < board.size(); i++) {
             if (board.get(i).isWorker()
-                    && board.get(i).getPlayerID() == player.getId()
+                    && board.get(i).getPlayerId() == player.getId()
                         && (board.get(i).getWorkerId() == worker_id))
                 return board.get(i);
 
