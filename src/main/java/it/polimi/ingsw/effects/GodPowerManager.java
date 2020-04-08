@@ -9,6 +9,7 @@ import it.polimi.ingsw.effects.move.MoveNotOnInitialPosition;
 import it.polimi.ingsw.effects.move.PushForward;
 import it.polimi.ingsw.effects.move.StandardMove;
 import it.polimi.ingsw.effects.move.SwapMove;
+import it.polimi.ingsw.effects.turn.NewNoMoveUpTurn;
 import it.polimi.ingsw.effects.turn.NewTurn;
 import it.polimi.ingsw.effects.winCondition.*;
 import org.json.simple.JSONObject;
@@ -27,8 +28,8 @@ import java.util.stream.Stream;
 public class GodPowerManager {
     /*valori per tenere memoria dell'eventuale giocatore che modifica il gioco avversario (Hera ed Athena)
      * 0 significa nessuno, altrimenti 1, 2 o eventualmente 3*/
-    private static int opponentsCantMoveUpAfterIDPlayer;
-    private static int opponentsCantWinOnPerimeterPlayer;
+    private static int opponentsCantMoveUpAfterIDidPlayerId;
+    private static int opponentsCantWinOnPerimeterPlayerId;
 
     private final static String root = "src\\main\\java\\it\\polimi\\ingsw\\Cards\\";
 
@@ -120,17 +121,17 @@ public class GodPowerManager {
         godPower.setNegativeWinConditions(new ArrayList());
         switch (negativeWinConditions) {
             case "opponentsCantWinOnPerimeter":
-                opponentsCantWinOnPerimeterPlayer = numOfPlayer; break;
+                opponentsCantWinOnPerimeterPlayerId = numOfPlayer; break;
             case "": break;
         }
 
         godPower.setLoseCondition(new StandardLoseCondition());
 
-        godPower.setNewTurn(new NewTurn());
         switch (newTurn) {
             case "opponentsCantMoveUpAfterIDid":
-                opponentsCantMoveUpAfterIDPlayer = numOfPlayer; break;
-            case "": break;
+                opponentsCantMoveUpAfterIDidPlayerId = numOfPlayer; break;
+            case "":
+                godPower.setNewTurn(new NewTurn()); break;
         }
 
         return godPower;
@@ -140,8 +141,8 @@ public class GodPowerManager {
     /* crea una lista di godPowers in base al numero di giocatori: deve generare due/tre carte casuali differenti,
        dopo averle costruite modifica alcune funzioni in presenza di divinità che modificano il comportamento degli avversari */
     public static List<GodPower> createGodPowers (int numOfPlayers) throws ParseException, IOException {
-        opponentsCantMoveUpAfterIDPlayer = 0;
-        opponentsCantWinOnPerimeterPlayer = 0;
+        opponentsCantMoveUpAfterIDidPlayerId = 0;
+        opponentsCantWinOnPerimeterPlayerId = 0;
         List <GodPower> godPowerList = new ArrayList();
         List <String> godFiles = chooseGodFiles(numOfPlayers);
 
@@ -149,11 +150,11 @@ public class GodPowerManager {
             godPowerList.add(power(godFiles.get(i-1), i));
 
         for (int i = 1; i <= numOfPlayers; i++) {
-            if (opponentsCantWinOnPerimeterPlayer!=0 && numOfPlayers!=opponentsCantWinOnPerimeterPlayer){
+            if (opponentsCantWinOnPerimeterPlayerId!=0 && numOfPlayers!=opponentsCantWinOnPerimeterPlayerId){
                 godPowerList.get(i-1).getNegativeWinConditions().add(new CantWinMovingOnPerimeter()); // modifica il potere degli avversari di Hera
             }
-            if (opponentsCantMoveUpAfterIDPlayer!=0 && numOfPlayers!=opponentsCantMoveUpAfterIDPlayer){
-                //todo: modificare il potere degli avversari di Athena
+            if (opponentsCantMoveUpAfterIDidPlayerId!=0){
+                godPowerList.get(i-1).setNewTurn(new NewNoMoveUpTurn(opponentsCantMoveUpAfterIDidPlayerId)); //potere di Athena
             }
         }
         return godPowerList;

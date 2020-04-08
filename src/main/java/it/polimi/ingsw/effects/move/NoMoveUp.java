@@ -16,15 +16,10 @@ import java.util.stream.Collectors;
 public class NoMoveUp extends StandardMove {
     private StandardMove decoratedMove;
 
-    public NoMoveUp(int moves) { //costruttore di default, da non usare, ma non è possibile farne a meno
-        super(moves);
-    }
-
-    public NoMoveUp (StandardMove decoratedMove, int moves){ //costruttore per decorare un metodo
-        super(moves);
+    public NoMoveUp (StandardMove decoratedMove){
+        super(decoratedMove.moves);
         this.decoratedMove = decoratedMove;
     }
-
 
     @Override
     public Set<Cell> move(Cell workerCell, Board board, Turn turn) {
