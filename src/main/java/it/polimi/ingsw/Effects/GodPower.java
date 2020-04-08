@@ -22,7 +22,7 @@ public class GodPower {
     private StandardConsolidateBuild consolidateBuild;
     private StandardLoseCondition loseCondition;
     private List<StandardWinCondition> positiveWinConditions;
-    private List<StandardWinCondition> negativeWinConditions;
+    private List<StandardWinCondition> blockingWinConditions;
     private NewTurn newTurn;
     private boolean askToBuildDomes = false;
     private boolean askToBuildBeforeMoveAndNotMoveUp = false;
@@ -35,36 +35,64 @@ public class GodPower {
         return build.build(workerCell, board, turn);
     }
 
+    //returns the state of the board after the worker has moved
     public void moveInto (Board board, Cell workerCell, Cell destinationCell) {
         consolidateMove.moveInto(board, workerCell, destinationCell);
     }
 
-    public void BuildUp (Position buildingcell, Board board, boolean god_power) {
-        consolidateBuild.BuildUp(buildingcell, board, god_power);
+    //returns the state of the board after the workers has built
+    public void BuildUp (Position buildingCell, Board board, boolean god_power) {
+        consolidateBuild.BuildUp(buildingCell, board, god_power);
     }
 
+    /**
+     * Checks if the player has lost
+     *
+     * @param collectMove a set<Cell> with the possible cells where the player can move
+     * @param collectBuild  a set<Cell> with the possible cells where the player can build
+     * @return true if the player has lost, false otherwise
+     */
     public boolean lose (Set<Cell> collectMove, Set<Cell> collectBuild){
         return  loseCondition.lose(collectMove, collectBuild);
     }
 
-    public boolean win (Cell workerCell, Cell destinationCell, Board board) {
-        boolean temp = false; //parto dall'idea di non aver vinto
+    /**
+     *  This method checks if the player has won
+     *
+     * @param workerCell the worker's cell
+     * @param destinationCell the worker's destination cell after its move
+     * @param board the board of the game
+     * @return true if the player has won, false otherwise
+     */
 
-        for (int i =0; i<positiveWinConditions.size(); i++) { //se una delle mie win condition, mi dice che ho vinto, setto a true
+
+    public boolean win (Cell workerCell, Cell destinationCell, Board board) {
+        boolean win = false;
+
+        //checks if one of the player has won with one of the win conditions
+        //that they have available with their god power
+        for (int i =0; i<positiveWinConditions.size(); i++) {
            if (positiveWinConditions.get(i).win(workerCell, destinationCell, board))
-               temp = true;
+               win = true;
         }
 
-        for (int j=0; j<negativeWinConditions.size(); j++) {//porto a false temp, se ho un malus alla win condition
-            if(negativeWinConditions.get(j).win(workerCell, destinationCell, board)){
-                temp = false;
+        //checks if one of the conditions that block the player possibility to win
+        //was set to false
+
+        for (int j=0; j<blockingWinConditions.size(); j++) {
+            if(blockingWinConditions.get(j).win(workerCell, destinationCell, board)){
+                win = false;
             }
         }
-        return temp;
+        return win;
     }
 
 
-    //Da usare nell'effetto di Athena
+    /**
+     * Creates a save state of the abilities that the player has with their god power
+     * @param godPower the god power the player has that we want to save
+     * @return a temporal save of all the abilities the player
+     */
     public GodPower copyGodPower (GodPower godPower) {
         GodPower tempGodPower = new GodPower();
         tempGodPower.setMove(this.move);
@@ -72,7 +100,7 @@ public class GodPower {
         tempGodPower.setConsolidateBuild(this.consolidateBuild);
         tempGodPower.setConsolidateMove(this.consolidateMove);
         tempGodPower.setPositiveWinConditions(this.positiveWinConditions);
-        tempGodPower.setNegativeWinConditions(this.negativeWinConditions);
+        tempGodPower.setNegativeWinConditions(this.blockingWinConditions);
         //tempGodPower.setMove(this.move);
         return tempGodPower;
     }
@@ -129,11 +157,11 @@ public class GodPower {
     }
 
     public List<StandardWinCondition> getNegativeWinConditions() {
-        return negativeWinConditions;
+        return blockingWinConditions;
     }
 
     public void setNegativeWinConditions(List<StandardWinCondition> negativeWinConditions) {
-        this.negativeWinConditions = negativeWinConditions;
+        this.blockingWinConditions = negativeWinConditions;
     }
 
     public void setNewTurn(NewTurn newTurn) { this.newTurn = newTurn; }

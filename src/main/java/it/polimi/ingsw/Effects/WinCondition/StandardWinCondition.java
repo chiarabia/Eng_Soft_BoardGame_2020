@@ -12,6 +12,7 @@ import it.polimi.ingsw.Cell;
          * @return false if the win condition is not met yet
          * @param workerCell the worker's Cell before the move
          * @param destinationCell the worker's Cell after the move
+         * @param board the board of the game
          */
 
         public boolean win (Cell workerCell, Cell destinationCell, Board board) {
