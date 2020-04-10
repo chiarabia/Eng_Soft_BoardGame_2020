@@ -1,4 +1,4 @@
-package it.polimi.ingsw;
+package it.polimi.ingsw.effects.build;
 
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.jupiter.api.Assertions.assertFalse;
@@ -10,6 +10,7 @@ import it.polimi.ingsw.Board;
 import it.polimi.ingsw.Cell;
 import it.polimi.ingsw.Player;
 import it.polimi.ingsw.Worker;
+import it.polimi.ingsw.Turn;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -17,30 +18,17 @@ import org.junit.jupiter.api.Test;
 import java.util.HashSet;
 import java.util.Set;
 
+public class UnderMyselfTest {
+    int builds = 1;
+    UnderMyself underMyself = new UnderMyself(builds);
+    Cell workerCell;
+    Turn turn;
+    Board board;
+    Player player = new Player("pippo",12);
+    Worker worker = new Worker(player, 12);
 
-
-
-public class WorkerTest {
-    Worker worker;
-    private Player player;
-
-    @Test
-    void workerHasTheRightPlayer(){
-        player = new Player ("pippo",12);
-        worker = new Worker (player, 12);
-        assertEquals(player, worker.getPlayer());
+    @BeforeEach
+    void setUp(){
+        turn = new Turn(player);
     }
-
-    @Test
-    void workerShouldNotHaveTheRightPlayer(){
-        Player player1 = new Player ("ciccio", 14);
-        Player player2 = new Player ("pippo",12);
-        worker = new Worker (player2, 12);
-        assertNotEquals(player1, worker.getPlayer());
-    }
-
-
-
 }
-
-

@@ -1,9 +1,9 @@
-package it.polimi.ingsw.EffectsTest.WinConditionTest;
+package it.polimi.ingsw.effects.winCondition;
 
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertThrows;
-import it.polimi.ingsw.effects.winCondition.CantWinMovingOnPerimeter;
+
 import it.polimi.ingsw.Cell;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -19,7 +19,7 @@ public class CantWinMovingOnPerimeterTest {
     Cell destinationCell;
 
     @BeforeEach
-    void SetUp(){
+    void setUp(){
         board = new Board();
     }
 
@@ -44,7 +44,7 @@ public class CantWinMovingOnPerimeterTest {
 
     //negative
     @Test
-    void ThrowsExceptionsWithNullParameters(){
+    void throwsExceptionsWithNullParameters(){
 
         assertThrows(NullPointerException.class, () -> {
             winCondition.win(null, null, null);

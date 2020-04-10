@@ -21,13 +21,13 @@ public class BoardTest {
     private Cell cell;
 
     @BeforeEach
-    void SetUp(){
+    void setUp(){
         board = new Board();
     }
 
     //negative
     @Test
-    void ShouldAddANewCell(){
+    void shouldAddANewCell(){
         cell = new Cell (0,0,3);
         board.newCell(0,0,3);
         assertNotNull(board.getCell(0,0,3));
@@ -35,7 +35,7 @@ public class BoardTest {
 
     //positive
     @Test
-    void ShouldNotHaveANullCell(){
+    void shouldNotHaveANullCell(){
         int x = 2;
         int y = 2;
         assertNotNull(board.getCell(x,y,0));
@@ -45,7 +45,7 @@ public class BoardTest {
 
     //positive
     @Test
-    void ShouldNotGetTheRightCell(){
+    void shouldNotGetTheRightCell(){
         cell = new Cell (1,1,1);
         board.newCell(1,1,1);
         assertNotEquals(cell, board.getCell(2,2,2));
@@ -53,7 +53,7 @@ public class BoardTest {
 
 
     @Test
-    void CellShouldBeFree(){
+    void cellShouldBeFree(){
         cell = new Cell (0,0,0);
         board.newCell(0,0,0);
         assertTrue(board.isFreeZone(0,0));
@@ -62,7 +62,7 @@ public class BoardTest {
 
     //negative
     @Test
-    void CellShouldNotBeFreeOfDomes(){
+    void cellShouldNotBeFreeOfDomes(){
         cell = new Cell (0,0,3);
         cell.setDome(true);
         board.newCell(0,0,3);
@@ -72,7 +72,7 @@ public class BoardTest {
 
     //negative
     @Test
-    void PlayerShouldGetTheRightLevel(){
+    void playerShouldGetTheRightLevel(){
         cell = new Cell (0,0,3);
         board.newCell(0,0,3);
         assertEquals(3, board.getZoneLevel(0,0));

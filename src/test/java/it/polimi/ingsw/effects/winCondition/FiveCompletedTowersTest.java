@@ -1,10 +1,10 @@
-package it.polimi.ingsw.EffectsTest.WinConditionTest;
+package it.polimi.ingsw.effects.winCondition;
 
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
-import it.polimi.ingsw.effects.winCondition.FiveCompletedTowers;
+
 import it.polimi.ingsw.Cell;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -30,7 +30,7 @@ public class FiveCompletedTowersTest {
 
     //negative
     @Test
-    void PlayerShouldWin(){
+    void playerShouldWin(){
         workerCell = new Cell(2,0,2);
         destinationCell = new Cell(1,0 ,3);
 
@@ -48,7 +48,7 @@ public class FiveCompletedTowersTest {
 
     //negative
     @Test
-    void PlayerShouldNotWinBecauseTheyDontMoveUp(){
+    void playerShouldNotWinBecauseTheyDontMoveUp(){
         workerCell = new Cell(2,0,2);
         destinationCell = new Cell(1,0 ,2);
 
@@ -65,7 +65,7 @@ public class FiveCompletedTowersTest {
 
     //negative
     @Test
-    void PlayerShouldNotWinBecauseThereAreLessThanFiveCompletedTowers(){
+    void playerShouldNotWinBecauseThereAreLessThanFiveCompletedTowers(){
         workerCell = new Cell(2,0,2);
         destinationCell = new Cell(1,0 ,3);
 
@@ -82,7 +82,7 @@ public class FiveCompletedTowersTest {
 
     //positive
     @Test
-    void ThrowsExceptionsWithNullParameters(){
+    void throwsExceptionsWithNullParameters(){
 
         assertThrows(NullPointerException.class, () -> {
             winCondition.win(null, null, null);
