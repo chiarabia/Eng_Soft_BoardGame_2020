@@ -40,7 +40,7 @@ public class MoveNotOnInitialPositionTest {
     @Test
     void playerShouldMoveTwoTimesInARow(){
         Cell workerCell = board.getCell(0,0,0); //worker initial position
-        Cell destinationCell = new Cell(1,0, 0);
+        Cell destinationCell = board.getCell(1,0, 0);
         workerCell.setWorker(worker);
 
         StandardConsolidateMove standardConsolidateMove = new StandardConsolidateMove();
@@ -57,8 +57,8 @@ public class MoveNotOnInitialPositionTest {
         assert !destinationCell.isFree();
 
         assert !notOnInitialPosition.move(destinationCell,board, turn).contains(workerCell); //toglie correttamente la posizione iniziale
-        assert notOnInitialPosition.move(destinationCell,board, turn).contains(destinationCell);
-        assert notOnInitialPosition.move(destinationCell,board, turn).size() == 5; //lol, non toglie la casella di partenza
+        assert !notOnInitialPosition.move(destinationCell,board, turn).contains(destinationCell);
+        assert notOnInitialPosition.move(destinationCell,board, turn).size() == 4; //lol, non toglie la casella di partenza
 
 
          //turn.updateTurnInfoAfterMove(workerCell,workerCell);
