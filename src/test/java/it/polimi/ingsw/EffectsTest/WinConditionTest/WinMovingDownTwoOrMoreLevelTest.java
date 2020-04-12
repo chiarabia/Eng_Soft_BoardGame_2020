@@ -1,8 +1,9 @@
-package it.polimi.ingsw.effects.winCondition;
+package it.polimi.ingsw.EffectsTest.WinConditionTest;
 
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertThrows;
+import it.polimi.ingsw.effects.winCondition.WinMovingDownTwoOrMoreLevels;
 import it.polimi.ingsw.Cell;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -19,7 +20,7 @@ public class WinMovingDownTwoOrMoreLevelTest {
     Cell destinationCell;
 
     @BeforeEach
-    void setUp(){
+    void SetUp(){
         board = new Board();
     }
 
@@ -63,7 +64,7 @@ public class WinMovingDownTwoOrMoreLevelTest {
 
     //negative
     @Test
-    void throwsExceptionsWithNullParameters(){
+    void ThrowsExceptionsWithNullParameters(){
 
         assertThrows(NullPointerException.class, () -> {
             winCondition.win(null, null, null);

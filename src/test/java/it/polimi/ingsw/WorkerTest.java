@@ -25,14 +25,14 @@ public class WorkerTest {
     private Player player;
 
     @Test
-    void workerHasTheRightPlayer(){
+    void WorkerHasTheRightPlayer(){
         player = new Player ("pippo",12);
         worker = new Worker (player, 12);
         assertEquals(player, worker.getPlayer());
     }
 
     @Test
-    void workerShouldNotHaveTheRightPlayer(){
+    void WorkerShouldNotHaveTheRightPlayer(){
         Player player1 = new Player ("ciccio", 14);
         Player player2 = new Player ("pippo",12);
         worker = new Worker (player2, 12);

@@ -19,100 +19,100 @@ public class CellTest {
     private Worker worker = new Worker(player, 12);
 
     @BeforeEach
-    void setUp(){
+    void SetUp(){
         cell = new Cell (0,0,0);
     }
 
     //positive
     @Test
-    void cellShouldBeFree(){
+    void CellShouldBeFree(){
         assertTrue(cell.isFree());
     }
 
     //positive
     @Test
-    void cellShouldNotBeFreeBecauseOfWorker(){
+    void CellShouldNotBeFreeBecauseOfWorker(){
         cell.setWorker(worker);
         assertFalse(cell.isFree());
     }
 
     //positive
     @Test
-    void cellShouldNotBeFreeBecauseOfDome(){
+    void CellShouldNotBeFreeBecauseOfDome(){
         cell.setDome(true);
         assertFalse(cell.isFree());
     }
 
     //positive
     @Test
-    void cellShouldNotBeFreeBecauseOfBuilding(){
+    void CellShouldNotBeFreeBecauseOfBuilding(){
         cell.setBuilding(true);
         assertFalse(cell.isFree());
     }
 
     //positive
     @Test
-    void cellShouldHaveAWorker(){
+    void CellShouldHaveAWorker(){
         cell.setWorker(worker);
         assertTrue(cell.isWorker());
     }
 
     //positive
     @Test
-    void cellShouldHaveADome(){
+    void CellShouldHaveADome(){
         cell.setDome(true);
         assertTrue(cell.isDome());
     }
 
     //positive
     @Test
-    void cellShouldHaveABuilding(){
+    void CellShouldHaveABuilding(){
         cell.setBuilding(true);
         assertTrue(cell.isBuilding());
     }
 
     //positive
     @Test
-    void cellGetsTheRightX(){
+    void CellGetsTheRightX(){
         assertEquals(0, cell.getX());
     }
 
     //positive
     @Test
-    void cellShouldGetTheRightY(){
+    void CellShouldGetTheRightY(){
         assertEquals(0, cell.getY());
     }
 
     //positive
     @Test
-    void cellShouldGetTheRightZ(){
+    void CellShouldGetTheRightZ(){
         assertEquals(0, cell.getX());
     }
 
     //positive
     @Test
-    void cellShouldGetTheRightWorker(){
+    void CellShouldGetTheRightWorker(){
         cell.setWorker(worker);
         assertEquals(worker, cell.getWorker());
     }
 
     //positive
     @Test
-    void cellShouldGetTheRightPlayer(){
+    void CellShouldGetTheRightPlayer(){
         cell.setWorker(worker);
         assertEquals(worker.getPlayer(), cell.getPlayer());
     }
 
     //positive
     @Test
-    void cellShouldGetTheRightPlayerId(){
+    void CellShouldGetTheRightPlayerId(){
         cell.setWorker(worker);
         assertEquals(worker.getPlayerId(), cell.getPlayerId());
     }
 
     //positive
     @Test
-    void cellShouldGetTheRightWorkerId(){
+    void CellShouldGetTheRightWorkerId(){
         cell.setWorker(worker);
         assertEquals(worker.getWorkerId(),cell.getWorkerId());
     }

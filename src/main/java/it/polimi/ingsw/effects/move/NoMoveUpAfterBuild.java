@@ -30,7 +30,7 @@ public class NoMoveUpAfterBuild extends StandardMove{
     }
 
     @Override
-    protected boolean checkMoveConditions(Cell workerCell, Turn turn) {
-        return super.checkMoveConditions(workerCell, turn);
+    protected boolean checkMoveConditions(Cell workercell, Turn turn) {
+        return super.checkMoveConditions(workercell, turn);
     }
 }

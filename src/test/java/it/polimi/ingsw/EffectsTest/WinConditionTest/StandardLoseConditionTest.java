@@ -1,8 +1,9 @@
-package it.polimi.ingsw.effects.winCondition;
+package it.polimi.ingsw.EffectsTest.WinConditionTest;
 
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertThrows;
+import it.polimi.ingsw.effects.winCondition.StandardLoseCondition;
 import it.polimi.ingsw.Cell;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -54,7 +55,7 @@ public class StandardLoseConditionTest {
 
     //positive
     @Test
-    void throwsExceptionWithNullParameters() {
+    void ThrowsExceptionWithNullParameters() {
         assertThrows(NullPointerException.class, () -> {
             loseCondition.lose(null, null);
         });

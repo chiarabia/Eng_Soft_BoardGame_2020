@@ -42,7 +42,7 @@ public class PushForward extends StandardMove{
         }
     }
 
-     protected int behindWorker_x (int myWorker_x, int opponentsWorker_x) {
+    private int behindWorker_x (int myWorker_x, int opponentsWorker_x) {
         if (myWorker_x == opponentsWorker_x) {
             return opponentsWorker_x;
         }
@@ -52,7 +52,7 @@ public class PushForward extends StandardMove{
         else
             return opponentsWorker_x+1;
     }
-    protected int behindWorker_y (int myWorker_y, int opponentsWorker_y) {
+    private int behindWorker_y (int myWorker_y, int opponentsWorker_y) {
         if (myWorker_y == opponentsWorker_y) {
             return opponentsWorker_y;
         }
