@@ -20,27 +20,39 @@ import java.util.Set;
 
 
 public class MoveNotOnInitialPositionTest {
-    int moves = 1;
+
+    int moves = 2;
     MoveNotOnInitialPosition notOnInitialPosition = new MoveNotOnInitialPosition(moves);
     Cell workerCell;
+    Cell destinationCell;
+    Board board;
+
     Turn turn;
     Player player = new Player("pippo",12);
     Worker worker = new Worker(player, 12);
 
     @BeforeEach
     void setUp(){
+        board = new Board();
         turn = new Turn (player);
     }
 
 
     //negative
+    //Throws Null Exception at cell.getWorkerId
     @Test
-    void playerShouldMoveTwoTimesInARow(){
-         workerCell = new Cell (0,0,0);
-         Cell workerCellFirst = new Cell(1,0,0);
-         workerCellFirst.setWorker(worker);
-         turn.updateTurnInfoAfterMove(workerCellFirst,workerCell);
-         assertTrue(notOnInitialPosition.checkMoveConditions(workerCell,turn));
+    void playerShouldNotMoveOnInitialPosition(){
+        worker = new Worker(player, 12);
+        workerCell = board.getCell(0,0,0);
+        destinationCell = board.getCell(1,0, 0);
+        workerCell.setWorker(worker);
+        turn.updateTurnInfoAfterMove(workerCell,destinationCell);
+        Set <Cell> collect = new HashSet<>();
+        collect.add(new Cell (1,0,0));
+        collect.add(new Cell (0,2,0));
+        collect.add(new Cell (1,1,0));
+        collect.add(new Cell(1,2,0));
+        assertEquals(collect,notOnInitialPosition.move(destinationCell,board,turn));
     }
 
     //positive

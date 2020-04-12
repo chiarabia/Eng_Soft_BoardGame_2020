@@ -48,9 +48,7 @@ public class MoveNotOnInitialPosition extends StandardMove{
     //The player needs to move two times in a row
     @Override
     protected boolean checkMoveConditions(Cell workerCell, Turn turn) {
-        if (turn.getMoveTimes() != 0) return false;
-        else {
             return super.checkMoveConditions(workerCell, turn);
-        }
+
     }
 }

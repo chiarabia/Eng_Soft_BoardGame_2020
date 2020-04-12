@@ -25,10 +25,10 @@ public class BoardTest {
         board = new Board();
     }
 
-    //negative
+
+    //positive
     @Test
     void shouldAddANewCell(){
-        cell = new Cell (0,0,3);
         board.newCell(0,0,3);
         assertNotNull(board.getCell(0,0,3));
     }
@@ -45,37 +45,41 @@ public class BoardTest {
 
     //positive
     @Test
-    void shouldNotGetTheRightCell(){
-        cell = new Cell (1,1,1);
-        board.newCell(1,1,1);
-        assertNotEquals(cell, board.getCell(2,2,2));
-    }
-
-
-    @Test
     void cellShouldBeFree(){
-        cell = new Cell (0,0,0);
         board.newCell(0,0,0);
         assertTrue(board.isFreeZone(0,0));
     }
 
 
-    //negative
+
+    //positive
     @Test
-    void cellShouldNotBeFreeOfDomes(){
-        cell = new Cell (0,0,3);
-        cell.setDome(true);
+    void cellShouldNotBeFree(){
+        board.getCell(0,0,0).setBuilding(true);
         board.newCell(0,0,3);
+        board.getCell(0,0,3).setDome(true);
+        board.newCell(0,0,1);
+        board.getCell(0,0,1).setBuilding(true);
+        board.newCell(0,0,2);
+        board.getCell(0,0,2).setBuilding(true);
+
         assertFalse(board.isFreeZone(0,0));
     }
 
 
-    //negative
+
+    //positive
     @Test
     void playerShouldGetTheRightLevel(){
-        cell = new Cell (0,0,3);
         board.newCell(0,0,3);
+        board.newCell(0,0,1);
+        board.newCell(0,0,2);
         assertEquals(3, board.getZoneLevel(0,0));
+    }
+
+    @Test
+    void playerShouldNotGetTheRightLevelBecauseCellIsOutsideOfTheBoard(){
+        assertFalse(board.isFreeZone(6,6));
     }
 
 

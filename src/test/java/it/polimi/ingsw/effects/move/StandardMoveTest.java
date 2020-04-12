@@ -36,6 +36,7 @@ public class StandardMoveTest {
     void setUp(){
         workerCell = new Cell(0,0,0);
         turn = new Turn(player);
+        board = new Board();
     }
 
     //positive
@@ -83,23 +84,39 @@ public class StandardMoveTest {
     //positive
     @Test
     void moveShouldNotWorkBecauseMoveConditionsReturnsFalse(){
-        board = new Board();
         Set temp = new HashSet<>();
         assertEquals(temp, standardMove.move(workerCell,board,turn));
     }
 
-    //negative
+
+    //positive
     @Test
-    void moveShouldGiveTheRightSetOfPossibleCellsWhileMovingUp(){
-        Cell destinationcell = new Cell (1,0,0);
-        board.newCell(1,0,0);
-        board.newCell(0,0,0);
+    void moveShouldGiveTheRightSetOfPossibleCellsOnSameLevel(){
+        Cell cellWorker=board.getCell(0,0,0);
+        cellWorker.setWorker(worker);
         Set <Cell> collect = new HashSet<>();
         collect.add(new Cell (1,0,0));
         collect.add(new Cell (0,1,0));
         collect.add(new Cell (1,1,0));
-        assertEquals(collect,standardMove.move(workerCell,board,turn));
+        assertEquals(collect,standardMove.move(cellWorker,board,turn));
+    }
 
+    //positive
+    @Test
+    void moveShouldGiveTheRightSetOfPossibleCellsWithMultipleLevels(){
+        board.newCell(0,0,1);
+        Cell cellWorker = board.getCell(0,0,1);
+        cellWorker.setWorker(worker);
+        board.newCell(0,1,1);
+        board.getCell(0,1,1).setBuilding(true);
+        board.getCell(0,1,0).setBuilding(true);
+        board.getCell(0,0,0).setBuilding(true);
+        board.newCell(0,1,2);
+        Set <Cell> collect = new HashSet<>();
+        collect.add(new Cell(1,0,0));
+        collect.add(new Cell(1,1,0));
+        collect.add(new Cell(0,1,2));
+        assertEquals(collect,standardMove.move(cellWorker,board,turn));
     }
 
     //positive
@@ -122,6 +139,19 @@ public class StandardMoveTest {
         assertThrows(NullPointerException.class, () -> {
             standardMove.move(null, null,null);
         });
+    }
+
+
+    @Test
+    void correctInstantiation() {
+        board = new Board();
+        workerCell = board.getCell(2,2,0);
+        workerCell.setWorker(worker);
+        //assert workerCell.isWorker();
+        //assert !workerCell.isFree();
+        //assert !workerCell.isDome();
+        //assert !workerCell.isBuilding();
+        //assert board.getStream().filter(a-> a.isFree()).count() == 24;
     }
 
 
