@@ -6,8 +6,6 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 
 
 import it.polimi.ingsw.Cell;
-import it.polimi.ingsw.Player;
-import it.polimi.ingsw.Worker;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import it.polimi.ingsw.Board;
@@ -22,8 +20,6 @@ public class FiveCompletedTowersTest {
     Cell workerCell;
     Cell destinationCell;
     Cell[] Tower;
-    Player player = new Player("pippo",12);
-    Worker worker = new Worker(player, 12);
     int i = 0;
 
     @BeforeEach
@@ -35,39 +31,35 @@ public class FiveCompletedTowersTest {
     //negative
     @Test
     void playerShouldWin(){
-        board.newCell(2,2,2);
-        workerCell = board.getCell(2,2,2);
-        workerCell.setWorker(worker);
-        board.newCell(2,2 ,1);
-        destinationCell = board.getCell(2,2 ,1);
+        workerCell = new Cell(2,0,2);
+        destinationCell = new Cell(1,0 ,3);
 
-        for (int x = 0; x<5; x++) {
-            for (int z= 0; z<3; z++ ) {
-                board.newCell(x, 0, z);
-                board.getCell(x, 0, z).setBuilding(true);
-            }
-            board.newCell(x,0,3);
-            board.getCell(x, 0, 3).setDome(true);
-
+        while( i < 5){
+            board.newCell(i,i,3);
+            Tower[i] = board.getCell(i,i,3);
+            Tower[i].setDome(true);
+            i++;
         }
+
+
         assertTrue(winCondition.win(workerCell, destinationCell, board));
+
     }
 
-    //positive
+    //negative
     @Test
-    //porbably the name should be modified
-    void playerShouldNotWinBecauseTheyDontMoveUp(){ //This victory condition does not consider the starting and finishing boxes
+    void playerShouldNotWinBecauseTheyDontMoveUp(){
         workerCell = new Cell(2,0,2);
         destinationCell = new Cell(1,0 ,2);
-        board = new Board();
 
-        for (int i = 0;  i < 5; i++){
+        while( i < 5){
             board.newCell(i,i,3);
-            board.getCell(i,i,3).setDome(true);
+            Tower[i] = board.getCell(i,i,3);
+            Tower[i].setDome(true);
+            i++;
         }
 
-        assert board.getStream().count() == 30.0;
-        assertTrue(winCondition.win(workerCell, destinationCell, board));
+        assertFalse(winCondition.win(workerCell, destinationCell, board));
 
     }
 
@@ -76,13 +68,14 @@ public class FiveCompletedTowersTest {
     void playerShouldNotWinBecauseThereAreLessThanFiveCompletedTowers(){
         workerCell = new Cell(2,0,2);
         destinationCell = new Cell(1,0 ,3);
-        board = new Board();
 
         while( i < 4){
             board.newCell(i,i,3);
-            board.getCell(i,i,3).setDome(true);
+            Tower[i] = board.getCell(i,i,3);
+            Tower[i].setDome(true);
             i++;
         }
+
 
         assertFalse(winCondition.win(workerCell, destinationCell, board));
     }

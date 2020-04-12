@@ -40,7 +40,7 @@ public class BuildBeforeMove extends StandardBuild {
 
         //Posso costruire prima di muovermi
 
-        if (turn.getWorkerUsed() != 0 && workercell.getWorkerId() != turn.getWorkerUsed()) //if the id doesn't match, false
+        if (workercell.getWorkerId() != turn.getWorkerUsed()) //if the id doesn't match, false
             return false;
 
         else {

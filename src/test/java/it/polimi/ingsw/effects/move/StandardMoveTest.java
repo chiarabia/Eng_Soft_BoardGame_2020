@@ -125,16 +125,5 @@ public class StandardMoveTest {
         });
     }
 
-    @Test
-    void correctInstanciation() {
-        board = new Board();
-        workerCell = board.getCell(2,2,0);
-        workerCell.setWorker(worker);
-        assert workerCell.isWorker();
-        assert !workerCell.isFree();
-        assert !workerCell.isDome();
-        assert !workerCell.isBuilding();
-        assert board.getStream().filter(a-> a.isFree()).count() == 24;
-    }
 
 }
