@@ -10,7 +10,7 @@ import org.junit.jupiter.api.Test;
 import it.polimi.ingsw.Board;
 
 
-public class CantWinMovingOnPerimeterTest {
+public class CannotWinMovingOnPerimeterTest {
 
     final CantWinMovingOnPerimeter winCondition = new CantWinMovingOnPerimeter();
 
