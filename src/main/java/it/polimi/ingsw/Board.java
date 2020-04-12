@@ -46,7 +46,7 @@ public class Board {
     //This method adds new Cells
     public void newCell(int x, int y, int z) {
         //check for duplicates
-        if (getCell(x, y, z) != null)
+        if (getCell(x, y, z) == null)
             return;
         else {
             Cell temp_cell = new Cell(x, y, z);
