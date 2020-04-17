@@ -11,6 +11,7 @@ import it.polimi.ingsw.Cell;
 import it.polimi.ingsw.Player;
 import it.polimi.ingsw.Worker;
 import it.polimi.ingsw.Turn;
+import it.polimi.ingsw.effects.consolidateBuild.StandardConsolidateBuild;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -21,6 +22,7 @@ import java.util.Set;
 public class NotOnSamePositionTest {
     int builds = 1;
     NotOnSamePosition notOnSamePosition = new NotOnSamePosition(builds);
+    StandardConsolidateBuild standardConsolidateBuild = new StandardConsolidateBuild();
     Cell workerCell;
     Turn turn;
     Board board;
@@ -30,6 +32,7 @@ public class NotOnSamePositionTest {
     @BeforeEach
     void setUp(){
         turn = new Turn(player);
+        board = new Board();
     }
 
 }

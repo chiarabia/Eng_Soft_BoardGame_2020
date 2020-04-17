@@ -33,7 +33,64 @@ public class StandardBuildTest {
     void setUp(){
         workerCell = new Cell(0,0,0);
         turn = new Turn(player);
+        board = new Board();
     }
+
+    //positive
+    @Test
+    void buildShouldGiveTheRightSetOfPossibleCellsWhenThereAreNoCompletedBuildings(){
+        Cell workerStartingCell = board.getCell(1,0,0);
+        workerCell = board.getCell(0,0,0);
+        workerCell.setWorker(worker);
+        turn.updateTurnInfoAfterMove(workerStartingCell,workerCell);
+        Set <Cell> collect = new HashSet<>();
+        collect.add(new Cell (1,0,0));
+        collect.add(new Cell (0,1,0));
+        collect.add(new Cell (1,1,0));
+        assertEquals(collect,standardBuild.build(workerCell,board,turn));
+    }
+
+    //positive
+    @Test
+    void buildShouldGiveTheRightSetOfPossibleCellsWhenThereIsACompletedBuilding(){
+        Cell workerStartingCell = board.getCell(1,0,0);
+        workerCell = board.getCell(0,0,0);
+        workerCell.setWorker(worker);
+        turn.updateTurnInfoAfterMove(workerStartingCell,workerCell);
+        board.getCell(0,1,0).setBuilding(true);
+        board.newCell(0,1,1);
+        board.getCell(0,1,1).setBuilding(true);
+        board.newCell(0,1,2);
+        board.getCell(0,1,2).setBuilding(true);
+        board.newCell(0,1,3);
+        board.getCell(0,1,3).setDome(true);
+        Set <Cell> collect = new HashSet<>();
+        collect.add(new Cell (1,0,0));
+        collect.add(new Cell(1,1,0));
+        assertEquals(collect,standardBuild.build(workerCell,board,turn));
+    }
+
+    //positive
+    @Test
+    void buildShouldGiveTheRightCellsRegardlessOfTheWorkerLevel(){
+        Cell workerStartingCell = board.getCell(1,0,0);
+        workerCell = board.getCell(0,0,0);
+        workerCell.setWorker(worker);
+        turn.updateTurnInfoAfterMove(workerStartingCell,workerCell);
+        board.getCell(0,1,0).setBuilding(true);
+        board.newCell(0,1,1);
+        board.getCell(0,1,1).setBuilding(true);
+        board.newCell(0,1,2);
+        board.getCell(1,1,0).setBuilding(true);
+        board.newCell(1,1,1);
+        Set <Cell> collect = new HashSet<>();
+        collect.add(new Cell (1,0,0));
+        collect.add(new Cell(0,1,2));
+        collect.add(new Cell(1,1,1));
+        assertEquals(collect,standardBuild.build(workerCell,board,turn));
+    }
+
+
 
     //positive
     @Test

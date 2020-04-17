@@ -25,7 +25,6 @@ public class BoardTest {
         board = new Board();
     }
 
-
     //positive
     @Test
     void shouldAddANewCell(){
@@ -42,14 +41,12 @@ public class BoardTest {
     }
 
 
-
     //positive
     @Test
     void cellShouldBeFree(){
         board.newCell(0,0,0);
         assertTrue(board.isFreeZone(0,0));
     }
-
 
 
     //positive
@@ -62,10 +59,8 @@ public class BoardTest {
         board.getCell(0,0,1).setBuilding(true);
         board.newCell(0,0,2);
         board.getCell(0,0,2).setBuilding(true);
-
         assertFalse(board.isFreeZone(0,0));
     }
-
 
 
     //positive
@@ -81,7 +76,6 @@ public class BoardTest {
     void playerShouldNotGetTheRightLevelBecauseCellIsOutsideOfTheBoard(){
         assertFalse(board.isFreeZone(6,6));
     }
-
 
 
 

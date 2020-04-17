@@ -88,7 +88,6 @@ public class StandardMoveTest {
         assertEquals(temp, standardMove.move(workerCell,board,turn));
     }
 
-
     //positive
     @Test
     void moveShouldGiveTheRightSetOfPossibleCellsOnSameLevel(){
@@ -141,7 +140,6 @@ public class StandardMoveTest {
         });
     }
 
-
     @Test
     void correctInstantiation() {
         board = new Board();
@@ -153,6 +151,5 @@ public class StandardMoveTest {
         //assert !workerCell.isBuilding();
         //assert board.getStream().filter(a-> a.isFree()).count() == 24;
     }
-
 
 }

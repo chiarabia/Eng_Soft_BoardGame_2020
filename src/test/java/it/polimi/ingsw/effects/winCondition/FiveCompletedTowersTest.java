@@ -19,7 +19,7 @@ import it.polimi.ingsw.Board;
 public class FiveCompletedTowersTest {
 
     final FiveCompletedTowers winCondition = new FiveCompletedTowers();
-
+    int i;
     Board board;
     Cell workerCell;
     Cell destinationCell;
@@ -69,7 +69,6 @@ public class FiveCompletedTowersTest {
     }
 
     //positive
-
     @Test
     void playerShouldNotWinBecauseThereAreLessThanFiveCompletedTowers(){
         workerCell = new Cell(2,0,2);
@@ -80,7 +79,6 @@ public class FiveCompletedTowersTest {
             board.getCell(i,i,3).setDome(true);
             i++;
         }
-
 
         assertFalse(winCondition.win(workerCell, destinationCell, board));
     }
