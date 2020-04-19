@@ -12,8 +12,8 @@ import java.util.Set;
  */
 
 
-public class NoMoveOnPerimeter extends StandardMove {
-    public NoMoveOnPerimeter(int moves) { //per convenzione metterei 1, tanto basta che possa muoversi almeno una volta il player per non perdere il turno
+public class UnlimitedMoveOnPerimeter extends StandardMove {
+    public UnlimitedMoveOnPerimeter(int moves) { //per convenzione metterei 1, tanto basta che possa muoversi almeno una volta il player per non perdere il turno
         super(moves);
     }
 

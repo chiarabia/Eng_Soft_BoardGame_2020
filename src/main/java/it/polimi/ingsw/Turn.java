@@ -5,6 +5,7 @@ package it.polimi.ingsw;
  */
 
 public class Turn {
+
     private Position workerStartingPosition = null;
     private Position firstBuildingPosition = null;
     //al momento non ci serve salvarsi dove i giocatori hanno costruito/si sono mossi, ma risulta immediato aggiornare i metodi per farlo
@@ -108,7 +109,7 @@ public class Turn {
      * @param destination_Z z coordinate of the worker ending position
      * @return true if the worker moved up
      */
-    private boolean verifyMoveUp (int starting_Z, int destination_Z) {
+    protected boolean verifyMoveUp (int starting_Z, int destination_Z) {
         return (destination_Z - starting_Z)>=1;
     }
 
@@ -119,7 +120,7 @@ public class Turn {
      * @param destination_Z z coordinate of the worker ending position
      * @return true if the worker moved down
      */
-    private boolean verifyMoveDown (int starting_Z, int destination_Z) {
+    protected boolean verifyMoveDown (int starting_Z, int destination_Z) {
         return (starting_Z - destination_Z)>=1;
     }
 
