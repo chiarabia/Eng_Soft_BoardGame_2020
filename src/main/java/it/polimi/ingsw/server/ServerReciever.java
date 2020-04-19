@@ -24,11 +24,11 @@ public class ServerReciever extends Thread {
                 if (message!=null) return message;
                 if (error) {
                     thread.interrupt();
-                    throw new ClientStoppedWorkingException();
+                    throw new ClientStoppedWorkingException(false);
                 }
             } catch (InterruptedException e) {break;}
         }
         thread.interrupt();
-        throw new ClientStoppedWorkingException();
+        throw new ClientStoppedWorkingException(true);
     }
 }

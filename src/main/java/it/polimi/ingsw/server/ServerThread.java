@@ -25,6 +25,7 @@ public class ServerThread extends Thread {
             try{
                 tempList.add(sendAndWaitForReply(message, i, 1));
             } catch(ClientStoppedWorkingException e){
+                tempList.add(null);
                 playersList.remove(i);
                 i--;
             }

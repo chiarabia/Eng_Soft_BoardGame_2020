@@ -11,6 +11,8 @@ import java.util.List;
 
 public class Game {
     private int numOfPlayers;
+    private Board board;
+    private Turn turn;
     private ServerThread serverThread;
     private List<Player> players;
     private List<GodPower> godPowers;
@@ -18,6 +20,7 @@ public class Game {
         this.serverThread = serverThread;
         this.numOfPlayers = numOfPlayers;
         this.godPowers = GodPowerManager.createGodPowers(numOfPlayers);
+        this.board = new Board();
         this.players = new ArrayList<>();
         for (int i = 0; i < playersNames.size(); i++)
             this.players.add(new Player (playersNames.get(i), i+1));
