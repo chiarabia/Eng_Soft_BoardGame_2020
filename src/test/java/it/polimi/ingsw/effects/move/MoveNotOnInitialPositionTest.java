@@ -6,11 +6,8 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotEquals;
-import it.polimi.ingsw.Board;
-import it.polimi.ingsw.Cell;
-import it.polimi.ingsw.Player;
-import it.polimi.ingsw.Worker;
-import it.polimi.ingsw.Turn;
+
+import it.polimi.ingsw.*;
 import it.polimi.ingsw.effects.consolidateMove.StandardConsolidateMove;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -43,17 +40,21 @@ public class MoveNotOnInitialPositionTest {
     @Test
     void playerShouldNotMoveOnInitialPosition(){
         worker = new Worker(player, 12);
-        workerCell = board.getCell(0,0,0);
+        Cell workerCell = board.getCell(0,0,0);
         destinationCell = board.getCell(1,0, 0);
         workerCell.setWorker(worker);
-        standardConsolidateMove.moveInto(board,workerCell.getPosition(),destinationCell.getPosition());
-        turn.updateTurnInfoAfterMove(workerCell.getPosition(),destinationCell.getPosition(), board);
-        Set <Cell> collect = new HashSet<>();
-        collect.add(new Cell (1,1,0));
-        collect.add(new Cell (0,1,0));
-        collect.add(new Cell (2,1,0));
-        collect.add(new Cell(2,0,0));
-        assertEquals(collect,notOnInitialPosition.move(destinationCell.getPosition(),board,turn));
+        Position startingPosition = workerCell.getPosition();
+        Position destinationPosition = destinationCell.getPosition();
+
+        standardConsolidateMove.moveInto(board,startingPosition,destinationPosition);
+        turn.updateTurnInfoAfterMove(startingPosition,destinationPosition, board);
+
+        Set <Position> collect = new HashSet<>();
+        collect.add(new Position (1,1,0));
+        collect.add(new Position (0,1,0));
+        collect.add(new Position (2,1,0));
+        collect.add(new Position(2,0,0));
+        assertEquals(collect,notOnInitialPosition.move(destinationPosition,board,turn));
     }
 
     //positive

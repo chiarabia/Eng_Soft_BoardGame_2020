@@ -20,6 +20,6 @@ public class StandardWinCondition {
             Cell workerCell = board.getCell(workerPosition);
             Cell destinationCell = board.getCell(destinationPosition);
             if (workerCell==null && destinationCell==null) return false; //condizione generalizzata
-            return (workerCell.getZ() == 2 && destinationCell.getZ() == 3);
+            return ((workerCell.getZ() == 2 && destinationCell.getZ() == 3) || workerCell.getZ()-destinationCell.getZ() >= 2);
         }
     }

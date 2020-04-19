@@ -12,7 +12,7 @@ public class GodPowerManagerTest {
     public void Test() throws ParseException, IOException {
         List<GodPower> godPowers = GodPowerManager.createGodPowers(3);
         assert (godPowers.size()==3);
-        assert (godPowers.stream().map(x->x!=null).reduce(true, (a, b)->a&&b));
+        assert (godPowers.stream().map(x->x!=null).reduce(true, (a, b)->a&&b)); //Todo: ci sono valori per cui questa istruzione non è sempre vera
         assert (godPowers.stream().map(x->x.getMove()!=null).reduce(true, (a, b)->a&&b));
         assert (godPowers.stream().map(x->x.getBuild()!=null).reduce(true, (a, b)->a&&b));
         assert (godPowers.stream().map(x->x.getConsolidateMove()!=null).reduce(true, (a, b)->a&&b));

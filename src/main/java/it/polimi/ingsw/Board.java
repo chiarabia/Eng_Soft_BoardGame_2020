@@ -39,7 +39,7 @@ public class Board {
     }
 
     public Cell getCell (Position position) {
-        return getCell(position.getX(), position.getY(), position.getY());
+        return getCell(position.getX(), position.getY(), position.getZ());
     }
 
 

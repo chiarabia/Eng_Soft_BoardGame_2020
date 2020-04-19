@@ -26,8 +26,10 @@ public class CantWinMovingOnPerimeterTest {
     //positive
     @Test
     void playerShouldNotWinByMovingOnAPerimeterCell(){
-        workerCell = new Cell(1,1 ,2);
-        destinationCell = new Cell(0,0 ,3);
+        board.newCell(1,1,2);
+        board.newCell(0,0,3);
+        workerCell = board.getCell(1,1 ,2);
+        destinationCell = board.getCell(0,0 ,3);
 
         assertFalse(winCondition.win(workerCell.getPosition(), destinationCell.getPosition(), board));
 

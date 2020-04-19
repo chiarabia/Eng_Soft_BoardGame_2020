@@ -6,11 +6,8 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotEquals;
-import it.polimi.ingsw.Board;
-import it.polimi.ingsw.Cell;
-import it.polimi.ingsw.Player;
-import it.polimi.ingsw.Worker;
-import it.polimi.ingsw.Turn;
+
+import it.polimi.ingsw.*;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -39,12 +36,12 @@ public class NoMoveUpAfterBuildTest {
         Cell buildCell = board.getCell(1,1,0);
         turn.updateTurnInfoAfterBuild(buildCell.getPosition());
         board.getCell(1,1,0).setBuilding(true);
+        board.newCell(0,1,1);
         workerCell = board.getCell(0,0,0);
         workerCell.setWorker(worker);
-        board.getCell(0,1,0).setBuilding(true);
-        board.newCell(0,1,1);
-        Set<Cell> collect = new HashSet<>();
-        collect.add(new Cell(1,0,0));
+
+        Set<Position> collect = new HashSet<>();
+        collect.add(new Position(0,1,1));
         assertEquals(collect,noMoveUpAfterBuild.move(workerCell.getPosition(),board,turn));
     }
 }

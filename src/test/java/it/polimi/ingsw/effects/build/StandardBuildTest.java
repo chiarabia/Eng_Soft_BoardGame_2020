@@ -6,11 +6,8 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotEquals;
-import it.polimi.ingsw.Board;
-import it.polimi.ingsw.Cell;
-import it.polimi.ingsw.Player;
-import it.polimi.ingsw.Worker;
-import it.polimi.ingsw.Turn;
+
+import it.polimi.ingsw.*;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -43,10 +40,10 @@ public class StandardBuildTest {
         workerCell = board.getCell(0,0,0);
         workerCell.setWorker(worker);
         turn.updateTurnInfoAfterMove(workerStartingCell.getPosition(),workerCell.getPosition(), board);
-        Set <Cell> collect = new HashSet<>();
-        collect.add(new Cell (1,0,0));
-        collect.add(new Cell (0,1,0));
-        collect.add(new Cell (1,1,0));
+        Set <Position> collect = new HashSet<>();
+        collect.add(new Position (1,0,0));
+        collect.add(new Position (0,1,0));
+        collect.add(new Position (1,1,0));
         assertEquals(collect,standardBuild.build(workerCell.getPosition(),board,turn));
     }
 
@@ -64,9 +61,9 @@ public class StandardBuildTest {
         board.getCell(0,1,2).setBuilding(true);
         board.newCell(0,1,3);
         board.getCell(0,1,3).setDome(true);
-        Set <Cell> collect = new HashSet<>();
-        collect.add(new Cell (1,0,0));
-        collect.add(new Cell(1,1,0));
+        Set <Position> collect = new HashSet<>();
+        collect.add(new Position (1,0,0));
+        collect.add(new Position(1,1,0));
         assertEquals(collect,standardBuild.build(workerCell.getPosition(),board,turn));
     }
 
@@ -83,10 +80,10 @@ public class StandardBuildTest {
         board.newCell(0,1,2);
         board.getCell(1,1,0).setBuilding(true);
         board.newCell(1,1,1);
-        Set <Cell> collect = new HashSet<>();
-        collect.add(new Cell (1,0,0));
-        collect.add(new Cell(0,1,2));
-        collect.add(new Cell(1,1,1));
+        Set <Position> collect = new HashSet<>();
+        collect.add(new Position (1,0,0));
+        collect.add(new Position(0,1,2));
+        collect.add(new Position(1,1,1));
         assertEquals(collect,standardBuild.build(workerCell.getPosition(),board,turn));
     }
 
@@ -115,8 +112,9 @@ public class StandardBuildTest {
 
     @Test
     void buildConditionShouldBeTrueBecauseTheWorkerHasAlreadyMovedAndNotBuilt(){
+        workerCell = board.getCell(0,1,0);
         workerCell.setWorker(worker);
-        Cell workerStartingCell = new Cell(1,0,0);
+        Cell workerStartingCell = board.getCell(1,0,0);
         turn.updateTurnInfoAfterMove(workerStartingCell.getPosition(),workerCell.getPosition(), board);
         assertTrue(standardBuild.checkBuildConditions(workerCell,turn));
     }

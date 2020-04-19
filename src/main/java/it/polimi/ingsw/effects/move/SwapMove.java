@@ -21,14 +21,14 @@ public class SwapMove extends StandardMove {
 
         else {
             final Set<Position> collect = board.getStream()
-                    .filter(a -> a.isFree() || a.isWorker())
+                    .filter(a -> a.isFree() || (a.isWorker()&&!(a.getPlayerId() == workerCell.getPlayerId())))
+                            // toglie l'altro worker dall'insieme di caselle disponibili
                     .filter(a -> !a.equals(workerCell))
                     .filter(a -> a.getX() <= workerCell.getX() + 1)
                     .filter(a -> a.getX() >= workerCell.getX() - 1)
                     .filter(a -> a.getY() <= workerCell.getY() + 1)
                     .filter(a -> a.getY() >= workerCell.getY() - 1)
                     .filter(a -> heightsDifference(workerCell.getZ(), a.getZ()) <= 1)
-                    .filter(a -> !(a.getPlayerId() == workerCell.getPlayerId())) // toglie l'altro worker dall'insieme di caselle disponibili
                     .map(Cell::getPosition)
                     .collect(Collectors.toSet());
             return collect;

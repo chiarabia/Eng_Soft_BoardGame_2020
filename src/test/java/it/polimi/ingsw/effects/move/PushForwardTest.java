@@ -6,11 +6,8 @@ package it.polimi.ingsw.effects.move;
     import static org.junit.jupiter.api.Assertions.assertNotNull;
     import static org.junit.jupiter.api.Assertions.assertEquals;
     import static org.junit.jupiter.api.Assertions.assertNotEquals;
-    import it.polimi.ingsw.Board;
-    import it.polimi.ingsw.Cell;
-    import it.polimi.ingsw.Player;
-    import it.polimi.ingsw.Worker;
-    import it.polimi.ingsw.Turn;
+
+    import it.polimi.ingsw.*;
     import org.junit.jupiter.api.BeforeEach;
     import org.junit.jupiter.api.Test;
 
@@ -18,7 +15,7 @@ package it.polimi.ingsw.effects.move;
     import java.util.Set;
 
 public class PushForwardTest {
-    int moves;
+    int moves = 1;
     PushForward pushForward = new PushForward(moves);
     Board board;
     Cell workerOneCell;
@@ -38,13 +35,23 @@ public class PushForwardTest {
     //negative
     @Test
     void playerShouldBePushedForward(){
+        assert board.getStream().count()==25.0;
         workerOneCell = board.getCell(1,2,0);
         workerOneCell.setWorker(workerPlayerOne);
         workerTwoCell = board.getCell(1,1,0);
         workerTwoCell.setWorker(workerPlayerTwo);
-        Set<Cell> collect = new HashSet<>();
-        collect.add(new Cell(1,0,0));
-        assertEquals(collect,pushForward.move(workerOneCell.getPosition(),board,turn));
+        Set<Position> collect = new HashSet<>();
+        collect.add(new Position(0,1,0));
+        collect.add(new Position(0,2,0));
+        collect.add(new Position(0,3,0));
+        collect.add(new Position(1,3,0));
+        collect.add(new Position(2,3,0));
+        collect.add(new Position(2,2,0));
+        collect.add(new Position(2,1,0));
+        collect.add(new Position(1,1,0));
+
+
+        assertEquals(collect, pushForward.move(workerOneCell.getPosition(),board,turn));
     }
 
 
