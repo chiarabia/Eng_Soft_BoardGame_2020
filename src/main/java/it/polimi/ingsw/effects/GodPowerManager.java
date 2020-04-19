@@ -132,17 +132,17 @@ public class GodPowerManager {
         godPower.setBlockingWinConditions(new ArrayList());
         switch (blockingWinConditions) {
             case "opponentsCantWinOnPerimeter":
-                opponentsCantWinOnPerimeterPlayer = numOfPlayer; break;
+                opponentsCantWinOnPerimeterPlayerId = numOfPlayer; break;
             case "": break;
         }
 
         godPower.setLoseCondition(new StandardLoseCondition());
 
-        godPower.setNewTurn(new NewTurn());
         switch (newTurn) {
             case "opponentsCantMoveUpAfterIDid":
-                opponentsCantMoveUpAfterIDPlayer = numOfPlayer; break;
-            case "": break;
+                opponentsCantMoveUpAfterIDidPlayerId = numOfPlayer; break;
+            case "":
+                godPower.setNewTurn(new NewTurn()); break;
         }
 
         return godPower;
@@ -158,8 +158,8 @@ public class GodPowerManager {
      */
 
     public static List<GodPower> createGodPowers (int numOfPlayers) throws ParseException, IOException {
-        opponentsCantMoveUpAfterIDPlayer = 0;
-        opponentsCantWinOnPerimeterPlayer = 0;
+        opponentsCantMoveUpAfterIDidPlayerId = 0;
+        opponentsCantWinOnPerimeterPlayerId = 0;
         List <GodPower> godPowerList = new ArrayList();
         List <String> godFiles = chooseGodFiles(numOfPlayers);
 
@@ -170,8 +170,8 @@ public class GodPowerManager {
             if (opponentsCantWinOnPerimeterPlayer!=0 && numOfPlayers!=opponentsCantWinOnPerimeterPlayer){
                 godPowerList.get(i-1).getBlockingWinConditions().add(new CantWinMovingOnPerimeter()); // changes the power of Hera's opponents
             }
-            if (opponentsCantMoveUpAfterIDPlayer!=0 && numOfPlayers!=opponentsCantMoveUpAfterIDPlayer){
-                //todo: modificare il potere degli avversari di Athena
+            if (opponentsCantMoveUpAfterIDidPlayerId!=0){
+                godPowerList.get(i-1).setNewTurn(new NewNoMoveUpTurn(opponentsCantMoveUpAfterIDidPlayerId)); //potere di Athena
             }
         }
         return godPowerList;
