@@ -16,14 +16,20 @@ import java.util.List;
 import java.util.Set;
 
 public class GodPower {
+    private final int playerId;
+
     private StandardMove move;
     private StandardBuild build;
+
     private StandardConsolidateMove consolidateMove;
     private StandardConsolidateBuild consolidateBuild;
+
     private StandardLoseCondition loseCondition;
     private List<StandardWinCondition> positiveWinConditions;
     private List<StandardWinCondition> blockingWinConditions;
+
     private NewTurn newTurn;
+
     private boolean askToBuildDomes = false;
     private boolean askToBuildBeforeMoveAndNotMoveUp = false;
 
@@ -94,17 +100,20 @@ public class GodPower {
      * @return a temporal save of all the abilities the player
      */
     public GodPower copyGodPower (GodPower godPower) {
-        GodPower tempGodPower = new GodPower();
+        GodPower tempGodPower = new GodPower(godPower.playerId);
         tempGodPower.setMove(this.move);
         tempGodPower.setBuild(this.build);
         tempGodPower.setConsolidateBuild(this.consolidateBuild);
         tempGodPower.setConsolidateMove(this.consolidateMove);
         tempGodPower.setPositiveWinConditions(this.positiveWinConditions);
-        tempGodPower.setNegativeWinConditions(this.blockingWinConditions);
+        tempGodPower.setBlockingWinConditions(this.blockingWinConditions);
         //tempGodPower.setMove(this.move);
         return tempGodPower;
     }
 
+    public GodPower(int playerId) {
+        this.playerId = playerId;
+    }
 
     //Setter and Getter
 
@@ -156,12 +165,12 @@ public class GodPower {
         this.positiveWinConditions = positiveWinConditions;
     }
 
-    public List<StandardWinCondition> getNegativeWinConditions() {
+    public List<StandardWinCondition> getBlockingWinConditions() {
         return blockingWinConditions;
     }
 
-    public void setNegativeWinConditions(List<StandardWinCondition> negativeWinConditions) {
-        this.blockingWinConditions = negativeWinConditions;
+    public void setBlockingWinConditions(List<StandardWinCondition> blockingWinConditions) {
+        this.blockingWinConditions = blockingWinConditions;
     }
 
     public void setNewTurn(NewTurn newTurn) { this.newTurn = newTurn; }
