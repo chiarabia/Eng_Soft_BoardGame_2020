@@ -37,7 +37,7 @@ public class NoMoveUpAfterBuildTest {
     @Test
     void playerShouldNotBeAbleToMoveUp(){
         Cell buildCell = board.getCell(1,1,0);
-        turn.updateTurnInfoAfterBuild(buildCell);
+        turn.updateTurnInfoAfterBuild(buildCell.getPosition());
         board.getCell(1,1,0).setBuilding(true);
         workerCell = board.getCell(0,0,0);
         workerCell.setWorker(worker);
@@ -45,6 +45,6 @@ public class NoMoveUpAfterBuildTest {
         board.newCell(0,1,1);
         Set<Cell> collect = new HashSet<>();
         collect.add(new Cell(1,0,0));
-        assertEquals(collect,noMoveUpAfterBuild.move(workerCell,board,turn));
+        assertEquals(collect,noMoveUpAfterBuild.move(workerCell.getPosition(),board,turn));
     }
 }

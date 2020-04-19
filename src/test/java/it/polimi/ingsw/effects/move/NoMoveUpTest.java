@@ -20,7 +20,7 @@ import java.util.Set;
 
 public class NoMoveUpTest {
     int moves = 1;
-    NoMoveUp noMoveUp = new NoMoveUp(moves);
+    NoMoveUp noMoveUp = new NoMoveUp(new StandardMove(moves));
     Cell workerCell;
     Turn turn;
     Board board;

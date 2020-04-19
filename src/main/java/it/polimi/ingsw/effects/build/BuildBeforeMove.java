@@ -2,6 +2,7 @@ package it.polimi.ingsw.effects.build;
 
 import it.polimi.ingsw.Board;
 import it.polimi.ingsw.Cell;
+import it.polimi.ingsw.Position;
 import it.polimi.ingsw.Turn;
 
 import java.util.Set;
@@ -18,8 +19,8 @@ public class BuildBeforeMove extends StandardBuild {
 
     //TODO: Non sono sicuro che chiamare la classe padre, mi permetta di usare il metodo canIbuild con Override, bisognerebbe fare testing
     @Override
-    public Set<Cell> build(Cell workerCell, Board board, Turn turn) {
-        return super.build(workerCell, board, turn);
+    public Set<Position> build(Position workerPosition, Board board, Turn turn) {
+        return super.build(workerPosition, board, turn);
     }
 
 

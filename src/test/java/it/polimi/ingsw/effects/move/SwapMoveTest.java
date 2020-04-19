@@ -55,6 +55,6 @@ public class SwapMoveTest {
         workerTwoCellBoardTwo = boardTwo.getCell(1,2,0);
         workerTwoCellBoardTwo.setWorker(workerPlayerTwo);
 
-        assertEquals(boardTwo,swapMove.move(workerOneCellBoardOne,boardOne,turn));
+        assertEquals(boardTwo,swapMove.move(workerOneCellBoardOne.getPosition(),boardOne,turn));
     }
 }

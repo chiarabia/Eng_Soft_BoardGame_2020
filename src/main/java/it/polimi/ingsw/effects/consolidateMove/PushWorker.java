@@ -2,13 +2,16 @@ package it.polimi.ingsw.effects.consolidateMove;
 
 import it.polimi.ingsw.Board;
 import it.polimi.ingsw.Cell;
-
+import it.polimi.ingsw.Position;
 
 
 public class PushWorker extends StandardConsolidateMove {
-    public void moveInto(Board board, Cell workerCell, Cell destinationCell) {
+    public void moveInto(Board board, Position workerPosition, Position destinationPosition) {
+        Cell workerCell = board.getCell(workerPosition);
+        Cell destinationCell = board.getCell(workerPosition);
+
         if (destinationCell.isFree())
-            super.moveInto(board, workerCell, destinationCell);
+            super.moveInto(board, workerPosition, workerPosition);
         else {
             int tempX = behindWorkerX(workerCell.getX(), destinationCell.getX());
             int tempY = behindWorkerY(workerCell.getY(), workerCell.getY());
@@ -16,9 +19,9 @@ public class PushWorker extends StandardConsolidateMove {
             //otteniamo la cella posta alle spalle del lavoratore nemico
             Cell behind_opposite_worker = board.getCell(tempX, tempY, tempZ);
             //sposto il lavoro avversario nella casella posta alle sue spalle
-            super.moveInto(board, destinationCell, behind_opposite_worker);
+            super.moveInto(board, destinationPosition, behind_opposite_worker.getPosition());
             //sposto il mio player
-            super.moveInto(board, workerCell, destinationCell);
+            super.moveInto(board, workerPosition, destinationPosition);
         }
     }
     private int behindWorkerX(int myWorkerX, int opponentsWorkerX) {

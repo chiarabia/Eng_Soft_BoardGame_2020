@@ -2,6 +2,7 @@ package it.polimi.ingsw.effects.build;
 
 import it.polimi.ingsw.Board;
 import it.polimi.ingsw.Cell;
+import it.polimi.ingsw.Position;
 import it.polimi.ingsw.Turn;
 
 import java.util.HashSet;
@@ -21,13 +22,14 @@ public class StandardBuild {
 
     /**
      * The general build method
-     * @param workerCell the worker's Cell
+     * @param workerPosition the worker's Position
      * @param board the board
      * @param turn the player's turn
      * @return a Set<Cell> collect that only has the cells where the player can build in
      */
 
-    public Set<Cell> build(Cell workerCell, Board board, Turn turn) {
+    public Set<Position> build(Position workerPosition, Board board, Turn turn) {
+        Cell workerCell = board.getCell(workerPosition);
         if (!checkBuildConditions(workerCell, turn))
             return new HashSet<>();
         else
@@ -37,6 +39,7 @@ public class StandardBuild {
                 .filter(a -> a.getX()>=workerCell.getX()-1)
                 .filter(a -> a.getY()<=workerCell.getY()+1)
                 .filter(a -> a.getY()>=workerCell.getY()-1)
+                .map(a->a.getPosition())
                 .collect(Collectors.toSet());
     }
 

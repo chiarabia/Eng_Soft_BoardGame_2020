@@ -2,6 +2,7 @@ package it.polimi.ingsw.effects.move;
 
 import it.polimi.ingsw.Board;
 import it.polimi.ingsw.Cell;
+import it.polimi.ingsw.Position;
 import it.polimi.ingsw.Turn;
 
 import java.util.HashSet;
@@ -15,9 +16,10 @@ public class PushForward extends StandardMove{
     }
 
     @Override
-    public Set<Cell> move(Cell workerCell, Board board, Turn turn) {
+    public Set<Position> move (Position workerPosition, Board board, Turn turn) {
+        Cell workerCell = board.getCell(workerPosition);
         if (!checkMoveConditions(workerCell, turn))
-            return new HashSet<Cell>();
+            return new HashSet<Position>();
         else{
             return board
                 .getStream()
@@ -38,6 +40,7 @@ public class PushForward extends StandardMove{
                         && board.isFreeZone
                         (behindWorker_x(workerCell.getX(), a.getX()),
                                 behindWorker_y(workerCell.getY(), a.getY()))))
+                    .map(Cell::getPosition)
                 .collect(Collectors.toSet());
         }
     }

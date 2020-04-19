@@ -6,6 +6,7 @@ import it.polimi.ingsw.effects.consolidateMove.PushWorker;
 import it.polimi.ingsw.effects.consolidateMove.StandardConsolidateMove;
 import it.polimi.ingsw.effects.consolidateMove.SwapWorker;
 import it.polimi.ingsw.effects.move.*;
+import it.polimi.ingsw.effects.turn.NewNoMoveUpTurn;
 import it.polimi.ingsw.effects.turn.NewTurn;
 import it.polimi.ingsw.effects.winCondition.*;
 import org.json.simple.JSONObject;
@@ -24,7 +25,6 @@ import java.util.stream.Stream;
 public class GodPowerManager {
     /*values​to keep memory of the player who changes the powers of the opponents (e.g: Hera, Athena, etc...)
      * 0 means nobody, otherwise 1, 2 or possibly 3 * */
-    private static int opponentsCantMoveUpAfterIDPlayer;
     private static int opponentsCantWinOnPerimeterPlayer;
 
     /*JSON files' path*/
@@ -33,9 +33,9 @@ public class GodPowerManager {
     /**
      * This method randomly extracts different 'numOfPlayers' cards in the form of List <String>,
      * regardless of names and/or number of cards in the Cards folder * /
-     * @param numOfPlayers
+     * @param numOfPlayers number of players
      * @return List</String>
-     * @throws IOException
+     * @throws IOException IO Exception
      */
 
     private static List <String> chooseGodFiles (int numOfPlayers) throws IOException {
@@ -132,15 +132,15 @@ public class GodPowerManager {
         godPower.setBlockingWinConditions(new ArrayList());
         switch (blockingWinConditions) {
             case "opponentsCantWinOnPerimeter":
-                opponentsCantWinOnPerimeterPlayerId = numOfPlayer; break;
+                opponentsCantWinOnPerimeterPlayer = numOfPlayer; break;
             case "": break;
         }
 
         godPower.setLoseCondition(new StandardLoseCondition());
 
         switch (newTurn) {
-            case "opponentsCantMoveUpAfterIDid":
-                opponentsCantMoveUpAfterIDidPlayerId = numOfPlayer; break;
+            case "newNoMoveUpTurn":
+                godPower.setNewTurn(new NewNoMoveUpTurn()); break;
             case "":
                 godPower.setNewTurn(new NewTurn()); break;
         }
@@ -158,8 +158,8 @@ public class GodPowerManager {
      */
 
     public static List<GodPower> createGodPowers (int numOfPlayers) throws ParseException, IOException {
-        opponentsCantMoveUpAfterIDidPlayerId = 0;
-        opponentsCantWinOnPerimeterPlayerId = 0;
+
+        opponentsCantWinOnPerimeterPlayer = 0;
         List <GodPower> godPowerList = new ArrayList();
         List <String> godFiles = chooseGodFiles(numOfPlayers);
 
@@ -169,9 +169,6 @@ public class GodPowerManager {
         for (int i = 1; i <= numOfPlayers; i++) {
             if (opponentsCantWinOnPerimeterPlayer!=0 && numOfPlayers!=opponentsCantWinOnPerimeterPlayer){
                 godPowerList.get(i-1).getBlockingWinConditions().add(new CantWinMovingOnPerimeter()); // changes the power of Hera's opponents
-            }
-            if (opponentsCantMoveUpAfterIDidPlayerId!=0){
-                godPowerList.get(i-1).setNewTurn(new NewNoMoveUpTurn(opponentsCantMoveUpAfterIDidPlayerId)); //potere di Athena
             }
         }
         return godPowerList;

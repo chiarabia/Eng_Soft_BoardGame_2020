@@ -29,7 +29,7 @@ public class CantWinMovingOnPerimeterTest {
         workerCell = new Cell(1,1 ,2);
         destinationCell = new Cell(0,0 ,3);
 
-        assertFalse(winCondition.win(workerCell, destinationCell, board));
+        assertFalse(winCondition.win(workerCell.getPosition(), destinationCell.getPosition(), board));
 
     }
 
@@ -39,7 +39,7 @@ public class CantWinMovingOnPerimeterTest {
         workerCell = new Cell(1,1 ,2);
         destinationCell = new Cell(2,1 ,3);
 
-        assertTrue(winCondition.win(workerCell, destinationCell, board));
+        assertTrue(winCondition.win(workerCell.getPosition(), destinationCell.getPosition(), board));
     }
 
     //negative

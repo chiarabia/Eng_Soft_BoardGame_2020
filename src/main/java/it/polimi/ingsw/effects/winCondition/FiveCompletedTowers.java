@@ -2,6 +2,7 @@ package it.polimi.ingsw.effects.winCondition;
 
 import it.polimi.ingsw.Board;
 import it.polimi.ingsw.Cell;
+import it.polimi.ingsw.Position;
 
 public class FiveCompletedTowers extends StandardWinCondition {
 
@@ -13,7 +14,7 @@ public class FiveCompletedTowers extends StandardWinCondition {
      * @param board the board of the game
      * @return true if the player has won, false otherwise
      */
-    public boolean win (Cell workerCell, Cell destinationCell, Board board) {
+    public boolean win (Position workerPosition, Position destinationPosition, Board board) {
         //condizione generalizzata
         return board.getStream().filter(x->x.getZ()==3)
                                 .filter(x->x.isDome())

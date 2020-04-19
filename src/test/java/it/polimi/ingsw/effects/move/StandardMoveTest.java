@@ -58,7 +58,7 @@ public class StandardMoveTest {
     void moveConditionsShouldBeFalseBecauseWorkerHasAlreadyMoved(){
         workerCell.setWorker(worker);
         Cell workerStartingCell = new Cell(1,0,0);
-        turn.updateTurnInfoAfterMove(workerStartingCell,workerCell);
+        turn.updateTurnInfoAfterMove(workerStartingCell.getPosition(),workerCell.getPosition(),board);
         assertFalse(standardMove.checkMoveConditions(workerCell,turn));
     }
 
@@ -69,7 +69,7 @@ public class StandardMoveTest {
         Cell workerCellFirst = new Cell(1,0,0);
         Cell workerStartingCell = new Cell(2,0,0);
         workerCellFirst.setWorker(worker2);
-        turn.updateTurnInfoAfterMove(workerStartingCell,workerCellFirst);
+        turn.updateTurnInfoAfterMove(workerStartingCell.getPosition(),workerCellFirst.getPosition(),board);
         assertFalse(standardMove.checkMoveConditions(workerCell,turn));
     }
 
@@ -85,7 +85,7 @@ public class StandardMoveTest {
     @Test
     void moveShouldNotWorkBecauseMoveConditionsReturnsFalse(){
         Set temp = new HashSet<>();
-        assertEquals(temp, standardMove.move(workerCell,board,turn));
+        assertEquals(temp, standardMove.move(workerCell.getPosition(),board,turn));
     }
 
     //positive
@@ -97,7 +97,7 @@ public class StandardMoveTest {
         collect.add(new Cell (1,0,0));
         collect.add(new Cell (0,1,0));
         collect.add(new Cell (1,1,0));
-        assertEquals(collect,standardMove.move(cellWorker,board,turn));
+        assertEquals(collect,standardMove.move(cellWorker.getPosition(),board,turn));
     }
 
     //positive
@@ -115,7 +115,7 @@ public class StandardMoveTest {
         collect.add(new Cell(1,0,0));
         collect.add(new Cell(1,1,0));
         collect.add(new Cell(0,1,2));
-        assertEquals(collect,standardMove.move(cellWorker,board,turn));
+        assertEquals(collect,standardMove.move(cellWorker.getPosition(),board,turn));
     }
 
     //positive

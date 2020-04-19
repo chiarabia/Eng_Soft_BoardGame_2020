@@ -42,12 +42,12 @@ public class StandardBuildTest {
         Cell workerStartingCell = board.getCell(1,0,0);
         workerCell = board.getCell(0,0,0);
         workerCell.setWorker(worker);
-        turn.updateTurnInfoAfterMove(workerStartingCell,workerCell);
+        turn.updateTurnInfoAfterMove(workerStartingCell.getPosition(),workerCell.getPosition(), board);
         Set <Cell> collect = new HashSet<>();
         collect.add(new Cell (1,0,0));
         collect.add(new Cell (0,1,0));
         collect.add(new Cell (1,1,0));
-        assertEquals(collect,standardBuild.build(workerCell,board,turn));
+        assertEquals(collect,standardBuild.build(workerCell.getPosition(),board,turn));
     }
 
     //positive
@@ -56,7 +56,7 @@ public class StandardBuildTest {
         Cell workerStartingCell = board.getCell(1,0,0);
         workerCell = board.getCell(0,0,0);
         workerCell.setWorker(worker);
-        turn.updateTurnInfoAfterMove(workerStartingCell,workerCell);
+        turn.updateTurnInfoAfterMove(workerStartingCell.getPosition(),workerCell.getPosition(), board);
         board.getCell(0,1,0).setBuilding(true);
         board.newCell(0,1,1);
         board.getCell(0,1,1).setBuilding(true);
@@ -67,7 +67,7 @@ public class StandardBuildTest {
         Set <Cell> collect = new HashSet<>();
         collect.add(new Cell (1,0,0));
         collect.add(new Cell(1,1,0));
-        assertEquals(collect,standardBuild.build(workerCell,board,turn));
+        assertEquals(collect,standardBuild.build(workerCell.getPosition(),board,turn));
     }
 
     //positive
@@ -76,7 +76,7 @@ public class StandardBuildTest {
         Cell workerStartingCell = board.getCell(1,0,0);
         workerCell = board.getCell(0,0,0);
         workerCell.setWorker(worker);
-        turn.updateTurnInfoAfterMove(workerStartingCell,workerCell);
+        turn.updateTurnInfoAfterMove(workerStartingCell.getPosition(),workerCell.getPosition(), board);
         board.getCell(0,1,0).setBuilding(true);
         board.newCell(0,1,1);
         board.getCell(0,1,1).setBuilding(true);
@@ -87,7 +87,7 @@ public class StandardBuildTest {
         collect.add(new Cell (1,0,0));
         collect.add(new Cell(0,1,2));
         collect.add(new Cell(1,1,1));
-        assertEquals(collect,standardBuild.build(workerCell,board,turn));
+        assertEquals(collect,standardBuild.build(workerCell.getPosition(),board,turn));
     }
 
 
@@ -117,7 +117,7 @@ public class StandardBuildTest {
     void buildConditionShouldBeTrueBecauseTheWorkerHasAlreadyMovedAndNotBuilt(){
         workerCell.setWorker(worker);
         Cell workerStartingCell = new Cell(1,0,0);
-        turn.updateTurnInfoAfterMove(workerStartingCell,workerCell);
+        turn.updateTurnInfoAfterMove(workerStartingCell.getPosition(),workerCell.getPosition(), board);
         assertTrue(standardBuild.checkBuildConditions(workerCell,turn));
     }
 

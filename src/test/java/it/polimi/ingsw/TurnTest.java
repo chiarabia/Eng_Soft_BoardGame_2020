@@ -25,6 +25,7 @@ public class TurnTest {
     Cell workerStartingCell;
     Cell workerDestinationCell;
     Cell buildingCell;
+    Board board;
 
     @BeforeEach
     void setUp(){
@@ -38,7 +39,7 @@ public class TurnTest {
     //positive
     @Test
     void updateTurnMoveShouldAddAMoveTime(){
-        turn.updateTurnInfoAfterMove(workerStartingCell,workerDestinationCell);
+        turn.updateTurnInfoAfterMove(workerStartingCell.getPosition(),workerDestinationCell.getPosition(), board);
         assertEquals(1,turn.getMoveTimes());
     }
 
@@ -46,21 +47,22 @@ public class TurnTest {
     //positive
     @Test
     void updateTurnMoveShouldSaveTheRightWorkerId(){
-        turn.updateTurnInfoAfterMove(workerStartingCell,workerDestinationCell);
+        turn.updateTurnInfoAfterMove(workerStartingCell.getPosition(),workerDestinationCell.getPosition(), board);
         assertEquals(workerDestinationCell.getWorkerId(),turn.getWorkerUsed());
     }
 
     //positive
     @Test
     void updateTurnMoveShouldSaveTheRightWorkerStartingPosition(){
-        turn.updateTurnInfoAfterMove(workerStartingCell,workerDestinationCell);
+        turn.updateTurnInfoAfterMove(workerStartingCell.getPosition(),workerDestinationCell.getPosition(), board);
         assertEquals(workerStartingCell.getPosition(),turn.getWorkerStartingPosition());
     }
 
     //positive
     @Test
     void updateTurnMoveShouldUSetToTrueMoveBeforeBuild(){
-        turn.updateTurnInfoAfterMove(workerStartingCell,workerDestinationCell);
+        turn.updateTurnInfoAfterMove(workerStartingCell.getPosition(),workerDestinationCell.getPosition(), board
+        );
         assertTrue(turn.isMoveBeforeBuild());
     }
 
@@ -69,9 +71,9 @@ public class TurnTest {
     void updateTurnMoveShouldNotSetToTrueMoveBeforeBuild(){
         Cell startingCell = new Cell (1,0,0);
         workerStartingCell.setWorker(worker);
-        turn.updateTurnInfoAfterMove(startingCell,workerStartingCell);
+        turn.updateTurnInfoAfterMove(startingCell.getPosition(),workerStartingCell.getPosition(), board);
         workerStartingCell.setWorker(null);
-        turn.updateTurnInfoAfterMove(workerStartingCell,workerDestinationCell);
+        turn.updateTurnInfoAfterMove(workerStartingCell.getPosition(),workerDestinationCell.getPosition(), board);
         assertFalse(turn.isMoveBeforeBuild());
     }
 
@@ -130,14 +132,14 @@ public class TurnTest {
         Cell lowCell = new Cell (0,0,0);
         Cell highCell = new Cell (0,1,1);
         highCell.setWorker(worker);
-        turn.updateTurnInfoAfterMove(lowCell,highCell);
+        turn.updateTurnInfoAfterMove(lowCell.getPosition(),highCell.getPosition(), board);
         assertTrue(turn.isMoveUp());
     }
 
     //positive
     @Test
     void updateTurnMoveShouldSetMoveUpToFalseBecauseTheMovementIsOnTheSameLevel(){
-        turn.updateTurnInfoAfterMove(workerStartingCell,workerDestinationCell);
+        turn.updateTurnInfoAfterMove(workerStartingCell.getPosition(),workerDestinationCell.getPosition(), board);
         assertFalse(turn.isMoveUp());
     }
 
@@ -147,7 +149,7 @@ public class TurnTest {
         Cell lowCell = new Cell (0,0,0);
         Cell highCell = new Cell (0,1,1);
         lowCell.setWorker(worker);
-        turn.updateTurnInfoAfterMove(highCell,lowCell);
+        turn.updateTurnInfoAfterMove(highCell.getPosition(),lowCell.getPosition(),board);
         assertFalse(turn.isMoveUp());
     }
 
@@ -157,14 +159,14 @@ public class TurnTest {
         Cell lowCell = new Cell (0,0,0);
         Cell highCell = new Cell (0,1,1);
         lowCell.setWorker(worker);
-        turn.updateTurnInfoAfterMove(highCell,lowCell);
+        turn.updateTurnInfoAfterMove(highCell.getPosition(),lowCell.getPosition(), board);
         assertTrue(turn.isMoveDown());
     }
 
     //positive
     @Test
     void updateTurnMoveShouldSetMoveDownToFalseBecauseTheMovementIsOnTheSameLevel(){
-        turn.updateTurnInfoAfterMove(workerStartingCell,workerDestinationCell);
+        turn.updateTurnInfoAfterMove(workerStartingCell.getPosition(),workerDestinationCell.getPosition(), board);
         assertFalse(turn.isMoveDown());
     }
 
@@ -174,7 +176,7 @@ public class TurnTest {
         Cell lowCell = new Cell (0,0,0);
         Cell highCell = new Cell (0,1,1);
         highCell.setWorker(worker);
-        turn.updateTurnInfoAfterMove(lowCell,highCell);
+        turn.updateTurnInfoAfterMove(lowCell.getPosition(),highCell.getPosition(), board);
         assertFalse(turn.isMoveDown());
     }
 
@@ -182,37 +184,37 @@ public class TurnTest {
     @Test
     void updateTurnMoveShouldThrowExceptionWithNullParameters() {
         assertThrows(NullPointerException.class, () -> {
-            turn.updateTurnInfoAfterMove(null, null);
+            turn.updateTurnInfoAfterMove(null, null, null);
         });
     }
 
     //positive
     @Test
     void updateTurnBuildShouldAddABuildTime(){
-        turn.updateTurnInfoAfterBuild(buildingCell);
+        turn.updateTurnInfoAfterBuild(buildingCell.getPosition());
         assertEquals(1,turn.getBuildTimes());
     }
 
     //positive
     @Test
     void updateTurnBuildShouldSaveTheRightBuildingPosition(){
-        turn.updateTurnInfoAfterMove(workerStartingCell,workerDestinationCell);
-        turn.updateTurnInfoAfterBuild(buildingCell);
+        turn.updateTurnInfoAfterMove(workerStartingCell.getPosition(),workerDestinationCell.getPosition(), board);
+        turn.updateTurnInfoAfterBuild(buildingCell.getPosition());
         assertEquals(buildingCell.getPosition(),turn.getFirstBuildingPosition());
     }
 
     //positive
     @Test
     void updateTurnBuildShouldSetBuildAfterMoveToTrue(){
-        turn.updateTurnInfoAfterMove(workerStartingCell,workerDestinationCell);
-        turn.updateTurnInfoAfterBuild(buildingCell);
+        turn.updateTurnInfoAfterMove(workerStartingCell.getPosition(),workerDestinationCell.getPosition(), board);
+        turn.updateTurnInfoAfterBuild(buildingCell.getPosition());
         assertTrue(turn.isBuildAfterMove());
     }
 
     //positive
     @Test
     void updateTurnBuildShouldLeaveBuildAfterMoveToFalse(){
-        turn.updateTurnInfoAfterBuild(buildingCell);
+        turn.updateTurnInfoAfterBuild(buildingCell.getPosition());
         assertFalse(turn.isBuildAfterMove());
     }
 

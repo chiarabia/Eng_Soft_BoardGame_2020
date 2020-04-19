@@ -4,6 +4,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import it.polimi.ingsw.Cell;
+import it.polimi.ingsw.Position;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -15,8 +16,8 @@ public class StandardLoseConditionTest {
 
    final StandardLoseCondition loseCondition = new StandardLoseCondition();
 
-   Set<Cell> collectMove;
-   Set<Cell> collectBuild;
+   Set<Position> collectMove;
+   Set<Position> collectBuild;
 
     @BeforeEach
     void setUp(){
@@ -33,22 +34,22 @@ public class StandardLoseConditionTest {
     //positive
     @Test
     void playerShouldLoseAndReturnTrueWhenOnlyMoveIsEmpty() {
-        collectBuild.add(new Cell(0, 0, 0));
+        collectBuild.add(new Position(0, 0, 0));
         assertTrue(loseCondition.lose(collectMove, collectBuild));
     }
 
     //positive
     @Test
     void playerShouldLoseAndReturnTrueWhenOnlyBuildIsEmpty() {
-        collectMove.add(new Cell(0, 0, 0));
+        collectMove.add(new Position(0, 0, 0));
         assertTrue(loseCondition.lose(collectMove, collectBuild));
     }
 
     //positive
     @Test
     void playerShouldNotLoseWhenBothAreNotEmpty(){
-        collectMove.add(new Cell(0, 0, 0));
-        collectBuild.add(new Cell(0, 0, 0)); // you must be sure of this beforehand
+        collectMove.add(new Position(0, 0, 0));
+        collectBuild.add(new Position(0, 0, 0)); // you must be sure of this beforehand
         assertFalse(loseCondition.lose(collectMove, collectBuild));
     }
 

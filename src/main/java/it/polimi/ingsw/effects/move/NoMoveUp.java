@@ -2,6 +2,7 @@ package it.polimi.ingsw.effects.move;
 
 import it.polimi.ingsw.Board;
 import it.polimi.ingsw.Cell;
+import it.polimi.ingsw.Position;
 import it.polimi.ingsw.Turn;
 
 import java.util.HashSet;
@@ -22,10 +23,11 @@ public class NoMoveUp extends StandardMove {
     }
 
     @Override
-    public Set<Cell> move(Cell workerCell, Board board, Turn turn) {
-        if (!checkMoveConditions(workerCell, turn)) return new HashSet<Cell>();
+    public Set<Position> move (Position workerPosition, Board board, Turn turn) {
+        Cell workerCell = board.getCell(workerPosition);
+        if (!checkMoveConditions(workerCell, turn)) return new HashSet<Position>();
         else {
-            Set<Cell> standardMove = decoratedMove.move(workerCell, board, turn);
+            Set<Position> standardMove = decoratedMove.move(workerPosition, board, turn);
             return standardMove.stream()
                     .filter(a -> a.getZ() <= workerCell.getZ())
                     .collect(Collectors.toSet());

@@ -29,7 +29,7 @@ public class WinMovingDownTwoOrMoreLevelTest {
         workerCell = new Cell(1,1 ,3);
         destinationCell = new Cell(2,1 ,1);
 
-        assertTrue(winCondition.win(workerCell, destinationCell, board));
+        assertTrue(winCondition.win(workerCell.getPosition(), destinationCell.getPosition(), board));
 
     }
 
@@ -39,7 +39,7 @@ public class WinMovingDownTwoOrMoreLevelTest {
         workerCell = new Cell(1,1 ,2);
         destinationCell = new Cell(2,1 ,0);
 
-        assertTrue(winCondition.win(workerCell, destinationCell, board));
+        assertTrue(winCondition.win(workerCell.getPosition(), destinationCell.getPosition(), board));
 
     }
 
@@ -49,7 +49,7 @@ public class WinMovingDownTwoOrMoreLevelTest {
         workerCell = new Cell (1,1,2);
         destinationCell = new Cell (1,1,1);
 
-        assertFalse(winCondition.win(workerCell,destinationCell,board));
+        assertFalse(winCondition.win(workerCell.getPosition(),destinationCell.getPosition(),board));
     }
 
     //positive
@@ -58,7 +58,7 @@ public class WinMovingDownTwoOrMoreLevelTest {
         workerCell = new Cell (1,1,0);
         destinationCell = new Cell (1,1,2);
 
-        assertFalse(winCondition.win(workerCell,destinationCell,board));
+        assertFalse(winCondition.win(workerCell.getPosition(),destinationCell.getPosition(),board));
     }
 
     //negative

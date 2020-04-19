@@ -1,15 +1,14 @@
 package it.polimi.ingsw.effects.consolidateMove;
 
-import it.polimi.ingsw.Board;
-import it.polimi.ingsw.Cell;
-import it.polimi.ingsw.Player;
-import it.polimi.ingsw.Worker;
+import it.polimi.ingsw.*;
 
 
-    public class SwapWorker extends StandardConsolidateMove {
-        public void moveInto (Board board, Cell workerCell, Cell destinationCell) {
+public class SwapWorker extends StandardConsolidateMove {
+        public void moveInto (Board board, Position workerPosition, Position destinationPosition){
+            Cell workerCell = board.getCell(workerPosition);
+            Cell destinationCell = board.getCell(workerPosition);
             // se nella cella di arrivo non c'è un lavoratore, eseguo il metodo della classe padre
-            if (destinationCell.isFree()) super.moveInto(board, workerCell, destinationCell);
+            if (destinationCell.isFree()) super.moveInto(board, workerPosition, destinationPosition);
             else {
                 Worker tempWorker = workerCell.getWorker();
                 workerCell.setWorker(destinationCell.getWorker());

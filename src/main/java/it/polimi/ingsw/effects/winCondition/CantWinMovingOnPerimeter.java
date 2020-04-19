@@ -2,14 +2,15 @@ package it.polimi.ingsw.effects.winCondition;
 
 import it.polimi.ingsw.Board;
 import it.polimi.ingsw.Cell;
+import it.polimi.ingsw.Position;
 
 
 public class CantWinMovingOnPerimeter extends StandardWinCondition {
 
     /** This method is used for the win condition that blocks the worker possibility to win
      * on a perimeter cell of the board
-     * @param workerCell the worker's Cell before the move
-     * @param destinationCell the worker's Cell after the move
+     * @param workerPosition the worker's Cell before the move
+     * @param destinationPosition the worker's Cell after the move
      * @param board the board of the game
      * @return false if the condition is met, the player cannot win
      * @return true if the player has the possibility to win
@@ -17,7 +18,9 @@ public class CantWinMovingOnPerimeter extends StandardWinCondition {
      */
 
     @Override
-    public boolean win(Cell workerCell, Cell destinationCell, Board board) {
+    public boolean win(Position workerPosition, Position destinationPosition, Board board) {
+        Cell workerCell = board.getCell(workerPosition);
+        Cell destinationCell = board.getCell(destinationPosition);
         if (workerCell==null && destinationCell==null) return true; //condizione generalizzata
         return (!destinationCell.isPerimetral());
     }

@@ -30,7 +30,7 @@ public class StandardWinConditionTest {
         workerCell = new Cell(1,1 ,2);
         destinationCell = new Cell(2,1 ,3);
 
-        assertTrue(winCondition.win(workerCell, destinationCell, board));
+        assertTrue(winCondition.win(workerCell.getPosition(), destinationCell.getPosition(), board));
 
     }
 
@@ -41,7 +41,7 @@ public class StandardWinConditionTest {
         destinationCell = new Cell(1, 1, 3);
 
 
-        assertFalse(winCondition.win(workerCell, destinationCell,board));
+        assertFalse(winCondition.win(workerCell.getPosition(), destinationCell.getPosition(),board));
     }
 
     //positive
@@ -50,7 +50,7 @@ public class StandardWinConditionTest {
         workerCell = new Cell (1,1,1);
         destinationCell = new Cell (1,1,2);
 
-        assertFalse(winCondition.win(workerCell,destinationCell,board));
+        assertFalse(winCondition.win(workerCell.getPosition(),destinationCell.getPosition(),board));
     }
 
     //negative

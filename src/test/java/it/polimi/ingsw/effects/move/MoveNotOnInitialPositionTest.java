@@ -46,14 +46,14 @@ public class MoveNotOnInitialPositionTest {
         workerCell = board.getCell(0,0,0);
         destinationCell = board.getCell(1,0, 0);
         workerCell.setWorker(worker);
-        standardConsolidateMove.moveInto(board,workerCell,destinationCell);
-        turn.updateTurnInfoAfterMove(workerCell,destinationCell);
+        standardConsolidateMove.moveInto(board,workerCell.getPosition(),destinationCell.getPosition());
+        turn.updateTurnInfoAfterMove(workerCell.getPosition(),destinationCell.getPosition(), board);
         Set <Cell> collect = new HashSet<>();
         collect.add(new Cell (1,1,0));
         collect.add(new Cell (0,1,0));
         collect.add(new Cell (2,1,0));
         collect.add(new Cell(2,0,0));
-        assertEquals(collect,notOnInitialPosition.move(destinationCell,board,turn));
+        assertEquals(collect,notOnInitialPosition.move(destinationCell.getPosition(),board,turn));
     }
 
     //positive

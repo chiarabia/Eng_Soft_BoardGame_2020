@@ -17,7 +17,7 @@ public class GodPowerManagerTest {
         assert (godPowers.stream().map(x->x.getBuild()!=null).reduce(true, (a, b)->a&&b));
         assert (godPowers.stream().map(x->x.getConsolidateMove()!=null).reduce(true, (a, b)->a&&b));
         assert (godPowers.stream().map(x->x.getConsolidateBuild()!=null).reduce(true, (a, b)->a&&b));
-        assert (godPowers.stream().map(x->x.getNegativeWinConditions()!=null).reduce(true, (a, b)->a&&b));
+        assert (godPowers.stream().map(x->x.getBlockingWinConditions()!=null).reduce(true, (a, b)->a&&b));
         assert (godPowers.stream().map(x->x.getPositiveWinConditions()!=null).reduce(true, (a, b)->a&&b));
         assert (godPowers.stream().map(x->x.getLoseCondition()!=null).reduce(true, (a, b)->a&&b));
         assert (godPowers.stream().map(x->x.getNewTurn()!=null).reduce(true, (a, b)->a&&b));

@@ -44,7 +44,7 @@ public class PushForwardTest {
         workerTwoCell.setWorker(workerPlayerTwo);
         Set<Cell> collect = new HashSet<>();
         collect.add(new Cell(1,0,0));
-        assertEquals(collect,pushForward.move(workerOneCell,board,turn));
+        assertEquals(collect,pushForward.move(workerOneCell.getPosition(),board,turn));
     }
 
 
