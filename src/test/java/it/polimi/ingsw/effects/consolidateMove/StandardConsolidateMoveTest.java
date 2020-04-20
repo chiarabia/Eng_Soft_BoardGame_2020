@@ -7,6 +7,8 @@ import it.polimi.ingsw.Worker;
 import it.polimi.ingsw.Turn;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.ValueSource;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -30,37 +32,69 @@ public class StandardConsolidateMoveTest {
     }
 
     @Test
-    void VerifyNormalCondition() {
+    void MovingOnTheSameLevel() {
         //The Standard ConsolidateMove just consolidate the action, so we can try every different Destination Cell of the board
         //So we can verify the mehod for every WorkerCell in Board and everyDestination
 
-        for (int x=0; x<5; x++) {
-            for (int y=0; y<5; y++) {
-                for (int z=0; z<4; z++) {
-                    for (int i=0; i<5; i++) {
-                        for (int j=0; j<5; j++) {
-                            for (int k=0; k<4; k++) {
-                                if(x!=i && y!=j && k!=z) {
-                                    board.newCell(x, y, z);
-                                    workerCell = board.getCell(x, y, z);
-                                    workerCell.setWorker(worker);
+        board.newCell(0,1,1);
+        workerCell = board.getCell(0,1,1);
+        workerCell.setWorker(worker);
+        board.newCell(1,1,1);
+        destinationCell = board.getCell(1,1,1);
 
+        standardConsolidateMove.moveInto(board, workerCell.getPosition(), destinationCell.getPosition());
 
-                                    board.newCell(i, j, k);
-                                    destinationCell = board.getCell(i, j, k);
+        assertAll("moveInto", () -> assertTrue(workerCell.isFree()),
+                () ->assertTrue(destinationCell.isWorker()),
+                () ->assertSame(destinationCell.getWorker(), worker),
+                () ->assertSame(destinationCell.getPlayer(), player));
 
-                                    standardConsolidateMove.moveInto(board, workerCell.getPosition(), destinationCell.getPosition());
-                                    assertTrue(workerCell.isFree());
-                                    assertTrue(destinationCell.isWorker());
-                                    assertSame(destinationCell.getWorker(), worker);
-                                    assertSame(destinationCell.getPlayer(), player);
-                                    board = new Board();
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-        }
+    }
+
+    @Test
+    void MovingUp() {
+        //The Standard ConsolidateMove just consolidate the action, so we can try every different Destination Cell of the board
+        //So we can verify the mehod for every WorkerCell in Board and everyDestination
+
+        board.newCell(0,1,0);
+        workerCell = board.getCell(0,1,0);
+        workerCell.setWorker(worker);
+        board.newCell(1,1,1);
+        destinationCell = board.getCell(1,1,1);
+
+        standardConsolidateMove.moveInto(board, workerCell.getPosition(), destinationCell.getPosition());
+
+        assertAll("moveInto", () -> assertTrue(workerCell.isFree()),
+                () ->assertTrue(destinationCell.isWorker()),
+                () ->assertSame(destinationCell.getWorker(), worker),
+                () ->assertSame(destinationCell.getPlayer(), player));
+
+    }
+
+    @Test
+    void MovingDown() {
+        //The Standard ConsolidateMove just consolidate the action, so we can try every different Destination Cell of the board
+        //So we can verify the mehod for every WorkerCell in Board and everyDestination
+
+        board.newCell(0,1,1);
+        workerCell = board.getCell(0,1,1);
+        workerCell.setWorker(worker);
+        board.newCell(1,1,0);
+        destinationCell = board.getCell(1,1,0);
+
+        standardConsolidateMove.moveInto(board, workerCell.getPosition(), destinationCell.getPosition());
+
+        assertAll("moveInto", () -> assertTrue(workerCell.isFree()),
+                () ->assertTrue(destinationCell.isWorker()),
+                () ->assertSame(destinationCell.getWorker(), worker),
+                () ->assertSame(destinationCell.getPlayer(), player));
+
+    }
+
+    @Test
+    void NullPointerException () {
+        assertThrows(NullPointerException.class, () -> {
+            standardConsolidateMove.moveInto(null, null, null);
+        });
     }
 }

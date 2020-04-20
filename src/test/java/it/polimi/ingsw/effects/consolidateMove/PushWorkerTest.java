@@ -27,103 +27,188 @@ public class PushWorkerTest {
         turn = new Turn(player1);
         board = new Board();
     }
-
     @Test
-    void MoveintoAFreeCell() {
-        //The PushWorker class just consolidate the action, so we can try every different Destination Cell of the board
+    void MovingOnTheSameLevel() {
+        //The Standard ConsolidateMove just consolidate the action, so we can try every different Destination Cell of the board
         //So we can verify the mehod for every WorkerCell in Board and everyDestination
-        for (int x=0; x<5; x++) {
-            for (int y=0; y<5; y++) {
-                for (int z=0; z<4; z++) {
-                    for (int i=0; i<5; i++) {
-                        for (int j=0; j<5; j++) {
-                            for (int k=0; k<4; k++) {
-                                if(x!=i && y!=j && k!=z) {
-                                    board.newCell(x, y, z);
-                                    workerCell = board.getCell(x, y, z);
-                                    workerCell.setWorker(worker1);
 
+        board.newCell(0,1,1);
+        workerCell = board.getCell(0,1,1);
+        workerCell.setWorker(worker1);
+        board.newCell(1,1,1);
+        destinationCell = board.getCell(1,1,1);
 
-                                    board.newCell(i, j, k);
-                                    destinationCell = board.getCell(i, j, k);
+        pushWorker.moveInto(board, workerCell.getPosition(), destinationCell.getPosition());
 
-                                    pushWorker.moveInto(board, workerCell.getPosition(), destinationCell.getPosition());
-                                    assertTrue(workerCell.isFree());
-                                    assertTrue(destinationCell.isWorker());
-                                    assertSame(destinationCell.getWorker(), worker1);
-                                    assertSame(destinationCell.getPlayer(), player1);
-                                    board = new Board();
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-        }
+        assertAll("moveInto", () -> assertTrue(workerCell.isFree()),
+                () ->assertTrue(destinationCell.isWorker()),
+                () ->assertSame(destinationCell.getWorker(), worker1),
+                () ->assertSame(destinationCell.getPlayer(), player1));
+
     }
 
     @Test
-    void ThrowNullException () {
+    void MovingUp() {
+        //The Standard ConsolidateMove just consolidate the action, so we can try every different Destination Cell of the board
+        //So we can verify the mehod for every WorkerCell in Board and everyDestination
+
+        board.newCell(0,1,0);
+        workerCell = board.getCell(0,1,0);
+        workerCell.setWorker(worker1);
+        board.newCell(1,1,1);
+        destinationCell = board.getCell(1,1,1);
+
+        pushWorker.moveInto(board, workerCell.getPosition(), destinationCell.getPosition());
+
+        assertAll("moveInto", () -> assertTrue(workerCell.isFree()),
+                () ->assertTrue(destinationCell.isWorker()),
+                () ->assertSame(destinationCell.getWorker(), worker1),
+                () ->assertSame(destinationCell.getPlayer(), player1));
+
+    }
+
+    @Test
+    void MovingDown() {
+        //The Standard ConsolidateMove just consolidate the action, so we can try every different Destination Cell of the board
+        //So we can verify the mehod for every WorkerCell in Board and everyDestination
+
+        board.newCell(0,1,1);
+        workerCell = board.getCell(0,1,1);
+        workerCell.setWorker(worker1);
+        board.newCell(1,1,0);
+        destinationCell = board.getCell(1,1,0);
+
+        pushWorker.moveInto(board, workerCell.getPosition(), destinationCell.getPosition());
+
+        assertAll("moveInto", () -> assertTrue(workerCell.isFree()),
+                () ->assertTrue(destinationCell.isWorker()),
+                () ->assertSame(destinationCell.getWorker(), worker1),
+                () ->assertSame(destinationCell.getPlayer(), player1));
+
+    }
+
+    @Test
+    void NullPointerException () {
         assertThrows(NullPointerException.class, () -> {
-            pushWorker.moveInto(board, null, null);
+            pushWorker.moveInto(null, null, null);
         });
     }
 
     @Test
-    void PushingIntoWorker() {
-        //The PushWorker class just consolidate the action, so we can try every different Destination Cell of the board
-        //So we can verify the mehod for every WorkerCell in Board and everyDestination
-        int behindWorkerX;
-        int behindWorkerY;
-        Cell behindCell;
+    void PushingWorkerOntheSameLevel () {
+        board.newCell(1,1,2);
+        workerCell = board.getCell(1,1,2);
+        workerCell.setWorker(worker1);
+        board.newCell(2,1,2);
+        destinationCell = board.getCell(2,1,2);
+        destinationCell.setWorker(worker2);
 
-        for (int x=1; 0<x&&x<4; x++) {
-            for (int y=1; 0<y&&y<4; y++) {
-                for (int z = 0; z < 4; z++) {
-                    for (int k = 0; k <= z + 1 && k < 4; k++) {
-                        if (x != 2 && y != 2) {
-                            board.newCell(x, y, z);
-                            workerCell = board.getCell(x, y, z);
-                            workerCell.setWorker(worker1); //try the 8 different positions around the enemy worker
+        board.newCell(3,1,0);
+        board.newCell(3,1,1);
+        board.newCell(3,1,2);
+        board.getCell(3,1,0).setBuilding(true);
+        board.getCell(3,1,1).setBuilding(true);
 
-                            if (x == 2) {
-                                behindWorkerX = 2;
-                            } else if (x > 2) {
-                                behindWorkerX = 2 - 1;
-                            } else
-                                behindWorkerX = 2 + 1;
-                            if (y == 2) {
-                                behindWorkerY = 2;
-                            } else if (y > 2) {
-                                behindWorkerY = 2 - 1;
-                            } else
-                                behindWorkerY = 2 + 1;
-
-                            board.newCell(2, 2, k); //the enemy worker is in the central cell of the board
-                            destinationCell = board.getCell(2, 2, k);
-                            destinationCell.setWorker(worker2);
-
-                            int i;
-                            for (i = 0; i <= k && i < 3; i++) {//creating a tower of building(complete or not) behind worker
-                                new StandardConsolidateBuild().BuildUp(new Position(behindWorkerX, behindWorkerY, i), board, false);
-                            }
-                            behindCell = board.getCell(behindWorkerX, behindWorkerY, i);
-
-                            pushWorker.moveInto(board, workerCell.getPosition(), destinationCell.getPosition());
-
-                            assertTrue(workerCell.isFree());
-                            assertTrue(destinationCell.isWorker());
-                            assertSame(behindCell.getWorker(), worker2);
-                            assertSame(behindCell.getPlayer(), player2);
-                            assertSame(destinationCell.getWorker(), worker1);
-                            assertSame(destinationCell.getPlayer(), player1);
-                            board = new Board();
-                        }
-                    }
-                }
-            }
-        }
+        pushWorker.moveInto(board, workerCell.getPosition(), destinationCell.getPosition());
+        assertAll("Push Worker",
+                () -> assertTrue(workerCell.isFree()),
+                () -> assertTrue(destinationCell.isWorker()),
+                () -> assertTrue(board.getCell(3,1,2).isWorker()),
+                () -> assertSame(worker1, destinationCell.getWorker()),
+                ()-> assertSame(worker2, board.getCell(3,1,2).getWorker()));
     }
 
+    void PushingWorkerOnTop() {
+        board.newCell(1,1,2);
+        workerCell = board.getCell(1,1,2);
+        workerCell.setWorker(worker1);
+        board.newCell(2,1,2);
+        destinationCell = board.getCell(2,1,2);
+        destinationCell.setWorker(worker2);
+
+        board.newCell(3,1,0);
+        board.newCell(3,1,1);
+        board.newCell(3,1,2);
+        board.newCell(3,1,3);
+        board.getCell(3,1,0).setBuilding(true);
+        board.getCell(3,1,1).setBuilding(true);
+        board.getCell(3,1,3).setBuilding(true);
+
+        pushWorker.moveInto(board, workerCell.getPosition(), destinationCell.getPosition());
+        assertAll("Push Worker",
+                () -> assertTrue(workerCell.isFree()),
+                () -> assertTrue(destinationCell.isWorker()),
+                () -> assertTrue(board.getCell(3,1,3).isWorker()),
+                () -> assertSame(worker1, destinationCell.getWorker()),
+                ()-> assertSame(worker2, board.getCell(3,1,3).getWorker()));
+    }
+
+    void PushingWorkerOnGroundSameY() {
+        board.newCell(1,1,2);
+        workerCell = board.getCell(1,1,2);
+        workerCell.setWorker(worker1);
+        board.newCell(2,1,2);
+        destinationCell = board.getCell(2,1,2);
+        destinationCell.setWorker(worker2);
+
+        pushWorker.moveInto(board, workerCell.getPosition(), destinationCell.getPosition());
+        assertAll("Push Worker",
+                () -> assertTrue(workerCell.isFree()),
+                () -> assertTrue(destinationCell.isWorker()),
+                () -> assertTrue(board.getCell(3,1,0).isWorker()),
+                () -> assertSame(worker1, destinationCell.getWorker()),
+                ()-> assertSame(worker2, board.getCell(3,1,0).getWorker()));
+    }
+
+    void PushingWorkerOnGroundDiagonally() {
+        board.newCell(1, 1, 2);
+        workerCell = board.getCell(1, 1, 2);
+        workerCell.setWorker(worker1);
+        board.newCell(2, 2, 2);
+        destinationCell = board.getCell(2, 2, 2);
+        destinationCell.setWorker(worker2);
+
+        pushWorker.moveInto(board, workerCell.getPosition(), destinationCell.getPosition());
+        assertAll("Push Worker",
+                () -> assertTrue(workerCell.isFree()),
+                () -> assertTrue(destinationCell.isWorker()),
+                () -> assertTrue(board.getCell(3, 3, 0).isWorker()),
+                () -> assertSame(worker1, destinationCell.getWorker()),
+                () -> assertSame(worker2, board.getCell(3, 1, 0).getWorker()));
+    }
+
+    void PushingWorkerOnGroundSameX() {
+        board.newCell(1, 1, 2);
+        workerCell = board.getCell(1, 1, 2);
+        workerCell.setWorker(worker1);
+        board.newCell(1, 2, 2);
+        destinationCell = board.getCell(1, 2, 2);
+        destinationCell.setWorker(worker2);
+
+        pushWorker.moveInto(board, workerCell.getPosition(), destinationCell.getPosition());
+        assertAll("Push Worker",
+                () -> assertTrue(workerCell.isFree()),
+                () -> assertTrue(destinationCell.isWorker()),
+                () -> assertTrue(board.getCell(1, 3, 0).isWorker()),
+                () -> assertSame(worker1, destinationCell.getWorker()),
+                () -> assertSame(worker2, board.getCell(1, 3, 0).getWorker()));
+    }
+
+    @Test
+    void PushingOutOfBoard () {
+        board.newCell(1,1,0);
+        workerCell = board.getCell(1,1,0);
+        workerCell.setWorker(worker1);
+        board.newCell(0,0,0);
+        destinationCell = board.getCell(0,0,0);
+        destinationCell.setWorker(worker2);
+
+        assertThrows(NullPointerException.class, () -> {
+            pushWorker.moveInto(board, null, null);
+        });
+
+
+    }
 
 }
+
