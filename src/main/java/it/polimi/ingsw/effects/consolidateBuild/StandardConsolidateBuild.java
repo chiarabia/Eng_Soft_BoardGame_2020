@@ -5,7 +5,6 @@ import it.polimi.ingsw.Cell;
 import it.polimi.ingsw.Position;
 
 public class StandardConsolidateBuild {
-    // todo: questa classe deve essere pronta anche per il Build under myself di Zeus
     public void BuildUp (Position buildingcell, Board board, boolean god_power) {
         if (god_power) { //Se god_power attivato, costruisco una cupola a qualsiasi livello
             Cell temp_cell = board.getCell(buildingcell);
@@ -18,7 +17,7 @@ public class StandardConsolidateBuild {
                 temp_cell.setBuilding(true);
                 board.newCell(buildingcell.getX(), buildingcell.getY(), buildingcell.getZ() + 1);
             }
-            else { //sono sulla sommita e quindi costruisco una cupola
+            else { //sono sulla sommità e quindi costruisco una cupola
                 temp_cell.setDome(true);
             }
         }

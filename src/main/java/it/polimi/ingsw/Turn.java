@@ -1,5 +1,7 @@
 package it.polimi.ingsw;
 
+import it.polimi.ingsw.effects.build.BuildBeforeMove;
+
 /**
  * This class defines a turn of the game
  */

@@ -8,13 +8,13 @@ import it.polimi.ingsw.Position;
 public class PushWorker extends StandardConsolidateMove {
     public void moveInto(Board board, Position workerPosition, Position destinationPosition) {
         Cell workerCell = board.getCell(workerPosition);
-        Cell destinationCell = board.getCell(workerPosition);
+        Cell destinationCell = board.getCell(destinationPosition);
 
         if (destinationCell.isFree())
-            super.moveInto(board, workerPosition, workerPosition);
+           super.moveInto(board, workerPosition, destinationPosition);
         else {
             int tempX = behindWorkerX(workerCell.getX(), destinationCell.getX());
-            int tempY = behindWorkerY(workerCell.getY(), workerCell.getY());
+            int tempY = behindWorkerY(workerCell.getY(), destinationCell.getY());
             int tempZ = board.getZoneLevel(tempX, tempY);
             //otteniamo la cella posta alle spalle del lavoratore nemico
             Cell behind_opposite_worker = board.getCell(tempX, tempY, tempZ);

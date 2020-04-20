@@ -1,5 +1,7 @@
 package it.polimi.ingsw;
 
+import java.util.ArrayList;
+
 /**
  *  This class defines the player
  *  <p> the player id will be a number from 1 to 3, in private final int id
@@ -11,12 +13,11 @@ package it.polimi.ingsw;
 public class Player {
     private final String name;
     private final int id;
-    private Worker workers[];
+    private ArrayList<Worker> workers = new ArrayList();
 
     public Player (String name, int id){
         this.id = id;
         this.name = name;
-        workers = new Worker[2];
     }
 
     public int getId() {
@@ -28,6 +29,18 @@ public class Player {
     }
 
     public Worker getWorker(int whichWorker){
-        return workers[whichWorker];
+        for(int i = 0; i<workers.size(); i++)
+            if (workers.get(i).getWorkerId() == whichWorker) {
+                return workers.get(i);
+            }
+        return null;
+    }
+
+    public void addWorker(Worker worker) {
+        if(worker.getPlayerId() == this.id) { //correctly add only if the worker isnot an opposite worker
+            if(getWorker(worker.getWorkerId())==null) { //no duplicates allowed
+                workers.add(worker);
+            }
+        }
     }
 }

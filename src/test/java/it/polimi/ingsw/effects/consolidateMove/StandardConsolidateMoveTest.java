@@ -1,11 +1,5 @@
 package it.polimi.ingsw.effects.consolidateMove;
 
-import static org.junit.jupiter.api.Assertions.assertTrue;
-import static org.junit.jupiter.api.Assertions.assertFalse;
-import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotEquals;
 import it.polimi.ingsw.Board;
 import it.polimi.ingsw.Cell;
 import it.polimi.ingsw.Player;
@@ -16,6 +10,8 @@ import org.junit.jupiter.api.Test;
 
 import java.util.HashSet;
 import java.util.Set;
+
+import static org.junit.jupiter.api.Assertions.*;
 
 
 public class StandardConsolidateMoveTest {
@@ -31,5 +27,40 @@ public class StandardConsolidateMoveTest {
     void setUp(){
         turn = new Turn(player);
         board = new Board();
+    }
+
+    @Test
+    void VerifyNormalCondition() {
+        //The Standard ConsolidateMove just consolidate the action, so we can try every different Destination Cell of the board
+        //So we can verify the mehod for every WorkerCell in Board and everyDestination
+
+        for (int x=0; x<5; x++) {
+            for (int y=0; y<5; y++) {
+                for (int z=0; z<4; z++) {
+                    for (int i=0; i<5; i++) {
+                        for (int j=0; j<5; j++) {
+                            for (int k=0; k<4; k++) {
+                                if(x!=i && y!=j && k!=z) {
+                                    board.newCell(x, y, z);
+                                    workerCell = board.getCell(x, y, z);
+                                    workerCell.setWorker(worker);
+
+
+                                    board.newCell(i, j, k);
+                                    destinationCell = board.getCell(i, j, k);
+
+                                    standardConsolidateMove.moveInto(board, workerCell.getPosition(), destinationCell.getPosition());
+                                    assertTrue(workerCell.isFree());
+                                    assertTrue(destinationCell.isWorker());
+                                    assertSame(destinationCell.getWorker(), worker);
+                                    assertSame(destinationCell.getPlayer(), player);
+                                    board = new Board();
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
     }
 }

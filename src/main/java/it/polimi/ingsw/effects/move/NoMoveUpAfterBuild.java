@@ -23,7 +23,7 @@ public class NoMoveUpAfterBuild extends StandardMove{
     public Set<Position> move (Position workerPosition, Board board, Turn turn) {
         Cell workerCell = board.getCell(workerPosition);
         Set<Position> temp_positions = super.move(workerPosition, board, turn);
-        if(turn.getMoveTimes()>0 & !turn.isBuildAfterMove()) //in altri termini, se ho già costruito, ma non dopo essermi mosso, allora...
+        if(turn.getBuildTimes()>0 & !turn.isBuildAfterMove()) //in altri termini, se ho già costruito, ma non dopo essermi mosso, allora...
            return temp_positions.stream()
                     .filter(a-> heightsDifference(workerPosition.getZ(),a.getZ())<=0)
                     .collect(Collectors.toSet());

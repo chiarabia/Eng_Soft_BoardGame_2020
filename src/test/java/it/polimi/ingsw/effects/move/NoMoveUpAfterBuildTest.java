@@ -29,8 +29,7 @@ public class NoMoveUpAfterBuildTest {
         board = new Board();
     }
 
-    //negative
-    //gives the the cell (0,1,1) as available
+    //positive
     @Test
     void playerShouldNotBeAbleToMoveUp(){
         Cell buildCell = board.getCell(1,1,0);
@@ -41,7 +40,23 @@ public class NoMoveUpAfterBuildTest {
         workerCell.setWorker(worker);
 
         Set<Position> collect = new HashSet<>();
-        collect.add(new Position(0,1,1));
+        collect.add(new Position(0,1,0));
+        collect.add(new Position(1,0,0));
+        assertEquals(collect,noMoveUpAfterBuild.move(workerCell.getPosition(),board,turn));
+    }
+
+    void playerShoulBeAbleToMoveUp(){
+        Cell buildCell = board.getCell(1,1,0);
+        buildCell.setBuilding(true);
+        board.newCell(1,1,1);
+        workerCell = board.getCell(0,0,0);
+        workerCell.setWorker(worker);
+
+        Set<Position> collect = new HashSet<>();
+        collect.add(new Position(0,1,0));
+        collect.add(new Position(1,0,0));
+        collect.add(new Position(1,1,1));
+
         assertEquals(collect,noMoveUpAfterBuild.move(workerCell.getPosition(),board,turn));
     }
 }
