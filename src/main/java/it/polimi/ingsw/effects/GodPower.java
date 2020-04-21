@@ -86,7 +86,7 @@ public class GodPower {
         //was set to false
 
         for (int j=0; j<blockingWinConditions.size(); j++) {
-            if(blockingWinConditions.get(j).win(workerPosition, destinationPosition, board)){
+            if(!blockingWinConditions.get(j).win(workerPosition, destinationPosition, board)){
                 win = false;
             }
         }
@@ -115,7 +115,7 @@ public class GodPower {
         this.playerId = playerId;
     }
 
-    //Setter and Getter
+    //Setters and Getters
 
 
     public int getPlayerId() {

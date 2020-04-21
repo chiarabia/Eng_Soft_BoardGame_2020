@@ -21,7 +21,7 @@ public class MoveNotOnInitialPosition extends StandardMove{
     }
 
     /**
-     * @param workerCell the worker's Cell
+     * @param workerPosition the worker's Cell
      * @param board the board
      * @param turn the player's turn
      * @return a Set<Cell> collect that only has the cells where the player can move

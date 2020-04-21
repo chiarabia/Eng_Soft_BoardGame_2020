@@ -44,7 +44,7 @@ public class CantWinMovingOnPerimeterTest {
         assertTrue(winCondition.win(workerCell.getPosition(), destinationCell.getPosition(), board));
     }
 
-    //negative
+    //positive
     @Test
     void throwsExceptionsWithNullParameters(){
 

@@ -27,75 +27,9 @@ public class PushWorkerTest {
         turn = new Turn(player1);
         board = new Board();
     }
-    @Test
-    void MovingOnTheSameLevel() {
-        //The Standard ConsolidateMove just consolidate the action, so we can try every different Destination Cell of the board
-        //So we can verify the mehod for every WorkerCell in Board and everyDestination
-
-        board.newCell(0,1,1);
-        workerCell = board.getCell(0,1,1);
-        workerCell.setWorker(worker1);
-        board.newCell(1,1,1);
-        destinationCell = board.getCell(1,1,1);
-
-        pushWorker.moveInto(board, workerCell.getPosition(), destinationCell.getPosition());
-
-        assertAll("moveInto", () -> assertTrue(workerCell.isFree()),
-                () ->assertTrue(destinationCell.isWorker()),
-                () ->assertSame(destinationCell.getWorker(), worker1),
-                () ->assertSame(destinationCell.getPlayer(), player1));
-
-    }
 
     @Test
-    void MovingUp() {
-        //The Standard ConsolidateMove just consolidate the action, so we can try every different Destination Cell of the board
-        //So we can verify the mehod for every WorkerCell in Board and everyDestination
-
-        board.newCell(0,1,0);
-        workerCell = board.getCell(0,1,0);
-        workerCell.setWorker(worker1);
-        board.newCell(1,1,1);
-        destinationCell = board.getCell(1,1,1);
-
-        pushWorker.moveInto(board, workerCell.getPosition(), destinationCell.getPosition());
-
-        assertAll("moveInto", () -> assertTrue(workerCell.isFree()),
-                () ->assertTrue(destinationCell.isWorker()),
-                () ->assertSame(destinationCell.getWorker(), worker1),
-                () ->assertSame(destinationCell.getPlayer(), player1));
-
-    }
-
-    @Test
-    void MovingDown() {
-        //The Standard ConsolidateMove just consolidate the action, so we can try every different Destination Cell of the board
-        //So we can verify the mehod for every WorkerCell in Board and everyDestination
-
-        board.newCell(0,1,1);
-        workerCell = board.getCell(0,1,1);
-        workerCell.setWorker(worker1);
-        board.newCell(1,1,0);
-        destinationCell = board.getCell(1,1,0);
-
-        pushWorker.moveInto(board, workerCell.getPosition(), destinationCell.getPosition());
-
-        assertAll("moveInto", () -> assertTrue(workerCell.isFree()),
-                () ->assertTrue(destinationCell.isWorker()),
-                () ->assertSame(destinationCell.getWorker(), worker1),
-                () ->assertSame(destinationCell.getPlayer(), player1));
-
-    }
-
-    @Test
-    void NullPointerException () {
-        assertThrows(NullPointerException.class, () -> {
-            pushWorker.moveInto(null, null, null);
-        });
-    }
-
-    @Test
-    void PushingWorkerOntheSameLevel () {
+    void pushWorkerShouldPushTheWorkerWhenOnTheSameLevel() {
         board.newCell(1,1,2);
         workerCell = board.getCell(1,1,2);
         workerCell.setWorker(worker1);
@@ -208,6 +142,50 @@ public class PushWorkerTest {
         });
 
 
+    }
+
+    //positive
+    @Test
+    void shouldReturnTheRightXCoordinateOfTheWorkerWhenPlayerAndOpponentWorkerHaveSameX(){
+        assertEquals(1,pushWorker.behindWorkerX(1,1));
+    }
+
+    //positive
+    @Test
+    void shouldReturnTheRightXCoordinateOfTheWorkerWhenPlayerHasHigherXThanOpponent(){
+        assertEquals(1,pushWorker.behindWorkerX(3,2));
+    }
+
+    //positive
+    @Test
+    void shouldReturnTheRightXCoordinateOfTheWorkerWhenPlayerHasMinorXThanOpponent(){
+        assertEquals(3,pushWorker.behindWorkerX(1,2));
+    }
+
+    //positive
+    @Test
+    void shouldReturnTheRightXCoordinateOfTheWorkerWhenPlayerAndOpponentWorkerHaveSameY(){
+        assertEquals(1,pushWorker.behindWorkerY(1,1));
+    }
+
+    //positive
+    @Test
+    void shouldReturnTheRightXCoordinateOfTheWorkerWhenPlayerHasHigherYThanOpponent(){
+        assertEquals(1,pushWorker.behindWorkerY(3,2));
+    }
+
+    //positive
+    @Test
+    void shouldReturnTheRightXCoordinateOfTheWorkerWhenPlayerHasMinorYThanOpponent(){
+        assertEquals(3,pushWorker.behindWorkerY(1,2));
+    }
+
+    //positive
+    @Test
+    void pushWorkerThrowsExceptionWithNullParameters () {
+        assertThrows(NullPointerException.class, () -> {
+            pushWorker.moveInto(null, null, null);
+        });
     }
 
 }

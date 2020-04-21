@@ -10,7 +10,6 @@ public class Turn {
 
     private Position workerStartingPosition = null;
     private Position firstBuildingPosition = null;
-    //al momento non ci serve salvarsi dove i giocatori hanno costruito/si sono mossi, ma risulta immediato aggiornare i metodi per farlo
     //private List<Position> movecells = new ArrayList<Position>();
     //private List<Position> buildcells = new ArrayList<Position>();
 

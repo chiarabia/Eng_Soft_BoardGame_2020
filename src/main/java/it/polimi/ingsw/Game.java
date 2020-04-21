@@ -16,6 +16,15 @@ public class Game {
     private ServerThread serverThread;
     private List<Player> players;
     private List<GodPower> godPowers;
+
+    /**
+     * This class creates a match
+     * @param serverThread
+     * @param numOfPlayers
+     * @param playersNames
+     * @throws IOException
+     * @throws ParseException
+     */
     public Game (ServerThread serverThread, int numOfPlayers, List<String> playersNames) throws IOException, ParseException {
         this.serverThread = serverThread;
         this.numOfPlayers = numOfPlayers;

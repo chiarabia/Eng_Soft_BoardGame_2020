@@ -24,7 +24,8 @@ import java.util.stream.Stream;
 
 public class GodPowerManager {
     /*values​to keep memory of the player who changes the powers of the opponents (e.g: Hera, Athena, etc...)
-     * 0 means nobody, otherwise 1, 2 or possibly 3 * */
+     * 0 means nobody, otherwise 1, 2 or possibly 3
+     */
     private static int opponentsCantWinOnPerimeterPlayer;
 
     /*JSON files' path*/
@@ -32,7 +33,7 @@ public class GodPowerManager {
 
     /**
      * This method randomly extracts different 'numOfPlayers' cards in the form of List <String>,
-     * regardless of names and/or number of cards in the Cards folder * /
+     * regardless of names and/or number of cards in the Cards folder
      * @param numOfPlayers number of players
      * @return List</String>
      * @throws IOException IO Exception
@@ -42,12 +43,12 @@ public class GodPowerManager {
         List <String> cards = new ArrayList();
         Stream<Path> paths = Files.walk(Paths.get(root));
         paths.filter(Files::isRegularFile).forEach(x->{cards.add(x.toString().substring(root.length()));});
-        // now the card list contains all 14 strings of JSON file names (eg "ApolloCard.json")
+        // the card list contains all 14 strings of JSON file names (eg "ApolloCard.json")
 
         Random rand = new Random();
         int numOfAvailableCards = cards.size();
         for (int i = numOfAvailableCards; i > numOfPlayers; i--) cards.remove(rand.nextInt(i));
-        // only 'numOfPlayers' random strings are left in the card list now
+        // only 'numOfPlayers' random strings are left in the card list
 
         return cards;
     }
@@ -149,8 +150,8 @@ public class GodPowerManager {
     }
 
     /**
-     * create a list of godPowers based on the number of players: he must generate two / three different random cards,
-     * after building them, it changes some functions in the presence of divinities that modify the behavior of the adversaries
+     * Creates a list of godPowers based on the number of players: it must generate two / three different random cards,
+     * then, after building them, changes the functions in case of presence of godPowers that modify the behaviors of the adversaries
      * @param numOfPlayers player ID
      * @return List</GodPower>
      * @throws ParseException

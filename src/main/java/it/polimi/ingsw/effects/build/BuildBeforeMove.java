@@ -24,24 +24,19 @@ public class BuildBeforeMove extends StandardBuild {
     }
 
 
-    /**
-     *
-     * @param workercell
-     * @param turn
-     * @return
-     */
+
 
     @Override
-    protected boolean checkBuildConditions(Cell workercell, Turn turn) {
-        if (!workercell.isWorker()) //robusto, devo invocare il metodo su un worker
+    protected boolean checkBuildConditions(Cell workerCell, Turn turn) {
+        if (!workerCell.isWorker()) //robusto, devo invocare il metodo su un worker
             return false;
 
-        if (workercell.getPlayerId() != turn.getPlayerId()) //il player deve essere uguale
+        if (workerCell.getPlayerId() != turn.getPlayerId()) //il player deve essere uguale
             return false;
 
         //Posso costruire prima di muovermi
 
-        if (turn.getWorkerUsed() != 0 && workercell.getWorkerId() != turn.getWorkerUsed()) //if the id doesn't match, false
+        if (turn.getWorkerUsed() != 0 && workerCell.getWorkerId() != turn.getWorkerUsed()) //if the id doesn't match, false
             return false;
 
         else {

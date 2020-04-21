@@ -5,8 +5,6 @@ import java.util.ArrayList;
 /**
  *  This class defines the player
  *  <p> the player id will be a number from 1 to 3, in private final int id
- *  the Cell in which the workers are will be stored in private Cell workerCell[],
- *  with workerCell[0] the first worker and workerCell[1] the second worker
  */
 
 
@@ -28,6 +26,7 @@ public class Player {
         return name;
     }
 
+
     public Worker getWorker(int whichWorker){
         for(int i = 0; i<workers.size(); i++)
             if (workers.get(i).getWorkerId() == whichWorker) {
@@ -37,7 +36,7 @@ public class Player {
     }
 
     public void addWorker(Worker worker) {
-        if(worker.getPlayerId() == this.id) { //correctly add only if the worker isnot an opposite worker
+        if(worker.getPlayerId() == this.id) { //checks if the worker is the worker's player and not of an opposing player
             if(getWorker(worker.getWorkerId())==null) { //no duplicates allowed
                 workers.add(worker);
             }

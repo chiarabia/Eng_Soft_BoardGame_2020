@@ -24,7 +24,7 @@ public class PushWorker extends StandardConsolidateMove {
             super.moveInto(board, workerPosition, destinationPosition);
         }
     }
-    private int behindWorkerX(int myWorkerX, int opponentsWorkerX) {
+    protected int behindWorkerX(int myWorkerX, int opponentsWorkerX) {
         if (myWorkerX == opponentsWorkerX) {
             return opponentsWorkerX;
         } else if (myWorkerX > opponentsWorkerX) {
@@ -32,7 +32,7 @@ public class PushWorker extends StandardConsolidateMove {
         } else
             return opponentsWorkerX + 1;
     }
-    private int behindWorkerY(int myWorkerY, int opponentsWorkerY) {
+    protected int behindWorkerY(int myWorkerY, int opponentsWorkerY) {
         if (myWorkerY == opponentsWorkerY) {
             return opponentsWorkerY;
         } else if (myWorkerY > opponentsWorkerY) {

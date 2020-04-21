@@ -5,10 +5,10 @@ import it.polimi.ingsw.Cell;
 import it.polimi.ingsw.Player;
 import it.polimi.ingsw.Worker;
 import it.polimi.ingsw.Turn;
+
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.params.ParameterizedTest;
-import org.junit.jupiter.params.provider.ValueSource;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -31,68 +31,119 @@ public class StandardConsolidateMoveTest {
         board = new Board();
     }
 
+    //positive
     @Test
-    void MovingOnTheSameLevel() {
-        //The Standard ConsolidateMove just consolidate the action, so we can try every different Destination Cell of the board
-        //So we can verify the mehod for every WorkerCell in Board and everyDestination
-
+    void moveIntoShouldSaveTheRightCellWhenMovingOnSameLevel() {
         board.newCell(0,1,1);
         workerCell = board.getCell(0,1,1);
         workerCell.setWorker(worker);
         board.newCell(1,1,1);
         destinationCell = board.getCell(1,1,1);
-
         standardConsolidateMove.moveInto(board, workerCell.getPosition(), destinationCell.getPosition());
-
-        assertAll("moveInto", () -> assertTrue(workerCell.isFree()),
-                () ->assertTrue(destinationCell.isWorker()),
-                () ->assertSame(destinationCell.getWorker(), worker),
-                () ->assertSame(destinationCell.getPlayer(), player));
+        assertTrue(destinationCell.isWorker());
 
     }
 
+    //positive
     @Test
-    void MovingUp() {
-        //The Standard ConsolidateMove just consolidate the action, so we can try every different Destination Cell of the board
-        //So we can verify the mehod for every WorkerCell in Board and everyDestination
+    void moveIntoShouldSaveTheRightWorkerWhenMovingOnSameLevel(){
+        board.newCell(0,1,1);
+        workerCell = board.getCell(0,1,1);
+        workerCell.setWorker(worker);
+        board.newCell(1,1,1);
+        destinationCell = board.getCell(1,1,1);
+        standardConsolidateMove.moveInto(board, workerCell.getPosition(), destinationCell.getPosition());
+        assertSame(worker, destinationCell.getWorker());
+    }
 
+    //positive
+    @Test
+    void moveIntoShouldRemoveTheWorkerFromTheStartingCellWhenMovingOnSameLevel(){
+        board.newCell(0,1,1);
+        workerCell = board.getCell(0,1,1);
+        workerCell.setWorker(worker);
+        board.newCell(1,1,1);
+        destinationCell = board.getCell(1,1,1);
+        standardConsolidateMove.moveInto(board, workerCell.getPosition(), destinationCell.getPosition());
+        assertFalse(workerCell.isWorker());
+    }
+
+    //positive
+    @Test
+    void moveIntoShouldSaveTheRightCellWhenMovingUp(){
         board.newCell(0,1,0);
         workerCell = board.getCell(0,1,0);
         workerCell.setWorker(worker);
         board.newCell(1,1,1);
         destinationCell = board.getCell(1,1,1);
-
         standardConsolidateMove.moveInto(board, workerCell.getPosition(), destinationCell.getPosition());
-
-        assertAll("moveInto", () -> assertTrue(workerCell.isFree()),
-                () ->assertTrue(destinationCell.isWorker()),
-                () ->assertSame(destinationCell.getWorker(), worker),
-                () ->assertSame(destinationCell.getPlayer(), player));
-
+        assertTrue(destinationCell.isWorker());
     }
 
+    //positive
     @Test
-    void MovingDown() {
-        //The Standard ConsolidateMove just consolidate the action, so we can try every different Destination Cell of the board
-        //So we can verify the mehod for every WorkerCell in Board and everyDestination
+    void moveIntoShouldSaveTheRightWorkerWhenMovingUp(){
+        board.newCell(0,1,0);
+        workerCell = board.getCell(0,1,0);
+        workerCell.setWorker(worker);
+        board.newCell(1,1,1);
+        destinationCell = board.getCell(1,1,1);
+        standardConsolidateMove.moveInto(board, workerCell.getPosition(), destinationCell.getPosition());
+        assertSame(worker, destinationCell.getWorker());
+    }
 
+    //positive
+    @Test
+    void moveIntoShouldRemoveTheWorkerFromTheStartingCellWhenMovingUp(){
+        board.newCell(0,1,0);
+        workerCell = board.getCell(0,1,0);
+        workerCell.setWorker(worker);
+        board.newCell(1,1,1);
+        destinationCell = board.getCell(1,1,1);
+        standardConsolidateMove.moveInto(board, workerCell.getPosition(), destinationCell.getPosition());
+        assertFalse(workerCell.isWorker());
+    }
+
+    //positive
+    @Test
+    void moveIntoShouldSaveTheRightCellWhenMovingDown() {
         board.newCell(0,1,1);
         workerCell = board.getCell(0,1,1);
         workerCell.setWorker(worker);
         board.newCell(1,1,0);
         destinationCell = board.getCell(1,1,0);
-
         standardConsolidateMove.moveInto(board, workerCell.getPosition(), destinationCell.getPosition());
-
-        assertAll("moveInto", () -> assertTrue(workerCell.isFree()),
-                () ->assertTrue(destinationCell.isWorker()),
-                () ->assertSame(destinationCell.getWorker(), worker),
-                () ->assertSame(destinationCell.getPlayer(), player));
-
+        assertTrue(destinationCell.isWorker());
     }
 
+    //positive
     @Test
-    void NullPointerException () {
+    void moveIntoShouldSaveTheRightWorkerWhenMovingDown(){
+        board.newCell(0,1,1);
+        workerCell = board.getCell(0,1,1);
+        workerCell.setWorker(worker);
+        board.newCell(1,1,0);
+        destinationCell = board.getCell(1,1,0);
+        standardConsolidateMove.moveInto(board, workerCell.getPosition(), destinationCell.getPosition());
+        assertSame(worker, destinationCell.getWorker());
+    }
+
+    //positive
+    @Test
+    void moveIntoShouldRemoveTheWorkerFromTheStartingCellWhenMovingDown(){
+        board.newCell(0,1,1);
+        workerCell = board.getCell(0,1,1);
+        workerCell.setWorker(worker);
+        board.newCell(1,1,0);
+        destinationCell = board.getCell(1,1,0);
+        standardConsolidateMove.moveInto(board, workerCell.getPosition(), destinationCell.getPosition());
+        assertFalse(workerCell.isWorker());
+    }
+
+
+    //positive
+    @Test
+    void moveIntoThrowsExceptionWithNullParameters() {
         assertThrows(NullPointerException.class, () -> {
             standardConsolidateMove.moveInto(null, null, null);
         });

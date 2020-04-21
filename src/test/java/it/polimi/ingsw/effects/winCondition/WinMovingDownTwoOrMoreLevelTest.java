@@ -67,15 +67,14 @@ public class WinMovingDownTwoOrMoreLevelTest {
         assertFalse(winCondition.win(workerCell.getPosition(),destinationCell.getPosition(),board));
     }
 
-    //negative
-    //@Test
-    //ToDo: this method doesnot call method on objects, it will never throw NullParametersException
-    /*void throwsExceptionsWithNullParameters(){
+    //positive
+    @Test
+    void throwsExceptionsWithNullParameters(){
 
         assertThrows(NullPointerException.class, () -> {
             winCondition.win(null, null, null);
         });
-    }*/
+    }
 
 
 }

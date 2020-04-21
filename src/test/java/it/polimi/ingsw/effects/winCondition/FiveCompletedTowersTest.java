@@ -31,7 +31,7 @@ public class FiveCompletedTowersTest {
         board = new Board();
     }
 
-    //negative
+    //positive
     @Test
     void playerShouldWin(){
         board.newCell(2,2,2);

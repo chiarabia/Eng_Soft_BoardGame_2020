@@ -55,7 +55,7 @@ public class StandardWinConditionTest {
         assertFalse(winCondition.win(workerCell.getPosition(),destinationCell.getPosition(),board));
     }
 
-    //negative
+    //positive
     @Test
     void throwsExceptionsWithNullParameters(){
 

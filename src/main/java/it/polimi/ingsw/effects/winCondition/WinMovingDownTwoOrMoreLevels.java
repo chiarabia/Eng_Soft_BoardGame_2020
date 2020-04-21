@@ -21,7 +21,7 @@ public class WinMovingDownTwoOrMoreLevels extends StandardWinCondition {
         Cell workerCell = board.getCell(workerPosition);
         Cell destinationCell = board.getCell(destinationPosition);
 
-        if (workerCell==null && destinationCell==null) return false; //condizione generalizzata
+        if (workerCell==null && destinationCell==null) return false;
         return ((workerCell.getZ() - destinationCell.getZ()) >= 2);
     }
 }

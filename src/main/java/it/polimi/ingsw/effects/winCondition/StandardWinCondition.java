@@ -19,7 +19,7 @@ public class StandardWinCondition {
         public boolean win (Position workerPosition, Position destinationPosition, Board board) {
             Cell workerCell = board.getCell(workerPosition);
             Cell destinationCell = board.getCell(destinationPosition);
-            if (workerCell==null && destinationCell==null) return false; //condizione generalizzata
+            if (workerCell==null && destinationCell==null) return false;
             return ((workerCell.getZ() == 2 && destinationCell.getZ() == 3) || workerCell.getZ()-destinationCell.getZ() >= 2);
         }
     }

@@ -19,20 +19,20 @@ public class NewNoMoveUpTurn extends NewTurn {
     GodPower originalGodPower;
 
     /**
-     *This method limits opponents' options if at least one worker has leveled up during my turn.
-     * Before modifying their methods I save a copy of the enemy godPower and modify their NewTurn so that at the end
-     * of their turn they can recover their original powers.
+     * This method limits opponents' actions if at least one worker has leveled up during the player's turn.
+     * <p>The method first saves a copy of the opponents' godPower, move effect and newTurn. Then the newTurn and move
+     * are restored.
      * @param oldTurn The current turn that is about to end
-     * @param godPowers The GodPowers of all players (still) in the game
+     * @param godPowers The GodPowers of all players in the game
      * @param player Player of the next turn
-     * @return
+     * @return a new Turn
      */
 
     public Turn newTurn(Turn oldTurn, List<GodPower> godPowers, Player player){
         if (oldTurn.isMoveUp()) {
             int i;
             for (i = 0; i < godPowers.size(); i++) {
-                if (i != godPowers.get(i).getPlayerId()) { //I only change the opponent godpowers
+                if (i != godPowers.get(i).getPlayerId()) { //the change has effect only on the opponents' godPowers
                     originalGodPower = originalGodPower.copyGodPower(godPowers.get(i)); //Saving the original GodPower
                     originalMove = godPowers.get(i).getMove(); //Collecting the previous Move effect
                     originalNewTurn = godPowers.get(i).getNewTurn(); //Collecting the original NewTurn effect
@@ -41,7 +41,7 @@ public class NewNoMoveUpTurn extends NewTurn {
                     modifiedNewTurn = new RestoreOriginalGodPower(originalGodPower);
                     modifiedMove = new NoMoveUp(originalMove);
 
-                    //Modifying the opponent GodPower
+                    //modifying the opponent GodPower
                     godPowers.get(i).setMove(modifiedMove);
                     godPowers.get(i).setNewTurn(modifiedNewTurn);
                 }
