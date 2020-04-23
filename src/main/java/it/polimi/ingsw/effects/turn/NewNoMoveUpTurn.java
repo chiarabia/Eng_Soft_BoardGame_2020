@@ -28,12 +28,13 @@ public class NewNoMoveUpTurn extends NewTurn {
      * @return a new Turn
      */
 
-    public Turn newTurn(Turn oldTurn, List<GodPower> godPowers, Player player){
+    @Override
+    public Turn endTurn(Turn oldTurn, List<GodPower> godPowers, Player player){
         if (oldTurn.isMoveUp()) {
             int i;
             for (i = 0; i < godPowers.size(); i++) {
                 if (i != godPowers.get(i).getPlayerId()) { //the change has effect only on the opponents' godPowers
-                    originalGodPower = originalGodPower.copyGodPower(godPowers.get(i)); //Saving the original GodPower
+                    originalGodPower = godPowers.get(i).copyGodPower(godPowers.get(i)); //Saving the original GodPower
                     originalMove = godPowers.get(i).getMove(); //Collecting the previous Move effect
                     originalNewTurn = godPowers.get(i).getNewTurn(); //Collecting the original NewTurn effect
 
@@ -49,5 +50,4 @@ public class NewNoMoveUpTurn extends NewTurn {
         }
         return new Turn(player);
     }
-
 }

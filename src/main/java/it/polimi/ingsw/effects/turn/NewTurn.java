@@ -17,7 +17,7 @@ public class NewTurn {
      * @param player Player of the next turn
      * @return
      */
-    public Turn newTurn(Turn oldTurn, List<GodPower> godPowers, Player player){
+    public Turn endTurn(Turn oldTurn, List<GodPower> godPowers, Player player){
         return new Turn(player);
     }
 }

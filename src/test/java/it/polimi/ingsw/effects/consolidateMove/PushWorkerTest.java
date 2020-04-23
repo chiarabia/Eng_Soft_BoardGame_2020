@@ -77,6 +77,7 @@ public class PushWorkerTest {
                 ()-> assertSame(worker2, board.getCell(3,1,3).getWorker()));
     }
 
+    @Test
     void PushingWorkerOnGroundSameY() {
         board.newCell(1,1,2);
         workerCell = board.getCell(1,1,2);
@@ -94,6 +95,7 @@ public class PushWorkerTest {
                 ()-> assertSame(worker2, board.getCell(3,1,0).getWorker()));
     }
 
+    @Test
     void PushingWorkerOnGroundDiagonally() {
         board.newCell(1, 1, 2);
         workerCell = board.getCell(1, 1, 2);
@@ -108,9 +110,10 @@ public class PushWorkerTest {
                 () -> assertTrue(destinationCell.isWorker()),
                 () -> assertTrue(board.getCell(3, 3, 0).isWorker()),
                 () -> assertSame(worker1, destinationCell.getWorker()),
-                () -> assertSame(worker2, board.getCell(3, 1, 0).getWorker()));
+                () -> assertSame(worker2, board.getCell(3, 3, 0).getWorker()));
     }
 
+    @Test
     void PushingWorkerOnGroundSameX() {
         board.newCell(1, 1, 2);
         workerCell = board.getCell(1, 1, 2);

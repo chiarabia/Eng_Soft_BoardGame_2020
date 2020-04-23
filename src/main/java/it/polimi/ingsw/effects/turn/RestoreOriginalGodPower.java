@@ -18,19 +18,19 @@ public class RestoreOriginalGodPower extends NewTurn {
      * @return
      */
     @Override
-    public Turn newTurn(Turn oldTurn, List<GodPower> godPowers, Player player) {
+    public Turn endTurn(Turn oldTurn, List<GodPower> godPowers, Player player) {
         int j;
         for(j = 0; j <godPowers.size(); j++) {
             if (godPowers.get(j).getPlayerId() == originalGodPower.getPlayerId()) {
                 godPowers.add(j, originalGodPower); //restore original GodPower effects
 
-                return godPowers.get(j).getNewTurn().newTurn(oldTurn, godPowers, player); //calling the right NewTurn method of the player;
+               return godPowers.get(j).getNewTurn().endTurn(oldTurn, godPowers, player); //calling the right NewTurn method of the player;
             }
         }
-        return super.newTurn(oldTurn, godPowers, player); //The method should never exit the for loop and perform this return
+        return super.endTurn(oldTurn, godPowers, player); //The method should never exit the for loop and perform this return
     }
 
     public RestoreOriginalGodPower(GodPower originalGodPower) {
-        originalGodPower = originalGodPower;
+        this.originalGodPower = originalGodPower;
     }
 }

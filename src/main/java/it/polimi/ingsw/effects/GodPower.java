@@ -12,6 +12,7 @@ import it.polimi.ingsw.effects.winCondition.StandardWinCondition;
 import it.polimi.ingsw.Position;
 import it.polimi.ingsw.Turn;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 
@@ -25,8 +26,8 @@ public class GodPower {
     private StandardConsolidateBuild consolidateBuild;
 
     private StandardLoseCondition loseCondition;
-    private List<StandardWinCondition> positiveWinConditions;
-    private List<StandardWinCondition> blockingWinConditions;
+    private List<StandardWinCondition> positiveWinConditions = new ArrayList<>();
+    private List<StandardWinCondition> blockingWinConditions = new ArrayList<>();
 
     private NewTurn newTurn;
 
@@ -107,6 +108,7 @@ public class GodPower {
         tempGodPower.setConsolidateMove(this.consolidateMove);
         tempGodPower.setPositiveWinConditions(this.positiveWinConditions);
         tempGodPower.setBlockingWinConditions(this.blockingWinConditions);
+        tempGodPower.setLoseCondition(this.loseCondition);
         tempGodPower.setNewTurn(this.newTurn);
         return tempGodPower;
     }
@@ -193,4 +195,11 @@ public class GodPower {
     public boolean isAskToBuildDomes() {return askToBuildDomes; }
 
     public boolean isAskToBuildBeforeMoveAndNotMoveUp() {return askToBuildBeforeMoveAndNotMoveUp; }
+
+    public void addPositiveWinConditions(StandardWinCondition positiveWinConditions) {
+        this.positiveWinConditions.add(positiveWinConditions);
+    }
+    public void addBlockingWinConditions(StandardWinCondition blockingWinConditions) {
+        this.blockingWinConditions.add(blockingWinConditions);
+    }
 }

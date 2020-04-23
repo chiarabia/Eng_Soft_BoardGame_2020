@@ -59,7 +59,7 @@ public class GodPowerManager {
      * @param numOfPlayer Player ID
      */
 
-    private static GodPower power (String nameOfFile, int numOfPlayer) throws IOException, ParseException {
+    public static GodPower power (String nameOfFile, int numOfPlayer) throws IOException, ParseException {
         GodPower godPower = new GodPower(numOfPlayer);
         FileReader fileReader = new FileReader(root + nameOfFile);
         JSONObject jsonObject = (JSONObject) (new JSONParser()).parse(fileReader);
@@ -85,6 +85,8 @@ public class GodPowerManager {
                 godPower.setMove(new MoveNotOnInitialPosition(numOfMoves)); break;
             case "swap":
                 godPower.setMove(new SwapMove(numOfMoves)); break;
+            case "noMoveUpAfterBuild":
+                godPower.setMove(new NoMoveUpAfterBuild(1)); break;
             case "":
                 godPower.setMove(new StandardMove(numOfMoves)); break;
         }
@@ -93,6 +95,8 @@ public class GodPowerManager {
             case "askToBuildBeforeMoveAndNotMoveUp":
                 godPower.setAskToBuildBeforeMoveAndNotMoveUp(true);
                 godPower.setBuild(new StandardBuild(numOfBuilds)); break;
+            case "buildBeforeMove":
+                godPower.setBuild(new BuildBeforeMove(1)); break;
             case "askToBuildDomes":
                 godPower.setAskToBuildDomes(true);
                 godPower.setBuild(new StandardBuild(numOfBuilds)); break;
@@ -168,7 +172,7 @@ public class GodPowerManager {
             godPowerList.add(power(godFiles.get(i-1), i));
 
         for (int i = 1; i <= numOfPlayers; i++) {
-            if (opponentsCantWinOnPerimeterPlayer!=0 && numOfPlayers!=opponentsCantWinOnPerimeterPlayer){
+            if (opponentsCantWinOnPerimeterPlayer!=0 && i!=opponentsCantWinOnPerimeterPlayer){
                 godPowerList.get(i-1).getBlockingWinConditions().add(new CantWinMovingOnPerimeter()); // changes the power of Hera's opponents
             }
         }
