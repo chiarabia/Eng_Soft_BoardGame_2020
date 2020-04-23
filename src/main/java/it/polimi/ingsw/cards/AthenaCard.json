@@ -1,12 +1,12 @@
 {
-  "move": "opponentsCantMoveUpAfterIDid",
+  "move": "",
   "build": "",
   "consolidateBuild": "",
   "consolidateMove": "",
   "positiveWinConditions": "",
   "negativeWinConditions": "",
   "loseConditions": "",
-  "newTurn": "",
+  "newTurn": "newNoMoveUpTurn",
   "numOfMoves": 1,
   "numOfBuilds": 1
 }

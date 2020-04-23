@@ -1,6 +1,6 @@
 {
-  "move": "",
-  "build": "askToBuildBeforeMoveAndNotMoveUp",
+  "move": "noMoveUpAfterBuild",
+  "build": "buildBeforeMove",
   "consolidateBuild": "",
   "consolidateMove": "",
   "positiveWinConditions": "",

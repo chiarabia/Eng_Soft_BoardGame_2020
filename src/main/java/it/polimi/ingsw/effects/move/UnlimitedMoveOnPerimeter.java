@@ -2,6 +2,7 @@ package it.polimi.ingsw.effects.move;
 
 import it.polimi.ingsw.Board;
 import it.polimi.ingsw.Cell;
+import it.polimi.ingsw.Position;
 import it.polimi.ingsw.Turn;
 
 import java.util.Set;
@@ -18,8 +19,8 @@ public class UnlimitedMoveOnPerimeter extends StandardMove {
     }
 
     @Override
-    public Set<Cell> move(Cell workerCell, Board board, Turn turn) {
-        return super.move(workerCell, board, turn);
+    public Set<Position> move (Position workerPosition, Board board, Turn turn) {
+        return super.move(workerPosition, board, turn);
     }
 
     @Override

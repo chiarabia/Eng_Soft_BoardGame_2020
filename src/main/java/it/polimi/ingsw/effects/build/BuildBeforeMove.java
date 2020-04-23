@@ -2,6 +2,7 @@ package it.polimi.ingsw.effects.build;
 
 import it.polimi.ingsw.Board;
 import it.polimi.ingsw.Cell;
+import it.polimi.ingsw.Position;
 import it.polimi.ingsw.Turn;
 
 import java.util.Set;
@@ -18,29 +19,24 @@ public class BuildBeforeMove extends StandardBuild {
 
     //TODO: Non sono sicuro che chiamare la classe padre, mi permetta di usare il metodo canIbuild con Override, bisognerebbe fare testing
     @Override
-    public Set<Cell> build(Cell workerCell, Board board, Turn turn) {
-        return super.build(workerCell, board, turn);
+    public Set<Position> build(Position workerPosition, Board board, Turn turn) {
+        return super.build(workerPosition, board, turn);
     }
 
 
-    /**
-     *
-     * @param workercell
-     * @param turn
-     * @return
-     */
+
 
     @Override
-    protected boolean checkBuildConditions(Cell workercell, Turn turn) {
-        if (!workercell.isWorker()) //robusto, devo invocare il metodo su un worker
+    protected boolean checkBuildConditions(Cell workerCell, Turn turn) {
+        if (!workerCell.isWorker()) //robusto, devo invocare il metodo su un worker
             return false;
 
-        if (workercell.getPlayerId() != turn.getPlayerId()) //il player deve essere uguale
+        if (workerCell.getPlayerId() != turn.getPlayerId()) //il player deve essere uguale
             return false;
 
         //Posso costruire prima di muovermi
 
-        if (turn.getWorkerUsed() != 0 && workercell.getWorkerId() != turn.getWorkerUsed()) //if the id doesn't match, false
+        if (turn.getWorkerUsed() != 0 && workerCell.getWorkerId() != turn.getWorkerUsed()) //if the id doesn't match, false
             return false;
 
         else {

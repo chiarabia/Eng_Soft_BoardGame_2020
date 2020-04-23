@@ -20,13 +20,10 @@ import java.util.Set;
 public class SwapMoveTest {
     int moves = 1;
     SwapMove swapMove = new SwapMove(moves);
-    Cell workerOneCellBoardOne;
-    Cell workerTwoCellBoardOne;
-    Cell workerOneCellBoardTwo;
-    Cell workerTwoCellBoardTwo;
+    Cell workerOneCell;
+    Cell workerTwoCell;
     Turn turn;
-    Board boardOne;
-    Board boardTwo;
+    Board board;
     Player playerOne = new Player("pippo",12);
     Worker workerPlayerOne = new Worker(playerOne, 12);
     Player playerTwo = new Player("ciccio",1);
@@ -36,25 +33,19 @@ public class SwapMoveTest {
     @BeforeEach
     void setUp(){
         turn = new Turn(playerOne);
-        boardOne = new Board();
-        boardTwo = new Board();
+        board = new Board();
     }
 
-    //negative
-    //Throws Null Exception at cell.getWorkerId
+    //positive
+
     @Test
     void playerShouldSwapWithTheOtherPlayer(){
         //setting the first board before the swap
-        workerOneCellBoardOne = boardOne.getCell(1,2,0);
-        workerOneCellBoardOne.setWorker(workerPlayerOne);
-        workerTwoCellBoardOne = boardOne.getCell(1,1,0);
-        workerTwoCellBoardOne.setWorker(workerPlayerTwo);
-        //setting the second board after the swap
-        workerOneCellBoardTwo = boardTwo.getCell(1,1,0);
-        workerOneCellBoardTwo.setWorker(workerPlayerOne);
-        workerTwoCellBoardTwo = boardTwo.getCell(1,2,0);
-        workerTwoCellBoardTwo.setWorker(workerPlayerTwo);
+        workerOneCell = board.getCell(1,2,0);
+        workerOneCell.setWorker(workerPlayerOne);
+        workerTwoCell = board.getCell(1,1,0);
+        workerTwoCell.setWorker(workerPlayerTwo);
 
-        assertEquals(boardTwo,swapMove.move(workerOneCellBoardOne,boardOne,turn));
+        assertTrue(swapMove.move(workerOneCell.getPosition(),board,turn).contains(workerTwoCell.getPosition()));
     }
 }

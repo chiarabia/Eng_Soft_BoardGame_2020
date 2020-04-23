@@ -21,6 +21,7 @@ public class UnlimitedMoveOnPerimeterTest {
     Turn turn;
     Player player = new Player("pippo",12);
     Worker worker = new Worker(player, 12);
+    Board board = new Board();
 
     @BeforeEach
     void SetUp(){
@@ -38,10 +39,12 @@ public class UnlimitedMoveOnPerimeterTest {
     //positive
     @Test
     void moveConditionsShouldReturnTrueBecauseCellIsOnThePerimeterEvenAfterAnotherMove(){
-        Cell startingCell = new Cell(1,0,0);
-        workerCell = new Cell(0,0,0);
+        board.newCell(1,0,0);
+        board.newCell(0,0,0);
+        Cell startingCell = board.getCell(1,0,0);
+        workerCell = board.getCell(0,0,0);
         workerCell.setWorker(worker);
-        turn.updateTurnInfoAfterMove(startingCell,workerCell);
+        turn.updateTurnInfoAfterMove(startingCell.getPosition(),workerCell.getPosition(), board);
         workerCell.setWorker(worker);
         assertTrue(unlimitedMoveOnPerimeter.checkMoveConditions(workerCell,turn));
     }

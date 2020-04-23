@@ -2,6 +2,7 @@ package it.polimi.ingsw.effects.move;
 
 import it.polimi.ingsw.Board;
 import it.polimi.ingsw.Cell;
+import it.polimi.ingsw.Position;
 import it.polimi.ingsw.Turn;
 
 import java.util.Set;
@@ -19,17 +20,19 @@ public class NoMoveUpAfterBuild extends StandardMove{
     }
 
     @Override
-    public Set<Cell> move(Cell workerCell, Board board, Turn turn) {
-        Set<Cell> temp_cell = super.move(workerCell, board, turn);
-        if(turn.getMoveTimes()>0 & !turn.isBuildAfterMove()) //in altri termini, se ho già costruito, ma non dopo essermi mosso, allora...
-           return temp_cell.stream()
-                    .filter(a-> heightsDifference(workerCell.getZ(),a.getZ())<=0)
+    public Set<Position> move (Position workerPosition, Board board, Turn turn) {
+        Cell workerCell = board.getCell(workerPosition);
+        Set<Position> temp_positions = super.move(workerPosition, board, turn);
+        if(turn.getBuildTimes()>0 & !turn.isBuildAfterMove()) //in altri termini, se ho già costruito, ma non dopo essermi mosso, allora...
+           return temp_positions.stream()
+                    .filter(a-> heightsDifference(workerPosition.getZ(),a.getZ())<=0)
                     .collect(Collectors.toSet());
         else
-            return temp_cell;
+            return temp_positions;
     }
 
     @Override
+    //Todo: ridefinire questo metodo
     protected boolean checkMoveConditions(Cell workerCell, Turn turn) {
         return super.checkMoveConditions(workerCell, turn);
     }

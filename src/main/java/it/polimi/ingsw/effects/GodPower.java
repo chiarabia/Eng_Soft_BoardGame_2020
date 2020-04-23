@@ -12,37 +12,44 @@ import it.polimi.ingsw.effects.winCondition.StandardWinCondition;
 import it.polimi.ingsw.Position;
 import it.polimi.ingsw.Turn;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 
 public class GodPower {
+    private final int playerId;
+
     private StandardMove move;
     private StandardBuild build;
+
     private StandardConsolidateMove consolidateMove;
     private StandardConsolidateBuild consolidateBuild;
+
     private StandardLoseCondition loseCondition;
-    private List<StandardWinCondition> positiveWinConditions;
-    private List<StandardWinCondition> blockingWinConditions;
+    private List<StandardWinCondition> positiveWinConditions = new ArrayList<>();
+    private List<StandardWinCondition> blockingWinConditions = new ArrayList<>();
+
     private NewTurn newTurn;
+
     private boolean askToBuildDomes = false;
     private boolean askToBuildBeforeMoveAndNotMoveUp = false;
 
-    public Set<Cell> move (Cell workerCell, Board board, Turn turn)  {
-        return move.move(workerCell, board, turn);
+    public Set<Position> move (Position workerPosition, Board board, Turn turn)  {
+        return move.move(workerPosition, board, turn);
     }
 
-    public Set<Cell> build(Cell workerCell, Board board, Turn turn) {
-        return build.build(workerCell, board, turn);
+    public Set<Position> build(Position workerPosition, Board board, Turn turn) {
+        return build.build(workerPosition, board, turn);
     }
 
     //returns the state of the board after the worker has moved
-    public void moveInto (Board board, Cell workerCell, Cell destinationCell) {
-        consolidateMove.moveInto(board, workerCell, destinationCell);
+    public void moveInto (Board board, Position workerPosition, Position destinationPosition) {
+        consolidateMove.moveInto(board, workerPosition, destinationPosition);
     }
 
     //returns the state of the board after the workers has built
-    public void BuildUp (Position buildingCell, Board board, boolean god_power) {
-        consolidateBuild.BuildUp(buildingCell, board, god_power);
+    public void BuildUp (Position buildingPosition, Board board, boolean god_power) {
+        consolidateBuild.BuildUp(buildingPosition, board, god_power);
     }
 
     /**
@@ -52,27 +59,27 @@ public class GodPower {
      * @param collectBuild  a set<Cell> with the possible cells where the player can build
      * @return true if the player has lost, false otherwise
      */
-    public boolean lose (Set<Cell> collectMove, Set<Cell> collectBuild){
+    public boolean lose (Set<Position> collectMove, Set<Position> collectBuild){
         return  loseCondition.lose(collectMove, collectBuild);
     }
 
     /**
      *  This method checks if the player has won
      *
-     * @param workerCell the worker's cell
-     * @param destinationCell the worker's destination cell after its move
+     * @param workerPosition the worker's cell
+     * @param destinationPosition the worker's destination cell after its move
      * @param board the board of the game
      * @return true if the player has won, false otherwise
      */
 
 
-    public boolean win (Cell workerCell, Cell destinationCell, Board board) {
+    public boolean win (Position workerPosition, Position destinationPosition, Board board) {
         boolean win = false;
 
         //checks if one of the player has won with one of the win conditions
         //that they have available with their god power
         for (int i =0; i<positiveWinConditions.size(); i++) {
-           if (positiveWinConditions.get(i).win(workerCell, destinationCell, board))
+           if (positiveWinConditions.get(i).win(workerPosition, destinationPosition, board))
                win = true;
         }
 
@@ -80,7 +87,7 @@ public class GodPower {
         //was set to false
 
         for (int j=0; j<blockingWinConditions.size(); j++) {
-            if(blockingWinConditions.get(j).win(workerCell, destinationCell, board)){
+            if(!blockingWinConditions.get(j).win(workerPosition, destinationPosition, board)){
                 win = false;
             }
         }
@@ -94,19 +101,28 @@ public class GodPower {
      * @return a temporal save of all the abilities the player
      */
     public GodPower copyGodPower (GodPower godPower) {
-        GodPower tempGodPower = new GodPower();
+        GodPower tempGodPower = new GodPower(godPower.playerId);
         tempGodPower.setMove(this.move);
         tempGodPower.setBuild(this.build);
         tempGodPower.setConsolidateBuild(this.consolidateBuild);
         tempGodPower.setConsolidateMove(this.consolidateMove);
         tempGodPower.setPositiveWinConditions(this.positiveWinConditions);
-        tempGodPower.setNegativeWinConditions(this.blockingWinConditions);
-        //tempGodPower.setMove(this.move);
+        tempGodPower.setBlockingWinConditions(this.blockingWinConditions);
+        tempGodPower.setLoseCondition(this.loseCondition);
+        tempGodPower.setNewTurn(this.newTurn);
         return tempGodPower;
     }
 
+    public GodPower(int playerId) {
+        this.playerId = playerId;
+    }
 
-    //Setter and Getter
+    //Setters and Getters
+
+
+    public int getPlayerId() {
+        return playerId;
+    }
 
     public StandardMove getMove() {
         return move;
@@ -156,12 +172,12 @@ public class GodPower {
         this.positiveWinConditions = positiveWinConditions;
     }
 
-    public List<StandardWinCondition> getNegativeWinConditions() {
+    public List<StandardWinCondition> getBlockingWinConditions() {
         return blockingWinConditions;
     }
 
-    public void setNegativeWinConditions(List<StandardWinCondition> negativeWinConditions) {
-        this.blockingWinConditions = negativeWinConditions;
+    public void setBlockingWinConditions(List<StandardWinCondition> blockingWinConditions) {
+        this.blockingWinConditions = blockingWinConditions;
     }
 
     public void setNewTurn(NewTurn newTurn) { this.newTurn = newTurn; }
@@ -179,4 +195,11 @@ public class GodPower {
     public boolean isAskToBuildDomes() {return askToBuildDomes; }
 
     public boolean isAskToBuildBeforeMoveAndNotMoveUp() {return askToBuildBeforeMoveAndNotMoveUp; }
+
+    public void addPositiveWinConditions(StandardWinCondition positiveWinConditions) {
+        this.positiveWinConditions.add(positiveWinConditions);
+    }
+    public void addBlockingWinConditions(StandardWinCondition blockingWinConditions) {
+        this.blockingWinConditions.add(blockingWinConditions);
+    }
 }

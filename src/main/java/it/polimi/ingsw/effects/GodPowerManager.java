@@ -5,10 +5,8 @@ import it.polimi.ingsw.effects.consolidateBuild.StandardConsolidateBuild;
 import it.polimi.ingsw.effects.consolidateMove.PushWorker;
 import it.polimi.ingsw.effects.consolidateMove.StandardConsolidateMove;
 import it.polimi.ingsw.effects.consolidateMove.SwapWorker;
-import it.polimi.ingsw.effects.move.MoveNotOnInitialPosition;
-import it.polimi.ingsw.effects.move.PushForward;
-import it.polimi.ingsw.effects.move.StandardMove;
-import it.polimi.ingsw.effects.move.SwapMove;
+import it.polimi.ingsw.effects.move.*;
+import it.polimi.ingsw.effects.turn.NewNoMoveUpTurn;
 import it.polimi.ingsw.effects.turn.NewTurn;
 import it.polimi.ingsw.effects.winCondition.*;
 import org.json.simple.JSONObject;
@@ -25,54 +23,70 @@ import java.util.Random;
 import java.util.stream.Stream;
 
 public class GodPowerManager {
-    /*valori per tenere memoria dell'eventuale giocatore che modifica il gioco avversario (Hera ed Athena)
-     * 0 significa nessuno, altrimenti 1, 2 o eventualmente 3*/
-    private static int opponentsCantMoveUpAfterIDPlayer;
+    /*values​to keep memory of the player who changes the powers of the opponents (e.g: Hera, Athena, etc...)
+     * 0 means nobody, otherwise 1, 2 or possibly 3
+     */
     private static int opponentsCantWinOnPerimeterPlayer;
 
+    /*JSON files' path*/
     private final static String root = "src\\main\\java\\it\\polimi\\ingsw\\Cards\\";
 
-    /* estrae 'numOfPlayers' carte diverse sotto forma di List <String>,
-     * indipendentemente da nomi e/o numero di carte presenti nella cartella Cards*/
+    /**
+     * This method randomly extracts different 'numOfPlayers' cards in the form of List <String>,
+     * regardless of names and/or number of cards in the Cards folder
+     * @param numOfPlayers number of players
+     * @return List</String>
+     * @throws IOException IO Exception
+     */
+
     private static List <String> chooseGodFiles (int numOfPlayers) throws IOException {
         List <String> cards = new ArrayList();
         Stream<Path> paths = Files.walk(Paths.get(root));
         paths.filter(Files::isRegularFile).forEach(x->{cards.add(x.toString().substring(root.length()));});
-        // adesso la lista cards contiene tutte le 14 stringhe di nomi dei file JSON (es. "ApolloCard.json")
+        // the card list contains all 14 strings of JSON file names (eg "ApolloCard.json")
 
         Random rand = new Random();
         int numOfAvailableCards = cards.size();
         for (int i = numOfAvailableCards; i > numOfPlayers; i--) cards.remove(rand.nextInt(i));
-        // adesso nella lista cards sono rimaste solo 'numOfPlayers' stringhe casuali
+        // only 'numOfPlayers' random strings are left in the card list
 
         return cards;
     }
 
-    /*Restituisce un GodPower completo di funzioni leggendo dai file JSON*/
-    private static GodPower power (String nameOfFile, int numOfPlayer) throws IOException, ParseException {
-        GodPower godPower = new GodPower();
+    /**
+     * This method creates a GodPower Object corresponding to the nameOfFile string. The appropriate effects are read from the JSON file.
+     * @param nameOfFile JSON file's name
+     * @param numOfPlayer Player ID
+     */
+
+    public static GodPower power (String nameOfFile, int numOfPlayer) throws IOException, ParseException {
+        GodPower godPower = new GodPower(numOfPlayer);
         FileReader fileReader = new FileReader(root + nameOfFile);
         JSONObject jsonObject = (JSONObject) (new JSONParser()).parse(fileReader);
+        //Effects' strings
         String move = (String) jsonObject.get("move");
         String build = (String) jsonObject.get("build");
         String consolidateMove = (String) jsonObject.get("consolidateMove");
         String consolidateBuild = (String) jsonObject.get("consolidateBuild");
         String positiveWinConditions = (String) jsonObject.get("positiveWinConditions");
-        String negativeWinConditions = (String) jsonObject.get("negativeWinConditions");
+        String blockingWinConditions = (String) jsonObject.get("negativeWinConditions");
         String loseConditions = (String) jsonObject.get("loseConditions");
         String newTurn = (String) jsonObject.get("newTurn");
+
         int numOfBuilds = Math.toIntExact((Long) jsonObject.get("numOfBuilds"));
         int numOfMoves = Math.toIntExact((Long) jsonObject.get("numOfMoves"));
 
         switch (move) {
             case "unlimitedPerimetralMove":
-                // todo: sistemare
+                godPower.setMove(new UnlimitedMoveOnPerimeter(numOfMoves)); break;
             case "pushForward":
                 godPower.setMove(new PushForward(numOfMoves)); break;
             case "moveNotOnInitialPosition":
                 godPower.setMove(new MoveNotOnInitialPosition(numOfMoves)); break;
             case "swap":
                 godPower.setMove(new SwapMove(numOfMoves)); break;
+            case "noMoveUpAfterBuild":
+                godPower.setMove(new NoMoveUpAfterBuild(1)); break;
             case "":
                 godPower.setMove(new StandardMove(numOfMoves)); break;
         }
@@ -81,6 +95,8 @@ public class GodPowerManager {
             case "askToBuildBeforeMoveAndNotMoveUp":
                 godPower.setAskToBuildBeforeMoveAndNotMoveUp(true);
                 godPower.setBuild(new StandardBuild(numOfBuilds)); break;
+            case "buildBeforeMove":
+                godPower.setBuild(new BuildBeforeMove(1)); break;
             case "askToBuildDomes":
                 godPower.setAskToBuildDomes(true);
                 godPower.setBuild(new StandardBuild(numOfBuilds)); break;
@@ -109,6 +125,7 @@ public class GodPowerManager {
 
         godPower.setPositiveWinConditions(new ArrayList());
         godPower.getPositiveWinConditions().add(new StandardWinCondition());
+
         switch (positiveWinConditions) {
             case "winMovingDownTwoOrMoreLevels":
                 godPower.getPositiveWinConditions().add(new WinMovingDownTwoOrMoreLevels()); break;
@@ -117,8 +134,8 @@ public class GodPowerManager {
             case "": break;
         }
 
-        godPower.setNegativeWinConditions(new ArrayList());
-        switch (negativeWinConditions) {
+        godPower.setBlockingWinConditions(new ArrayList());
+        switch (blockingWinConditions) {
             case "opponentsCantWinOnPerimeter":
                 opponentsCantWinOnPerimeterPlayer = numOfPlayer; break;
             case "": break;
@@ -126,21 +143,27 @@ public class GodPowerManager {
 
         godPower.setLoseCondition(new StandardLoseCondition());
 
-        godPower.setNewTurn(new NewTurn());
         switch (newTurn) {
-            case "opponentsCantMoveUpAfterIDid":
-                opponentsCantMoveUpAfterIDPlayer = numOfPlayer; break;
-            case "": break;
+            case "newNoMoveUpTurn":
+                godPower.setNewTurn(new NewNoMoveUpTurn()); break;
+            case "":
+                godPower.setNewTurn(new NewTurn()); break;
         }
 
         return godPower;
     }
 
+    /**
+     * Creates a list of godPowers based on the number of players: it must generate two / three different random cards,
+     * then, after building them, changes the functions in case of presence of godPowers that modify the behaviors of the adversaries
+     * @param numOfPlayers player ID
+     * @return List</GodPower>
+     * @throws ParseException
+     * @throws IOException
+     */
 
-    /* crea una lista di godPowers in base al numero di giocatori: deve generare due/tre carte casuali differenti,
-       dopo averle costruite modifica alcune funzioni in presenza di divinità che modificano il comportamento degli avversari */
     public static List<GodPower> createGodPowers (int numOfPlayers) throws ParseException, IOException {
-        opponentsCantMoveUpAfterIDPlayer = 0;
+
         opponentsCantWinOnPerimeterPlayer = 0;
         List <GodPower> godPowerList = new ArrayList();
         List <String> godFiles = chooseGodFiles(numOfPlayers);
@@ -149,11 +172,8 @@ public class GodPowerManager {
             godPowerList.add(power(godFiles.get(i-1), i));
 
         for (int i = 1; i <= numOfPlayers; i++) {
-            if (opponentsCantWinOnPerimeterPlayer!=0 && numOfPlayers!=opponentsCantWinOnPerimeterPlayer){
-                godPowerList.get(i-1).getNegativeWinConditions().add(new CantWinMovingOnPerimeter()); // modifica il potere degli avversari di Hera
-            }
-            if (opponentsCantMoveUpAfterIDPlayer!=0 && numOfPlayers!=opponentsCantMoveUpAfterIDPlayer){
-                //todo: modificare il potere degli avversari di Athena
+            if (opponentsCantWinOnPerimeterPlayer!=0 && i!=opponentsCantWinOnPerimeterPlayer){
+                godPowerList.get(i-1).getBlockingWinConditions().add(new CantWinMovingOnPerimeter()); // changes the power of Hera's opponents
             }
         }
         return godPowerList;

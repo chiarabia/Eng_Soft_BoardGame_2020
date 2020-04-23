@@ -2,6 +2,7 @@ package it.polimi.ingsw.effects.winCondition;
 
 
 import it.polimi.ingsw.Cell;
+import it.polimi.ingsw.Position;
 
 
 import java.util.Set;
@@ -17,7 +18,7 @@ public class StandardLoseCondition {
      * @return return true if the player has lost, false otherwise
      */
 
-    public boolean lose (Set<Cell> collectMove, Set<Cell> collectBuild){
+    public boolean lose (Set<Position> collectMove, Set<Position> collectBuild){
         if(collectMove.isEmpty()) return true;
         return collectBuild.isEmpty();
     }

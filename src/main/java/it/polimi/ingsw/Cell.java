@@ -51,6 +51,8 @@ public class Cell {
     public boolean isPerimetral() {
         return (getY()==4 || getY()==0 ||getX() == 0 || getX() == 4);
     }
+
+    //getters for worker, player and their IDs
     public Worker getWorker(){return worker;}
     public Player getPlayer(){return worker.getPlayer();}
     public int getWorkerId() {return worker.getWorkerId();}

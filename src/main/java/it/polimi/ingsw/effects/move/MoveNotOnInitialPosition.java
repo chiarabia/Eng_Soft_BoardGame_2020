@@ -21,7 +21,7 @@ public class MoveNotOnInitialPosition extends StandardMove{
     }
 
     /**
-     * @param workerCell the worker's Cell
+     * @param workerPosition the worker's Cell
      * @param board the board
      * @param turn the player's turn
      * @return a Set<Cell> collect that only has the cells where the player can move
@@ -29,18 +29,21 @@ public class MoveNotOnInitialPosition extends StandardMove{
      */
 
     @Override
-    public Set<Cell> move(Cell workerCell, Board board, Turn turn) {
+    public Set<Position> move (Position workerPosition, Board board, Turn turn) {
+        Cell workerCell = board.getCell(workerPosition);
+
         if (!checkMoveConditions(workerCell, turn)) return new HashSet<>();
         else {
             Position initialPosition = turn.getWorkerStartingPosition();
+
             if (initialPosition != null) {
-                return super.move(workerCell, board, turn)
+                return super.move(workerPosition, board, turn)
                         .stream()
-                        .filter(a -> !a.getPosition().equals(initialPosition))
+                        .filter(a -> !a.equals(initialPosition))
                         .collect(Collectors.toSet());
             }
             //if the player didn't already move they can move normally
-            else return super.move(workerCell, board, turn);
+            else return super.move(workerPosition, board, turn);
         }
     }
 

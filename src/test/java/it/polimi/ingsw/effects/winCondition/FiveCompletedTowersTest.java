@@ -31,7 +31,7 @@ public class FiveCompletedTowersTest {
         board = new Board();
     }
 
-    //negative
+    //positive
     @Test
     void playerShouldWin(){
         board.newCell(2,2,2);
@@ -49,7 +49,7 @@ public class FiveCompletedTowersTest {
             board.getCell(x, 0, 3).setDome(true);
 
         }
-        assertTrue(winCondition.win(workerCell, destinationCell, board));
+        assertTrue(winCondition.win(workerCell.getPosition(), destinationCell.getPosition(), board));
     }
 
     //positive
@@ -64,7 +64,7 @@ public class FiveCompletedTowersTest {
             board.getCell(i,i,3).setDome(true);
         }
 
-        assertTrue(winCondition.win(workerCell, destinationCell, board));
+        assertTrue(winCondition.win(workerCell.getPosition(), destinationCell.getPosition(), board));
 
     }
 
@@ -80,7 +80,7 @@ public class FiveCompletedTowersTest {
             i++;
         }
 
-        assertFalse(winCondition.win(workerCell, destinationCell, board));
+        assertFalse(winCondition.win(workerCell.getPosition(), destinationCell.getPosition(), board));
     }
 
     //positive

@@ -2,6 +2,7 @@ package it.polimi.ingsw.effects.move;
 
 import it.polimi.ingsw.Board;
 import it.polimi.ingsw.Cell;
+import it.polimi.ingsw.Position;
 import it.polimi.ingsw.Turn;
 
 import java.util.HashSet;
@@ -16,21 +17,17 @@ import java.util.stream.Collectors;
 public class NoMoveUp extends StandardMove {
     private StandardMove decoratedMove;
 
-    public NoMoveUp(int moves) { //costruttore di default, da non usare, ma non è possibile farne a meno
-        super(moves);
-    }
-
-    public NoMoveUp (StandardMove decoratedMove, int moves){ //costruttore per decorare un metodo
-        super(moves);
+    public NoMoveUp (StandardMove decoratedMove){
+        super(decoratedMove.moves);
         this.decoratedMove = decoratedMove;
     }
 
-
     @Override
-    public Set<Cell> move(Cell workerCell, Board board, Turn turn) {
-        if (!checkMoveConditions(workerCell, turn)) return new HashSet<Cell>();
+    public Set<Position> move (Position workerPosition, Board board, Turn turn) {
+        Cell workerCell = board.getCell(workerPosition);
+        if (!checkMoveConditions(workerCell, turn)) return new HashSet<Position>();
         else {
-            Set<Cell> standardMove = decoratedMove.move(workerCell, board, turn);
+            Set<Position> standardMove = decoratedMove.move(workerPosition, board, turn);
             return standardMove.stream()
                     .filter(a -> a.getZ() <= workerCell.getZ())
                     .collect(Collectors.toSet());

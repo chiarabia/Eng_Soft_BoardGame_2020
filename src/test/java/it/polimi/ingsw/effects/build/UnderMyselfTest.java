@@ -6,11 +6,8 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotEquals;
-import it.polimi.ingsw.Board;
-import it.polimi.ingsw.Cell;
-import it.polimi.ingsw.Player;
-import it.polimi.ingsw.Worker;
-import it.polimi.ingsw.Turn;
+
+import it.polimi.ingsw.*;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -30,5 +27,73 @@ public class UnderMyselfTest {
     @BeforeEach
     void setUp(){
         turn = new Turn(player);
+        board = new Board();
     }
+
+    @Test
+    void buildShouldGiveTheStandardSetOfPossibleCellsAndTheWorkerPosition() {
+        workerCell = board.getCell(3,3,0);
+        workerCell.setWorker(worker);
+        turn.updateTurnInfoAfterMove(new Position(2,2,0), workerCell.getPosition(), board);
+
+        Set <Position> collect = new HashSet<>();
+        collect.add(new Position (4,4,0));
+        collect.add(new Position(3,3,0));
+        collect.add(new Position (2,2,0));
+        collect.add(new Position (3,2,0));
+        collect.add(new Position (2,3,0));
+        collect.add(new Position (3,4,0));
+        collect.add(new Position (4,3,0));
+        collect.add(new Position (2,4,0));
+        collect.add(new Position (4,2,0));
+        assertEquals(collect, underMyself.build(workerCell.getPosition(), board, turn));
+    }
+    @Test
+    void buildShouldNotContainTheWorkerPositionBeacuseZis3() {
+        board = new Board();
+        board.newCell(3,3,0);
+        board.newCell(3,3,1);
+        board.newCell(3,3,2);
+        board.newCell(3,3,3);
+
+        board.getCell(3,3,0).setBuilding(true);
+        board.getCell(3,3,1).setBuilding(true);
+        board.getCell(3,3,2).setBuilding(true);
+
+        workerCell = board.getCell(3,3,3);
+        workerCell.setWorker(worker);
+        turn.updateTurnInfoAfterMove(new Position(2,2,0), workerCell.getPosition(), board);
+
+        Set <Position> collect = new HashSet<>();
+        collect.add(new Position (4,4,0));
+        collect.add(new Position (2,2,0));
+        collect.add(new Position (3,2,0));
+        collect.add(new Position (2,3,0));
+        collect.add(new Position (3,4,0));
+        collect.add(new Position (4,3,0));
+        collect.add(new Position (2,4,0));
+        collect.add(new Position (4,2,0));
+        assertEquals(collect, underMyself.build(workerCell.getPosition(), board, turn));
+    }
+
+    @Test
+    void buildShouldBeEmpty () {
+        board = new Board();
+        board.newCell(3,3,3);
+        workerCell = board.getCell(3,3,3);
+        workerCell.setWorker(worker);
+        turn.updateTurnInfoAfterMove(new Position(2,2,0), workerCell.getPosition(), board);
+        turn.updateTurnInfoAfterBuild(new Position(4,4,0));
+
+        Set <Position> collect = new HashSet<>();
+        assertEquals(collect, underMyself.build(workerCell.getPosition(), board, turn));
+    }
+
+    @Test
+    void NullPointerException () {
+        assertThrows(NullPointerException.class, () -> {
+            underMyself.build(null, null, null);
+        });
+    }
+
 }
