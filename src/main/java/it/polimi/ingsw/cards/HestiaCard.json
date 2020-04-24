@@ -1,4 +1,5 @@
 {
+  "name": "Hestia",
   "move": "",
   "build": "notOnPerimeter",
   "consolidateBuild": "",

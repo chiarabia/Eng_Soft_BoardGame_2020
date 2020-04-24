@@ -17,6 +17,7 @@ import java.util.List;
 import java.util.Set;
 
 public class GodPower {
+    private final String godName;
     private final int playerId;
 
     private StandardMove move;
@@ -101,7 +102,7 @@ public class GodPower {
      * @return a temporal save of all the abilities the player
      */
     public GodPower copyGodPower (GodPower godPower) {
-        GodPower tempGodPower = new GodPower(godPower.playerId);
+        GodPower tempGodPower = new GodPower(godPower.playerId, godPower.godName);
         tempGodPower.setMove(this.move);
         tempGodPower.setBuild(this.build);
         tempGodPower.setConsolidateBuild(this.consolidateBuild);
@@ -113,12 +114,14 @@ public class GodPower {
         return tempGodPower;
     }
 
-    public GodPower(int playerId) {
+    public GodPower(int playerId, String godName) {
         this.playerId = playerId;
+        this.godName = godName;
     }
 
     //Setters and Getters
 
+    public String getGodName() { return godName; }
 
     public int getPlayerId() {
         return playerId;

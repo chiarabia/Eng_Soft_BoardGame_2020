@@ -1,13 +1,16 @@
 package it.polimi.ingsw.server;
 
 import it.polimi.ingsw.exceptions.ClientStoppedWorkingException;
+
+import java.io.ObjectInputStream;
 import java.net.Socket;
 import java.util.Scanner;
 
 public class ServerReciever extends Thread {
     private static String message;
     private static boolean error;
-    public static String recieve(Socket socket, int timeLimit) throws ClientStoppedWorkingException {
+    private static Object object;
+    public static String receiveMessage(Socket socket, int timeLimit) throws ClientStoppedWorkingException {
         Thread thread = new Thread(()-> {
                 try {
                     Scanner in = new Scanner (socket.getInputStream());
@@ -22,6 +25,31 @@ public class ServerReciever extends Thread {
             try {
                 sleep(10);
                 if (message!=null) return message;
+                if (error) {
+                    thread.interrupt();
+                    throw new ClientStoppedWorkingException(false);
+                }
+            } catch (InterruptedException e) {break;}
+        }
+        thread.interrupt();
+        throw new ClientStoppedWorkingException(true);
+    }
+
+    public static Object receiveObject(Socket socket, int timeLimit) throws ClientStoppedWorkingException {
+        Thread thread = new Thread(()-> {
+            try {
+                ObjectInputStream fileObjectIn = new ObjectInputStream(socket.getInputStream());
+                object = (Object) fileObjectIn.readObject();
+            } catch (Exception e) {error = true;}
+        });
+
+        object = null;
+        error = false;
+        thread.start();
+        for (int i = 0; i < timeLimit * 100; i++) {
+            try {
+                sleep(10);
+                if (object!=null) return object;
                 if (error) {
                     thread.interrupt();
                     throw new ClientStoppedWorkingException(false);

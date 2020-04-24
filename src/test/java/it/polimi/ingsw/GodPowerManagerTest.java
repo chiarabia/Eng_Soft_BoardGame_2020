@@ -31,7 +31,7 @@ public class GodPowerManagerTest {
         void setup () {
         godPowerManager = new GodPowerManager();
         fileName = new String();
-        godPowerCorrect = new GodPower(1);
+        godPowerCorrect = new GodPower(1, "Apollo");
         godPowerCorrect.setMove(new StandardMove(1));
         godPowerCorrect.setBuild(new StandardBuild(1));
         godPowerCorrect.setConsolidateBuild(new StandardConsolidateBuild());
