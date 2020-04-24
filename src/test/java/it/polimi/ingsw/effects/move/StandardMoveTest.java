@@ -26,7 +26,7 @@ public class StandardMoveTest {
     Player player = new Player("pippo",12);
     Player player2 = new Player("ciccio",3);
     Worker worker = new Worker(player, 12);
-    Worker worker2 = new Worker(player,12);
+    Worker worker2 = new Worker(player,13);
 
 
     @BeforeEach
@@ -137,6 +137,8 @@ public class StandardMoveTest {
             standardMove.move(null, null,null);
         });
     }
+
+
 
     @Test
     void correctInstantiation() {

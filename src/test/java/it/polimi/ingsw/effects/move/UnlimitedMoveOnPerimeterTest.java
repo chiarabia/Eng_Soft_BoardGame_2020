@@ -22,6 +22,7 @@ public class UnlimitedMoveOnPerimeterTest {
     Player player = new Player("pippo",12);
     Player player2 = new Player("ciccio",3);
     Worker worker = new Worker(player, 12);
+    Worker worker2 = new Worker(player,13);
     Board board = new Board();
 
     @BeforeEach
@@ -68,6 +69,19 @@ public class UnlimitedMoveOnPerimeterTest {
         workerCell = board.getCell(0,0,0);
         assertFalse(unlimitedMoveOnPerimeter.checkMoveConditions(workerCell,turn));
     }
+
+    //positive
+    @Test
+    void buildConditionShouldBeFalseBecauseTheWorkerMovingASecondTimeHasADifferentId(){
+        workerCell = board.getCell(0,0,0);
+        workerCell.setWorker(worker);
+        Cell workerCellFirst = board.getCell(1,0,0);
+        Cell workerStartingCell = board.getCell(2,0,0);
+        workerCellFirst.setWorker(worker2);
+        turn.updateTurnInfoAfterMove(workerStartingCell.getPosition(),workerCellFirst.getPosition(),board);
+        assertFalse(unlimitedMoveOnPerimeter.checkMoveConditions(workerCell,turn));
+    }
+
 
     //positive
     @Test
