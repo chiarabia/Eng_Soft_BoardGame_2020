@@ -60,7 +60,6 @@ public class GodPowerManager {
      */
 
     public static GodPower power (String nameOfFile, int numOfPlayer) throws IOException, ParseException {
-        GodPower godPower = new GodPower(numOfPlayer);
         FileReader fileReader = new FileReader(root + nameOfFile);
         JSONObject jsonObject = (JSONObject) (new JSONParser()).parse(fileReader);
         //Effects' strings
@@ -75,6 +74,8 @@ public class GodPowerManager {
 
         int numOfBuilds = Math.toIntExact((Long) jsonObject.get("numOfBuilds"));
         int numOfMoves = Math.toIntExact((Long) jsonObject.get("numOfMoves"));
+
+        GodPower godPower = new GodPower(numOfPlayer, (String) jsonObject.get("name"));
 
         switch (move) {
             case "unlimitedPerimetralMove":

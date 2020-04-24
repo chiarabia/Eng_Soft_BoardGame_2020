@@ -1,4 +1,5 @@
 {
+  "name": "Atlas",
   "move": "",
   "build": "askToBuildDomes",
   "consolidateBuild": "",

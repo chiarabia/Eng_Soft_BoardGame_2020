@@ -1,10 +1,12 @@
 package it.polimi.ingsw.server;
 
+import it.polimi.ingsw.GameController;
 import it.polimi.ingsw.exceptions.ClientStoppedWorkingException;
 import it.polimi.ingsw.Game;
 import org.json.simple.parser.ParseException;
 
 import java.io.IOException;
+import java.io.ObjectOutputStream;
 import java.io.PrintWriter;
 import java.net.Socket;
 import java.util.ArrayList;
@@ -23,7 +25,7 @@ public class ServerThread extends Thread {
         List <String> tempList = new ArrayList();
         for (int i = 0; i < playersList.size(); i++) {
             try{
-                tempList.add(sendAndWaitForReply(message, i, 1));
+                tempList.add(sendMessageAndWaitForReply(message, i, 1));
             } catch(ClientStoppedWorkingException e){
                 tempList.add(null);
                 playersList.remove(i);
@@ -37,9 +39,18 @@ public class ServerThread extends Thread {
         out.println(message);
         out.flush();
     }
-    public String sendAndWaitForReply(String message, int player, int timeLimit) throws IOException, ClientStoppedWorkingException {
+    public String sendMessageAndWaitForReply(String message, int player, int timeLimit) throws IOException, ClientStoppedWorkingException {
         sendMessage(message, player);
-        return ServerReciever.recieve(playersList.get(player), timeLimit);
+        return ServerReciever.receiveMessage(playersList.get(player), timeLimit);
+    }
+    public void sendObject(Object object, int player) throws IOException {
+        ObjectOutputStream fileObjectOut = new ObjectOutputStream(playersList.get(player).getOutputStream());
+        fileObjectOut.writeObject(object);
+        fileObjectOut.flush();
+    }
+    public Object sendObjectAndWaitForReply(Object object, int player, int timeLimit) throws IOException, ClientStoppedWorkingException {
+        sendObject(object, player);
+        return ServerReciever.receiveObject(playersList.get(player), timeLimit);
     }
     public void startGame(){
         try {
@@ -49,7 +60,11 @@ public class ServerThread extends Thread {
                 scanList ("Close");
                 return;
             }
-            Game game = new Game(this, numOfPlayers, playersNames);
+            ServerProxy serverProxy = new ServerProxy(this);
+            GameController gameController = new GameController();
+            Game game = new Game(numOfPlayers, playersNames);
+            game.addObserver(serverProxy);
+            serverProxy.addObserver(gameController);
 
             // Here the game begins //
 
