@@ -8,111 +8,79 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotEquals;
 
 import it.polimi.ingsw.*;
-import it.polimi.ingsw.effects.consolidateMove.StandardConsolidateMove;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import java.util.HashSet;
-import java.util.Set;
 
 public class StandardConsolidateBuildTest {
     StandardConsolidateBuild standardConsolidateBuild = new StandardConsolidateBuild();
-    Cell workerCell;
-    Cell destinationCell;
+    Cell buildingCell;
     Board board;
-    Turn turn;
+    boolean forceDome;
     Player player = new Player("pippo",12);
     Worker worker = new Worker(player, 12);
 
     @BeforeEach
     void setUp(){
-        turn = new Turn(player);
         board = new Board();
     }
+
+    //positive
     @Test
-    void BuildingCreateNewFreeCellAboveTheBuilding() {
-        board.getCell(0, 0, 0);
-
-        //creation of a nearly complete board using standardConsolidateBuild
-        for (int x=0; x<5; x++) {
-            for (int y=0; y<5; y++) {
-                for (int z=0; z<3; z++) {
-                    assertTrue(board.getCell(x, y, z).isFree()); //free before
-
-                    standardConsolidateBuild.BuildUp(new Position(x, y, z), board, false);
-                    assertFalse(board.getCell(x, y, z).isFree());//NOT free after
-
-                    assertNotNull(board.getCell(x,y,z+1)); //automatically created new free Cell above mine
-                    assertTrue(board.getCell(x,y,z+1).isFree());
-                }
-
-            }
-        }
-        for (int x=0; x<5; x++) {
-            for (int y=0; y<5; y++) {
-                assertTrue(board.getCell(x,y,3).isFree());
-            }
-        }
-        assertTrue(board.getStream().filter(a->a.isFree()).count()==25*1.0);
-        assertTrue(board.getStream().filter(a->a.getZ()<=3).filter(a->a.isBuilding()).count()==25.0*3.0);
+    void withForceDomeTrueShouldBeAbleToBuildADomeOnTheCell(){
+        forceDome = true;
+        buildingCell = board.getCell(0,0,0);
+        standardConsolidateBuild.buildUp(buildingCell.getPosition(),board,forceDome);
+        assertTrue(buildingCell.isDome());
     }
 
+    //positive
     @Test
-    void DomeCreation() {
-    //creation of a nearly complete board
-    for (int x=0; x<5; x++) {
-        for (int y=0; y<5; y++) {
-            for (int z=0; z<3; z++) {
-                board.newCell(x,y,z);
-                board.getCell(x,y,z).setBuilding(true);
-            }
-            board.newCell(x,y,3);
-        }
+    void shouldNotBuildADomeWithForceDomeFalseAndNotOnThirdLevel(){
+        forceDome = false;
+        buildingCell = board.getCell(0,0,0);
+        standardConsolidateBuild.buildUp(buildingCell.getPosition(),board,forceDome);
+        assertFalse(buildingCell.isDome());
     }
-    for (int x=0; x<5; x++) {
-        for (int y=0; y<5; y++) {
-            standardConsolidateBuild.BuildUp(new Position(x,y,3), board, false);
-        }
-    }
-    assertTrue(board.getStream().filter(a->a.isFree()).count()==25*0.0);
-    assertTrue(board.getStream().filter(a->a.getZ()<=2).filter(a->a.isBuilding()).count()==25.0*3.0);
-    assertTrue(board.getStream().filter(a->a.getZ()==3).filter(a->a.isDome()).count()==25.0*1.0);
 
-}
-
+    //positive
     @Test
-    void DomeAtAnyLevel () {
-        for (int z=0; z<3; z++) {
-            //creating an entire level of dome
-            for (int y=0; y<5; y++) {
-                for (int x=0; x<5; x++) {
-                    assertTrue(board.getCell(x, y, z).isFree()); //free before
+    void shouldBuildABuildingWhenNotOnThirdLevelAndWithForceDomeFalse(){
+        forceDome = false;
+        buildingCell = board.getCell(0,0,0);
+        standardConsolidateBuild.buildUp(buildingCell.getPosition(),board,forceDome);
+        assertTrue(buildingCell.isBuilding());
+    }
 
-                    standardConsolidateBuild.BuildUp(new Position(x, y, z), board, true);
-                    assertFalse(board.getCell(x, y, z).isFree());//NOT free after
+    //positive
+    @Test
+    void shouldBuildADomeThenOnThirdLevelAndWithForceDomeFalse(){
+        forceDome = false;
+        board.getCell(0,0,0).setBuilding(true);
+        board.newCell(1,1,1);
+        board.getCell(1,1,1).setBuilding(true);
+        board.newCell(2,2,2);
+        board.getCell(2,2,2).setBuilding(true);
+        board.newCell(3,3,3);
+        buildingCell = board.getCell(3,3,3);
+        standardConsolidateBuild.buildUp(buildingCell.getPosition(),board,forceDome);
+        assertTrue(buildingCell.isDome());
+    }
 
-                    assertTrue(board.getCell(x,y,z+1)==null); //This Method doesnot create domes
-                    assertTrue(board.getCell(x,y,z).isDome());
-                }
-            }
-            assertTrue(board.getStream().filter(a->a.isFree()).count()==25*0.0);
-            assertTrue(board.getStream().filter(a->a.isDome()).count()==25.0*1.0);
+    //positive
+    @Test
+    void buildUpShouldThrowExceptionWithNullParametersAndForceDomeFalse () {
+        assertThrows(NullPointerException.class, () -> {
+            standardConsolidateBuild.buildUp(null, null, false);
+        });
+    }
 
-            //resetting the previous floor of the board, and then starting to build dome in the next floor of the board
-            for (int y=0; y<5; y++) {
-                for (int x=0; x<5; x++) {
-                    board.getCell(x, y, z).setDome(false); //free before
-                    standardConsolidateBuild.BuildUp(new Position(x, y, z), board, false);
-                    assertFalse(board.getCell(x, y, z).isFree());//NOT free after
-                    assertNotNull(board.getCell(x,y,z+1)); //This Method doesnot create domes
-                    assertTrue(board.getCell(x,y,z+1).isFree());
-                }
-            }
-
-        }
-
-
-
+    //positive
+    @Test
+    void buildUpShouldThrowExceptionWithNullParametersAndForceDomeTrue () {
+        assertThrows(NullPointerException.class, () -> {
+            standardConsolidateBuild.buildUp(null, null, true);
+        });
     }
 
 }

@@ -39,11 +39,10 @@ public class BuildBeforeMove extends StandardBuild {
         if (turn.getWorkerUsed() != 0 && workerCell.getWorkerId() != turn.getWorkerUsed()) //if the id doesn't match, false
             return false;
 
-        else {
-            if (turn.isMoveBeforeBuild()||turn.getMoveTimes()==0) //se mi sono mosso, allora posso costruire OPPURE, posso costruire se non mi sono ancora mosso)
-                return (turn.getBuildTimes() < builds);
-            else
-                return false;
-        }
+        if(!turn.isMoveBeforeBuild())
+            return false;
+        else
+            return (turn.getBuildTimes() < builds);
+
     }
 }

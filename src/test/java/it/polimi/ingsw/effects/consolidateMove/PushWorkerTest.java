@@ -2,6 +2,7 @@ package it.polimi.ingsw.effects.consolidateMove;
 
 import it.polimi.ingsw.*;
 import it.polimi.ingsw.effects.consolidateBuild.StandardConsolidateBuild;
+import it.polimi.ingsw.effects.winCondition.StandardLoseCondition;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -52,7 +53,8 @@ public class PushWorkerTest {
                 ()-> assertSame(worker2, board.getCell(3,1,2).getWorker()));
     }
 
-    void PushingWorkerOnTop() {
+    @Test
+    void pushingWorkerOnTop() {
         board.newCell(1,1,2);
         workerCell = board.getCell(1,1,2);
         workerCell.setWorker(worker1);
@@ -78,7 +80,7 @@ public class PushWorkerTest {
     }
 
     @Test
-    void PushingWorkerOnGroundSameY() {
+    void workerShouldBePushedWithSameYCoordinates() {
         board.newCell(1,1,2);
         workerCell = board.getCell(1,1,2);
         workerCell.setWorker(worker1);
@@ -96,7 +98,7 @@ public class PushWorkerTest {
     }
 
     @Test
-    void PushingWorkerOnGroundDiagonally() {
+    void workerShouldBePushedDiagonally() {
         board.newCell(1, 1, 2);
         workerCell = board.getCell(1, 1, 2);
         workerCell.setWorker(worker1);
@@ -114,7 +116,7 @@ public class PushWorkerTest {
     }
 
     @Test
-    void PushingWorkerOnGroundSameX() {
+    void workerShouldBePushedWithTheSameXCoordinate() {
         board.newCell(1, 1, 2);
         workerCell = board.getCell(1, 1, 2);
         workerCell.setWorker(worker1);
@@ -132,7 +134,7 @@ public class PushWorkerTest {
     }
 
     @Test
-    void PushingOutOfBoard () {
+    void whenTheWorkerIsPushedOutsideOfTheBoardShouldThrowNullException () {
         board.newCell(1,1,0);
         workerCell = board.getCell(1,1,0);
         workerCell.setWorker(worker1);
@@ -144,7 +146,16 @@ public class PushWorkerTest {
             pushWorker.moveInto(board, null, null);
         });
 
+    }
 
+    //positive
+    @Test
+    void whenDestinationCellIsFreeMoveIntoShouldCallMoveIntoFromStandardConsolidateMove(){
+        workerCell = board.getCell(0,0,0);
+        workerCell.setWorker(worker1);
+        destinationCell = board.getCell(0,1,0);
+        pushWorker.moveInto(board,workerCell.getPosition(),destinationCell.getPosition());
+        assertTrue(destinationCell.isWorker());
     }
 
     //positive

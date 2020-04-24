@@ -26,7 +26,7 @@ public class StandardMoveTest {
     Player player = new Player("pippo",12);
     Player player2 = new Player("ciccio",3);
     Worker worker = new Worker(player, 12);
-    Worker worker2 = new Worker(player,12);
+    Worker worker2 = new Worker(player,13);
 
 
     @BeforeEach
@@ -62,7 +62,7 @@ public class StandardMoveTest {
 
     //positive
     @Test
-    void moveConditionShouldBeFalseBecauseTheWorkerToMoveASecondTimeHasADifferentId(){
+    void moveConditionShouldBeFalseBecauseTheWorkerMovingASecondTimeHasADifferentId(){
         workerCell.setWorker(worker);
         Cell workerCellFirst = board.getCell(1,0,0);
         Cell workerStartingCell = board.getCell(2,0,0);
@@ -119,7 +119,7 @@ public class StandardMoveTest {
     //positive
     @Test
     void shouldObtainTheRightLevelDifference(){
-        assertEquals(1, 2,3);
+        assertEquals(1,standardMove.heightsDifference(2,3));
     }
 
     //positive
@@ -137,6 +137,8 @@ public class StandardMoveTest {
             standardMove.move(null, null,null);
         });
     }
+
+
 
     @Test
     void correctInstantiation() {

@@ -39,7 +39,7 @@ public class RestoreOriginalGodPowerTest {
     }
 
     @Test
-    void OriginalDemeterGodPowerShouldBeRestored() {
+    void originalDemeterGodPowerShouldBeRestored() {
         currentTurn = new Turn(player2);
         assert godList.get(0).getPlayerId()==1;
         assert godList.get(1).getPlayerId()==2;

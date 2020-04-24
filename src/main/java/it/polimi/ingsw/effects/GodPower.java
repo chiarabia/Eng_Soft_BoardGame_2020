@@ -1,7 +1,6 @@
 package it.polimi.ingsw.effects;
 
 import it.polimi.ingsw.Board;
-import it.polimi.ingsw.Cell;
 import it.polimi.ingsw.effects.build.StandardBuild;
 import it.polimi.ingsw.effects.consolidateBuild.StandardConsolidateBuild;
 import it.polimi.ingsw.effects.consolidateMove.StandardConsolidateMove;
@@ -50,7 +49,7 @@ public class GodPower {
 
     //returns the state of the board after the workers has built
     public void BuildUp (Position buildingPosition, Board board, boolean god_power) {
-        consolidateBuild.BuildUp(buildingPosition, board, god_power);
+        consolidateBuild.buildUp(buildingPosition, board, god_power);
     }
 
     /**

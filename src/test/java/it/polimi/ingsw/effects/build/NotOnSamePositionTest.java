@@ -33,7 +33,7 @@ public class NotOnSamePositionTest {
     }
 
     @Test
-    void buildShouldGiveTheStandardSetOfPossibleCellsforTheFirstMoveOfTurn() {
+    void buildShouldGiveTheStandardSetOfPossibleCellsForTheFirstMoveOfTurn() {
         board = new Board();
         workerCell = board.getCell(3,3,0);
         workerCell.setWorker(worker);
@@ -52,7 +52,7 @@ public class NotOnSamePositionTest {
     }
 
     @Test
-    void buildShouldGiveTheRightSetOfPossibleCellswithoutFirstBuildingCell() {
+    void buildShouldGiveTheRightSetOfPossibleCellsWithoutFirstBuildingCell() {
         board = new Board();
         workerCell = board.getCell(3, 3, 0);
         workerCell.setWorker(worker);
@@ -71,6 +71,7 @@ public class NotOnSamePositionTest {
         assertEquals(collect, notOnSamePosition.build(workerCell.getPosition(), board, turn));
     }
 
+    @Test
     void buildShouldBeEmpty () {
         board = new Board();
         board.newCell(3,3,3);
@@ -84,8 +85,10 @@ public class NotOnSamePositionTest {
         assertEquals(collect, notOnSamePosition.build(workerCell.getPosition(), board, turn));
     }
 
+
+
     @Test
-    void NullPointerException () {
+    void buildShouldThrowExceptionWithNullParameters () {
         assertThrows(NullPointerException.class, () -> {
             notOnSamePosition.build(null, null, null);
         });

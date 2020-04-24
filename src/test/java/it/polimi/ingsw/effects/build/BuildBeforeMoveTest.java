@@ -42,7 +42,7 @@ public class BuildBeforeMoveTest {
 
     //positive
     @Test
-    void BuildConditionShouldThrowExceptionWithNullParameters() {
+    void buildConditionShouldThrowExceptionWithNullParameters() {
         assertThrows(NullPointerException.class, () -> {
             buildBeforeMove.checkBuildConditions(null, null);
         });

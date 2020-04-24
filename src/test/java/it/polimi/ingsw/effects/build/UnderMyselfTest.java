@@ -90,7 +90,8 @@ public class UnderMyselfTest {
     }
 
     @Test
-    void NullPointerException () {
+
+    void buildShouldThrowExceptionWithNullParameters () {
         assertThrows(NullPointerException.class, () -> {
             underMyself.build(null, null, null);
         });

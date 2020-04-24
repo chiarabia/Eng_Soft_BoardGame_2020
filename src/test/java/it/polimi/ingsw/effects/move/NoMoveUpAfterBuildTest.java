@@ -45,6 +45,7 @@ public class NoMoveUpAfterBuildTest {
         assertEquals(collect,noMoveUpAfterBuild.move(workerCell.getPosition(),board,turn));
     }
 
+    @Test
     void playerShoulBeAbleToMoveUp(){
         Cell buildCell = board.getCell(1,1,0);
         buildCell.setBuilding(true);

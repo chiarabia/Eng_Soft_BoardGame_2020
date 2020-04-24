@@ -29,7 +29,7 @@ public class SwapWorkerTest {
     }
 
     @Test
-    void MovingOnTheSameLevel() {
+    void swapWorkerShouldWorkWhenTheWorkersAreOnTheSameLevel() {
         //The Standard ConsolidateMove just consolidate the action, so we can try every different Destination Cell of the board
         //So we can verify the mehod for every WorkerCell in Board and everyDestination
 
@@ -49,7 +49,7 @@ public class SwapWorkerTest {
     }
 
     @Test
-    void MovingUp() {
+    void swapWorkerShouldWorkWhenTheWorkerIsMovingUp() {
         //The Standard ConsolidateMove just consolidate the action, so we can try every different Destination Cell of the board
         //So we can verify the mehod for every WorkerCell in Board and everyDestination
 
@@ -69,7 +69,7 @@ public class SwapWorkerTest {
     }
 
     @Test
-    void MovingDown() {
+    void swapWorkerShouldWorkWhenTheWorkerIsMovingDown() {
         //The Standard ConsolidateMove just consolidate the action, so we can try every different Destination Cell of the board
         //So we can verify the mehod for every WorkerCell in Board and everyDestination
 
@@ -89,14 +89,14 @@ public class SwapWorkerTest {
     }
 
     @Test
-    void NullPointerException () {
+    void swapWorkerThrowsExceptionWithNullParameters () {
         assertThrows(NullPointerException.class, () -> {
             swapWorker.moveInto(null, null, null);
         });
     }
 
     @Test
-    void MovingIntoWorkerCellOnSameLevel() {
+    void movingIntoWorkerCellOnSameLevel() {
         board.newCell(1,1,2);
         workerCell = board.getCell(1,1,2);
         workerCell.setWorker(worker1);
@@ -112,7 +112,8 @@ public class SwapWorkerTest {
                 () -> assertSame(destinationCell.getWorker(), worker1));
     }
 
-    void MovingIntoWorkerCellUp() {
+    @Test
+    void movingIntoWorkerCellUp() {
         board.newCell(1,1,2);
         workerCell = board.getCell(1,1,2);
         workerCell.setWorker(worker1);
@@ -128,7 +129,8 @@ public class SwapWorkerTest {
                 () -> assertSame(destinationCell.getWorker(), worker1));
     }
 
-    void MovingIntoWorkerCellDown() {
+    @Test
+    void movingIntoWorkerCellDown() {
         board.newCell(1,1,2);
         workerCell = board.getCell(1,1,2);
         workerCell.setWorker(worker1);

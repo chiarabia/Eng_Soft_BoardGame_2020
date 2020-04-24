@@ -11,14 +11,20 @@ import it.polimi.ingsw.Cell;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Set;
+import java.util.List;
 
 
 public class BoardTest {
 
     private Board board;
-    private Cell cell;
+    Player player = new Player("pippo",12);
+    Player player2 = new Player("ciccio",3);
+    Worker worker = new Worker(player, 12);
+    Worker worker3 = new Worker(player,34);
+    Worker worker2 = new Worker(player2,12);
 
     @BeforeEach
     void setUp(){
@@ -62,6 +68,40 @@ public class BoardTest {
         assertFalse(board.isFreeZone(0,0));
     }
 
+    //positive
+    @Test
+    void getWorkerCellsShouldGetTheRightCells(){
+        board.getCell(0,0,0).setWorker(worker);
+        List<Cell> collect = new ArrayList<>();
+        collect.add(new Cell(0,0,0));
+        assertEquals(collect,board.getWorkerCells());
+    }
+
+    //positive
+    @Test
+    void getWorkerCellsShouldGetTheRightCellsOfTheSamePlayer(){
+        board.getCell(0,0,0).setWorker(worker);
+        board.getCell(0,1,0).setWorker(worker2);
+        List<Cell> collect = new ArrayList<>();
+        collect.add(new Cell(0,0,0));
+        assertEquals(collect,board.getWorkerCells(player));
+    }
+
+    //positive
+    @Test
+    void getWorkerCellShouldGetTheRightCellOfTheSpecificWorkerAndPlayer(){
+        board.getCell(0,0,0).setWorker(worker);
+        board.getCell(0,1,0).setWorker(worker2);
+        board.getCell(1,0,0).setWorker(worker3);
+        Cell expctedCell = new Cell(0,0,0);
+        assertEquals(expctedCell,board.getWorkerCell(player,12));
+    }
+
+    //positive
+    @Test
+    void getWorkerCellShouldReturnNullIfThereAreNoWorkers(){
+        assertEquals(null,board.getWorkerCell(player,12));
+    }
 
     //positive
     @Test

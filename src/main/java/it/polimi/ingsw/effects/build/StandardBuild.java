@@ -61,18 +61,14 @@ public class StandardBuild {
             return false;
 
         //if the player has moved a worker yet
-        if (turn.getMoveTimes()==0)
+        if (!turn.isMoveBeforeBuild())
             return false;
 
         //if the id of the worker is not the same of the id of the worker used in the turn
         if (workerCell.getWorkerId() != turn.getWorkerUsed())
             return false;
 
-        else {
-            if (turn.isMoveBeforeBuild()) //se mi sono mosso, allora posso costruire
-                return (turn.getBuildTimes() < builds);
-            else
-                return false;
-        }
+        else
+            return (turn.getBuildTimes() < builds);
     }
 }
