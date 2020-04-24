@@ -29,11 +29,11 @@ public class NewNoMoveUpTurnTest  {
     Board board = new Board();
 
     @BeforeEach
-    public void setup () {
+    public void setUp () {
     }
 
     @Test
-    void TheEnemyShouldHaveNoMoveUppEffectAfterAthenaTurn() throws ParseException, IOException {
+    void theEnemyShouldHaveNoMoveUppEffectAfterAthenaTurn() throws ParseException, IOException {
         athenaGodPower = GodPowerManager.power("AthenaCard.json", 1);
         oppositeGodPower = GodPowerManager.power("HestiaCard.json", 2);
         godList.add(athenaGodPower);

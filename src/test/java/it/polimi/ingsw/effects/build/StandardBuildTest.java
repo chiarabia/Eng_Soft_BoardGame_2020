@@ -87,7 +87,12 @@ public class StandardBuildTest {
         assertEquals(collect,standardBuild.build(workerCell.getPosition(),board,turn));
     }
 
-
+    @Test
+    void buildShouldReturnANewHashSetIfConditionsAreNotMet(){
+        workerCell = board.getCell(0,0,0);
+        Set collect = new HashSet();
+        assertEquals(collect,standardBuild.build(workerCell.getPosition(),board,turn));
+    }
 
     //positive
     @Test
@@ -105,7 +110,7 @@ public class StandardBuildTest {
 
     //positive
     @Test
-    void buildConditionsShouldBeFalseBecauseWorkerHasntAlreadyMoved(){
+    void buildConditionsShouldBeFalseBecauseWorkerHasNotAlreadyMoved(){
         workerCell.setWorker(worker);
         assertFalse(standardBuild.checkBuildConditions(workerCell,turn));
     }
@@ -119,6 +124,13 @@ public class StandardBuildTest {
         assertTrue(standardBuild.checkBuildConditions(workerCell,turn));
     }
 
+    @Test
+    void buildConditionsShouldBeFalseBecauseIsMoveBeforeBuildIsFalse(){
+        workerCell = board.getCell(0,0,0);
+        workerCell.setWorker(worker);
+        assertFalse(standardBuild.checkBuildConditions(workerCell,turn));
+    }
+
     //positive
     @Test
     void buildConditionShouldThrowExceptionWithNullParameters() {
@@ -127,8 +139,12 @@ public class StandardBuildTest {
         });
     }
 
-
-
+    @Test
+    void buildShouldThrowExceptionWithNullParameters () {
+        assertThrows(NullPointerException.class, () -> {
+            standardBuild.build(null, null, null);
+        });
+    }
 
 
 }

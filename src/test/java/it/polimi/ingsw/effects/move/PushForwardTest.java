@@ -49,10 +49,17 @@ public class PushForwardTest {
         collect.add(new Position(2,2,0));
         collect.add(new Position(2,1,0));
         collect.add(new Position(1,1,0));
-
-
         assertEquals(collect, pushForward.move(workerOneCell.getPosition(),board,turn));
     }
+
+    //positive
+    @Test
+    void moveShouldReturnANewHashSetIfConditionsAreNotMet(){
+        Set collect = new HashSet<>();
+        workerOneCell = board.getCell(0,0,0);
+        assertEquals(collect,pushForward.move(workerOneCell.getPosition(),board,turn));
+    }
+
 
 
 

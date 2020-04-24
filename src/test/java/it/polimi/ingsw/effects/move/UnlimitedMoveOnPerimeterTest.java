@@ -6,26 +6,39 @@ package it.polimi.ingsw.effects.move;
     import static org.junit.jupiter.api.Assertions.assertNotNull;
     import static org.junit.jupiter.api.Assertions.assertEquals;
     import static org.junit.jupiter.api.Assertions.assertNotEquals;
-    import it.polimi.ingsw.Board;
-    import it.polimi.ingsw.Cell;
-    import it.polimi.ingsw.Player;
-    import it.polimi.ingsw.Worker;
-    import it.polimi.ingsw.Turn;
+
+    import it.polimi.ingsw.*;
     import org.junit.jupiter.api.BeforeEach;
     import org.junit.jupiter.api.Test;
 
+    import java.util.HashSet;
+    import java.util.Set;
+
 public class UnlimitedMoveOnPerimeterTest {
-    int moves = 1;
+    int moves = 2;
     UnlimitedMoveOnPerimeter unlimitedMoveOnPerimeter = new UnlimitedMoveOnPerimeter(moves);
     Cell workerCell;
     Turn turn;
     Player player = new Player("pippo",12);
+    Player player2 = new Player("ciccio",3);
     Worker worker = new Worker(player, 12);
     Board board = new Board();
 
     @BeforeEach
     void SetUp(){
         turn = new Turn(player);
+    }
+
+    //positive
+    @Test
+    void moveShouldWorkLikeStandardMove(){
+        Cell cellWorker=board.getCell(0,0,0);
+        cellWorker.setWorker(worker);
+        Set<Position> collect = new HashSet<>();
+        collect.add(new Position(1,0,0));
+        collect.add(new Position (0,1,0));
+        collect.add(new Position (1,1,0));
+        assertEquals(collect,unlimitedMoveOnPerimeter.move(cellWorker.getPosition(),board,turn));
     }
 
     //positive
@@ -47,6 +60,32 @@ public class UnlimitedMoveOnPerimeterTest {
         turn.updateTurnInfoAfterMove(startingCell.getPosition(),workerCell.getPosition(), board);
         workerCell.setWorker(worker);
         assertTrue(unlimitedMoveOnPerimeter.checkMoveConditions(workerCell,turn));
+    }
+
+    //positive
+    @Test
+    void moveConditionShouldBeFalseBecauseMissingWorker (){
+        workerCell = board.getCell(0,0,0);
+        assertFalse(unlimitedMoveOnPerimeter.checkMoveConditions(workerCell,turn));
+    }
+
+    //positive
+    @Test
+    void moveConditionsShouldBeFalseBecauseTurnPlayerIdIsNotTheSameOfThePlayerId(){
+        workerCell = board.getCell(0,0,0);
+        workerCell.setWorker(worker);
+        Turn turn2 = new Turn(player2);
+        assertFalse(unlimitedMoveOnPerimeter.checkMoveConditions(workerCell,turn2));
+    }
+
+    //positive
+    @Test
+    void moveConditionShouldReturnTrueIfTheWorkerHasAlreadyMovedAndTheCellIsNotPerimetral() {
+        workerCell = board.getCell(1,1,0);
+        Cell workerStartingCell = board.getCell(0,0,0);
+        workerCell.setWorker(worker);
+        turn.updateTurnInfoAfterMove(workerStartingCell.getPosition(),workerCell.getPosition(),board);
+        assertTrue(unlimitedMoveOnPerimeter.checkMoveConditions(workerCell, turn));
     }
 
     //positive

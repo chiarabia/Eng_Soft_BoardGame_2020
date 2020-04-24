@@ -65,7 +65,7 @@ public class NotOnPerimeterTest {
     }
 
     @Test
-    void NullPointerException () {
+    void buildShouldThrowExceptionWithNullParameters () {
         assertThrows(NullPointerException.class, () -> {
             notOnPerimeter.build(null, null, null);
         });

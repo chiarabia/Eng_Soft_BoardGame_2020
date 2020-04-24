@@ -30,10 +30,11 @@ public class OnSamePositionBlockOnlyTest {
     @BeforeEach
     void setUp(){
         turn = new Turn(player);
+        board = new Board();
     }
 
     @Test
-    void buildShouldGiveTheStandardSetOfPossibleCellsforTheFirstMoveOfTurn() {
+    void buildShouldGiveTheStandardSetOfPossibleCellsForTheFirstMoveOfTurn() {
         board = new Board();
         workerCell = board.getCell(3,3,0);
         workerCell.setWorker(worker);
@@ -60,7 +61,7 @@ public class OnSamePositionBlockOnlyTest {
 
         new StandardConsolidateMove().moveInto(board, workerCell.getPosition(), destinationCell.getPosition());
         turn.updateTurnInfoAfterMove(workerCell.getPosition(), destinationCell.getPosition(), board);
-        new StandardConsolidateBuild().BuildUp(new Position(4,4,0), board, false);
+        new StandardConsolidateBuild().buildUp(new Position(4,4,0), board, false);
         turn.updateTurnInfoAfterBuild(new Position(4,4,0));
 
         Set<Position> collect = new HashSet<>();
@@ -69,7 +70,16 @@ public class OnSamePositionBlockOnlyTest {
     }
 
     @Test
-    void NullPointerException () {
+    void shouldReturnANewHasSetIfConditionsAreNotMet(){
+        new StandardConsolidateBuild().buildUp(new Position(4,4,0), board, false);
+        turn.updateTurnInfoAfterBuild(new Position(4,4,0));
+        workerCell = board.getCell(0,0,0);
+        Set collect = new HashSet();
+        assertEquals(collect, onSamePositionBlockOnly.build(workerCell.getPosition(),board,turn));
+    }
+
+    @Test
+    void buildShouldThrowExceptionWithNullParameters () {
         assertThrows(NullPointerException.class, () -> {
             onSamePositionBlockOnly.build(null, null, null);
         });

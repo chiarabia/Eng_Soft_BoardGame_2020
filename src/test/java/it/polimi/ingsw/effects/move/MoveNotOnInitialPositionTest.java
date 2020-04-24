@@ -57,6 +57,18 @@ public class MoveNotOnInitialPositionTest {
         assertEquals(collect,notOnInitialPosition.move(destinationPosition,board,turn));
     }
 
+    @Test
+    void playerShouldBeAbleToMoveNormallyIfThisIsTheirFirstMoveOfTheTurn(){
+        Cell cellWorker=board.getCell(0,0,0);
+        cellWorker.setWorker(worker);
+        Set <Position> collect = new HashSet<>();
+        collect.add(new Position(1,0,0));
+        collect.add(new Position (0,1,0));
+        collect.add(new Position (1,1,0));
+
+        assertEquals(collect,notOnInitialPosition.move(cellWorker.getPosition(),board,turn));
+    }
+
     //positive
     @Test
     void moveConditionShouldThrowExceptionWithNullParameters() {
@@ -65,4 +77,11 @@ public class MoveNotOnInitialPositionTest {
         });
     }
 
+    //positive
+    @Test
+    void moveShouldThrowExceptionWithNullParameters() {
+        assertThrows(NullPointerException.class, () -> {
+            notOnInitialPosition.move(null, null,null);
+        });
+    }
 }

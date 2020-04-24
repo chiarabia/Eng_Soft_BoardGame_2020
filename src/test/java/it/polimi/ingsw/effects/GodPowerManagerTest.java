@@ -1,4 +1,4 @@
-package it.polimi.ingsw;
+package it.polimi.ingsw.effects;
 
 import it.polimi.ingsw.effects.GodPower;
 import it.polimi.ingsw.effects.GodPowerManager;
