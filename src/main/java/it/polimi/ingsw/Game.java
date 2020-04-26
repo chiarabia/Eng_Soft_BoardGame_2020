@@ -3,13 +3,13 @@ package it.polimi.ingsw;
 import it.polimi.ingsw.effects.GodPower;
 import it.polimi.ingsw.effects.GodPowerManager;
 import it.polimi.ingsw.server.GameObserver;
-import it.polimi.ingsw.server.ProxyObserver;
-import it.polimi.ingsw.server.ServerThread;
+import it.polimi.ingsw.server.serializable.SerializableAnswer;
+import it.polimi.ingsw.server.serializable.SerializableUpdate;
 import org.json.simple.parser.ParseException;
-
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+
 
 public class Game {
     private int numOfPlayers;
@@ -19,9 +19,32 @@ public class Game {
     private List<GodPower> godPowers;
     private List<GameObserver> observerList;
 
-    public void addObserver(GameObserver observer){
-        observerList.add(observer);
+    public int getNumOfPlayers() {return numOfPlayers;}
+    public Board getBoard() { return board; }
+    public Turn getTurn() { return turn; }
+    public List<Player> getPlayers() { return players; }
+    public List<GodPower> getGodPowers() { return godPowers; }
+
+    public void setNumOfPlayers(int numOfPlayers) {this.numOfPlayers = numOfPlayers;}
+    public void setBoard(Board board) {this.board = board; }
+    public void setTurn(Turn turn) {this.turn = turn;}
+    public void setPlayers(List<Player> players) {this.players = players;}
+    public void setGodPowers(List<GodPower> godPowers) {this.godPowers = godPowers;}
+
+    public void addObserver(GameObserver observer){observerList.add(observer);}
+
+    public void notifyAnswerOnePlayer(SerializableAnswer answer) throws IOException {
+        for (int i = 0; i < observerList.size(); i++) observerList.get(i).answerOnePlayer(answer);
     }
+
+    public void notifyUpdateAll(SerializableUpdate update) throws IOException {
+        for (int i = 0; i < observerList.size(); i++) observerList.get(i).updateAll(update);
+    }
+
+    public void notifyUpdateAllAndAnswerOnePlayer(SerializableUpdate update, SerializableAnswer answer) throws IOException {
+        for (int i = 0; i < observerList.size(); i++) observerList.get(i).updateAllAndAnswerOnePlayer(update, answer);
+    }
+
 
     /**
      * This class creates a match

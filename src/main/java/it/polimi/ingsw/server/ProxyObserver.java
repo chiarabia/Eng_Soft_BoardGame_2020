@@ -1,11 +1,12 @@
 package it.polimi.ingsw.server;
 
 import it.polimi.ingsw.Position;
+import java.io.IOException;
 
 public interface ProxyObserver {
-    public void onMove(int playerId, int workerId);
-    public void onBuild(int playerId, int workerId);
-    public void onConsolidateMove(int playerId, int workerId, Position newPosition);
-    public void onConsolidateBuild(Position newPosition, boolean forceDome);
-    public void onPlayerDisconnection(int playerId);
+    void onMove(int playerId, int workerId) throws IOException;
+    void onBuild(int playerId, int workerId) throws IOException;
+    void onConsolidateMove(int playerId, int workerId, Position newPosition) throws IOException;
+    void onConsolidateBuild(int playerId, Position newPosition, boolean forceDome) throws IOException;
+    void onPlayerDisconnection(int playerId) throws IOException;
 }

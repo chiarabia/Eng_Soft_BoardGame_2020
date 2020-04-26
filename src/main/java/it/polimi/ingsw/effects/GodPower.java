@@ -48,7 +48,7 @@ public class GodPower {
     }
 
     //returns the state of the board after the workers has built
-    public void BuildUp (Position buildingPosition, Board board, boolean god_power) {
+    public void buildUp (Position buildingPosition, Board board, boolean god_power) {
         consolidateBuild.buildUp(buildingPosition, board, god_power);
     }
 

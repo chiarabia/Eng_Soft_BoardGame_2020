@@ -48,6 +48,11 @@ public class ServerThread extends Thread {
         fileObjectOut.writeObject(object);
         fileObjectOut.flush();
     }
+    public void sendAllObject(Object object) throws IOException {
+        for (int i = 0; i < playersList.size(); i++){
+            if (playersList.get(i)!=null) sendObject(object, i);
+        }
+    }
     public Object sendObjectAndWaitForReply(Object object, int player, int timeLimit) throws IOException, ClientStoppedWorkingException {
         sendObject(object, player);
         return ServerReciever.receiveObject(playersList.get(player), timeLimit);
@@ -61,8 +66,8 @@ public class ServerThread extends Thread {
                 return;
             }
             ServerProxy serverProxy = new ServerProxy(this);
-            GameController gameController = new GameController();
             Game game = new Game(numOfPlayers, playersNames);
+            GameController gameController = new GameController(game);
             game.addObserver(serverProxy);
             serverProxy.addObserver(gameController);
 
