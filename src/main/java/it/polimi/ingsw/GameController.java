@@ -3,11 +3,17 @@ package it.polimi.ingsw;
 import it.polimi.ingsw.server.ProxyObserver;
 import it.polimi.ingsw.server.serializable.*;
 import java.io.IOException;
+import java.util.List;
 import java.util.Set;
 
 public class GameController implements ProxyObserver {
     private Game game;
     public GameController(Game game) {this.game = game;}
+
+    @Override
+    public void onReady(int playerId) throws IOException {
+        // questo metodo decide quale operazione eseguire
+    }
 
     @Override
     public void onMove(int playerId, int workerId) throws IOException {
@@ -21,7 +27,7 @@ public class GameController implements ProxyObserver {
     public void onBuild(int playerId, int workerId) throws IOException {
         Position workerPosition = game.getBoard().getWorkerCell(game.getPlayers().get(playerId-1), workerId).getPosition();
         Set<Position> builds = game.getGodPowers().get(playerId-1).build(workerPosition, game.getBoard(), game.getTurn());
-        boolean canForceDome = false; //todo: sistemare
+        boolean canForceDome = game.getGodPowers().get(playerId-1).isAskToBuildDomes();
         SerializableAnswer answer = new SerializableAnswerBuild(playerId, builds, canForceDome);
         game.notifyAnswerOnePlayer(answer);
     }
@@ -41,6 +47,16 @@ public class GameController implements ProxyObserver {
         SerializableUpdate update = new SerializableUpdateBuild(newPosition, game.getBoard().getCell(newPosition).isDome());
         SerializableAnswer answer = null; //todo: sistemare
         game.notifyUpdateAllAndAnswerOnePlayer(update, answer);
+    }
+
+    @Override
+    public void onInfosInitialization() throws IOException {
+        game.initializeInfos();
+    }
+
+    @Override
+    public void onWorkersInitialization(int playerId, List<Position> workerPositions) throws IOException {
+        game.initializeWorkers(playerId, workerPositions);
     }
 
     @Override
