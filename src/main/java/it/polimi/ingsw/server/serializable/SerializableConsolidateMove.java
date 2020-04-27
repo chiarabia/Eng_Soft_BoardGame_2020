@@ -10,12 +10,12 @@ public class SerializableConsolidateMove implements Serializable {
         return newPosition;
     }
 
-    public int getNumOfWorker() {
+    public int getWorkerId() {
         return workerId;
     }
 
-    public SerializableConsolidateMove(Position newPosition, int numOfWorker) {
+    public SerializableConsolidateMove(Position newPosition, int workerId) {
         this.newPosition = newPosition;
-        this.workerId = numOfWorker;
+        this.workerId = workerId;
     }
 }

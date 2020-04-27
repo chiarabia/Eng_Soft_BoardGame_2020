@@ -3,8 +3,7 @@ package it.polimi.ingsw;
 import it.polimi.ingsw.effects.GodPower;
 import it.polimi.ingsw.effects.GodPowerManager;
 import it.polimi.ingsw.server.GameObserver;
-import it.polimi.ingsw.server.serializable.SerializableAnswer;
-import it.polimi.ingsw.server.serializable.SerializableUpdate;
+import it.polimi.ingsw.server.serializable.*;
 import org.json.simple.parser.ParseException;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -33,16 +32,23 @@ public class Game {
 
     public void addObserver(GameObserver observer){observerList.add(observer);}
 
-    public void notifyAnswerOnePlayer(SerializableAnswer answer) throws IOException {
-        for (int i = 0; i < observerList.size(); i++) observerList.get(i).answerOnePlayer(answer);
-    }
 
+    // In questo metodo il ciclo MVC viene rotto, quindi notifyUpdateAll
+    // deve servire SOLO per comunicare il termine della partita (vittoria o disconnessione player)
     public void notifyUpdateAll(SerializableUpdate update) throws IOException {
         for (int i = 0; i < observerList.size(); i++) observerList.get(i).updateAll(update);
     }
 
+    public void notifyAnswerOnePlayer(SerializableAnswer answer) throws IOException {
+        for (int i = 0; i < observerList.size(); i++) observerList.get(i).answerOnePlayer(answer);
+    }
+
     public void notifyUpdateAllAndAnswerOnePlayer(SerializableUpdate update, SerializableAnswer answer) throws IOException {
         for (int i = 0; i < observerList.size(); i++) observerList.get(i).updateAllAndAnswerOnePlayer(update, answer);
+    }
+
+    public void notifyUpdateAllTwiceAndAnswerOnePlayer(SerializableUpdate update1, SerializableUpdate update2, SerializableAnswer answer) throws IOException {
+        for (int i = 0; i < observerList.size(); i++) observerList.get(i).updateAllTwiceAndAnswerOnePlayer(update1, update2, answer);
     }
 
 

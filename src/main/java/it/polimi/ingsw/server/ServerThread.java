@@ -70,9 +70,7 @@ public class ServerThread extends Thread {
             GameController gameController = new GameController(game);
             game.addObserver(serverProxy);
             serverProxy.addObserver(gameController);
-
-            // Here the game begins //
-
+            gameController.onInitialization();
         }catch(IOException | ParseException e){}
     }
     public void run(){
