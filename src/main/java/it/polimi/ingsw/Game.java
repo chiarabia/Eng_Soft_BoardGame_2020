@@ -51,37 +51,6 @@ public class Game {
         for (int i = 0; i < observerList.size(); i++) observerList.get(i).updateAllTwiceAndAnswerOnePlayer(update1, update2, answer);
     }
 
-    public void initializeInfos() throws IOException{
-        List<String> playersNames = new ArrayList<>();
-        List<String> godPowersNames = new ArrayList<>();
-        for (Player player: players) playersNames.add(player.getName());
-        for (GodPower godPower: godPowers) godPowersNames.add(godPower.getGodName());
-        SerializableUpdateInitializeInfos update = new SerializableUpdateInitializeInfos(playersNames, godPowersNames);
-        SerializableRequest request = new SerializableRequestInitializeWorkers(1);
-        notifyUpdateAllAndAnswerOnePlayer(update, request);
-    }
-
-    public void initializeWorkers(int playerId, List<Position> workerPositions) throws IOException {
-        Worker worker1 = new Worker(players.get(playerId-1), 1);
-        Worker worker2 = new Worker(players.get(playerId-1), 2);
-        players.get(playerId-1).addWorker(worker1);
-        players.get(playerId-1).addWorker(worker2);
-        Cell worker1Cell = board.getCell(workerPositions.get(0));
-        Cell worker2Cell = board.getCell(workerPositions.get(1));
-        worker1Cell.setWorker(worker1);
-        worker2Cell.setWorker(worker2);
-        SerializableUpdateInitializeWorkers update = new SerializableUpdateInitializeWorkers(workerPositions, playerId);
-        if (playerId == players.size()){
-            // tutti i worker sono pronti, il primo turno ha inizio
-            SerializableUpdateTurn updateTurn = new SerializableUpdateTurn(1);
-            notifyUpdateAllTwiceAndAnswerOnePlayer(update, updateTurn, new SerializableRequestReady(1));
-            // il segnale di Ready serve solo a portare il controller allo stato di default onReady()
-        } else {
-            SerializableRequest request = new SerializableRequestInitializeWorkers(playerId + 1);
-            notifyUpdateAllAndAnswerOnePlayer(update, request);
-        }
-    }
-
 
     /**
      * This class creates a match

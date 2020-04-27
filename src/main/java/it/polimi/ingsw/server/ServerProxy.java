@@ -1,8 +1,8 @@
 package it.polimi.ingsw.server;
 
 import it.polimi.ingsw.exceptions.ClientStoppedWorkingException;
-import it.polimi.ingsw.server.serializable.SerializableAnswer;
-import it.polimi.ingsw.server.serializable.SerializableUpdate;
+import it.polimi.ingsw.server.serializable.*;
+
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
@@ -22,11 +22,56 @@ public class ServerProxy implements GameObserver{
 
     // risponde a un singolo player
     public void answerOnePlayer(SerializableAnswer answer) throws IOException {
+        int playerId = answer.getPlayerId();
         try {
             Object fromClient = serverThread.sendObjectAndWaitForReply(answer, answer.getPlayerId(), 300);
             // qui il client ha risposto, ora devo gestire la risposta
+            if (fromClient instanceof SerializableMove) {
+                SerializableMove serializableFromClient = (SerializableMove) fromClient;
+                for (int i = 0; i < observerList.size(); i++)
+                    observerList.get(i).onMove(playerId, serializableFromClient.getWorkerId());
+            }
+            if (fromClient instanceof SerializableBuild) {
+                SerializableBuild serializableFromClient = (SerializableBuild) fromClient;
+                for (int i = 0; i < observerList.size(); i++)
+                    observerList.get(i).onBuild(playerId, serializableFromClient.getWorkerId());
+            }
+            if (fromClient instanceof SerializableOptionalMove) {
+                SerializableOptionalMove serializableFromClient = (SerializableOptionalMove) fromClient;
+                for (int i = 0; i < observerList.size(); i++)
+                    observerList.get(i).onOptionalMove(playerId, serializableFromClient.isWantToMove());
+            }
+            if (fromClient instanceof SerializableOptionalBuild) {
+                SerializableOptionalBuild serializableFromClient = (SerializableOptionalBuild) fromClient;
+                for (int i = 0; i < observerList.size(); i++)
+                    observerList.get(i).onOptionalBuild(playerId, serializableFromClient.isWantToBuild());
+            }
+            if (fromClient instanceof SerializableConsolidateMove) {
+                SerializableConsolidateMove serializableFromClient = (SerializableConsolidateMove) fromClient;
+                for (int i = 0; i < observerList.size(); i++)
+                    observerList.get(i).onConsolidateMove(playerId, serializableFromClient.getWorkerId(), serializableFromClient.getNewPosition());
+            }
+            if (fromClient instanceof SerializableConsolidateBuild) {
+                SerializableConsolidateBuild serializableFromClient = (SerializableConsolidateBuild) fromClient;
+                for (int i = 0; i < observerList.size(); i++)
+                    observerList.get(i).onConsolidateBuild(playerId, serializableFromClient.getNewPosition(), serializableFromClient.isForceDome());
+            }
+            if (fromClient instanceof SerializableInitializeWorkers) {
+                SerializableInitializeWorkers serializableFromClient = (SerializableInitializeWorkers) fromClient;
+                for (int i = 0; i < observerList.size(); i++)
+                    observerList.get(i).onInitialization(playerId, serializableFromClient.getWorkerPositions());
+            }
+            if (fromClient instanceof SerializableReady) {
+                for (int i = 0; i < observerList.size(); i++) observerList.get(i).onReady(playerId);
+            }
         } catch (ClientStoppedWorkingException e){
-            // il client non risponde o si è disconnesso
+            if (e.isWasItTimeOut()){
+                // il giocatore non ha risposto entro il tempo stabilito, quindi ha perso
+
+            } else {
+                // il giocatore si è disconnesso, quindi la partita termina
+                for (int i = 0; i < observerList.size(); i++) observerList.get(i).onPlayerDisconnection(playerId);
+            }
         }
     }
 
