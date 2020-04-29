@@ -21,21 +21,10 @@ public class ServerProxy implements GameObserver{
     }
 
     // risponde a un singolo player
-    public void answerOnePlayer(SerializableAnswer answer) throws IOException {
-        int playerId = answer.getPlayerId();
+    public void answerOnePlayer(SerializableRequest request) throws IOException {
+        int playerId = request.getPlayerId();
         try {
-            Object fromClient = serverThread.sendObjectAndWaitForReply(answer, answer.getPlayerId(), 300);
-            // qui il client ha risposto, ora devo gestire la risposta
-            if (fromClient instanceof SerializableMove) {
-                SerializableMove serializableFromClient = (SerializableMove) fromClient;
-                for (int i = 0; i < observerList.size(); i++)
-                    observerList.get(i).onMove(playerId, serializableFromClient.getWorkerId());
-            }
-            if (fromClient instanceof SerializableBuild) {
-                SerializableBuild serializableFromClient = (SerializableBuild) fromClient;
-                for (int i = 0; i < observerList.size(); i++)
-                    observerList.get(i).onBuild(playerId, serializableFromClient.getWorkerId());
-            }
+            Object fromClient = serverThread.sendObjectAndWaitForReply(request, request.getPlayerId(), 300);
             if (fromClient instanceof SerializableOptionalMove) {
                 SerializableOptionalMove serializableFromClient = (SerializableOptionalMove) fromClient;
                 for (int i = 0; i < observerList.size(); i++)
@@ -61,9 +50,6 @@ public class ServerProxy implements GameObserver{
                 for (int i = 0; i < observerList.size(); i++)
                     observerList.get(i).onInitialization(playerId, serializableFromClient.getWorkerPositions());
             }
-            if (fromClient instanceof SerializableReady) {
-                for (int i = 0; i < observerList.size(); i++) observerList.get(i).onReady(playerId);
-            }
         } catch (ClientStoppedWorkingException e){
             if (e.isWasItTimeOut()){
                 // il giocatore non ha risposto entro il tempo stabilito, quindi ha perso
@@ -76,16 +62,16 @@ public class ServerProxy implements GameObserver{
     }
 
     // aggiorna tutti i player e risponde a un singolo player
-    public void updateAllAndAnswerOnePlayer(SerializableUpdate update, SerializableAnswer answer) throws IOException {
+    public void updateAllAndAnswerOnePlayer(SerializableUpdate update, SerializableRequest request) throws IOException {
         serverThread.sendAllObject(update);
-        answerOnePlayer(answer);
+        answerOnePlayer(request);
     }
 
     // aggiorna tutti i player due volte e risponde a un singolo player
-    public void updateAllTwiceAndAnswerOnePlayer(SerializableUpdate update1, SerializableUpdate update2, SerializableAnswer answer) throws IOException {
+    public void updateAllTwiceAndAnswerOnePlayer(SerializableUpdate update1, SerializableUpdate update2, SerializableRequest request) throws IOException {
         serverThread.sendAllObject(update1);
         serverThread.sendAllObject(update2);
-        answerOnePlayer(answer);
+        answerOnePlayer(request);
     }
 
     public ServerProxy(ServerThread serverThread) {

@@ -39,16 +39,16 @@ public class Game {
         for (int i = 0; i < observerList.size(); i++) observerList.get(i).updateAll(update);
     }
 
-    public void notifyAnswerOnePlayer(SerializableAnswer answer) throws IOException {
-        for (int i = 0; i < observerList.size(); i++) observerList.get(i).answerOnePlayer(answer);
+    public void notifyAnswerOnePlayer(SerializableRequest request) throws IOException {
+        for (int i = 0; i < observerList.size(); i++) observerList.get(i).answerOnePlayer(request);
     }
 
-    public void notifyUpdateAllAndAnswerOnePlayer(SerializableUpdate update, SerializableAnswer answer) throws IOException {
-        for (int i = 0; i < observerList.size(); i++) observerList.get(i).updateAllAndAnswerOnePlayer(update, answer);
+    public void notifyUpdateAllAndAnswerOnePlayer(SerializableUpdate update, SerializableRequest request) throws IOException {
+        for (int i = 0; i < observerList.size(); i++) observerList.get(i).updateAllAndAnswerOnePlayer(update, request);
     }
 
-    public void notifyUpdateAllTwiceAndAnswerOnePlayer(SerializableUpdate update1, SerializableUpdate update2, SerializableAnswer answer) throws IOException {
-        for (int i = 0; i < observerList.size(); i++) observerList.get(i).updateAllTwiceAndAnswerOnePlayer(update1, update2, answer);
+    public void notifyUpdateAllTwiceAndAnswerOnePlayer(SerializableUpdate update1, SerializableUpdate update2, SerializableRequest request) throws IOException {
+        for (int i = 0; i < observerList.size(); i++) observerList.get(i).updateAllTwiceAndAnswerOnePlayer(update1, update2, request);
     }
 
 

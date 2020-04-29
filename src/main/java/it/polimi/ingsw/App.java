@@ -11,7 +11,7 @@ import java.io.IOException;
 
 public class App
 {
-    public static void main( String[] args ) throws IOException, ParseException {
+    public static void main( String[] args ) throws InterruptedException {
         Server.startServer();
     }
 }

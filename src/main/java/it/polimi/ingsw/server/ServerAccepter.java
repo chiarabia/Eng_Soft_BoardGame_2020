@@ -7,6 +7,7 @@ import java.net.Socket;
 public class ServerAccepter extends Thread {
     private ServerSocket serverSocket;
     private ServerWaitingList waitingList;
+    private final boolean restartOnIOException;
     private int numOfPlayers;
     public void run() {
         try {
@@ -20,11 +21,18 @@ public class ServerAccepter extends Thread {
                 if (numOfPlayers == 3 && waitingList.isThreePlayersListFull())
                     (new ServerThread(waitingList.exportThreePlayersList(), waitingList, 3)).start();
             }
-        }catch(IOException e){}
+        } catch (IOException e) {
+            if (restartOnIOException) try { Server.startServer(); } catch (InterruptedException ex) {}
+        }
     }
-    public ServerAccepter(ServerSocket serverSocket, ServerWaitingList waitingList, int numOfPlayers){
+    public ServerAccepter(ServerSocket serverSocket, ServerWaitingList waitingList, int numOfPlayers, boolean restartOnIOException){
         this.numOfPlayers = numOfPlayers;
         this.serverSocket = serverSocket;
         this.waitingList = waitingList;
+        this.restartOnIOException = restartOnIOException;
+    }
+
+    public ServerAccepter(ServerSocket serverSocket, ServerWaitingList waitingList, int numOfPlayers){
+        this(serverSocket, waitingList, numOfPlayers, false);
     }
 }

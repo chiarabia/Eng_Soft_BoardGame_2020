@@ -33,9 +33,7 @@ public class Turn {
         return moveBeforeBuild;
     }
 
-    public boolean isBuildAfterMove() {
-        return buildAfterMove;
-    }
+    public boolean isBuildAfterMove() {return buildAfterMove;}
 
     public boolean isMoveUp() {
         return moveUp;

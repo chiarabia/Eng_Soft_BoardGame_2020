@@ -5,9 +5,6 @@ import java.io.IOException;
 import java.util.List;
 
 public interface ProxyObserver {
-    void onReady(int playerId) throws IOException;
-    void onMove(int playerId, int workerId) throws IOException;
-    void onBuild(int playerId, int workerId) throws IOException;
     void onOptionalMove (int playerId, boolean wantToMove) throws IOException;
     void onOptionalBuild (int playerId, boolean wantToBuild) throws IOException;
     void onConsolidateMove(int playerId, int workerId, Position newPosition) throws IOException;
