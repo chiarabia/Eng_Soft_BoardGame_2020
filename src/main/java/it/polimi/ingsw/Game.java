@@ -33,10 +33,10 @@ public class Game {
     public void addObserver(GameObserver observer){observerList.add(observer);}
 
 
-    // In questo metodo il ciclo MVC viene rotto, quindi notifyUpdateAll
+    // In questo metodo il ciclo MVC viene rotto, quindi notifyJustUpdateAll
     // deve servire SOLO per comunicare il termine della partita (vittoria o disconnessione player)
-    public void notifyUpdateAll(SerializableUpdate update) throws IOException {
-        for (int i = 0; i < observerList.size(); i++) observerList.get(i).updateAll(update);
+    public void notifyJustUpdateAll(SerializableUpdate update) throws IOException {
+        for (int i = 0; i < observerList.size(); i++) observerList.get(i).justUpdateAll(update);
     }
 
     public void notifyAnswerOnePlayer(SerializableRequest request) throws IOException {
@@ -47,8 +47,15 @@ public class Game {
         for (int i = 0; i < observerList.size(); i++) observerList.get(i).updateAllAndAnswerOnePlayer(update, request);
     }
 
-    public void notifyUpdateAllTwiceAndAnswerOnePlayer(SerializableUpdate update1, SerializableUpdate update2, SerializableRequest request) throws IOException {
-        for (int i = 0; i < observerList.size(); i++) observerList.get(i).updateAllTwiceAndAnswerOnePlayer(update1, update2, request);
+    public void notifyUpdateAllAndAnswerOnePlayer(List <SerializableUpdate> updates, SerializableRequest request) throws IOException {
+        for (int i = 0; i < observerList.size(); i++) observerList.get(i).updateAllAndAnswerOnePlayer(updates, request);
+    }
+
+    public int nextPlayerId(int playerId){
+        int firstPlayerId = (playerId % numOfPlayers) + 1;
+        for (int i = firstPlayerId; i < firstPlayerId + numOfPlayers - 1; i++)
+            if (players.get(((i-1) % numOfPlayers)+1) != null) return ((i-1) % numOfPlayers) +1;
+        return playerId;
     }
 
 

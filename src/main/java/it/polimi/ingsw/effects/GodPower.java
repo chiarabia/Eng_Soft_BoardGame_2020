@@ -1,6 +1,7 @@
 package it.polimi.ingsw.effects;
 
 import it.polimi.ingsw.Board;
+import it.polimi.ingsw.Player;
 import it.polimi.ingsw.effects.build.StandardBuild;
 import it.polimi.ingsw.effects.consolidateBuild.StandardConsolidateBuild;
 import it.polimi.ingsw.effects.consolidateMove.StandardConsolidateMove;
@@ -50,6 +51,10 @@ public class GodPower {
     //returns the state of the board after the workers has built
     public void buildUp (Position buildingPosition, Board board, boolean god_power) {
         consolidateBuild.buildUp(buildingPosition, board, god_power);
+    }
+
+    public Turn endTurn (Turn oldTurn, List<GodPower> godPowers, Player player){
+        return newTurn.endTurn(oldTurn, godPowers, player);
     }
 
     /**
@@ -190,18 +195,20 @@ public class GodPower {
         this.askToBuildDomes = askToBuildDomes;
     }
 
-    public void setAskToBuildBeforeMoveAndNotMoveUp(boolean askToBuildBeforeMoveAndNotMoveUp) {
-        this.askToBuildBeforeMoveAndNotMoveUp = askToBuildBeforeMoveAndNotMoveUp;
-    }
-
     public boolean isAskToBuildDomes() {return askToBuildDomes; }
-
-    public boolean isAskToBuildBeforeMoveAndNotMoveUp() {return askToBuildBeforeMoveAndNotMoveUp; }
 
     public void addPositiveWinConditions(StandardWinCondition positiveWinConditions) {
         this.positiveWinConditions.add(positiveWinConditions);
     }
     public void addBlockingWinConditions(StandardWinCondition blockingWinConditions) {
         this.blockingWinConditions.add(blockingWinConditions);
+    }
+
+    public boolean isAskToBuildBeforeMoveAndNotMoveUp() {
+        return askToBuildBeforeMoveAndNotMoveUp;
+    }
+
+    public void setAskToBuildBeforeMoveAndNotMoveUp(boolean askToBuildBeforeMoveAndNotMoveUp) {
+        this.askToBuildBeforeMoveAndNotMoveUp = askToBuildBeforeMoveAndNotMoveUp;
     }
 }
