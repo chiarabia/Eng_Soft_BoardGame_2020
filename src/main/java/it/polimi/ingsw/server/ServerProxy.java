@@ -15,8 +15,8 @@ public class ServerProxy implements GameObserver{
     }
 
     // aggiorna tutti i player rompendo il ciclo MVC
-    // updateAll deve servire SOLO per comunicare il termine della partita (vittoria o disconnessione player)
-    public void updateAll(SerializableUpdate update) throws IOException {
+    // justUpdateAll deve servire SOLO per comunicare il termine della partita (vittoria o disconnessione player)
+    public void justUpdateAll(SerializableUpdate update) throws IOException {
         serverThread.sendAllObject(update);
     }
 
@@ -62,16 +62,15 @@ public class ServerProxy implements GameObserver{
     }
 
     // aggiorna tutti i player e risponde a un singolo player
-    public void updateAllAndAnswerOnePlayer(SerializableUpdate update, SerializableRequest request) throws IOException {
-        serverThread.sendAllObject(update);
+    public void updateAllAndAnswerOnePlayer(List<SerializableUpdate> updates, SerializableRequest request) throws IOException {
+        for (SerializableUpdate update : updates) serverThread.sendAllObject(update);
         answerOnePlayer(request);
     }
 
-    // aggiorna tutti i player due volte e risponde a un singolo player
-    public void updateAllTwiceAndAnswerOnePlayer(SerializableUpdate update1, SerializableUpdate update2, SerializableRequest request) throws IOException {
-        serverThread.sendAllObject(update1);
-        serverThread.sendAllObject(update2);
-        answerOnePlayer(request);
+    public void updateAllAndAnswerOnePlayer(SerializableUpdate update, SerializableRequest request) throws IOException {
+        List <SerializableUpdate> updates = new ArrayList<>();
+        updates.add(update);
+        updateAllAndAnswerOnePlayer(updates, request);
     }
 
     public ServerProxy(ServerThread serverThread) {

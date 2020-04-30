@@ -95,7 +95,7 @@ public class GodPowerManager {
         switch (build) {
             case "askToBuildBeforeMoveAndNotMoveUp":
                 godPower.setAskToBuildBeforeMoveAndNotMoveUp(true);
-                godPower.setBuild(new StandardBuild(numOfBuilds)); break;
+                godPower.setBuild(new BuildBeforeMove(numOfBuilds)); break; //todo:dovrebbe essere giusto ma boh
             case "buildBeforeMove":
                 godPower.setBuild(new BuildBeforeMove(1)); break;
             case "askToBuildDomes":
