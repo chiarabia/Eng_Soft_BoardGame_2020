@@ -8,6 +8,7 @@ import org.json.simple.parser.ParseException;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 
 
 public class Game {
@@ -37,6 +38,10 @@ public class Game {
     // deve servire SOLO per comunicare il termine della partita (vittoria o disconnessione player)
     public void notifyJustUpdateAll(SerializableUpdate update) throws IOException {
         for (int i = 0; i < observerList.size(); i++) observerList.get(i).justUpdateAll(update);
+    }
+
+    public void notifyJustUpdateAll(List<SerializableUpdate> updates) throws IOException {
+        for (int i = 0; i < observerList.size(); i++) observerList.get(i).justUpdateAll(updates);
     }
 
     public void notifyAnswerOnePlayer(SerializableRequest request) throws IOException {

@@ -1,6 +1,6 @@
 package it.polimi.ingsw.server;
 
-import it.polimi.ingsw.GameController;
+import it.polimi.ingsw.Controller;
 import it.polimi.ingsw.exceptions.ClientStoppedWorkingException;
 import it.polimi.ingsw.Game;
 import org.json.simple.parser.ParseException;
@@ -67,7 +67,7 @@ public class ServerThread extends Thread {
             }
             ServerProxy serverProxy = new ServerProxy(this);
             Game game = new Game(numOfPlayers, playersNames);
-            GameController gameController = new GameController(game);
+            Controller gameController = new Controller(game);
             game.addObserver(serverProxy);
             serverProxy.addObserver(gameController);
             gameController.onInitialization();

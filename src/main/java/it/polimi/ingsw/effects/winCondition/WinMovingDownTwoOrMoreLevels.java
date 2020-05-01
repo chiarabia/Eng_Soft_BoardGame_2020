@@ -18,10 +18,10 @@ public class WinMovingDownTwoOrMoreLevels extends StandardWinCondition {
 
     @Override
     public boolean win (Position workerPosition, Position destinationPosition, Board board){
+        if (workerPosition==null && destinationPosition==null) return false;
         Cell workerCell = board.getCell(workerPosition);
         Cell destinationCell = board.getCell(destinationPosition);
-
-        if (workerCell==null && destinationCell==null) return false;
+        if (workerCell==null && destinationCell==null) return false; // non capisco a cosa serva
         return ((workerCell.getZ() - destinationCell.getZ()) >= 2);
     }
 }

@@ -19,8 +19,7 @@ public class RestoreOriginalGodPower extends NewTurn {
      */
     @Override
     public Turn endTurn(Turn oldTurn, List<GodPower> godPowers, Player player) {
-        int j;
-        for(j = 0; j <godPowers.size(); j++) {
+        for(int j = 0; j < godPowers.size(); j++) {
             if (godPowers.get(j).getPlayerId() == originalGodPower.getPlayerId()) {
                 godPowers.add(j, originalGodPower); //restore original GodPower effects
 
