@@ -6,6 +6,7 @@ import it.polimi.ingsw.server.serializable.*;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 
 public class ServerProxy implements GameObserver{
     private ServerThread serverThread;
@@ -18,6 +19,10 @@ public class ServerProxy implements GameObserver{
     // justUpdateAll deve servire SOLO per comunicare il termine della partita (vittoria o disconnessione player)
     public void justUpdateAll(SerializableUpdate update) throws IOException {
         serverThread.sendAllObject(update);
+    }
+
+    public void justUpdateAll(List<SerializableUpdate> updates) throws IOException {
+        for (SerializableUpdate update : updates) serverThread.sendAllObject(update);
     }
 
     // risponde a un singolo player
@@ -53,7 +58,7 @@ public class ServerProxy implements GameObserver{
         } catch (ClientStoppedWorkingException e){
             if (e.isWasItTimeOut()){
                 // il giocatore non ha risposto entro il tempo stabilito, quindi ha perso
-
+                for (int i = 0; i < observerList.size(); i++) observerList.get(i).onPlayerLoss(playerId);
             } else {
                 // il giocatore si è disconnesso, quindi la partita termina
                 for (int i = 0; i < observerList.size(); i++) observerList.get(i).onPlayerDisconnection(playerId);
