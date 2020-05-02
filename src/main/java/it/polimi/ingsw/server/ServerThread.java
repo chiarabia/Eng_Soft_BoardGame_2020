@@ -59,12 +59,13 @@ public class ServerThread extends Thread {
     }
     public void startGame(){
         try {
-            for (int i = 0; i < numOfPlayers; i++) sendMessage("Server is ready", i);
+            for (int i = 0; i < numOfPlayers; i++) sendMessage("Ready", i);
             playersNames = scanList("Player's name");
             if (playersList.size() < numOfPlayers){
                 scanList ("Close");
                 return;
             }
+            for (int i = 0; i < numOfPlayers; i++) sendMessage("Start Serializable", i);
             ServerProxy serverProxy = new ServerProxy(this);
             Game game = new Game(numOfPlayers, playersNames);
             Controller gameController = new Controller(game);
