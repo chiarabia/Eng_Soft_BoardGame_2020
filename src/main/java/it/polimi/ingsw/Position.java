@@ -6,7 +6,7 @@ import java.util.Objects;
  * This class sets the coordinates for the Positions on the board
  */
 
-public class Position {
+public class Position implements java.io.Serializable {
     private final int x;
     private final int y;
     private final int z;

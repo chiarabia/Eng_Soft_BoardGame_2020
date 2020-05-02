@@ -26,10 +26,10 @@ public class ServerProxy implements GameObserver{
     }
 
     // risponde a un singolo player
-    public void answerOnePlayer(SerializableRequest request) throws IOException {
+    public void answerOnePlayer(SerializableRequest request) throws IOException{
         int playerId = request.getPlayerId();
         try {
-            Object fromClient = serverThread.sendObjectAndWaitForReply(request, request.getPlayerId(), 300);
+            Object fromClient = serverThread.sendObjectAndWaitForReply(request, request.getPlayerId() - 1, 300);
             if (fromClient instanceof SerializableOptionalMove) {
                 SerializableOptionalMove serializableFromClient = (SerializableOptionalMove) fromClient;
                 for (int i = 0; i < observerList.size(); i++)
@@ -67,12 +67,12 @@ public class ServerProxy implements GameObserver{
     }
 
     // aggiorna tutti i player e risponde a un singolo player
-    public void updateAllAndAnswerOnePlayer(List<SerializableUpdate> updates, SerializableRequest request) throws IOException {
+    public void updateAllAndAnswerOnePlayer(List<SerializableUpdate> updates, SerializableRequest request) throws IOException{
         for (SerializableUpdate update : updates) serverThread.sendAllObject(update);
         answerOnePlayer(request);
     }
 
-    public void updateAllAndAnswerOnePlayer(SerializableUpdate update, SerializableRequest request) throws IOException {
+    public void updateAllAndAnswerOnePlayer(SerializableUpdate update, SerializableRequest request) throws IOException{
         List <SerializableUpdate> updates = new ArrayList<>();
         updates.add(update);
         updateAllAndAnswerOnePlayer(updates, request);

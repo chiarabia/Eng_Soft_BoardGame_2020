@@ -17,8 +17,8 @@ import java.util.Scanner;
 
 public class Client {
     private static ClientBoard board;
-    public static Socket socket;
-    public final static String serverIP = "127.0.0.1";
+    public static Socket serverSocket;
+    public final static String serverIP = "192.168.1.22";
     public static int numOfPlayers = 0;
     public static int myPlayerId = 0;
     public static int playerTurnId = 0; // mostra il playerId del giocatore che sta giocando
@@ -44,11 +44,11 @@ public class Client {
             if (object instanceof SerializableRequestMove){
                 System.out.print("Worker 1 possible moves: ");
                 for (Position p: ((SerializableRequestMove) object).getWorker1Moves())
-                    System.out.print("(" + p.getX()+", "+p.getY()+", "+", "+p.getZ()+") ");
+                    System.out.print("(" + p.getX()+", "+p.getY()+", "+p.getZ()+") ");
                 System.out.println();
                 System.out.print("Worker 2 possible moves: ");
                 for (Position p: ((SerializableRequestMove) object).getWorker2Moves())
-                    System.out.print("(" + p.getX()+", "+p.getY()+", "+", "+p.getZ()+") ");
+                    System.out.print("(" + p.getX()+", "+p.getY()+", "+p.getZ()+") ");
                 System.out.println();
                 System.out.print("worker id: ");
                 workerId = keyboard.nextInt();
@@ -64,11 +64,11 @@ public class Client {
             if (object instanceof SerializableRequestBuild){
                 System.out.print("Worker 1 possible builds: ");
                 for (Position p: ((SerializableRequestBuild) object).getWorker1Builds())
-                    System.out.print("(" + p.getX()+", "+p.getY()+", "+", "+p.getZ()+") ");
+                    System.out.print("(" + p.getX()+", "+p.getY()+", "+p.getZ()+") ");
                 System.out.println();
                 System.out.print("Worker 2 possible builds: ");
                 for (Position p: ((SerializableRequestBuild) object).getWorker2Builds())
-                    System.out.print("(" + p.getX()+", "+p.getY()+", "+", "+p.getZ()+") ");
+                    System.out.print("(" + p.getX()+", "+p.getY()+", "+p.getZ()+") ");
                 System.out.println();
                 System.out.println("Can force dome: " + ((SerializableRequestBuild) object).isCanForceMove());
                 System.out.print("worker id: ");
@@ -124,33 +124,30 @@ public class Client {
     }
 
     private static void setup (String myName, int serverPort) throws Exception {
+        serverSocket = new Socket(serverIP, serverPort);
         Scanner keyboard = new Scanner(System.in);
-        Socket socket = new Socket(serverIP, serverPort);
-        Scanner in = new Scanner(socket.getInputStream());
-        PrintWriter out = new PrintWriter(socket.getOutputStream());
         String message;
         boolean isServerReady = false;
         while (!isServerReady) {
-            System.out.println("Waiting for message...");
-            message = in.nextLine();
+            message = waitForMessage();
             System.out.println(message + " from Server");
             if (message.equals("Hello")) {
-                out.println("Hello");
-                out.flush();
+                sendMessage("Hello");
             }
             isServerReady = message.equals("Ready");
         }
-        message = in.nextLine();
+        message = waitForMessage();
         if (message.equals("Player's name")) {
             System.out.println("Server has asked for name");
-            out.println(myName);
+            sendMessage(myName);
         }
-        message = in.nextLine();
+        message = waitForMessage();
         if (message.equals("Close")) {
             System.out.println("Server has closed connection");
             throw new Exception();
         } else if (message.equals("Start Serializable")) {
             System.out.println("Server has switched to Serializable");
+            sendMessage("Start game");
         }
         SerializableUpdateInitializeInfos infos = (SerializableUpdateInitializeInfos) waitForObject();
         for (int id = 1; id <= numOfPlayers; id++) {
@@ -193,14 +190,21 @@ public class Client {
         playerTurnId = ((SerializableUpdateTurn) object).getPlayerId();
     }
     private static Object waitForObject() throws IOException, ClassNotFoundException {
-        ObjectInputStream fileObjectIn = new ObjectInputStream(socket.getInputStream());
+        ObjectInputStream fileObjectIn = new ObjectInputStream(serverSocket.getInputStream());
         return (Object) fileObjectIn.readObject();
     }
     private static void sendObject (Object object) throws IOException {
-        ObjectOutputStream fileObjectOut = new ObjectOutputStream(socket.getOutputStream());
+        ObjectOutputStream fileObjectOut = new ObjectOutputStream(serverSocket.getOutputStream());
         fileObjectOut.writeObject(object);
         fileObjectOut.flush();
     }
+    public static void sendMessage(String message) throws IOException {
+        sendObject(new SerializableMessage(message));
+    }
+    public static String waitForMessage() throws IOException, ClassNotFoundException {
+        return ((SerializableRequestMessage) waitForObject()).getMessage();
+    }
+
     public static void displayBoard(){
         System.out.print("\n-------------------------\n");
         for (int i = 0; i<5; i++){

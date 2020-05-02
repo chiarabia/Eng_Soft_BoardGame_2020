@@ -1,5 +1,6 @@
 package it.polimi.ingsw.server;
 
+import it.polimi.ingsw.exceptions.ClientStoppedWorkingException;
 import it.polimi.ingsw.server.serializable.SerializableRequest;
 import it.polimi.ingsw.server.serializable.SerializableUpdate;
 
