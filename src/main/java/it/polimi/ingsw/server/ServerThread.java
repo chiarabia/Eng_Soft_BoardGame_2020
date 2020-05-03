@@ -3,9 +3,12 @@ package it.polimi.ingsw.server;
 import it.polimi.ingsw.Controller;
 import it.polimi.ingsw.exceptions.ClientStoppedWorkingException;
 import it.polimi.ingsw.Game;
+import it.polimi.ingsw.server.serializable.SerializableMessage;
+import it.polimi.ingsw.server.serializable.SerializableRequestMessage;
 import org.json.simple.parser.ParseException;
 
 import java.io.IOException;
+import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.io.PrintWriter;
 import java.net.Socket;
@@ -34,17 +37,15 @@ public class ServerThread extends Thread {
         }
         return tempList;
     }
-    public void sendMessage(String message, int player) throws IOException {
-        PrintWriter out = new PrintWriter(playersList.get(player).getOutputStream());
-        out.println(message);
-        out.flush();
+    public void sendMessage(String message, int position) throws IOException {
+        sendObject(new SerializableRequestMessage(position + 1, message), position);
     }
-    public String sendMessageAndWaitForReply(String message, int player, int timeLimit) throws IOException, ClientStoppedWorkingException {
-        sendMessage(message, player);
-        return ServerReciever.receiveMessage(playersList.get(player), timeLimit);
+    public String sendMessageAndWaitForReply(String message, int position, int timeLimit) throws IOException, ClientStoppedWorkingException {
+        sendMessage(message, position);
+        return ((SerializableMessage)ServerReciever.receiveObject(playersList.get(position), timeLimit)).getMessage();
     }
-    public void sendObject(Object object, int player) throws IOException {
-        ObjectOutputStream fileObjectOut = new ObjectOutputStream(playersList.get(player).getOutputStream());
+    public void sendObject(Object object, int position) throws IOException {
+        ObjectOutputStream fileObjectOut = new ObjectOutputStream(playersList.get(position).getOutputStream());
         fileObjectOut.writeObject(object);
         fileObjectOut.flush();
     }
@@ -53,18 +54,15 @@ public class ServerThread extends Thread {
             if (playersList.get(i)!=null) sendObject(object, i);
         }
     }
-    public Object sendObjectAndWaitForReply(Object object, int player, int timeLimit) throws IOException, ClientStoppedWorkingException {
-        sendObject(object, player);
-        return ServerReciever.receiveObject(playersList.get(player), timeLimit);
+    public Object sendObjectAndWaitForReply(Object object, int position, int timeLimit) throws IOException, ClientStoppedWorkingException {
+        sendObject(object, position);
+        return ServerReciever.receiveObject(playersList.get(position), timeLimit);
     }
     public void startGame(){
         try {
-            for (int i = 0; i < numOfPlayers; i++) sendMessage("Server is ready", i);
+            for (int i = 0; i < numOfPlayers; i++) sendMessage("Ready", i);
             playersNames = scanList("Player's name");
-            if (playersList.size() < numOfPlayers){
-                scanList ("Close");
-                return;
-            }
+            for (int i = 0; i < numOfPlayers; i++) sendMessage("Start game", i);
             ServerProxy serverProxy = new ServerProxy(this);
             Game game = new Game(numOfPlayers, playersNames);
             Controller gameController = new Controller(game);

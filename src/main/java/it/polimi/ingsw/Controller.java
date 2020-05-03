@@ -195,6 +195,7 @@ public class Controller implements ProxyObserver {
                 return;
             }
         }
-        if (loseCondition.lose(allMoves, allBuilds)) onPlayerLoss(playerId, tempUpdates);
+        //if (loseCondition.lose(allMoves, allBuilds)) onPlayerLoss(playerId, tempUpdates);
+        // todo:tolto momentaneamente poiché risponde true a caso
     }
 }
