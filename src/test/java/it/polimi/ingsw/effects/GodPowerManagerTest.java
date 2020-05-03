@@ -4,6 +4,7 @@ import it.polimi.ingsw.effects.GodPower;
 import it.polimi.ingsw.effects.GodPowerManager;
 import it.polimi.ingsw.effects.build.*;
 import it.polimi.ingsw.effects.consolidateBuild.StandardConsolidateBuild;
+import it.polimi.ingsw.effects.consolidateBuild.UnderWorker;
 import it.polimi.ingsw.effects.consolidateMove.PushWorker;
 import it.polimi.ingsw.effects.consolidateMove.StandardConsolidateMove;
 import it.polimi.ingsw.effects.consolidateMove.SwapWorker;
@@ -271,6 +272,8 @@ public class GodPowerManagerTest {
         fileName = "ZeusCard.json";
         godPowerLoadByCard = GodPowerManager.power(fileName, 1);
         godPowerCorrect.setBuild(new UnderMyself(1));
+        godPowerCorrect.setConsolidateBuild(new UnderWorker());
+
 
         assertAll("Athena", () -> assertEquals(godPowerLoadByCard.getMove().getClass(), godPowerCorrect.getMove().getClass()),
                 () -> assertEquals(godPowerLoadByCard.getBuild().getClass(), godPowerCorrect.getBuild().getClass()),

@@ -2,6 +2,7 @@ package it.polimi.ingsw.effects;
 
 import it.polimi.ingsw.effects.build.*;
 import it.polimi.ingsw.effects.consolidateBuild.StandardConsolidateBuild;
+import it.polimi.ingsw.effects.consolidateBuild.UnderWorker;
 import it.polimi.ingsw.effects.consolidateMove.PushWorker;
 import it.polimi.ingsw.effects.consolidateMove.StandardConsolidateMove;
 import it.polimi.ingsw.effects.consolidateMove.SwapWorker;
@@ -113,7 +114,13 @@ public class GodPowerManager {
                 godPower.setBuild(new StandardBuild(numOfBuilds)); break;
         }
 
-        godPower.setConsolidateBuild(new StandardConsolidateBuild());
+        switch (consolidateBuild) {
+            case "underWorker" :
+                godPower.setConsolidateBuild(new UnderWorker()); break;
+            case "" :
+                godPower.setConsolidateBuild(new StandardConsolidateBuild()); break;
+
+        }
 
         switch (consolidateMove) {
             case "pushWorker":

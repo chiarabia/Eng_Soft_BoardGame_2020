@@ -32,7 +32,6 @@ public class NoMoveUpAfterBuild extends StandardMove{
     }
 
     @Override
-    //Todo: ridefinire questo metodo
     protected boolean checkMoveConditions(Cell workerCell, Turn turn) {
         return super.checkMoveConditions(workerCell, turn);
     }

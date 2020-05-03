@@ -2,7 +2,7 @@
   "name": "Zeus",
   "move": "",
   "build": "underMyself",
-  "consolidateBuild": "",
+  "consolidateBuild": "underWorker",
   "consolidateMove": "",
   "positiveWinConditions": "",
   "negativeWinConditions": "",
