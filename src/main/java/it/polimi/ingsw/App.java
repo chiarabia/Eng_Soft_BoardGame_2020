@@ -13,6 +13,7 @@ import java.io.IOException;
 public class App
 {
     public static void main( String[] args ) throws Exception {
-        Server.startServer();
+        Server.startServer(555);
+        Client.startClient(555,  "192.168.1.8");
     }
 }

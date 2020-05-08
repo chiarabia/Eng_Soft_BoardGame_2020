@@ -3,159 +3,144 @@ package it.polimi.ingsw.client;
 // CLIENTBOARD -----> CLIENTPLAYER [3] -----------> CLIENTWORKER [2]
 //      Ͱ-----------> CLIENTBUILDING [5][5]
 
-import it.polimi.ingsw.Position;
-import it.polimi.ingsw.server.serializable.*;
+// Questo codice è interamente work in progress, soprattutto nei metodi grafico-testuali
 
+import it.polimi.ingsw.Position;
+import it.polimi.ingsw.exceptions.GameEndedException;
+import it.polimi.ingsw.server.serializable.*;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
-import java.io.PrintWriter;
 import java.net.Socket;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Scanner;
+import java.util.*;
 
 public class Client {
+    private static String serverIP;
+    private static int serverPort;
     private static ClientBoard board;
-    public static Socket serverSocket;
-    public final static String serverIP = "192.168.1.22";
-    public static int numOfPlayers = 0;
-    public static int myPlayerId = 0;
-    public static int playerTurnId = 0; // mostra il playerId del giocatore che sta giocando
-    public static void startClient() throws Exception {
-        Scanner keyboard = new Scanner(System.in);
-        System.out.print("name: ");
-        String myName = keyboard.next();
-        System.out.print("numOfPlayers: ");
-        numOfPlayers = keyboard.nextInt();
+    private static Socket serverSocket;
+    private static int numOfPlayers = 0;
+    private static int myPlayerId = 0;
+    private static int playerTurnId = 0; // mostra il playerId del giocatore che sta giocando
+    private static Scanner keyboard = new Scanner(System.in);
+
+    public static void startClient(int port, String IP) {
+        serverPort = port;
+        serverIP = IP;
+        String myName = askForInfos();
         board = new ClientBoard(numOfPlayers);
-
-        if (numOfPlayers == 2) setup(myName, 555);
-        else setup(myName, 556);
-
-        displayBoard();
-        Object object;
-        int loserPlayerId, playerId, workerId, oldLevel, x, y, z;
-        boolean isDome;
-        Position position;
-
-        while (true){
-            object = waitForObject();
-            if (object instanceof SerializableRequestMove){
-                System.out.print("Worker 1 possible moves: ");
-                for (Position p: ((SerializableRequestMove) object).getWorker1Moves())
-                    System.out.print("(" + p.getX()+", "+p.getY()+", "+p.getZ()+") ");
-                System.out.println();
-                System.out.print("Worker 2 possible moves: ");
-                for (Position p: ((SerializableRequestMove) object).getWorker2Moves())
-                    System.out.print("(" + p.getX()+", "+p.getY()+", "+p.getZ()+") ");
-                System.out.println();
-                System.out.print("worker id: ");
-                workerId = keyboard.nextInt();
-                System.out.print("x: ");
-                x = keyboard.nextInt();
-                System.out.print("y: ");
-                y = keyboard.nextInt();
-                System.out.print("z: ");
-                z = keyboard.nextInt();
-                position = new Position(x, y, z);
-                sendObject(new SerializableConsolidateMove(position, workerId));
-            }
-            if (object instanceof SerializableRequestBuild){
-                System.out.print("Worker 1 possible builds: ");
-                for (Position p: ((SerializableRequestBuild) object).getWorker1Builds())
-                    System.out.print("(" + p.getX()+", "+p.getY()+", "+p.getZ()+") ");
-                System.out.println();
-                System.out.print("Worker 2 possible builds: ");
-                for (Position p: ((SerializableRequestBuild) object).getWorker2Builds())
-                    System.out.print("(" + p.getX()+", "+p.getY()+", "+p.getZ()+") ");
-                System.out.println();
-                System.out.println("Can force dome: " + ((SerializableRequestBuild) object).isCanForceMove());
-                System.out.print("worker id: ");
-                workerId = keyboard.nextInt();
-                System.out.print("x: ");
-                x = keyboard.nextInt();
-                System.out.print("y: ");
-                y = keyboard.nextInt();
-                System.out.print("z: ");
-                z = keyboard.nextInt();
-                System.out.print("is dome: ");
-                isDome = keyboard.nextBoolean();
-                position = new Position(x, y, z);
-                sendObject(new SerializableConsolidateBuild(position, workerId, isDome));
-            }
-            if (object instanceof SerializableUpdateMove){
-                playerId = ((SerializableUpdateMove) object).getPlayerId();
-                workerId = ((SerializableUpdateMove) object).getWorkerId();
-                x = ((SerializableUpdateMove) object).getNewPosition().getX();
-                y = ((SerializableUpdateMove) object).getNewPosition().getY();
-                board.getPlayer(playerId).getWorker(workerId).setX(x);
-                board.getPlayer(playerId).getWorker(workerId).setY(y);
-                System.out.println("Player " + playerId+ " has moved worker "+workerId+" to ("+ x + ", " + y + ")");
-            }
-            if (object instanceof SerializableUpdateBuild){
-                x = ((SerializableUpdateBuild) object).getNewPosition().getX();
-                y = ((SerializableUpdateBuild) object).getNewPosition().getY();
-                isDome = ((SerializableUpdateBuild) object).isDome();
-                if (board.getCell(x, y)!=null) oldLevel = board.getCell(x,y).getLevel();
-                else oldLevel = -1;
-                board.setCell(new ClientBuilding(oldLevel +1, isDome), x, y);
-                if (!isDome) System.out.println("Building in ("+ x + ", " + y + ")");
-                else System.out.println("Dome in ("+ x + ", " + y + ")");
-            }
-            if (object instanceof SerializableUpdateTurn){
-                playerTurnId = ((SerializableUpdateTurn) object).getPlayerId();
-                System.out.println("Player "+((SerializableUpdateTurn) object).getPlayerId() + " now playing");
-            }
-            if (object instanceof SerializableUpdateLoser){
-                loserPlayerId = ((SerializableUpdateLoser) object).getPlayerId();
-                System.out.println("Player "+loserPlayerId +" has lost");
-                if (loserPlayerId == myPlayerId) return;
-            }
-            if (object instanceof SerializableUpdateWinner){
-                System.out.println("Player " + ((SerializableUpdateWinner) object).getPlayerId() + " has won");
-                return;
-            }
-            if (object instanceof SerializableUpdateDisconnection){
-                System.out.println("Player " + ((SerializableUpdateDisconnection) object).getPlayerId() + " disconnected");
-                return;
-            }
-        }
+        try{
+            setup(myName);
+            while (true) reactToServer(waitForObject());
+        } catch (GameEndedException e){}
+        catch (Exception e){System.out.println(Color.RED.set() + "Oops... something went wrong");}
     }
 
-    private static void setup (String myName, int serverPort) throws Exception {
-        serverSocket = new Socket(serverIP, serverPort);
-        Scanner keyboard = new Scanner(System.in);
-        String message;
-        boolean isServerReady = false;
-        while (!isServerReady) {
-            message = waitForMessage();
-            System.out.println(message + " from Server");
-            if (message.equals("Hello")) {
-                sendMessage("Hello");
+    private static void reactToServer(Object object) throws Exception {
+        boolean isDome;
+        int playerId = 0, workerId = 0, oldLevel, x, y, z;
+        if (object instanceof SerializableRequestMove){
+            if (((SerializableRequestMove) object).getWorker1Moves().size()!=0) {
+                workerId = 1;
+                System.out.print("Worker 1 possible moves: ");
+                for (Position p : ((SerializableRequestMove) object).getWorker1Moves())
+                    System.out.print("(" + p.getX() + ", " + p.getY() + ", " + p.getZ() + ") ");
+                System.out.println();
             }
-            isServerReady = message.equals("Ready");
+            if (((SerializableRequestMove) object).getWorker2Moves().size()!=0) {
+                workerId = 2;
+                System.out.print("Worker 2 possible moves: ");
+                for (Position p : ((SerializableRequestMove) object).getWorker2Moves())
+                    System.out.print("(" + p.getX() + ", " + p.getY() + ", " + p.getZ() + ") ");
+                System.out.println();
+            }
+            if (((SerializableRequestMove) object).getWorker1Moves().size()!=0 && ((SerializableRequestMove) object).getWorker2Moves().size()!=0 ) workerId = 0;
+            if (workerId == 0) workerId = askForInt("worker id:");
+            Position position = null;
+            while (!isPositionCorrect(position, ((SerializableRequestMove) object).getWorker1Moves()) && !isPositionCorrect(position, ((SerializableRequestMove) object).getWorker2Moves()))
+                position = askForPosition();
+            sendObject(new SerializableConsolidateMove(position, workerId));
         }
-        message = waitForMessage();
-        if (message.equals("Player's name")) {
-            System.out.println("Server has asked for name");
-            sendMessage(myName);
+        if (object instanceof SerializableRequestBuild){
+            if (((SerializableRequestBuild) object).getWorker1Builds().size()!=0) {
+                workerId = 1;
+                System.out.print("Worker 1 possible builds: ");
+                for (Position p : ((SerializableRequestBuild) object).getWorker1Builds())
+                    System.out.print("(" + p.getX() + ", " + p.getY() + ", " + p.getZ() + ") ");
+                System.out.println();
+            }
+            if (((SerializableRequestBuild) object).getWorker2Builds().size()!=0) {
+                workerId = 2;
+                System.out.print("Worker 2 possible builds: ");
+                for (Position p : ((SerializableRequestBuild) object).getWorker2Builds())
+                    System.out.print("(" + p.getX() + ", " + p.getY() + ", " + p.getZ() + ") ");
+                System.out.println();
+            }
+            if (((SerializableRequestBuild) object).getWorker1Builds().size()!=0 && ((SerializableRequestBuild) object).getWorker2Builds().size()!=0) workerId = 0;
+            if (workerId == 0) workerId = askForInt("worker id:");
+            if (((SerializableRequestBuild) object).isCanForceMove()) isDome = askForBoolean("is dome (y/n): ");
+            else isDome = false;
+            Position position = null;
+            while (!isPositionCorrect(position, ((SerializableRequestBuild) object).getWorker1Builds()) && !isPositionCorrect(position, ((SerializableRequestBuild) object).getWorker2Builds()) )
+                position = askForPosition();
+            sendObject(new SerializableConsolidateBuild(position, workerId, isDome));
         }
-        message = waitForMessage();
-        if (message.equals("Close")) {
-            System.out.println("Server has closed connection");
-            throw new Exception();
-        } else if (message.equals("Start Serializable")) {
-            System.out.println("Server has switched to Serializable");
-            sendMessage("Start game");
+        if (object instanceof SerializableUpdateMove){
+            playerId = ((SerializableUpdateMove) object).getPlayerId();
+            workerId = ((SerializableUpdateMove) object).getWorkerId();
+            x = ((SerializableUpdateMove) object).getNewPosition().getX();
+            y = ((SerializableUpdateMove) object).getNewPosition().getY();
+            board.getPlayer(playerId).getWorker(workerId).setX(x);
+            board.getPlayer(playerId).getWorker(workerId).setY(y);
+            System.out.println("Player " + playerId+ " has moved worker "+workerId+" to ("+ x + ", " + y + ")");
+        }
+        if (object instanceof SerializableUpdateBuild){
+            x = ((SerializableUpdateBuild) object).getNewPosition().getX();
+            y = ((SerializableUpdateBuild) object).getNewPosition().getY();
+            isDome = ((SerializableUpdateBuild) object).isDome();
+            if (board.getCell(x, y)!=null) oldLevel = board.getCell(x,y).getLevel();
+            else oldLevel = -1;
+            board.setCell(new ClientBuilding(oldLevel +1, isDome), x, y);
+            if (!isDome) System.out.println("Building in ("+ x + ", " + y + ")");
+            else System.out.println("Dome in ("+ x + ", " + y + ")");
+        }
+        if (object instanceof SerializableUpdateTurn){
+            playerTurnId = ((SerializableUpdateTurn) object).getPlayerId();
+            System.out.println("Player "+((SerializableUpdateTurn) object).getPlayerId() + " now playing");
+        }
+        if (object instanceof SerializableUpdateLoser){
+            playerId = ((SerializableUpdateLoser) object).getPlayerId();
+            System.out.println("Player "+playerId +" has lost");
+            if (playerId == myPlayerId) return;
+        }
+        if (object instanceof SerializableUpdateWinner){
+            System.out.println("Player " + ((SerializableUpdateWinner) object).getPlayerId() + " has won");
+            throw new GameEndedException();
+        }
+        if (object instanceof SerializableUpdateDisconnection){
+            System.out.println("Player " + ((SerializableUpdateDisconnection) object).getPlayerId() + " disconnected");
+            throw new GameEndedException();
+        }
+        displayBoard();
+    }
+
+    private static void setup (String myName) throws Exception {
+        serverSocket = new Socket(serverIP, serverPort);
+        sendMessage(numOfPlayers + " players");
+        String message = "";
+        while (message.equals("Player's name") || message.equals("")) {
+            message = waitForMessage();
+            if (message.equals("Player's name")) sendMessage(myName);
+        }
+        if (message.substring(0, 15).equals("You are player ")) {
+            myPlayerId = Character.getNumericValue(message.charAt(15));
+            System.out.println("You are player " + myPlayerId);
         }
         SerializableUpdateInitializeInfos infos = (SerializableUpdateInitializeInfos) waitForObject();
         for (int id = 1; id <= numOfPlayers; id++) {
             board.setPlayer(new ClientPlayer(infos.getPlayersNames().get(id - 1), infos.getGodPowersNames().get(id - 1)), id);
             if (infos.getPlayersNames().get(id - 1).equals(myName)) myPlayerId = id;
         }
-        System.out.println("You are player " + myPlayerId);
-
         Object object;
         int whichPlayerId;
         Position positionWorker1, positionWorker2;
@@ -163,7 +148,6 @@ public class Client {
             object = waitForObject();
             if (object instanceof SerializableUpdateTurn) break;
             if (object instanceof SerializableUpdateInitializeWorkers){
-                displayBoard();
                 whichPlayerId = ((SerializableUpdateInitializeWorkers) object).getPlayerId();
                 positionWorker1 = ((SerializableUpdateInitializeWorkers) object).getWorkerPositions().get(0);
                 positionWorker2 = ((SerializableUpdateInitializeWorkers) object).getWorkerPositions().get(1);
@@ -171,49 +155,129 @@ public class Client {
                 board.getPlayer(whichPlayerId).getWorker(1).setY(positionWorker1.getY());
                 board.getPlayer(whichPlayerId).getWorker(2).setX(positionWorker2.getX());
                 board.getPlayer(whichPlayerId).getWorker(2).setY(positionWorker2.getY());
+                displayBoard();
             }
             if (object instanceof SerializableRequestInitializeWorkers){
-                System.out.print("Worker 1 X: ");
-                int myWorker1x = keyboard.nextInt();
-                System.out.print("Worker 1 Y: ");
-                int myWorker1y = keyboard.nextInt();
-                System.out.print("Worker 2 X: ");
-                int myWorker2x = keyboard.nextInt();
-                System.out.print("Worker 2 Y: ");
-                int myWorker2y = keyboard.nextInt();
-                List<Position> myWorkerPositions = new ArrayList<>();
-                myWorkerPositions.add(new Position(myWorker1x, myWorker1y, 0));
-                myWorkerPositions.add(new Position(myWorker2x, myWorker2y, 0));
+                List <Position> myWorkerPositions = askForWorkersInitialPositions();
                 sendObject(new SerializableInitializeWorkers(myWorkerPositions));
+            }
+            if (object instanceof SerializableUpdateDisconnection){
+                System.out.println("Player "+ ((SerializableUpdateDisconnection) object).getPlayerId() + " disconnected");
+                throw new GameEndedException();
             }
         }
         playerTurnId = ((SerializableUpdateTurn) object).getPlayerId();
+        displayBoard();
     }
+
     private static Object waitForObject() throws IOException, ClassNotFoundException {
         ObjectInputStream fileObjectIn = new ObjectInputStream(serverSocket.getInputStream());
         return (Object) fileObjectIn.readObject();
     }
+
     private static void sendObject (Object object) throws IOException {
         ObjectOutputStream fileObjectOut = new ObjectOutputStream(serverSocket.getOutputStream());
         fileObjectOut.writeObject(object);
         fileObjectOut.flush();
     }
-    public static void sendMessage(String message) throws IOException {
-        sendObject(new SerializableMessage(message));
-    }
-    public static String waitForMessage() throws IOException, ClassNotFoundException {
-        return ((SerializableRequestMessage) waitForObject()).getMessage();
+
+    private static void sendMessage(String message) throws IOException {
+        sendObject(new Message(message));
     }
 
-    public static void displayBoard(){
-        System.out.print("\n-------------------------\n");
-        for (int i = 0; i<5; i++){
-            for (int j = 4; j >=0; j--){
-                if (board.getCell(i, j)==null) System.out.print("|   |");
-                else if (board.getCell(i, j).isDome()) System.out.print("| D |");
-                else System.out.print("| "+ board.getCell(i, j).getLevel() + " |");
+    private static String waitForMessage() throws IOException, ClassNotFoundException {
+        return ((Message) waitForObject()).getMessage();
+    }
+
+    private static boolean isPositionCorrect (Position position, Set <Position> collection){
+        if (position==null) return false;
+        return collection.stream().anyMatch(x -> x.equals(position));
+    }
+
+    private static String askForInfos(){
+        System.out.println(Color.BLUE.set());
+        System.out.println("  ╔══ ╔═╗ ╖ ╓ ═╦═ ╔═╗ ╔═╗ ╥ ╖ ╓ ╥ ®");
+        System.out.println("  ╚═╗ ╠═╣ ║\\║  ║  ║ ║ ╠\\╝ ║ ║\\║ ║");
+        System.out.println("  ══╝ ╜ ╙ ╜ ╙  ╨  ╚═╝ ╜ \\ ╨ ╜ ╙ ╨\n");
+        String myName = askForString(Color.YELLOW.set() + "What's your name? ");
+        numOfPlayers = askForInt("How many players? ");
+        return myName;
+    }
+
+    private static List <Position> askForWorkersInitialPositions (){
+        int myWorker1x = askForInt("Worker 1 X: ");
+        int myWorker1y = askForInt("Worker 1 Y: ");
+        int myWorker2x = askForInt("Worker 2 X: ");
+        int myWorker2y = askForInt("Worker 2 Y: ");
+        List<Position> myWorkerPositions = new ArrayList<>();
+        myWorkerPositions.add(new Position(myWorker1x, myWorker1y, 0));
+        myWorkerPositions.add(new Position(myWorker2x, myWorker2y, 0));
+        return myWorkerPositions;
+    }
+
+    private static Position askForPosition(){
+        int x = askForInt("x: ");
+        int y = askForInt("y: ");
+        int z = askForInt("z: ");
+        return new Position(x, y, z);
+    }
+
+    private static int askForInt(String request){
+        try {
+            System.out.print(request);
+            int fromKeyboard = keyboard.nextInt();
+            return fromKeyboard;
+        } catch(Exception e){return askForInt(request);}
+    }
+
+    private static String askForString(String request){
+        System.out.print(request);
+        String fromKeyboard = keyboard.next();
+        return fromKeyboard;
+    }
+
+    private static boolean askForBoolean(String request){
+        String fromKeyboard;
+        while (true) {
+            System.out.print(request);
+            fromKeyboard = keyboard.next();
+            if (fromKeyboard.toLowerCase().equals("y") || fromKeyboard.toLowerCase().equals("n")) break;
+        }
+        return fromKeyboard.toLowerCase().equals("y");
+    }
+
+    private static void displayBoard(){
+        System.out.print(Color.WHITE.set()+"\n┌─────────────────────────────┐\n");
+        //for (int j = 0; j<5; j++){
+        //    for (int i = 4; i >=0; i--){
+        for (int j = 4; j>=0; j--){
+            for (int i = 0; i <5; i++){
+                boolean isThereAWorker = false;
+                for (int k = 0; k < numOfPlayers; k++){
+                    if (!board.getPlayer(k+1).hasLost()) {
+                        int worker1x = board.getPlayer(k+1).getWorker(1).getX();
+                        int worker1y = board.getPlayer(k+1).getWorker(1).getY();
+                        int worker2x = board.getPlayer(k+1).getWorker(2).getX();
+                        int worker2y = board.getPlayer(k+1).getWorker(2).getY();
+                        if ((i==worker1x && j==worker1y)||(i==worker2x && j==worker2y)) isThereAWorker = true;
+                    }
+                }
+                if (isThereAWorker)  System.out.print(Color.WHITE.set()+"│ "+Color.BLUE.set()+" ■  ");
+                else if (board.getCell(i, j)==null) System.out.print(Color.WHITE.set()+"│     ");
+                else if (board.getCell(i, j).isDome()) System.out.print(Color.WHITE.set()+"│ "+Color.BLUE.set()+"▲▲▲ ");
+                else {
+                    System.out.print(Color.WHITE.set()+"│ "+ Color.BLUE.set());
+                    switch (board.getCell(i, j).getLevel()){
+                        case 0: System.out.print("░░░"); break;
+                        case 2: System.out.print("▒▒▒"); break;
+                        case 1: System.out.print("▓▓▓"); break;
+                    }
+                    System.out.print(Color.WHITE.set()+ " ");
+                }
             }
-            System.out.print("\n-------------------------\n");
+            System.out.print(Color.WHITE.set()+"│");
+            if (j==4) System.out.print(Color.WHITE.set()+"\n└─────────────────────────────┘\n");
+            else System.out.print(Color.WHITE.set()+"\n├─────────────────────────────┤\n");
         }
         System.out.println();
         for (int i = 0; i < numOfPlayers; i++){

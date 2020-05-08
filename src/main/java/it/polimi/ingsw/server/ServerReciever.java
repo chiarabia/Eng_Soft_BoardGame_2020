@@ -8,22 +8,24 @@ import java.io.ObjectInputStream;
 import java.net.Socket;
 import java.util.Scanner;
 
+// Lancia ClientStoppedWorkingException con wasItTimeOut = true se è scaduto il tempo
+// di risposta, oppure wasItTimeOut = false in ogni altro caso (problema di rete / client si scollega)
+// Non distingue fra problemi di rete e client che si scollega poiché nella nostra
+// architettura non fa differenza, in ogni caso il Server disconnette e termina.
+
 public class ServerReciever extends Thread {
-    private static boolean clientError;
-    private static boolean IOError;
+    private static boolean error;
     private static Object object;
-    public static Object receiveObject(Socket socket, int timeLimit) throws ClientStoppedWorkingException, IOException {
+    public static Object receiveObject(Socket socket, int timeLimit) throws ClientStoppedWorkingException {
         Thread thread = new Thread(()-> {
             try {
                 ObjectInputStream fileObjectIn = new ObjectInputStream(socket.getInputStream());
                 object = (Object) fileObjectIn.readObject();
-            }  catch (IOException e){IOError = true;}
-            catch (Exception e) {clientError = true;}
+            } catch (Exception e) {error = true;}
         });
 
         object = null;
-        clientError = false;
-        IOError = false;
+        error = false;
         thread.start();
         for (int i = 0; i < timeLimit * 100; i++) {
             try {
@@ -31,13 +33,9 @@ public class ServerReciever extends Thread {
                 if (object!=null) {
                     return object;
                 }
-                if (clientError) {
+                if (error) {
                     thread.interrupt();
                     throw new ClientStoppedWorkingException(false);
-                }
-                if (IOError) {
-                    thread.interrupt();
-                    throw new IOException();
                 }
             } catch (InterruptedException e) {break;}
         }

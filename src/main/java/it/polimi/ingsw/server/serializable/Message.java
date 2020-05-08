@@ -1,13 +1,13 @@
 package it.polimi.ingsw.server.serializable;
 
-public class SerializableMessage implements Serializable{
+public class Message implements java.io.Serializable{
     private final String message;
 
     public String getMessage() {
         return message;
     }
 
-    public SerializableMessage(String message) {
+    public Message(String message) {
         this.message = message;
     }
 }
