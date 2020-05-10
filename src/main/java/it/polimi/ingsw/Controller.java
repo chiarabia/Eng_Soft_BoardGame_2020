@@ -1,10 +1,13 @@
 package it.polimi.ingsw;
 
 import it.polimi.ingsw.effects.GodPower;
+import it.polimi.ingsw.effects.GodPowerManager;
 import it.polimi.ingsw.effects.winCondition.StandardLoseCondition;
 import it.polimi.ingsw.effects.winCondition.StandardWinCondition;
 import it.polimi.ingsw.server.ProxyObserver;
 import it.polimi.ingsw.server.serializable.*;
+import org.json.simple.parser.ParseException;
+
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -13,9 +16,22 @@ import java.util.Set;
 
 public class Controller implements ProxyObserver {
     private Game game;
-    public Controller(Game game) {
-        this.game = game;
+    private static List <GodPower> godPowersLeft;
+    private List<String> getGodPowersLeftNames (){
+        List<String> godPowersNames = new ArrayList<>();
+        for (GodPower godPower: godPowersLeft) godPowersNames.add(godPower.getGodName());
+        return godPowersNames;
     }
+    private void chooseGodPower(String godPower){
+        for (int i = 0; i < godPowersLeft.size(); i++){
+            if (godPowersLeft.get(i).getGodName().equals(godPower)){
+                game.getGodPowers().add(godPowersLeft.get(i));
+                godPowersLeft.remove(i);
+                break;
+            }
+        }
+    }
+    public Controller(Game game) { this.game = game; }
 
     // tempUpdates è una coda di Updates che verranno inviati ai client non appena sarà possibile,
     // cioè non appena ci sarà una Request da inviare a un client singolo.
@@ -87,18 +103,19 @@ public class Controller implements ProxyObserver {
         nextOperation(playerId, update);
     }
 
-    public void onInitialization() throws IOException {
+    public void onInitialization() throws IOException, ParseException {
+        godPowersLeft = GodPowerManager.createGodPowers(game.getNumOfPlayers());
+        List<String> godPowersNames = getGodPowersLeftNames();
         List<String> playersNames = new ArrayList<>();
-        List<String> godPowersNames = new ArrayList<>();
         for (Player player: game.getPlayers()) playersNames.add(player.getName());
-        for (GodPower godPower: game.getGodPowers()) godPowersNames.add(godPower.getGodName());
-        SerializableUpdateInitializeInfos update = new SerializableUpdateInitializeInfos(playersNames, godPowersNames);
-        SerializableRequest request = new SerializableRequestInitializeWorkers(1);
+        SerializableUpdateInitializeNames update = new SerializableUpdateInitializeNames(playersNames);
+        SerializableRequest request = new SerializableRequestInitializeGame(1, godPowersNames);
         game.notifyUpdateAllAndAnswerOnePlayer(update, request);
     }
 
     @Override
-    public void onInitialization(int playerId, List<Position> workerPositions) throws IOException {
+    public void onInitialization(int playerId, List<Position> workerPositions, String godPower) throws IOException {
+        chooseGodPower(godPower);
         Worker worker1 = new Worker(game.getPlayers().get(playerId-1), 1);
         Worker worker2 = new Worker(game.getPlayers().get(playerId-1), 2);
         game.getPlayers().get(playerId-1).addWorker(worker1);
@@ -107,7 +124,7 @@ public class Controller implements ProxyObserver {
         Cell worker2Cell = game.getBoard().getCell(workerPositions.get(1));
         worker1Cell.setWorker(worker1);
         worker2Cell.setWorker(worker2);
-        SerializableUpdateInitializeWorkers update = new SerializableUpdateInitializeWorkers(workerPositions, playerId);
+        SerializableUpdateInitializeGame update = new SerializableUpdateInitializeGame(workerPositions, godPower, playerId);
         if (playerId == game.getPlayers().size()){ // tutti i worker sono pronti, il primo turno ha inizio
             SerializableUpdateTurn updateTurn = new SerializableUpdateTurn(1);
             game.setTurn(new Turn(game.getPlayers().get(0)));
@@ -116,7 +133,7 @@ public class Controller implements ProxyObserver {
             tempUpdates.add(updateTurn);
             nextOperation(1, tempUpdates);
         } else {
-            SerializableRequest request = new SerializableRequestInitializeWorkers(playerId + 1);
+            SerializableRequest request = new SerializableRequestInitializeGame(playerId + 1, getGodPowersLeftNames());
             game.notifyUpdateAllAndAnswerOnePlayer(update, request);
         }
     }

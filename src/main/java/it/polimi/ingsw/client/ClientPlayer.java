@@ -3,7 +3,7 @@ package it.polimi.ingsw.client;
 public class ClientPlayer {
     private ClientWorker[] workers;
     private final String playerName;
-    private final String godPowerName;
+    private String godPowerName;
     private boolean lost = false;
 
     public ClientWorker getWorker(int workerId) {
@@ -30,11 +30,12 @@ public class ClientPlayer {
         workers [workerId-1] = worker;
     }
 
-    public ClientPlayer(String playerName, String godPowerName) {
+    public void setGodPowerName(String godPowerName) { this.godPowerName = godPowerName; }
+
+    public ClientPlayer(String playerName) {
         this.workers = new ClientWorker[2];
         workers[0] = new ClientWorker();
         workers[1] = new ClientWorker();
         this.playerName = playerName;
-        this.godPowerName = godPowerName;
     }
 }

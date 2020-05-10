@@ -136,30 +136,32 @@ public class Client {
             myPlayerId = Character.getNumericValue(message.charAt(15));
             System.out.println("You are player " + myPlayerId);
         }
-        SerializableUpdateInitializeInfos infos = (SerializableUpdateInitializeInfos) waitForObject();
-        for (int id = 1; id <= numOfPlayers; id++) {
-            board.setPlayer(new ClientPlayer(infos.getPlayersNames().get(id - 1), infos.getGodPowersNames().get(id - 1)), id);
-            if (infos.getPlayersNames().get(id - 1).equals(myName)) myPlayerId = id;
-        }
+        SerializableUpdateInitializeNames names = (SerializableUpdateInitializeNames) waitForObject();
+        for (int id = 1; id <= numOfPlayers; id++)
+            board.setPlayer(new ClientPlayer(names.getPlayersNames().get(id - 1)), id);
         Object object;
+        String godPower;
         int whichPlayerId;
         Position positionWorker1, positionWorker2;
         while (true){
             object = waitForObject();
             if (object instanceof SerializableUpdateTurn) break;
-            if (object instanceof SerializableUpdateInitializeWorkers){
-                whichPlayerId = ((SerializableUpdateInitializeWorkers) object).getPlayerId();
-                positionWorker1 = ((SerializableUpdateInitializeWorkers) object).getWorkerPositions().get(0);
-                positionWorker2 = ((SerializableUpdateInitializeWorkers) object).getWorkerPositions().get(1);
+            if (object instanceof SerializableUpdateInitializeGame){
+                godPower = ((SerializableUpdateInitializeGame) object).getGodPower();
+                whichPlayerId = ((SerializableUpdateInitializeGame) object).getPlayerId();
+                positionWorker1 = ((SerializableUpdateInitializeGame) object).getWorkerPositions().get(0);
+                positionWorker2 = ((SerializableUpdateInitializeGame) object).getWorkerPositions().get(1);
+                board.getPlayer(whichPlayerId).setGodPowerName(godPower);
                 board.getPlayer(whichPlayerId).getWorker(1).setX(positionWorker1.getX());
                 board.getPlayer(whichPlayerId).getWorker(1).setY(positionWorker1.getY());
                 board.getPlayer(whichPlayerId).getWorker(2).setX(positionWorker2.getX());
                 board.getPlayer(whichPlayerId).getWorker(2).setY(positionWorker2.getY());
                 displayBoard();
             }
-            if (object instanceof SerializableRequestInitializeWorkers){
+            if (object instanceof SerializableRequestInitializeGame){
+                String chosenGodPower = askForGodPower(((SerializableRequestInitializeGame) object).getGodPowers());
                 List <Position> myWorkerPositions = askForWorkersInitialPositions();
-                sendObject(new SerializableInitializeWorkers(myWorkerPositions));
+                sendObject(new SerializableInitializeGame(myWorkerPositions, chosenGodPower));
             }
             if (object instanceof SerializableUpdateDisconnection){
                 System.out.println("Player "+ ((SerializableUpdateDisconnection) object).getPlayerId() + " disconnected");
@@ -202,6 +204,18 @@ public class Client {
         String myName = askForString(Color.YELLOW.set() + "What's your name? ");
         numOfPlayers = askForInt("How many players? ");
         return myName;
+    }
+
+    private static String askForGodPower (List <String> godPowers){
+        String godPower = "";
+        if(godPowers.size()==1) return godPowers.get(0);
+        while (true) {
+            for (String s : godPowers) System.out.print(s + " ");
+            godPower = askForString("left, choose God Power: ");
+            String finalGodPower = godPower;
+            if  (godPowers.stream().anyMatch(x -> x.equals(finalGodPower))) break;
+        }
+        return godPower;
     }
 
     private static List <Position> askForWorkersInitialPositions (){
@@ -276,16 +290,17 @@ public class Client {
                 }
             }
             System.out.print(Color.WHITE.set()+"│");
-            if (j==4) System.out.print(Color.WHITE.set()+"\n└─────────────────────────────┘\n");
+            if (j==0) System.out.print(Color.WHITE.set()+"\n└─────────────────────────────┘\n");
             else System.out.print(Color.WHITE.set()+"\n├─────────────────────────────┤\n");
         }
         System.out.println();
         for (int i = 0; i < numOfPlayers; i++){
-            if (!board.getPlayer(i+1).hasLost()) {
+            if (!board.getPlayer(i+1).hasLost() && board.getPlayer(i+1).getGodPowerName()!=null) {
                 System.out.print("Player " + (i + 1) + ": Worker 1 (" + board.getPlayer(i + 1).getWorker(1).getX() + ", " + board.getPlayer(i + 1).getWorker(1).getY() + ")");
                 System.out.print(", Worker 2 (" + board.getPlayer(i + 1).getWorker(2).getX() + ", " + board.getPlayer(i + 1).getWorker(2).getY() + ")");
                 System.out.println(", " + board.getPlayer(i + 1).getGodPowerName());
-            } else System.out.println("Player " + (i + 1) + " has lost");
+            } else if (board.getPlayer(i+1).getGodPowerName()==null) System.out.println("Player " + (i + 1));
+            else System.out.println("Player " + (i + 1) + " has lost");
         }
     }
 }

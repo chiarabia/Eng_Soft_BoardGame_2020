@@ -74,7 +74,7 @@ public class Game {
      */
     public Game (int numOfPlayers, List<String> playersNames) throws IOException, ParseException {
         this.numOfPlayers = numOfPlayers;
-        this.godPowers = GodPowerManager.createGodPowers(numOfPlayers);
+        this.godPowers = new ArrayList<>();
         this.board = new Board();
         this.players = new ArrayList<>();
         this.observerList = new ArrayList<>();

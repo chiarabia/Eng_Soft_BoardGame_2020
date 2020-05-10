@@ -6,7 +6,6 @@ import it.polimi.ingsw.server.serializable.*;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Set;
 
 public class ServerProxy implements GameObserver{
     private ServerThread serverThread;
@@ -50,10 +49,10 @@ public class ServerProxy implements GameObserver{
                 for (int i = 0; i < observerList.size(); i++)
                     observerList.get(i).onConsolidateBuild(playerId, serializableFromClient.getNewPosition(), serializableFromClient.isForceDome());
             }
-            if (fromClient instanceof SerializableInitializeWorkers) {
-                SerializableInitializeWorkers serializableFromClient = (SerializableInitializeWorkers) fromClient;
+            if (fromClient instanceof SerializableInitializeGame) {
+                SerializableInitializeGame serializableFromClient = (SerializableInitializeGame) fromClient;
                 for (int i = 0; i < observerList.size(); i++)
-                    observerList.get(i).onInitialization(playerId, serializableFromClient.getWorkerPositions());
+                    observerList.get(i).onInitialization(playerId, serializableFromClient.getWorkerPositions(), serializableFromClient.getGodPower());
             }
         } catch (ClientStoppedWorkingException e){
             if (e.isWasItTimeOut()){
