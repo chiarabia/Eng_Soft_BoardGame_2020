@@ -14,7 +14,7 @@ public class Board {
 
     /**
      * Constructs the board as a 5x5 table. Each cell has a Cell object
-     * with coordinates xyz.
+     * with coordinates xy.
      */
     public Board() {
         int x, y;
