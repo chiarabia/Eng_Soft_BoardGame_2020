@@ -3,6 +3,11 @@ package it.polimi.ingsw.client;
 public class ClientBoard {
     private ClientPlayer[] players;
     private ClientBuilding[][] cells;
+    private int playerTurnId; // mostra il playerId del giocatore che sta giocando
+
+    public void setPlayerTurnId(int playerTurnId) { this.playerTurnId = playerTurnId; }
+
+    public int getPlayerTurnId() { return playerTurnId; }
 
     public ClientPlayer getPlayer(int playerId){
         return players[playerId-1];
