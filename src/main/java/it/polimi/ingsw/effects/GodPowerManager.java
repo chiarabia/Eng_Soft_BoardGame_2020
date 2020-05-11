@@ -29,7 +29,7 @@ public class GodPowerManager {
     private static int opponentsCantWinOnPerimeterPlayer;
 
     /*JSON files' path*/
-    private final static String root = "src\\main\\java\\it\\polimi\\ingsw\\Cards\\";
+    private final static String ROOT = "src/main/java/it/polimi/ingsw/cards/";
 
     /**
      * This method randomly extracts different 'numOfPlayers' cards in the form of List <String>,
@@ -41,8 +41,8 @@ public class GodPowerManager {
 
     private static List <String> chooseGodFiles (int numOfPlayers) throws IOException {
         List <String> cards = new ArrayList();
-        Stream<Path> paths = Files.walk(Paths.get(root));
-        paths.filter(Files::isRegularFile).forEach(x->{cards.add(x.toString().substring(root.length()));});
+        Stream<Path> paths = Files.walk(Paths.get(ROOT));
+        paths.filter(Files::isRegularFile).forEach(x->{cards.add(x.toString().substring(ROOT.length()));});
         // the card list contains all 14 strings of JSON file names (eg "ApolloCard.json")
 
         Random rand = new Random();
@@ -60,7 +60,7 @@ public class GodPowerManager {
      */
 
     public static GodPower power (String nameOfFile, int numOfPlayer) throws IOException, ParseException {
-        FileReader fileReader = new FileReader(root + nameOfFile);
+        FileReader fileReader = new FileReader(ROOT + nameOfFile);
         JSONObject jsonObject = (JSONObject) (new JSONParser()).parse(fileReader);
         //Effects' strings
         String move = (String) jsonObject.get("move");
