@@ -14,9 +14,9 @@ import java.util.Scanner;
 // architettura non fa differenza, in ogni caso il Server disconnette e termina.
 
 public class ServerReciever extends Thread {
-    private static boolean error;
-    private static Object object;
-    public static Object receiveObject(Socket socket, int timeLimit) throws ClientStoppedWorkingException {
+    private boolean error;
+    private Object object;
+    public Object receiveObject(Socket socket, int timeLimit) throws ClientStoppedWorkingException {
         Thread thread = new Thread(()-> {
             try {
                 ObjectInputStream fileObjectIn = new ObjectInputStream(socket.getInputStream());

@@ -16,7 +16,7 @@ import java.util.Set;
 
 public class Controller implements ProxyObserver {
     private Game game;
-    private static List <GodPower> godPowersLeft;
+    private List <GodPower> godPowersLeft;
     private List<String> getGodPowersLeftNames (){
         List<String> godPowersNames = new ArrayList<>();
         for (GodPower godPower: godPowersLeft) godPowersNames.add(godPower.getGodName());

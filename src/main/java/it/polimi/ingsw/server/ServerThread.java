@@ -36,7 +36,7 @@ public class ServerThread extends Thread {
     }
     public String sendMessageAndWaitForReply(String message, int position, int timeLimit) throws IOException, ClientStoppedWorkingException {
         sendMessage(message, position);
-        return ((Message)ServerReciever.receiveObject(playersList.get(position), timeLimit)).getMessage();
+        return ((Message)(new ServerReciever()).receiveObject(playersList.get(position), timeLimit)).getMessage();
     }
     public void sendObject(Object object, int position) {
         try {
@@ -52,7 +52,7 @@ public class ServerThread extends Thread {
     }
     public Object sendObjectAndWaitForReply(Object object, int position, int timeLimit) throws ClientStoppedWorkingException {
         sendObject(object, position);
-        return ServerReciever.receiveObject(playersList.get(position), timeLimit);
+        return (new ServerReciever()).receiveObject(playersList.get(position), timeLimit);
     }
     public void run(){
         try {
