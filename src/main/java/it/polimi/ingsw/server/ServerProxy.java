@@ -29,16 +29,6 @@ public class ServerProxy implements GameObserver{
         int playerId = request.getPlayerId();
         try {
             Object fromClient = serverThread.sendObjectAndWaitForReply(request, request.getPlayerId() - 1, 300);
-            if (fromClient instanceof SerializableOptionalMove) {
-                SerializableOptionalMove serializableFromClient = (SerializableOptionalMove) fromClient;
-                for (int i = 0; i < observerList.size(); i++)
-                    observerList.get(i).onOptionalMove(playerId, serializableFromClient.isWantToMove());
-            }
-            if (fromClient instanceof SerializableOptionalBuild) {
-                SerializableOptionalBuild serializableFromClient = (SerializableOptionalBuild) fromClient;
-                for (int i = 0; i < observerList.size(); i++)
-                    observerList.get(i).onOptionalBuild(playerId, serializableFromClient.isWantToBuild());
-            }
             if (fromClient instanceof SerializableConsolidateMove) {
                 SerializableConsolidateMove serializableFromClient = (SerializableConsolidateMove) fromClient;
                 for (int i = 0; i < observerList.size(); i++)

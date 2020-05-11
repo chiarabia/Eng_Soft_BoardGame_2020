@@ -17,11 +17,16 @@ import java.util.Set;
 public class Controller implements ProxyObserver {
     private Game game;
     private List <GodPower> godPowersLeft;
+    public Controller(Game game) { this.game = game; }
+
+    // metodo riservato per onInitialization(...)
     private List<String> getGodPowersLeftNames (){
         List<String> godPowersNames = new ArrayList<>();
         for (GodPower godPower: godPowersLeft) godPowersNames.add(godPower.getGodName());
         return godPowersNames;
     }
+
+    // metodo riservato per onInitialization(...)
     private void chooseGodPower(String godPower){
         for (int i = 0; i < godPowersLeft.size(); i++){
             if (godPowersLeft.get(i).getGodName().equals(godPower)){
@@ -31,7 +36,6 @@ public class Controller implements ProxyObserver {
             }
         }
     }
-    public Controller(Game game) { this.game = game; }
 
     // tempUpdates è una coda di Updates che verranno inviati ai client non appena sarà possibile,
     // cioè non appena ci sarà una Request da inviare a un client singolo.
@@ -41,6 +45,7 @@ public class Controller implements ProxyObserver {
     // una Request (che costringe ServerProxy a rimanere in attesa di una risposta
     // per poi invocare un metodo del Controller, garantendo così l'irreversibilità del ciclo).
 
+    // decide quale player deve eseguire quale operazione, appoggiandosi alle informazioni di Turn e GodPower
     public void nextOperation(int playerId, List <SerializableUpdate> tempUpdates) throws IOException {
         // Questo metodo per ora gestisce solo un turno classico (move + build)
         int nextPlayerId = game.nextPlayerId(playerId);
@@ -75,16 +80,7 @@ public class Controller implements ProxyObserver {
     }
 
     @Override
-    public void onOptionalMove(int playerId, boolean wantToMove) throws IOException {
-        // prende atto del fatto che il giocatore ha accettato o meno di muovere
-    }
-
-    @Override
-    public void onOptionalBuild(int playerId, boolean wantToBuild) throws IOException {
-        // prende atto del fatto che il giocatore ha accettato o meno di costruire
-    }
-
-    @Override
+    // consolida la move, genera il relativo oggetto update e verifica se il player nell'effettuare tale mossa ha vinto
     public void onConsolidateMove(int playerId, int workerId, Position newPosition) throws IOException {
         Position workerPosition = game.getBoard().getWorkerCell(game.getPlayers().get(playerId-1), workerId).getPosition();
         game.getGodPowers().get(playerId-1).moveInto(game.getBoard(), workerPosition, newPosition);
@@ -96,6 +92,7 @@ public class Controller implements ProxyObserver {
     }
 
     @Override
+    // consolida la build e genera il relativo oggetto update
     public void onConsolidateBuild(int playerId, Position newPosition, boolean forceDome) throws IOException {
         game.getGodPowers().get(playerId-1).buildUp(newPosition, game.getBoard(), forceDome);
         game.getTurn().updateTurnInfoAfterBuild(newPosition);
@@ -103,6 +100,7 @@ public class Controller implements ProxyObserver {
         nextOperation(playerId, update);
     }
 
+    // primo metodo lanciato del controller, avvia MVC e procedura di InitializeGame
     public void onInitialization() throws IOException, ParseException {
         godPowersLeft = GodPowerManager.createGodPowers(game.getNumOfPlayers());
         List<String> godPowersNames = getGodPowersLeftNames();
@@ -114,6 +112,7 @@ public class Controller implements ProxyObserver {
     }
 
     @Override
+    // prosegue nella procedura di InitializeGame avanzando di un player
     public void onInitialization(int playerId, List<Position> workerPositions, String godPower) throws IOException {
         chooseGodPower(godPower);
         Worker worker1 = new Worker(game.getPlayers().get(playerId-1), 1);
@@ -139,26 +138,16 @@ public class Controller implements ProxyObserver {
     }
 
     @Override
+    // notifica i player della disconnessione e rompe MVC
     public void onPlayerDisconnection(int playerId) throws IOException {
         SerializableUpdate update = new SerializableUpdateDisconnection(playerId);
         game.notifyJustUpdateAll(update);
         // Game ends due to disconnection
     }
 
-    @Override
-    public void onPlayerLoss(int playerId) throws IOException {
-        onPlayerLoss(playerId, new ArrayList<>());
-    }
-
-    public void onPlayerLoss(int playerId, SerializableUpdate update) throws IOException {
-        List <SerializableUpdate> tempUpdates = new ArrayList<>();
-        tempUpdates.add(update);
-        onPlayerLoss(playerId, tempUpdates);
-    }
-
+    // termina il turno del perdente settando il Turn successivo, rimuove i worker dalle celle,
+    // setta Player e GodPower a null, chiama nextOperation mettendo in coda gli update relativi a perdita e turno
     public void onPlayerLoss(int playerId, List<SerializableUpdate> tempUpdates) throws IOException {
-        // termina il turno del perdente settando il Turn successivo, rimuove i worker dalle celle,
-        // setta Player e GodPower a null, chiama nextOperation mettendo in coda gli update relativi a perdita e turno
         int nextPlayerId = game.nextPlayerId(playerId);
         Position worker1Position = game.getBoard().getWorkerCell(game.getPlayers().get(playerId-1), 1).getPosition();
         Position worker2Position = game.getBoard().getWorkerCell(game.getPlayers().get(playerId-1), 2).getPosition();
@@ -174,6 +163,18 @@ public class Controller implements ProxyObserver {
         nextOperation(nextPlayerId, tempUpdates);
     }
 
+    @Override
+    public void onPlayerLoss(int playerId) throws IOException {
+        onPlayerLoss(playerId, new ArrayList<>());
+    }
+
+    public void onPlayerLoss(int playerId, SerializableUpdate update) throws IOException {
+        List <SerializableUpdate> tempUpdates = new ArrayList<>();
+        tempUpdates.add(update);
+        onPlayerLoss(playerId, tempUpdates);
+    }
+
+    // notifica i player della vittoria e rompe MVC
     public void onPlayerWin (int playerId, List<SerializableUpdate> tempUpdates) throws IOException {
         tempUpdates.add(new SerializableUpdateWinner(playerId));
         game.notifyJustUpdateAll(tempUpdates);

@@ -21,7 +21,7 @@ public class Client {
 
     public static void startClient(int port, String IP) {
         displayLogo();
-        String myName = askForString(Color.YELLOW.set() + "What's your name? ");;
+        String myName = askForString(Color.YELLOW.set() + "What's your name? ");
         numOfPlayers = askForInt("How many players? ");
         board = new ClientBoard(numOfPlayers);
         try{
