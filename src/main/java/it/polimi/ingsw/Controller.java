@@ -19,6 +19,14 @@ public class Controller implements ProxyObserver {
     private List <GodPower> godPowersLeft;
     public Controller(Game game) { this.game = game; }
 
+    // restituisce il giocatore successivo a quello corrente
+    private int nextPlayerId(int playerId){
+        int firstPlayerId = (playerId % game.getNumOfPlayers()) + 1;
+        for (int i = firstPlayerId; i < firstPlayerId + game.getNumOfPlayers() - 1; i++)
+            if (game.getPlayers().get(((i-1) % game.getNumOfPlayers())) != null) return ((i-1) % game.getNumOfPlayers()) +1;
+        return playerId;
+    }
+
     // metodo riservato per onInitialization(...)
     private List<String> getGodPowersLeftNames (){
         List<String> godPowersNames = new ArrayList<>();
@@ -48,7 +56,6 @@ public class Controller implements ProxyObserver {
     // decide quale player deve eseguire quale operazione, appoggiandosi alle informazioni di Turn e GodPower
     public void nextOperation(int playerId, List <SerializableUpdate> tempUpdates) throws IOException {
         // Questo metodo per ora gestisce solo un turno classico (move + build)
-        int nextPlayerId = game.nextPlayerId(playerId);
         boolean canForceDome = game.getGodPowers().get(playerId-1).isAskToBuildDomes();
         Position worker1Position = game.getBoard().getWorkerCell(game.getPlayers().get(playerId-1), 1).getPosition();
         Position worker2Position = game.getBoard().getWorkerCell(game.getPlayers().get(playerId-1), 2).getPosition();
@@ -66,10 +73,7 @@ public class Controller implements ProxyObserver {
             SerializableRequest request = new SerializableRequestBuild(playerId, worker1Builds, worker2Builds, canForceDome);
             game.notifyUpdateAllAndAnswerOnePlayer(tempUpdates, request);
         } else if (game.getTurn().isBuildAfterMove()){ // turno terminato
-            Turn newTurn = game.getGodPowers().get(playerId-1).endTurn(game.getTurn(), game.getGodPowers(), game.getPlayers().get(nextPlayerId-1));
-            game.setTurn(newTurn);
-            tempUpdates.add(new SerializableUpdateTurn(nextPlayerId));
-            nextOperation(nextPlayerId, tempUpdates);
+            onEndedTurn(playerId, tempUpdates);
         }
     }
 
@@ -77,6 +81,20 @@ public class Controller implements ProxyObserver {
         List <SerializableUpdate> tempUpdates = new ArrayList<>();
         tempUpdates.add(tempUpdate);
         nextOperation(playerId, tempUpdates);
+    }
+
+    @Override
+    // Termina il turno
+    public void onEndedTurn (int playerId) throws IOException {
+        onEndedTurn(playerId, new ArrayList<>());
+    }
+
+    public void onEndedTurn (int playerId, List <SerializableUpdate> tempUpdates) throws IOException {
+        int nextPlayerId = nextPlayerId(playerId);
+        Turn newTurn = game.getGodPowers().get(playerId-1).endTurn(game.getTurn(), game.getGodPowers(), game.getPlayers().get(nextPlayerId-1));
+        game.setTurn(newTurn);
+        tempUpdates.add(new SerializableUpdateTurn(nextPlayerId));
+        nextOperation(nextPlayerId, tempUpdates);
     }
 
     @Override
@@ -148,7 +166,7 @@ public class Controller implements ProxyObserver {
     // termina il turno del perdente settando il Turn successivo, rimuove i worker dalle celle,
     // setta Player e GodPower a null, chiama nextOperation mettendo in coda gli update relativi a perdita e turno
     public void onPlayerLoss(int playerId, List<SerializableUpdate> tempUpdates) throws IOException {
-        int nextPlayerId = game.nextPlayerId(playerId);
+        int nextPlayerId = nextPlayerId(playerId);
         Position worker1Position = game.getBoard().getWorkerCell(game.getPlayers().get(playerId-1), 1).getPosition();
         Position worker2Position = game.getBoard().getWorkerCell(game.getPlayers().get(playerId-1), 2).getPosition();
 

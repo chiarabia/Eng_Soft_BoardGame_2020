@@ -44,6 +44,9 @@ public class ServerProxy implements GameObserver{
                 for (int i = 0; i < observerList.size(); i++)
                     observerList.get(i).onInitialization(playerId, serializableFromClient.getWorkerPositions(), serializableFromClient.getGodPower());
             }
+            if (fromClient instanceof SerializableDeclineLastOptional) {
+                for (int i = 0; i < observerList.size(); i++) observerList.get(i).onEndedTurn(playerId);
+            }
         } catch (ClientStoppedWorkingException e){
             if (e.isWasItTimeOut()){
                 // il giocatore non ha risposto entro il tempo stabilito, quindi ha perso

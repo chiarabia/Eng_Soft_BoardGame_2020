@@ -7,6 +7,7 @@ import java.util.Set;
 public class SerializableRequestOptional implements SerializableRequest{
     private final int playerId;
     private final boolean isMoveOptional; // se è false allora sono le builds a essere facoltative
+    private final boolean canDecline;
     private final Set<Position> worker1Moves;
     private final Set<Position> worker2Moves;
     private final Set<Position> worker1Builds;
@@ -42,8 +43,11 @@ public class SerializableRequestOptional implements SerializableRequest{
         return canForceMove;
     }
 
-    public SerializableRequestOptional(int playerId, boolean isMoveOptional, Set<Position> worker1Moves, Set<Position> worker2Moves, Set<Position> worker1Builds, Set<Position> worker2Builds, boolean canForceMove) {
+    public boolean canDecline() {return canDecline;}
+
+    public SerializableRequestOptional(int playerId, boolean isMoveOptional, boolean canDecline, Set<Position> worker1Moves, Set<Position> worker2Moves, Set<Position> worker1Builds, Set<Position> worker2Builds, boolean canForceMove) {
         this.playerId = playerId;
+        this.canDecline = canDecline;
         this.isMoveOptional = isMoveOptional;
         this.worker1Moves = worker1Moves;
         this.worker2Moves = worker2Moves;

@@ -57,13 +57,6 @@ public class Game {
         for (int i = 0; i < observerList.size(); i++) observerList.get(i).updateAllAndAnswerOnePlayer(updates, request);
     }
 
-    public int nextPlayerId(int playerId){
-        int firstPlayerId = (playerId % numOfPlayers) + 1;
-        for (int i = firstPlayerId; i < firstPlayerId + numOfPlayers - 1; i++)
-            if (players.get(((i-1) % numOfPlayers)) != null) return ((i-1) % numOfPlayers) +1;
-        return playerId;
-    }
-
 
     /**
      * This class creates a match

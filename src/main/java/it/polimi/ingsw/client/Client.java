@@ -98,6 +98,9 @@ public class Client {
             else System.out.println("Dome in ("+ x + ", " + y + ")");
             displayBoard();
         }
+        if (object instanceof SerializableRequestOptional){
+            //todo: scrivere questa parte
+        }
         if (object instanceof SerializableUpdateTurn){
             int playerTurnId = ((SerializableUpdateTurn) object).getPlayerId();
             board.setPlayerTurnId(playerTurnId);
