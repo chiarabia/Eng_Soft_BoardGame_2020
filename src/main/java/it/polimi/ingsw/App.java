@@ -12,8 +12,8 @@ import java.io.IOException;
 
 public class App
 {
-    public static void main( String[] args ) throws Exception {
+    public static void main( String[] args ) throws InterruptedException {
         Server.startServer(555);
-        Client.startClient(555,  "192.168.1.8");
+        Client.startClient(555,  "localhost");
     }
 }

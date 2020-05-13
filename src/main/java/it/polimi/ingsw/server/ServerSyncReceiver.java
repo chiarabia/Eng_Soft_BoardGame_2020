@@ -8,12 +8,11 @@ import java.io.ObjectInputStream;
 import java.net.Socket;
 import java.util.Scanner;
 
-// Lancia ClientStoppedWorkingException con wasItTimeOut = true se è scaduto il tempo
-// di risposta, oppure wasItTimeOut = false in ogni altro caso (problema di rete / client si scollega)
-// Non distingue fra problemi di rete e client che si scollega poiché nella nostra
+// ClientStoppedWorkingException
+// non distingue fra problemi di rete e client che si scollega poiché nella nostra
 // architettura non fa differenza, in ogni caso il Server disconnette e termina.
 
-public class ServerReciever extends Thread {
+public class ServerSyncReceiver extends Thread {
     private boolean error;
     private Object object;
     public Object receiveObject(Socket socket, int timeLimit) throws ClientStoppedWorkingException {
@@ -35,11 +34,11 @@ public class ServerReciever extends Thread {
                 }
                 if (error) {
                     thread.interrupt();
-                    throw new ClientStoppedWorkingException(false);
+                    throw new ClientStoppedWorkingException();
                 }
             } catch (InterruptedException e) {break;}
         }
         thread.interrupt();
-        throw new ClientStoppedWorkingException(true);
+        throw new ClientStoppedWorkingException();
     }
 }

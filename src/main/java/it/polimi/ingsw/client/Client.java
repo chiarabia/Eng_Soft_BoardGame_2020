@@ -233,12 +233,13 @@ public class Client {
         }
         System.out.println();
         for (int i = 0; i < numOfPlayers; i++){
+            System.out.print("Player " + (i + 1) + " ("+ board.getPlayer(i+1).getPlayerName()+ ") ");
             if (!board.getPlayer(i+1).hasLost() && board.getPlayer(i+1).getGodPowerName()!=null) {
-                System.out.print("Player " + (i + 1) + ": Worker 1 (" + board.getPlayer(i + 1).getWorker(1).getX() + ", " + board.getPlayer(i + 1).getWorker(1).getY() + ")");
+                System.out.print(": Worker 1 (" + board.getPlayer(i + 1).getWorker(1).getX() + ", " + board.getPlayer(i + 1).getWorker(1).getY() + ")");
                 System.out.print(", Worker 2 (" + board.getPlayer(i + 1).getWorker(2).getX() + ", " + board.getPlayer(i + 1).getWorker(2).getY() + ")");
                 System.out.println(", " + board.getPlayer(i + 1).getGodPowerName());
-            } else if (board.getPlayer(i+1).getGodPowerName()==null) System.out.println("Player " + (i + 1));
-            else System.out.println("Player " + (i + 1) + " has lost");
+            } else if (board.getPlayer(i+1).getGodPowerName()==null) System.out.println();
+            else System.out.println("has lost");
         }
     }
 }

@@ -8,9 +8,9 @@ import java.io.IOException;
 import java.util.List;
 
 public interface GameObserver {
-    void justUpdateAll(SerializableUpdate update) throws IOException;
-    void justUpdateAll(List<SerializableUpdate> updates) throws IOException;
-    void answerOnePlayer(SerializableRequest request) throws IOException;
-    void updateAllAndAnswerOnePlayer(SerializableUpdate update, SerializableRequest request) throws IOException;
-    void updateAllAndAnswerOnePlayer(List<SerializableUpdate> updates, SerializableRequest request) throws IOException;
+    void justUpdateAll(SerializableUpdate update);
+    void justUpdateAll(List<SerializableUpdate> updates);
+    void answerOnePlayer(SerializableRequest request);
+    void updateAllAndAnswerOnePlayer(SerializableUpdate update, SerializableRequest request);
+    void updateAllAndAnswerOnePlayer(List<SerializableUpdate> updates, SerializableRequest request);
 }

@@ -4,12 +4,10 @@ import it.polimi.ingsw.Controller;
 import it.polimi.ingsw.exceptions.ClientStoppedWorkingException;
 import it.polimi.ingsw.Game;
 import it.polimi.ingsw.server.serializable.Message;
-import org.json.simple.parser.ParseException;
 
 import java.io.IOException;
 import java.io.ObjectOutputStream;
 import java.net.Socket;
-import java.net.SocketException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -31,12 +29,12 @@ public class ServerThread extends Thread {
         }
         return tempList;
     }
-    public void sendMessage(String message, int position) throws IOException {
+    public void sendMessage(String message, int position) {
         sendObject(new Message(message), position);
     }
-    public String sendMessageAndWaitForReply(String message, int position, int timeLimit) throws IOException, ClientStoppedWorkingException {
+    public String sendMessageAndWaitForReply(String message, int position, int timeLimit) throws ClientStoppedWorkingException {
         sendMessage(message, position);
-        return ((Message)(new ServerReciever()).receiveObject(playersList.get(position), timeLimit)).getMessage();
+        return ((Message)(new ServerSyncReceiver()).receiveObject(playersList.get(position), timeLimit)).getMessage();
     }
     public void sendObject(Object object, int position) {
         try {
@@ -45,14 +43,10 @@ public class ServerThread extends Thread {
             fileObjectOut.flush();
         } catch (Exception e){}
     }
-    public void sendAllObject(Object object) throws IOException {
+    public void sendAllObject(Object object) {
         for (int i = 0; i < playersList.size(); i++){
             if (playersList.get(i)!=null) sendObject(object, i);
         }
-    }
-    public Object sendObjectAndWaitForReply(Object object, int position, int timeLimit) throws ClientStoppedWorkingException {
-        sendObject(object, position);
-        return (new ServerReciever()).receiveObject(playersList.get(position), timeLimit);
     }
     public void run(){
         try {
@@ -62,12 +56,12 @@ public class ServerThread extends Thread {
                 return;
             }
             for (int i = 0; i < numOfPlayers; i++) sendMessage("You are player " + (i+1), i);
-            ServerProxy serverProxy = new ServerProxy(this);
-            Game game = new Game(numOfPlayers, playersNames);
-            Controller gameController = new Controller(game);
-            game.addObserver(serverProxy);
-            serverProxy.addObserver(gameController);
-            gameController.onInitialization();
+            ServerView serverView = new ServerView(this, playersList); // View
+            Game game = new Game(numOfPlayers, playersNames); // Model
+            Controller gameController = new Controller(game, serverView); // Controller
+            game.addObserver(serverView);
+            serverView.addObserver(gameController);
+            serverView.start();
         }catch(Exception e){}
     }
     public ServerThread(List<Socket> playersList, ServerWaitingList waitingList, int numOfPlayers){
