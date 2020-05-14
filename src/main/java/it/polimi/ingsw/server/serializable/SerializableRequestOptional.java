@@ -12,7 +12,7 @@ public class SerializableRequestOptional implements SerializableRequest{
     private final Set<Position> worker2Moves;
     private final Set<Position> worker1Builds;
     private final Set<Position> worker2Builds;
-    private final boolean canForceMove;
+    private final boolean canForceDome;
 
     @Override
     public int getPlayerId() {
@@ -39,13 +39,13 @@ public class SerializableRequestOptional implements SerializableRequest{
         return worker2Builds;
     }
 
-    public boolean isCanForceMove() {
-        return canForceMove;
+    public boolean isCanForceDome() {
+        return canForceDome;
     }
 
     public boolean canDecline() {return canDecline;}
 
-    public SerializableRequestOptional(int playerId, boolean isMoveOptional, boolean canDecline, Set<Position> worker1Moves, Set<Position> worker2Moves, Set<Position> worker1Builds, Set<Position> worker2Builds, boolean canForceMove) {
+    public SerializableRequestOptional(int playerId, boolean isMoveOptional, boolean canDecline, Set<Position> worker1Moves, Set<Position> worker2Moves, Set<Position> worker1Builds, Set<Position> worker2Builds, boolean canForceDome) {
         this.playerId = playerId;
         this.canDecline = canDecline;
         this.isMoveOptional = isMoveOptional;
@@ -53,6 +53,6 @@ public class SerializableRequestOptional implements SerializableRequest{
         this.worker2Moves = worker2Moves;
         this.worker1Builds = worker1Builds;
         this.worker2Builds = worker2Builds;
-        this.canForceMove = canForceMove;
+        this.canForceDome = canForceDome;
     }
 }

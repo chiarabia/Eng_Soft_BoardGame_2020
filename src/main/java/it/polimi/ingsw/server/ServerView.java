@@ -71,42 +71,45 @@ public class ServerView extends Thread implements GameObserver{
     // Ogni 0.1 secondi controlla se è successo qualcosa (se ha ricevuto oggetti da un qualunque client)
     // Ogni oggetto-evento captato genera una notifica al Controller
     public void run() {
-        for (int i = 0; i < observerList.size(); i++) observerList.get(i).onInitialization();
-        Object fromClient = null;
-        int playerId;
-        while (!processStopped) {
-            while (true) {
-                playerId = 1;
-                for (int i = 0; i < eventGenerators.size(); i++) {
-                    fromClient = eventGenerators.get(i).getNewEvent();
-                    if (fromClient != null) break;
-                    playerId++;
-                }
-                if (fromClient != null) break;
-                try { sleep(10); } catch (InterruptedException e) { }
+            for (int i = 0; i < observerList.size(); i++) observerList.get(i).onInitialization();
+            Object fromClient = null;
+            int playerId;
+            while (!processStopped) {
+                try {
+                    while (true) {
+                        playerId = 1;
+                        for (int i = 0; i < eventGenerators.size(); i++) {
+                            fromClient = eventGenerators.get(i).getNewEvent();
+                            if (fromClient != null) break;
+                            playerId++;
+                        }
+                        if (fromClient != null) break;
+                        try {
+                           sleep(10);
+                        } catch (InterruptedException e) {}
+                    }
+                    if (fromClient instanceof SerializableConsolidateMove) {
+                        SerializableConsolidateMove serializableFromClient = (SerializableConsolidateMove) fromClient;
+                        for (int i = 0; i < observerList.size(); i++)
+                            observerList.get(i).onConsolidateMove(playerId, serializableFromClient.getWorkerId(), serializableFromClient.getNewPosition());
+                    }
+                    if (fromClient instanceof SerializableConsolidateBuild) {
+                        SerializableConsolidateBuild serializableFromClient = (SerializableConsolidateBuild) fromClient;
+                        for (int i = 0; i < observerList.size(); i++)
+                           observerList.get(i).onConsolidateBuild(playerId, serializableFromClient.getNewPosition(), serializableFromClient.isForceDome());
+                    }
+                    if (fromClient instanceof SerializableInitializeGame) {
+                        SerializableInitializeGame serializableFromClient = (SerializableInitializeGame) fromClient;
+                        for (int i = 0; i < observerList.size(); i++)
+                            observerList.get(i).onInitialization(playerId, serializableFromClient.getWorkerPositions(), serializableFromClient.getGodPower());
+                    }
+                    if (fromClient instanceof SerializableDeclineLastOptional) {
+                        for (int i = 0; i < observerList.size(); i++) observerList.get(i).onEndedTurn(playerId);
+                    }
+                    if (fromClient instanceof Message && ((Message) fromClient).getMessage().equals("Error")) {
+                        for (int i = 0; i < observerList.size(); i++) observerList.get(i).onPlayerDisconnection(playerId);
+                    }
+                }catch (Exception e){stopProcess();}
             }
-            if (fromClient instanceof SerializableConsolidateMove) {
-                SerializableConsolidateMove serializableFromClient = (SerializableConsolidateMove) fromClient;
-                for (int i = 0; i < observerList.size(); i++)
-                    observerList.get(i).onConsolidateMove(playerId, serializableFromClient.getWorkerId(), serializableFromClient.getNewPosition());
-            }
-            if (fromClient instanceof SerializableConsolidateBuild) {
-                SerializableConsolidateBuild serializableFromClient = (SerializableConsolidateBuild) fromClient;
-                for (int i = 0; i < observerList.size(); i++)
-                    observerList.get(i).onConsolidateBuild(playerId, serializableFromClient.getNewPosition(), serializableFromClient.isForceDome());
-            }
-            if (fromClient instanceof SerializableInitializeGame) {
-                SerializableInitializeGame serializableFromClient = (SerializableInitializeGame) fromClient;
-                for (int i = 0; i < observerList.size(); i++)
-                    observerList.get(i).onInitialization(playerId, serializableFromClient.getWorkerPositions(), serializableFromClient.getGodPower());
-            }
-            if (fromClient instanceof SerializableDeclineLastOptional) {
-                for (int i = 0; i < observerList.size(); i++) observerList.get(i).onEndedTurn(playerId);
-            }
-            if (fromClient instanceof Message && ((Message) fromClient).getMessage().equals("Error")) {
-                // il giocatore si è disconnesso, quindi la partita termina
-                for (int i = 0; i < observerList.size(); i++) observerList.get(i).onPlayerDisconnection(playerId);
-            }
-        }
     }
 }

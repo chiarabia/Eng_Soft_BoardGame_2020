@@ -20,10 +20,10 @@ public class ClientKeyboard {
     }
 
     public static List <Position> askForWorkersInitialPositions (){
-        int myWorker1x = askForInt("Worker 1 X: ");
-        int myWorker1y = askForInt("Worker 1 Y: ");
-        int myWorker2x = askForInt("Worker 2 X: ");
-        int myWorker2y = askForInt("Worker 2 Y: ");
+        int myWorker1x = askForInt("Worker 1 x: ");
+        int myWorker1y = askForInt("Worker 1 y: ");
+        int myWorker2x = askForInt("Worker 2 x: ");
+        int myWorker2y = askForInt("Worker 2 y: ");
         List<Position> myWorkerPositions = new ArrayList<>();
         myWorkerPositions.add(new Position(myWorker1x, myWorker1y, 0));
         myWorkerPositions.add(new Position(myWorker2x, myWorker2y, 0));
@@ -33,8 +33,7 @@ public class ClientKeyboard {
     public static Position askForPosition(){
         int x = askForInt("x: ");
         int y = askForInt("y: ");
-        int z = askForInt("z: ");
-        return new Position(x, y, z);
+        return new Position(x, y, 0);
     }
 
     public static int askForInt(String request){
@@ -42,7 +41,7 @@ public class ClientKeyboard {
             System.out.print(request);
             int fromKeyboard = keyboard.nextInt();
             return fromKeyboard;
-        } catch(Exception e){return askForInt(request);}
+        } catch(Exception e){return 0;}
     }
 
     public static String askForString(String request){
