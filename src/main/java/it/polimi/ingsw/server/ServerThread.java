@@ -1,13 +1,12 @@
 package it.polimi.ingsw.server;
 
-import it.polimi.ingsw.GameController;
+import it.polimi.ingsw.Controller;
 import it.polimi.ingsw.exceptions.ClientStoppedWorkingException;
 import it.polimi.ingsw.Game;
-import org.json.simple.parser.ParseException;
+import it.polimi.ingsw.server.serializable.Message;
 
 import java.io.IOException;
 import java.io.ObjectOutputStream;
-import java.io.PrintWriter;
 import java.net.Socket;
 import java.util.ArrayList;
 import java.util.List;
@@ -17,16 +16,12 @@ public class ServerThread extends Thread {
     private List<Socket> playersList;
     private List<String> playersNames;
     private ServerWaitingList waitingList;
-    private void returnListToWaitingList(){
-        if (numOfPlayers == 2) waitingList.importTwoPlayersList(playersList);
-        if (numOfPlayers == 3) waitingList.importThreePlayersList(playersList);
-    }
     private List <String> scanList(String message) throws IOException {
         List <String> tempList = new ArrayList();
         for (int i = 0; i < playersList.size(); i++) {
             try{
                 tempList.add(sendMessageAndWaitForReply(message, i, 1));
-            } catch(ClientStoppedWorkingException e){
+            } catch(Exception e){
                 tempList.add(null);
                 playersList.remove(i);
                 i--;
@@ -34,51 +29,40 @@ public class ServerThread extends Thread {
         }
         return tempList;
     }
-    public void sendMessage(String message, int player) throws IOException {
-        PrintWriter out = new PrintWriter(playersList.get(player).getOutputStream());
-        out.println(message);
-        out.flush();
+    public void sendMessage(String message, int position) {
+        sendObject(new Message(message), position);
     }
-    public String sendMessageAndWaitForReply(String message, int player, int timeLimit) throws IOException, ClientStoppedWorkingException {
-        sendMessage(message, player);
-        return ServerReciever.receiveMessage(playersList.get(player), timeLimit);
+    public String sendMessageAndWaitForReply(String message, int position, int timeLimit) throws ClientStoppedWorkingException {
+        sendMessage(message, position);
+        return ((Message)(new ServerSyncReceiver()).receiveObject(playersList.get(position), timeLimit)).getMessage();
     }
-    public void sendObject(Object object, int player) throws IOException {
-        ObjectOutputStream fileObjectOut = new ObjectOutputStream(playersList.get(player).getOutputStream());
-        fileObjectOut.writeObject(object);
-        fileObjectOut.flush();
+    public void sendObject(Object object, int position) {
+        try {
+            ObjectOutputStream fileObjectOut = new ObjectOutputStream(playersList.get(position).getOutputStream());
+            fileObjectOut.writeObject(object);
+            fileObjectOut.flush();
+        } catch (Exception e){}
     }
-    public void sendAllObject(Object object) throws IOException {
+    public void sendAllObject(Object object) {
         for (int i = 0; i < playersList.size(); i++){
             if (playersList.get(i)!=null) sendObject(object, i);
         }
     }
-    public Object sendObjectAndWaitForReply(Object object, int player, int timeLimit) throws IOException, ClientStoppedWorkingException {
-        sendObject(object, player);
-        return ServerReciever.receiveObject(playersList.get(player), timeLimit);
-    }
-    public void startGame(){
+    public void run(){
         try {
-            for (int i = 0; i < numOfPlayers; i++) sendMessage("Server is ready", i);
             playersNames = scanList("Player's name");
-            if (playersList.size() < numOfPlayers){
-                scanList ("Close");
+            if (playersList.size() < numOfPlayers) {
+                waitingList.importPlayersList(playersList);
                 return;
             }
-            ServerProxy serverProxy = new ServerProxy(this);
-            Game game = new Game(numOfPlayers, playersNames);
-            GameController gameController = new GameController(game);
-            game.addObserver(serverProxy);
-            serverProxy.addObserver(gameController);
-            gameController.onInitialization();
-        }catch(IOException | ParseException e){}
-    }
-    public void run(){
-        try{
-            scanList("Hello");
-        } catch(IOException e){return;}
-        if (playersList.size() < numOfPlayers) returnListToWaitingList();
-        else startGame();
+            for (int i = 0; i < numOfPlayers; i++) sendMessage("You are player " + (i+1), i);
+            ServerView serverView = new ServerView(this, playersList); // View
+            Game game = new Game(numOfPlayers, playersNames); // Model
+            Controller gameController = new Controller(game, serverView); // Controller
+            game.addObserver(serverView);
+            serverView.addObserver(gameController);
+            serverView.start();
+        }catch(Exception e){}
     }
     public ServerThread(List<Socket> playersList, ServerWaitingList waitingList, int numOfPlayers){
         this.playersList = playersList;

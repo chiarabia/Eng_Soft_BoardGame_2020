@@ -3,9 +3,9 @@ package it.polimi.ingsw.server.serializable;
 import it.polimi.ingsw.Position;
 
 public class SerializableConsolidateBuild implements Serializable {
-        private final Position newPosition;
-        private final int workerId;
-        private final boolean forceDome;
+    private final Position newPosition;
+    private final int workerId;
+    private final boolean forceDome;
 
     public Position getNewPosition() {
             return newPosition;

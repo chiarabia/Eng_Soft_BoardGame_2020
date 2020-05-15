@@ -2,12 +2,14 @@ package it.polimi.ingsw;
 
 import it.polimi.ingsw.effects.GodPower;
 import it.polimi.ingsw.effects.GodPowerManager;
+import it.polimi.ingsw.exceptions.ClientStoppedWorkingException;
 import it.polimi.ingsw.server.GameObserver;
 import it.polimi.ingsw.server.serializable.*;
 import org.json.simple.parser.ParseException;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 
 
 public class Game {
@@ -32,30 +34,24 @@ public class Game {
 
     public void addObserver(GameObserver observer){observerList.add(observer);}
 
-
-    // In questo metodo il ciclo MVC viene rotto, quindi notifyJustUpdateAll
-    // deve servire SOLO per comunicare il termine della partita (vittoria o disconnessione player)
-    public void notifyJustUpdateAll(SerializableUpdate update) throws IOException {
+    public void notifyJustUpdateAll(SerializableUpdate update) {
         for (int i = 0; i < observerList.size(); i++) observerList.get(i).justUpdateAll(update);
     }
 
-    public void notifyAnswerOnePlayer(SerializableRequest request) throws IOException {
+    public void notifyJustUpdateAll(List<SerializableUpdate> updates) {
+        for (int i = 0; i < observerList.size(); i++) observerList.get(i).justUpdateAll(updates);
+    }
+
+    public void notifyAnswerOnePlayer(SerializableRequest request) {
         for (int i = 0; i < observerList.size(); i++) observerList.get(i).answerOnePlayer(request);
     }
 
-    public void notifyUpdateAllAndAnswerOnePlayer(SerializableUpdate update, SerializableRequest request) throws IOException {
+    public void notifyUpdateAllAndAnswerOnePlayer(SerializableUpdate update, SerializableRequest request){
         for (int i = 0; i < observerList.size(); i++) observerList.get(i).updateAllAndAnswerOnePlayer(update, request);
     }
 
-    public void notifyUpdateAllAndAnswerOnePlayer(List <SerializableUpdate> updates, SerializableRequest request) throws IOException {
+    public void notifyUpdateAllAndAnswerOnePlayer(List <SerializableUpdate> updates, SerializableRequest request) {
         for (int i = 0; i < observerList.size(); i++) observerList.get(i).updateAllAndAnswerOnePlayer(updates, request);
-    }
-
-    public int nextPlayerId(int playerId){
-        int firstPlayerId = (playerId % numOfPlayers) + 1;
-        for (int i = firstPlayerId; i < firstPlayerId + numOfPlayers - 1; i++)
-            if (players.get(((i-1) % numOfPlayers)+1) != null) return ((i-1) % numOfPlayers) +1;
-        return playerId;
     }
 
 
@@ -63,12 +59,10 @@ public class Game {
      * This class creates a match
      * @param numOfPlayers
      * @param playersNames
-     * @throws IOException
-     * @throws ParseException
      */
-    public Game (int numOfPlayers, List<String> playersNames) throws IOException, ParseException {
+    public Game (int numOfPlayers, List<String> playersNames) {
         this.numOfPlayers = numOfPlayers;
-        this.godPowers = GodPowerManager.createGodPowers(numOfPlayers);
+        this.godPowers = new ArrayList<>();
         this.board = new Board();
         this.players = new ArrayList<>();
         this.observerList = new ArrayList<>();

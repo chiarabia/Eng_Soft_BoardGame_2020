@@ -15,6 +15,7 @@ public class Turn {
 
     private boolean moveBeforeBuild = false;
     private boolean buildAfterMove = false;
+    private boolean buildBeforeMove = false;
 
     private boolean moveUp = false;
     private boolean moveDown = false;
@@ -57,6 +58,10 @@ public class Turn {
 
     public int getPlayerId() {
         return playerId;
+    }
+
+    public boolean isBuildBeforeMove() {
+        return buildBeforeMove;
     }
 
     public Position getWorkerStartingPosition() {
@@ -133,10 +138,16 @@ public class Turn {
 
     public void updateTurnInfoAfterBuild ( Position buildingPosition) {
         //set up the parameters after the standard build
-        if (!buildAfterMove && moveBeforeBuild) {
-            buildAfterMove = true;
+        if(!moveBeforeBuild) {
+            this.buildBeforeMove = true;
             this.firstBuildingPosition = buildingPosition;
         }
+
+        if (!buildAfterMove && moveBeforeBuild) {
+            this.buildAfterMove = true;
+            this.firstBuildingPosition = buildingPosition;
+        }
+
         buildTimes ++;
     }
 }
