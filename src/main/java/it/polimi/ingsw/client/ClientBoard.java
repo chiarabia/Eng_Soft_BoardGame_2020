@@ -4,6 +4,11 @@ public class ClientBoard {
     private ClientPlayer[] players;
     private ClientBuilding[][] cells;
     private int playerTurnId; // mostra il playerId del giocatore che sta giocando
+    private int myPlayerId = 0;
+
+    public void setMyPlayerId(int playerId){ myPlayerId = playerId;}
+
+    public int getMyPlayerId(){ return myPlayerId;}
 
     public void setPlayerTurnId(int playerTurnId) { this.playerTurnId = playerTurnId; }
 
@@ -24,6 +29,8 @@ public class ClientBoard {
     public void setCell (ClientBuilding cell, int x, int y){
         cells[x][y] = cell;
     }
+
+    public int numOfPlayers(){ return players.length; }
 
     public ClientBoard(int numOfPlayers) {
         this.players = new ClientPlayer[numOfPlayers];

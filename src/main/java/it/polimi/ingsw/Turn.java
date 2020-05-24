@@ -2,6 +2,8 @@ package it.polimi.ingsw;
 
 import it.polimi.ingsw.effects.build.BuildBeforeMove;
 
+import java.util.Set;
+
 /**
  * This class defines a turn of the game
  */
@@ -23,7 +25,7 @@ public class Turn {
     private int moveTimes = 0;
     private int buildTimes = 0;
 
-    private int workerUsed;
+    private int workerUsed = 0;
     private final int playerId;
 
     public Turn(Player player) {
@@ -150,6 +152,21 @@ public class Turn {
 
         buildTimes ++;
     }
+
+    public boolean canDecline () {
+        return (this.moveBeforeBuild && this.buildAfterMove);
+    }
+
+    public boolean isBuildOptional (Set worker1builds, Set worker2builds) {
+        return (this.isBuildAfterMove()&&
+                !(worker1builds.isEmpty()&&worker2builds.isEmpty()));
+    }
+
+    public boolean isMoveOptional (Set worker1moves, Set worker2moves) {
+        return (this.isMoveBeforeBuild()&&
+                !(worker1moves.isEmpty()&&worker1moves.isEmpty()));
+    }
+
 }
 
 

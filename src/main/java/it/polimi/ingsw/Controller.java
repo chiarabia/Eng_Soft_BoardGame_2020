@@ -3,19 +3,14 @@ package it.polimi.ingsw;
 import it.polimi.ingsw.effects.GodPower;
 import it.polimi.ingsw.effects.GodPowerManager;
 import it.polimi.ingsw.effects.winCondition.StandardLoseCondition;
-import it.polimi.ingsw.effects.winCondition.StandardWinCondition;
 import it.polimi.ingsw.server.ProxyObserver;
 import it.polimi.ingsw.server.ServerView;
 import it.polimi.ingsw.server.serializable.*;
-import org.json.simple.parser.ParseException;
 
-import java.io.IOException;
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
+import java.util.Objects;
 import java.util.Set;
-
-import static java.lang.Thread.sleep;
 
 public class Controller implements ProxyObserver {
     private Game game;
@@ -27,61 +22,141 @@ public class Controller implements ProxyObserver {
     }
 
     // Decide quale player deve eseguire quale operazione, appoggiandosi alle informazioni di Turn e GodPower
-    public void nextOperation(){ //todo: Questo metodo per ora gestisce solo un turno classico (move + build)
+    public void nextOperation(){
         int playerId = game.getTurn().getPlayerId();
+        Turn turn = game.getTurn();
+        SerializableRequest request;
+
         boolean canForceDome = game.getGodPowers().get(playerId-1).isAskToBuildDomes();
         Position worker1Position = game.getBoard().getWorkerCell(game.getPlayers().get(playerId-1), 1).getPosition();
         Position worker2Position = game.getBoard().getWorkerCell(game.getPlayers().get(playerId-1), 2).getPosition();
+
         Set<Position> worker1Moves = game.getGodPowers().get(playerId-1).move(worker1Position, game.getBoard(), game.getTurn());
         Set<Position> worker2Moves = game.getGodPowers().get(playerId-1).move(worker2Position, game.getBoard(), game.getTurn());
         Set<Position> worker1Builds = game.getGodPowers().get(playerId-1).build(worker1Position, game.getBoard(), game.getTurn());
         Set<Position> worker2Builds = game.getGodPowers().get(playerId-1).build(worker2Position, game.getBoard(), game.getTurn());
 
-        if (!checkWinOrLose(playerId, worker1Moves, worker2Moves, worker1Builds, worker1Builds)) { // controlla se ha vinto e nel caso salta ogni altra procedura
-            if (!game.getTurn().isMoveBeforeBuild()) { // deve ancora muovere e poi costruire
-                SerializableRequest request = new SerializableRequestMove(playerId, worker1Moves, worker2Moves);
-                game.notifyAnswerOnePlayer(request);
-            } else if (game.getTurn().isMoveBeforeBuild() && !game.getTurn().isBuildAfterMove()) { // deve ancora costruire
-                SerializableRequest request = new SerializableRequestBuild(playerId, worker1Builds, worker2Builds, canForceDome);
-                game.notifyAnswerOnePlayer(request);
-            } else if (game.getTurn().isBuildAfterMove()) { // turno terminato
-                onEndedTurn(playerId);
-            }
+        if (checkLose(playerId, worker1Moves, worker1Builds, worker2Moves, worker2Builds, turn)) {
+            return;
+        }
+        else if (checkWin (playerId, null, null)) {
+            return;
+        }
+        else {
+            request = new SerializableRequestAction(playerId,
+                    turn.isMoveOptional(worker1Moves, worker2Moves),                    //controllo se le mosse sono opzionali o meno controllando i valori di turno
+                    turn.isBuildOptional(worker1Builds, worker2Builds),
+                    turn.canDecline(),                                                  //controllo se entrambi i valori sono a true
+                    worker1Moves, worker2Moves, worker1Builds, worker2Builds, canForceDome);
+            game.notifyAnswerOnePlayer(request);
+            return;
         }
     }
 
     @Override
-    // Termina il turno corrente, setta il nuovo oggetto Turn e invia l'update relativo al cambio di turno
+    // Termina il turno corrente
     public void onEndedTurn (int playerId) {
         int nextPlayerId = nextPlayerId(playerId);
-        Turn newTurn = game.getGodPowers().get(playerId-1).endTurn(game.getTurn(), game.getGodPowers(), game.getPlayers().get(nextPlayerId-1));
-        game.setTurn(newTurn);
+        Turn newTurn = game.getGodPowers().get(playerId-1).endTurn(game.getTurn(), game.getGodPowers(), game.getPlayers().get(nextPlayerId-1)); // termina il turno precedente, serve l'end turn del giocatore corrente
+        game.setTurn(newTurn); // setta il turno successivo
         SerializableUpdate update = new SerializableUpdateTurn(nextPlayerId);
-        game.notifyJustUpdateAll(update);
-        nextOperation();
+        game.notifyJustUpdateAll(update); // aggiorna i players del cambio turno
+        nextOperation(); // apre una nuova operazione
     }
 
     @Override
-    // Consolida la move, aggiorna Turn, invia il relativo oggetto update e verifica se il player nell'effettuare tale mossa abbia vinto
+    // Gestisce una ConsolidateMove
     public void onConsolidateMove(int playerId, int workerId, Position newPosition) {
         Position workerPosition = game.getBoard().getWorkerCell(game.getPlayers().get(playerId-1), workerId).getPosition();
-        game.getGodPowers().get(playerId-1).moveInto(game.getBoard(), workerPosition, newPosition);
-        game.getTurn().updateTurnInfoAfterMove(workerPosition, newPosition, game.getBoard());
+        game.getGodPowers().get(playerId-1).moveInto(game.getBoard(), workerPosition, newPosition); // consolida la mossa
+        game.getTurn().updateTurnInfoAfterMove(workerPosition, newPosition, game.getBoard()); // aggiorna Turn
         SerializableUpdate update = new SerializableUpdateMove(newPosition, playerId, workerId);
-        game.notifyJustUpdateAll(update);
+        game.notifyJustUpdateAll(update); // aggiorna i players della move
 
-        if (game.getGodPowers().get(playerId-1).win(workerPosition, newPosition, game.getBoard())) onPlayerWin(playerId);
-        else nextOperation();
+        checkWin(playerId, workerPosition, newPosition); // se la move determina una vittoria apre la procedura di vittoria...
+        nextOperation(); //...altrimenti apre una nuova operazione
     }
 
     @Override
-    // Consolida la build, aggiorna Turn e invia il relativo oggetto update
+    // Gestisce una ConsolidateBuild
     public void onConsolidateBuild(int playerId, Position newPosition, boolean forceDome) {
-        game.getGodPowers().get(playerId-1).buildUp(newPosition, game.getBoard(), forceDome);
-        game.getTurn().updateTurnInfoAfterBuild(newPosition);
+        game.getGodPowers().get(playerId-1).buildUp(newPosition, game.getBoard(), forceDome); // consolida la build
+        game.getTurn().updateTurnInfoAfterBuild(newPosition); // aggiorna Turn
         SerializableUpdate update = new SerializableUpdateBuild(newPosition, game.getBoard().getCell(newPosition).isDome());
-        game.notifyJustUpdateAll(update);
-        nextOperation();
+        game.notifyJustUpdateAll(update); // aggiorna i players della build
+        nextOperation(); // apre una nuova operazione
+    }
+
+    @Override
+    // Notifica i player della disconnessione
+    public void onPlayerDisconnection(int playerId) {
+        if (game.getPlayers().get(playerId-1)!=null) { // Se la disconnessione di un player non è dovuta a una sconfitta...
+            SerializableUpdate update = new SerializableUpdateDisconnection(playerId);
+            game.notifyJustUpdateAll(update); // aggiorna i players della disconnessione
+            serverView.stopAllEventGenerators(); // termina tutti i thread legati alla partita
+        }
+    }
+
+    // Notifica i players della vittoria
+    public void onPlayerWin (int playerId)  {
+        game.notifyJustUpdateAll(new SerializableUpdateWinner(playerId)); // avvisa i players della vittoria
+        serverView.stopAllEventGenerators(); // termina tutti i thread legati alla partita
+    }
+
+    // Gestisce la sconfitta di un giocatore
+    public void onPlayerLoss(int playerId)  {
+        int nextPlayerId = nextPlayerId(playerId);
+        Position worker1Position = game.getBoard().getWorkerCell(game.getPlayers().get(playerId-1), 1).getPosition();
+        Position worker2Position = game.getBoard().getWorkerCell(game.getPlayers().get(playerId-1), 2).getPosition();
+
+        Turn newTurn = game.getGodPowers().get(playerId-1).endTurn(game.getTurn(), game.getGodPowers(), game.getPlayers().get(nextPlayerId-1)); // termina il turno precedente
+        game.setTurn(newTurn); // setta il turno successivo
+        game.getPlayers().set(playerId-1, null); // setta il Player a null
+        game.getGodPowers().set(playerId-1, null); // setta il GodPower a null
+        game.getBoard().getCell(worker1Position).setWorker(null); // rimuove i worker dalle celle
+        game.getBoard().getCell(worker2Position).setWorker(null);
+        List<SerializableUpdate> tempUpdates = new ArrayList<>();
+        tempUpdates.add( new SerializableUpdateLoser(playerId));
+        tempUpdates.add(new SerializableUpdateTurn(nextPlayerId));
+        game.notifyJustUpdateAll(tempUpdates); // aggiorna i players della sconfitta
+        nextOperation(); // apre una nuova operazione
+    }
+
+
+    //controllo di tutte le condizioni di vittoria, globali o in seguito ad una mossa
+    //restituisce true in caso di vittoria
+    private boolean checkWin (int playerId, Position workerPosition, Position destinationPosition) {
+        if (game.getPlayers().stream().filter(Objects::nonNull).count()==1) { // controlla se è rimasto solo il giocatore corrente
+            onPlayerWin(playerId);
+            return true;
+        }
+        if (workerPosition == null && destinationPosition == null) {
+            for (GodPower p: game.getGodPowers()) { // controlla le condizioni di vittoria di tutti i players
+                if (p!=null) {
+                    if (p.win(null, null, game.getBoard())) {
+                        onPlayerWin(p.getPlayerId());
+                        return true;
+                    }
+                }
+            }
+        }
+        else {
+            if (game.getGodPowers().get(playerId-1).win(workerPosition, destinationPosition, game.getBoard())) {
+                onPlayerWin(playerId);
+                return true;
+            }
+        }
+        return false;
+    }
+
+    private boolean checkLose (int playerId, Set<Position> worker1Moves, Set<Position> worker1Builds, Set<Position> worker2Moves, Set<Position> worker2Builds, Turn turn) {
+        StandardLoseCondition standardLoseCondition = game.getGodPowers().get(playerId-1).getLoseCondition();
+
+        if (!turn.canDecline() && standardLoseCondition.lose(worker1Moves, worker1Builds) && standardLoseCondition.lose(worker2Moves, worker2Builds)) {
+            onPlayerLoss(playerId);
+            return true;
+        }
+        return false;
     }
 
     @Override
@@ -123,68 +198,6 @@ public class Controller implements ProxyObserver {
             SerializableRequest request = new SerializableRequestInitializeGame(playerId + 1, getGodPowersLeftNames());
             game.notifyUpdateAllAndAnswerOnePlayer(update, request);
         }
-    }
-
-    @Override
-    // Notifica i player della disconnessione
-    public void onPlayerDisconnection(int playerId) {
-        SerializableUpdate update = new SerializableUpdateDisconnection(playerId);
-        game.notifyJustUpdateAll(update);
-        serverView.stopProcess();
-        // Game ends due to disconnection
-    }
-
-    // termina il turno del perdente settando il Turn successivo, rimuove i worker dalle celle,
-    // setta Player e GodPower a null, invia gli update relativi a perdita e turno
-    public void onPlayerLoss(int playerId)  {
-        int nextPlayerId = nextPlayerId(playerId);
-        Position worker1Position = game.getBoard().getWorkerCell(game.getPlayers().get(playerId-1), 1).getPosition();
-        Position worker2Position = game.getBoard().getWorkerCell(game.getPlayers().get(playerId-1), 2).getPosition();
-
-        Turn newTurn = game.getGodPowers().get(playerId-1).endTurn(game.getTurn(), game.getGodPowers(), game.getPlayers().get(nextPlayerId-1));
-        game.setTurn(newTurn);
-        game.getPlayers().set(playerId-1, null);
-        game.getGodPowers().set(playerId-1, null);
-        game.getBoard().getCell(worker1Position).setWorker(null);
-        game.getBoard().getCell(worker2Position).setWorker(null);
-        List<SerializableUpdate> tempUpdates = new ArrayList<>();
-        tempUpdates.add( new SerializableUpdateLoser(playerId));
-        tempUpdates.add(new SerializableUpdateTurn(nextPlayerId));
-        game.notifyJustUpdateAll(tempUpdates);
-        nextOperation();
-    }
-
-    // Notifica i player della vittoria
-    public void onPlayerWin (int playerId)  {
-        game.notifyJustUpdateAll(new SerializableUpdateWinner(playerId));
-        serverView.stopProcess();
-        // Game ends due to win
-    }
-
-    // Controllo di vittoria/sconfitta generico che non considera mosse da consolidare
-    // Controlla: se è rimasto un solo giocatore, condizioni di vittoria di tutti i players, condizioni di sconfitta del player corrente
-    // Restituisce true in caso di vittoria
-    private boolean checkWinOrLose (int playerId, Set<Position> worker1Moves, Set<Position> worker2Moves, Set<Position> worker1Builds, Set<Position> worker2Builds)  {
-        if (game.getPlayers().stream().filter(x->x!=null).count()==1) { // controlla se è rimasto solo il giocatore corrente
-            onPlayerWin(playerId);
-            return true;
-        }
-        Set<Position> allMoves = new HashSet<>(worker1Moves);
-        allMoves.addAll(worker2Moves);
-        Set<Position> allBuilds = new HashSet<>(worker1Builds);
-        allMoves.addAll(worker2Builds);
-        StandardLoseCondition loseCondition = game.getGodPowers().get(playerId-1).getLoseCondition();
-        for (GodPower p: game.getGodPowers()){
-            List <StandardWinCondition> positiveWinCondition= p.getPositiveWinConditions();
-            List <StandardWinCondition> blockingWinCondition= p.getBlockingWinConditions();
-            if (blockingWinCondition.stream().allMatch(x -> x.win(null, null, game.getBoard())) &&
-                    positiveWinCondition.stream().anyMatch(x -> x.win(null, null, game.getBoard()))) {
-                onPlayerWin(p.getPlayerId());
-                return true;
-            }
-        }
-        // if (loseCondition.lose(allMoves, allBuilds)) onPlayerLoss(playerId); // todo:tolto momentaneamente poiché risponde true a caso
-        return false;
     }
 
     // restituisce il giocatore successivo a quello corrente

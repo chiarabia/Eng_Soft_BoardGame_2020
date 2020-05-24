@@ -18,7 +18,7 @@ public class ServerAccepter extends Thread {
                 (new Thread (()->{
                     try {
                         ServerWaitingList waitingList;
-                        Message message = (Message) (new ServerSyncReceiver()).receiveObject(socket, 1);
+                        Message message = (Message) (new ServerSyncReceiver()).receiveObject(socket);
                         int numOfPlayers = Character.getNumericValue(message.getMessage().charAt(0));
                         if (numOfPlayers == 2) waitingList = twoPlayersWaitingList;
                         else if (numOfPlayers == 3) waitingList = threePlayersWaitingList;

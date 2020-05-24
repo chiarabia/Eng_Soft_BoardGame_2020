@@ -19,7 +19,7 @@ public class StandardLoseCondition {
      */
 
     public boolean lose (Set<Position> collectMove, Set<Position> collectBuild){
-        if(collectMove.isEmpty()) return true;
+        if(!collectMove.isEmpty()) return false;
         return collectBuild.isEmpty();
     }
 }

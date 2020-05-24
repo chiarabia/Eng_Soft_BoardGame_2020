@@ -9,6 +9,7 @@ import static org.junit.jupiter.api.Assertions.assertNotEquals;
 
 import it.polimi.ingsw.*;
 import it.polimi.ingsw.effects.consolidateBuild.StandardConsolidateBuild;
+import it.polimi.ingsw.effects.consolidateMove.StandardConsolidateMove;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -92,6 +93,33 @@ public class NotOnSamePositionTest {
         assertThrows(NullPointerException.class, () -> {
             notOnSamePosition.build(null, null, null);
         });
+    }
+
+    @Test
+    void buildShouldGiveTheRightSetOfPossibleCellsWithoutFirstBuildingCell2() {
+        board = new Board();
+        Cell workerCell1 = board.getCell(0, 0, 0);
+        Cell workerCell2 = board.getCell(1, 1, 0);
+        Worker worker1 = new Worker (player, 1);
+        Worker worker2 = new Worker (player, 2);
+
+        workerCell1.setWorker(worker1);
+        workerCell2.setWorker(worker2);
+
+        new StandardConsolidateMove().moveInto(board, workerCell2.getPosition(), new Position(2,0,0));
+        turn.updateTurnInfoAfterMove(workerCell2.getPosition(), new Position(2,0,0), board);
+
+        new StandardConsolidateBuild().buildUp(new Position(3,0,0), board,false);
+        turn.updateTurnInfoAfterBuild(new Position(3,0,0));
+
+
+        Set<Position> collect = new HashSet<>();
+        collect.add(new Position (1,0,0));
+        collect.add(new Position (2,1,0));
+        collect.add(new Position (3,1,0));
+        collect.add(new Position (1,1,0));
+
+        assertEquals(collect, notOnSamePosition.build(new Position(2,0,0), board, turn));
     }
 
 }

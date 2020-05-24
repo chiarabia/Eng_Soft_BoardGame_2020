@@ -33,16 +33,16 @@ public class StandardLoseConditionTest {
 
     //positive
     @Test
-    void playerShouldLoseAndReturnTrueWhenOnlyMoveIsEmpty() {
+    void playerShouldNotLoseAndReturnFalseWhenOnlyMoveIsEmpty() {
         collectBuild.add(new Position(0, 0, 0));
-        assertTrue(loseCondition.lose(collectMove, collectBuild));
+        assertFalse(loseCondition.lose(collectMove, collectBuild));
     }
 
     //positive
     @Test
-    void playerShouldLoseAndReturnTrueWhenOnlyBuildIsEmpty() {
+    void playerShouldNotLoseAndReturnFalseWhenOnlyBuildIsEmpty() {
         collectMove.add(new Position(0, 0, 0));
-        assertTrue(loseCondition.lose(collectMove, collectBuild));
+        assertFalse(loseCondition.lose(collectMove, collectBuild));
     }
 
     //positive

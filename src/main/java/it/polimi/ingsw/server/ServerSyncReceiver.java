@@ -13,32 +13,15 @@ import java.util.Scanner;
 // architettura non fa differenza, in ogni caso il Server disconnette e termina.
 
 public class ServerSyncReceiver extends Thread {
-    private boolean error;
-    private Object object;
-    public Object receiveObject(Socket socket, int timeLimit) throws ClientStoppedWorkingException {
-        Thread thread = new Thread(()-> {
-            try {
-                ObjectInputStream fileObjectIn = new ObjectInputStream(socket.getInputStream());
-                object = (Object) fileObjectIn.readObject();
-            } catch (Exception e) {error = true;}
-        });
-
-        object = null;
-        error = false;
-        thread.start();
-        for (int i = 0; i < timeLimit * 100; i++) {
-            try {
-                sleep(10);
-                if (object!=null) {
-                    return object;
-                }
-                if (error) {
-                    thread.interrupt();
-                    throw new ClientStoppedWorkingException();
-                }
-            } catch (InterruptedException e) {break;}
-        }
-        thread.interrupt();
+    public Object receiveObject(Socket socket) throws ClientStoppedWorkingException {
+        Object object = null;
+        try {
+            socket.setSoTimeout(1000);
+            ObjectInputStream fileObjectIn = new ObjectInputStream(socket.getInputStream());
+            object = fileObjectIn.readObject();
+            socket.setSoTimeout(0);
+        } catch (Exception e) {}
+        if (object!=null) return object;
         throw new ClientStoppedWorkingException();
     }
 }

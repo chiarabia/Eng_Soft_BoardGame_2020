@@ -69,11 +69,9 @@ public class WinMovingDownTwoOrMoreLevelTest {
 
     //positive
     @Test
-    void throwsExceptionsWithNullParameters(){
+    void shouldNotThrowsExceptionsWithNullParameters(){
 
-        assertThrows(NullPointerException.class, () -> {
-            winCondition.win(null, null, null);
-        });
+        assertFalse(winCondition.win(null, null, null));
     }
 
 

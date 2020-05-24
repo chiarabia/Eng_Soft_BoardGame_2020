@@ -25,6 +25,9 @@ public class UnlimitedMoveOnPerimeter extends StandardMove {
 
     @Override
     protected boolean checkMoveConditions(Cell workerCell, Turn turn) {
+        if (turn.isMoveBeforeBuild() && turn.isBuildAfterMove())
+            return false;
+
         //the Cell needs to have a worker
         if (!workerCell.isWorker())
             return false;

@@ -39,7 +39,7 @@ public class MoveNotOnInitialPosition extends StandardMove{
             if (initialPosition != null) {
                 return super.move(workerPosition, board, turn)
                         .stream()
-                        .filter(a -> !a.equals(initialPosition))
+                        .filter(a -> !(a.getX()==initialPosition.getX()&& a.getY()==initialPosition.getY()))
                         .collect(Collectors.toSet());
             }
             //if the player didn't already move they can move normally
@@ -51,7 +51,9 @@ public class MoveNotOnInitialPosition extends StandardMove{
     //The player needs to move two times in a row
     @Override
     protected boolean checkMoveConditions(Cell workerCell, Turn turn) {
+        if (turn.isMoveBeforeBuild() && turn.isBuildAfterMove())
+            return false;
+        else
             return super.checkMoveConditions(workerCell, turn);
-
     }
 }

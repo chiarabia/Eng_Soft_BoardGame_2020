@@ -57,11 +57,8 @@ public class StandardWinConditionTest {
 
     //positive
     @Test
-    void throwsExceptionsWithNullParameters(){
-
-        assertThrows(NullPointerException.class, () -> {
-            winCondition.win(null, null, null);
-        });
+    void shouldNotThrowsExceptionsWithNullParameters(){
+        assertFalse(winCondition.win(null, null, null));
     }
 
 

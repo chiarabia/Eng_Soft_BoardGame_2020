@@ -17,13 +17,13 @@ public class ServerThread extends Thread {
     private List<String> playersNames;
     private ServerWaitingList waitingList;
     private List <String> scanList(String message) throws IOException {
-        List <String> tempList = new ArrayList();
+        List <String> tempList = new ArrayList<>();
         for (int i = 0; i < playersList.size(); i++) {
             try{
-                tempList.add(sendMessageAndWaitForReply(message, i, 1));
+                tempList.add(sendMessageAndWaitForReply(message, i));
             } catch(Exception e){
                 tempList.add(null);
-                playersList.remove(i);
+                playersList.remove(i).close();
                 i--;
             }
         }
@@ -32,9 +32,9 @@ public class ServerThread extends Thread {
     public void sendMessage(String message, int position) {
         sendObject(new Message(message), position);
     }
-    public String sendMessageAndWaitForReply(String message, int position, int timeLimit) throws ClientStoppedWorkingException {
+    public String sendMessageAndWaitForReply(String message, int position) throws ClientStoppedWorkingException {
         sendMessage(message, position);
-        return ((Message)(new ServerSyncReceiver()).receiveObject(playersList.get(position), timeLimit)).getMessage();
+        return ((Message)(new ServerSyncReceiver()).receiveObject(playersList.get(position))).getMessage();
     }
     public void sendObject(Object object, int position) {
         try {
@@ -56,12 +56,12 @@ public class ServerThread extends Thread {
                 return;
             }
             for (int i = 0; i < numOfPlayers; i++) sendMessage("You are player " + (i+1), i);
-            ServerView serverView = new ServerView(this, playersList); // View
+            ServerView serverView = new ServerView(this); // View
             Game game = new Game(numOfPlayers, playersNames); // Model
-            Controller gameController = new Controller(game, serverView); // Controller
+            Controller controller = new Controller(game, serverView); // Controller
             game.addObserver(serverView);
-            serverView.addObserver(gameController);
-            serverView.start();
+            serverView.addObserver(controller);
+            serverView.startNewEventGenerators(playersList);
         }catch(Exception e){}
     }
     public ServerThread(List<Socket> playersList, ServerWaitingList waitingList, int numOfPlayers){

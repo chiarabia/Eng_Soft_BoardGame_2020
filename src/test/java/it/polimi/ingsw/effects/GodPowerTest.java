@@ -72,7 +72,7 @@ public class GodPowerTest {
         Set <Position>collectMove = new HashSet<>();
         Set <Position> collectBuild = new HashSet<>();
         collectBuild.add(new Position(0, 0, 0));
-        assertTrue(godPower.lose(collectMove, collectBuild));
+        assertFalse(godPower.lose(collectMove, collectBuild));
     }
 
 

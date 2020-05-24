@@ -4,9 +4,10 @@ import it.polimi.ingsw.Position;
 
 import java.util.Set;
 
-public class SerializableRequestOptional implements SerializableRequest{
+public class SerializableRequestAction implements SerializableRequest{
     private final int playerId;
     private final boolean isMoveOptional; // se è false allora sono le builds a essere facoltative
+    private final boolean isBuildOptional;
     private final boolean canDecline;
     private final Set<Position> worker1Moves;
     private final Set<Position> worker2Moves;
@@ -21,6 +22,10 @@ public class SerializableRequestOptional implements SerializableRequest{
 
     public boolean isMoveOptional() {
         return isMoveOptional;
+    }
+
+    public boolean isBuildOptional() {
+        return isBuildOptional;
     }
 
     public Set<Position> getWorker1Moves() {
@@ -45,14 +50,31 @@ public class SerializableRequestOptional implements SerializableRequest{
 
     public boolean canDecline() {return canDecline;}
 
-    public SerializableRequestOptional(int playerId, boolean isMoveOptional, boolean canDecline, Set<Position> worker1Moves, Set<Position> worker2Moves, Set<Position> worker1Builds, Set<Position> worker2Builds, boolean canForceDome) {
+    public SerializableRequestAction(int playerId, boolean isMoveOptional, boolean isBuildOptional, boolean canDecline, Set<Position> worker1Moves, Set<Position> worker2Moves, Set<Position> worker1Builds, Set<Position> worker2Builds, boolean canForceDome) {
         this.playerId = playerId;
         this.canDecline = canDecline;
         this.isMoveOptional = isMoveOptional;
+        this.isBuildOptional = isBuildOptional;
         this.worker1Moves = worker1Moves;
         this.worker2Moves = worker2Moves;
         this.worker1Builds = worker1Builds;
         this.worker2Builds = worker2Builds;
         this.canForceDome = canForceDome;
+    }
+
+    public boolean areBuildsEmpty () {
+        return this.worker1Builds.size()==0 && this.worker2Builds.size()==0;
+    }
+
+    public boolean areMovesEmpty () {
+        return this.worker1Moves.size()==0 && this.worker2Moves.size()==0;
+    }
+
+    public boolean canWorkerDoAction (int workerId) {
+        if (workerId == 1)
+            return (this.worker1Moves.size()!=0 || this.worker1Builds.size()!=0);
+        else if (workerId == 2)
+            return (this.worker2Moves.size()!=0 || this.worker2Builds.size()!=0);
+        else return false;
     }
 }

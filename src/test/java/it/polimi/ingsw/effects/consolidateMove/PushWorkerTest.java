@@ -202,5 +202,27 @@ public class PushWorkerTest {
         });
     }
 
-}
+    @Test
+    void pushWorkerShouldCorrectlyPushEnemyWorkeronGround () {
+        workerCell = board.getCell(1,1,0);
+        Cell enemyWorker = board.getCell(2,2,0);
+
+        worker1 = new Worker(player1, 2);
+        worker2 = new Worker(player2, 1);
+
+        workerCell.setWorker(worker1);
+        enemyWorker.setWorker(worker2);
+
+        pushWorker.moveInto(board, workerCell.getPosition(), enemyWorker.getPosition());
+
+        assertAll("Push Worker",
+                () -> assertTrue(workerCell.isFree()),
+                () -> assertTrue(enemyWorker.isWorker()),
+                () -> assertTrue(board.getCell(3,3,0).isWorker()),
+                () -> assertSame(worker1, enemyWorker.getWorker()),
+                ()-> assertSame(worker2, board.getCell(3,3,0).getWorker()));
+    }
+
+    }
+
 
