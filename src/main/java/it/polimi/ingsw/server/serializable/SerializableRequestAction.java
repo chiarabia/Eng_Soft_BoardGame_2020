@@ -6,14 +6,15 @@ import java.util.Set;
 
 public class SerializableRequestAction implements SerializableRequest{
     private final int playerId;
-    private final boolean isMoveOptional; // se è false allora sono le builds a essere facoltative
-    private final boolean isBuildOptional;
-    private final boolean canDecline;
+    private final boolean isMoveOptional; // true move facoltateive
+    private final boolean isBuildOptional; //build facoltative
+    private final boolean canDecline; //true, il player si è mosso prima di costruire e ha costruito dopo essersi mosso
+    //quindi per le nostre regole, può rifiutare una move/build opzionale e passare il turno
     private final Set<Position> worker1Moves;
     private final Set<Position> worker2Moves;
     private final Set<Position> worker1Builds;
     private final Set<Position> worker2Builds;
-    private final boolean canForceDome;
+    private final boolean canForceDome; //True se il player può costruire una cupola ad ogni livello
 
     @Override
     public int getPlayerId() {
