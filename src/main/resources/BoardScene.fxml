@@ -15,7 +15,7 @@
 <?import javafx.scene.text.TextFlow?>
 
 <?import javafx.scene.image.Image?>
-<StackPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="774" minWidth="1386" prefHeight="774" prefWidth="1386" style="-fx-background-color:#37b9fd;" stylesheets="CSS/Board.css" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="it.polimi.ingsw.gui.BoardSceneController">
+<StackPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="774" minWidth="1386" prefHeight="774" prefWidth="1386" style="-fx-background-color:#37b9fd;" stylesheets="CSS/Board.css" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="it.polimi.ingsw.client.gui.BoardSceneController">
       <BorderPane fx:id="board" maxHeight="774" maxWidth="1386" prefHeight="774" prefWidth="1386" minHeight="774" minWidth="1386" BorderPane.alignment="CENTER">
          <center>
             <GridPane fx:id="GridPane" minHeight="500" minWidth="500" prefHeight="500.9" prefWidth="500" BorderPane.alignment="CENTER">

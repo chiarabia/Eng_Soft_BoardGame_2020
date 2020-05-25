@@ -1,20 +1,13 @@
-package it.polimi.ingsw.gui;
+package it.polimi.ingsw.client.gui;
 
-import javafx.beans.binding.Bindings;
-import javafx.beans.value.ObservableValue;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Label;
-import javafx.scene.control.Slider;
-import javafx.scene.control.TextField;
 import javafx.scene.image.ImageView;
 import javafx.scene.image.Image;
-import javafx.scene.layout.BorderPane;
 import javafx.scene.text.Text;
 import javafx.scene.text.TextFlow;
 
-import javax.swing.event.ChangeListener;
-import java.awt.*;
 import java.net.URL;
 import java.util.ResourceBundle;
 
