@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.FlowPane?>
+<?import javafx.scene.text.Font?>
+
+<?import javafx.scene.image.Image?>
+
+<?import javafx.scene.layout.StackPane?>
+<StackPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="712.9" minWidth="1282.0" prefHeight="712.9" prefWidth="1282.0" style="-fx-background-color:#31c3fd;" stylesheets="CSS/MatchSetup.css" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="it.polimi.ingsw.gui.WaitingSceneController">
+<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="712.9" minWidth="1282.0" prefHeight="712.9" prefWidth="1282.0" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1">
+   <center>
+      <FlowPane id="flowPaneCenter" alignment="CENTER" maxWidth="516.6" maxHeight="513.9" minHeight="513.9" minWidth="516.6" orientation="VERTICAL" prefHeight="513.9" prefWidth="516.6" BorderPane.alignment="CENTER">
+         <children>
+            <ImageView fitHeight="50.0" fitWidth="50.0" pickOnBounds="true" preserveRatio="true">
+               <image>
+                  <Image url="PreGameImages/loading.gif" />
+               </image>
+               <FlowPane.margin>
+                  <Insets bottom="15.0" left="25.0" />
+               </FlowPane.margin>
+            </ImageView>
+            <Label alignment="CENTER" contentDisplay="CENTER" text="Waiting..." textAlignment="CENTER">
+               <FlowPane.margin>
+                  <Insets left="15.0" />
+               </FlowPane.margin>
+               <font>
+                  <Font size="18.0" />
+               </font>
+            </Label>
+         </children>
+         <BorderPane.margin>
+            <Insets />
+         </BorderPane.margin>
+      </FlowPane>
+   </center>
+</BorderPane>
+        </StackPane>

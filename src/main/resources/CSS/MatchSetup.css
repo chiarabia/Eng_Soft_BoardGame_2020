@@ -1,0 +1,4 @@
+#flowPaneCenter{
+    -fx-background-image: url('/PreGameImages/BoardIsleWithSea.png');
+    -fx-background-size: cover;
+}

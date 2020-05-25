@@ -1,0 +1,27 @@
+#GridPane{
+    -fx-background-image: url('/Board/SantoriniBoardOnly.png');
+    -fx-background-repeat: no-repeat;
+    -fx-background-size: cover;
+}
+
+#board{
+    -fx-background-image: url('/Board/BigBoard.PNG');
+    -fx-background-repeat: no-repeat;
+    -fx-background-size: cover;
+}
+
+#ListOfPlayers{
+    -fx-background-color:#95df8f;
+    -fx-background-radius: 25px;
+}
+
+#playersName{
+    -fx-background-color:#95df8f;
+    -fx-background-radius: 25px
+}
+
+#godDescription{
+    -fx-background-color:#95df8f;
+    -fx-background-radius: 25px;
+}
+

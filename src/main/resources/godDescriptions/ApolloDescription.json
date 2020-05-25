@@ -1,0 +1,6 @@
+{
+    "name" : "Apollo",
+    "description" : "Your move: Your Worker may move into an opponent Worker's space (using normal movement rules) and force their Worker to the space yours just vacated (swapping their positions)",
+    "image code" : "01.png"
+
+}

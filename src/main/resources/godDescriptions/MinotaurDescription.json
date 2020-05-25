@@ -1,0 +1,5 @@
+{
+    "name" : "Minotaur",
+    "description" : "Your Move: Your Worker may move into an opponent Worker's space (using normal movement rules), if the next space in the same direction is unoccupied. Their Worker is forced into that space (regardless of its level)",
+    "image" : "08.png"
+}

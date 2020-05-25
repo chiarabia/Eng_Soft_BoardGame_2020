@@ -1,0 +1,15 @@
+#HBox1, #HBox3, #HBox2{
+    -fx-background-color: #dfd2c3;
+    -fx-background-radius: 25px;
+    -fx-border-color: #554c46;
+    -fx-border-image-width: 3px;
+    -fx-border-radius: 25px;
+    -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.8), 10, 0, 0, 0);
+}
+
+#godPortrait1, #godPortrait2, #godPortrait3{
+    -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.5), 10, 0, 0, 0);
+}
+
+#godDescription1, #godDescription2, #godDescription3{
+}
