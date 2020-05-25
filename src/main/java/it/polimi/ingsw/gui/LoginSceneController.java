@@ -15,7 +15,6 @@ import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.TextField;
 import javafx.stage.Stage;
 import javafx.collections.FXCollections;
-import sun.rmi.rmic.Main;
 
 import javax.swing.text.html.ImageView;
 import java.io.IOException;
