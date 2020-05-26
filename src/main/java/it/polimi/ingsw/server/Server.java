@@ -9,7 +9,7 @@ import static java.lang.Thread.sleep;
 
 public class Server {
     public static int serverPort;
-    public static void startServer() throws InterruptedException {
+    public void startServer() throws InterruptedException {
         ServerSocket serverSocket;
         ServerAccepter playersAccepter;
         while (true) {
@@ -21,7 +21,7 @@ public class Server {
             } catch (IOException e) { sleep(10000); }
         }
     }
-    public static void startServer(int port) throws InterruptedException {
+    public void startServer(int port) throws InterruptedException {
         serverPort = port;
         startServer();
     }

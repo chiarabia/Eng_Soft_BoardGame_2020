@@ -1,10 +1,10 @@
-package it.polimi.ingsw.client.CLI;
+package it.polimi.ingsw.client.cli;
 
 import it.polimi.ingsw.Position;
 import it.polimi.ingsw.client.ClientBoard;
 import it.polimi.ingsw.client.View;
-import it.polimi.ingsw.server.serializable.SerializableRequestAction;
-import it.polimi.ingsw.server.serializable.SerializableUpdateInitializeNames;
+import it.polimi.ingsw.client.ViewObserver;
+import it.polimi.ingsw.server.serializable.*;
 
 import java.util.*;
 import java.util.stream.Collectors;
@@ -12,6 +12,8 @@ import java.util.stream.Collectors;
 public class Terminal implements View {
     private final Scanner keyboard = new Scanner(System.in);
     private ClientBoard board;
+    private List<ViewObserver> observerList = new ArrayList<>();
+    public void addObserver(ViewObserver observer){observerList.add(observer);}
 
     public void setBoard(ClientBoard board) {
         this.board = board;
@@ -178,16 +180,94 @@ public class Terminal implements View {
         }
     }
 
-    public String askForName(){
-        return askForString(Terminal.Color.WHITE.set() + "What's your name? ");
+
+    public void askForAction(SerializableRequestAction object){
+        new Thread(()-> {
+            boolean isDome;
+            Position position;
+            int workerId = 0;
+            boolean move = false; //questi boolean contengono le intenzioni del player
+            //se il player decide di muoversi, move diventa true.
+            //se il payer non ha scelta, non gli viene permesso di scegliere.
+            boolean build = false;
+            //mostra al player tutte le informazioni sulle mosse che i suoi worker possono eseguire
+            displayRequestAction(object);
+
+            if (object.canDecline()) { //Se il player può terminare il turno
+                if (object.areBuildsEmpty() && object.areMovesEmpty()) {
+                    displayEndTurn("There are no more moves available. The turn is over.");
+                    for (int i = 0; i < observerList.size(); i++) observerList.get(i).onCompletedDecline(); //questo oggetto passa il turno
+                    return;
+                }
+                //chiedo al player se vuole terminare il turno
+                else if (askForDecline("Do you want to decline(y/n)? ")) {
+                    for (int i = 0; i < observerList.size(); i++) observerList.get(i).onCompletedDecline();
+                    return;
+                }
+            }
+
+            //chiedo quale lavoratore il player voglia usare solo se entrambi possono muoversi
+            if (object.canWorkerDoAction(1)&&object.canWorkerDoAction(2)) {
+                workerId = askForWorker(); //se entrambi i lavoratori possono fare qualche azione chiedo al player;
+            } else { //se no capisco io al posto del player qual è l'unico worker che può compiere un'azione
+                int i;
+                for(i = 1; i<=2; i++) {
+                    if (object.canWorkerDoAction(i)) {//in caso contrario non ho bisogno di chiedere al player
+                        workerId = i;
+                    }
+                }
+            }
+
+            if (!object.areMovesEmpty()&&!object.areBuildsEmpty()) { //Se il lavoratore può sia muoversi che costruire chiedo al player
+                while (!move && !build) {
+                    if (askForDecision("move")) move = true;
+                    if (askForDecision("build")) build = true;
+                }
+            } else { //se no scelgo per lui
+                if (object.areMovesEmpty()) build = true;
+                else move = true;
+            }
+
+            if (move) { //se posso solo muovermi  o il player ha scleto di muovermi
+                if (workerId==1) position = askForRightPosition(object.getWorker1Moves()); //chiedo al player la posizione
+                else position = askForRightPosition(object.getWorker2Moves());
+                for (int i = 0; i < observerList.size(); i++) observerList.get(i).onCompletedMove(position, workerId);
+            } else if (build) {
+                if (object.isCanForceDome()) isDome = askForDome(); //chiedo al player se vuole costruire una cupola
+                    //a qualsiasi livello, solo se può farlo con il potere della sua divinità
+                else isDome = false;
+                if (workerId==1) position = askForRightPosition(object.getWorker1Builds()); //chiedo dove il player voglia costruire
+                else position = askForRightPosition(object.getWorker2Builds());
+                for (int i = 0; i < observerList.size(); i++) observerList.get(i).onCompletedBuild(position, workerId, isDome);
+            }
+        }).start();
     }
 
-    public int askForNumOfPlayers(){
-        return askForInt("How many players? ");
+    public void askForGodPowerAndWorkersInitialPositions(List<String> godPowers){
+        new Thread(()-> {
+            String chosenGodPower = askForGodPower(godPowers);
+            List<Position> myWorkerPositions = askForWorkersInitialPositions();
+            for (int i = 0; i < observerList.size(); i++)
+                observerList.get(i).onCompletedRequestInitializeGame(chosenGodPower, myWorkerPositions);
+        }).start();
     }
 
-    // todo:sistemare
-    public Position askForRightPosition (Set<Position> positions) {
+    public void askForStartupInfos() {
+        new Thread(()-> {
+            String name = askForString(Terminal.Color.WHITE.set() + "What's your name? ");
+            int numOfPlayers = askForInt("How many players? ");
+            for (int i = 0; i < observerList.size(); i++) observerList.get(i).onCompletedStartup(name, numOfPlayers);
+        }).start();
+    }
+
+
+
+
+
+    // metodi riservati
+
+
+    private Position askForRightPosition (Set<Position> positions) {
         Position position = null;
         while (!isPositionCorrect(position, positions))
             position = askForPosition();
@@ -195,23 +275,24 @@ public class Terminal implements View {
         return new Position(position1.getX(), position1.getY(), positions.stream().filter(p -> p.getX() == position1.getX() && p.getY() == position1.getY()).map(Position::getZ).collect(Collectors.toList()).get(0));
     }
 
-    public boolean askForDecline(String request) {
+    private boolean askForDecline(String request) {
         return askForBoolean(request);
     }
 
-    public boolean askForDecision(String action){
+    private boolean askForDecision(String action){
         return askForBoolean("Do you want to "+action+"(y/n)? ");
     }
 
-    public int askForWorker(){
+    private int askForWorker(){
         return askForInt("worker id: ");
     }
 
-    public boolean askForDome(){
+    private boolean askForDome(){
         return askForBoolean("is dome (y/n): ");
     }
 
-    public String askForGodPower (List<String> godPowers){
+
+    private String askForGodPower (List<String> godPowers){
         String godPower = "";
         if(godPowers.size()==1) return godPowers.get(0);
         while (true) {
@@ -223,7 +304,7 @@ public class Terminal implements View {
         return godPower;
     }
 
-    public List <Position> askForWorkersInitialPositions (){
+    private List <Position> askForWorkersInitialPositions (){
         int myWorker1x = askForInt("Worker 1 x: ");
         int myWorker1y = askForInt("Worker 1 y: ");
         int myWorker2x = askForInt("Worker 2 x: ");
@@ -234,15 +315,11 @@ public class Terminal implements View {
         return myWorkerPositions;
     }
 
-    public Position askForPosition(){
+    private Position askForPosition(){
         int x = askForInt("x: ");
         int y = askForInt("y: ");
         return new Position(x, y, 0);
     }
-
-
-
-    // metodi riservati
 
     private int askForInt(String request){
         try {

@@ -30,7 +30,7 @@ public class ServerAccepter extends Thread {
                 })).start();
             }
         } catch (IOException e) {
-            try { Server.startServer(); } catch (InterruptedException ex) {}
+            try { (new Server()).startServer(serverSocket.getLocalPort()); } catch (InterruptedException ex) {}
         }
     }
     public ServerAccepter(ServerSocket serverSocket){
