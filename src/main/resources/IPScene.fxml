@@ -8,7 +8,7 @@
 <?import javafx.scene.layout.FlowPane?>
 
 <?import javafx.scene.layout.StackPane?>
-<StackPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="712.9" minWidth="1282.0" prefHeight="712.9" prefWidth="1282.0" style="-fx-background-color:#31c3fd;" stylesheets="CSS/MatchSetup.css" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="it.polimi.ingsw.gui.IPSceneController">
+<StackPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="712.9" minWidth="1282.0" prefHeight="712.9" prefWidth="1282.0" style="-fx-background-color:#31c3fd;" stylesheets="CSS/MatchSetup.css" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="it.polimi.ingsw.client.gui.IPSceneController">
 <BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="712.9" minWidth="1282.0" prefHeight="712.9" prefWidth="1282.0" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" >
 
    <center>
