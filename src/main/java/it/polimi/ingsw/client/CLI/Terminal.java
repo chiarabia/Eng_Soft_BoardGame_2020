@@ -14,7 +14,6 @@ public class Terminal implements View {
     private ClientBoard board;
     private List<ViewObserver> observerList = new ArrayList<>();
     public void addObserver(ViewObserver observer){observerList.add(observer);}
-
     public void setBoard(ClientBoard board) {
         this.board = board;
     }
@@ -118,6 +117,10 @@ public class Terminal implements View {
 
     public void displayMessage(String string){
         System.out.println(string);
+    }
+
+    public void displayErrorMessage(){
+        displayMessage(Terminal.Color.RED.set() + "\nOops... something went wrong" + Terminal.Color.RED.set());
     }
 
     public void displayStartUp () {
@@ -351,7 +354,7 @@ public class Terminal implements View {
         return collection.stream().anyMatch(x -> x.getX() == position.getX() && x.getY() == position.getY());
     }
 
-    public enum Color {
+    private enum Color {
         RESET("\u001B[0m"),
         BLACK("\u001B[30m"),
         RED("\u001B[31m"),
