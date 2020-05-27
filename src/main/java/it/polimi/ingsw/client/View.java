@@ -15,7 +15,8 @@ public interface View {
 
     // metodi di rappresentazione
     void displayPlayerNames(SerializableUpdateInitializeNames names);
-    void displayMessage(String string);
+    void displayMessage(String message);
+    void displayErrorMessage();
     void displayStartUp ();
     void displayCells (Set< Position > positions);
     void displayTurn();
@@ -28,30 +29,7 @@ public interface View {
     void askForGodPowerAndWorkersInitialPositions(List<String> godPowers);
     void askForStartupInfos();
 
-    enum Color{
-        RESET("\u001B[0m"),
-        BLACK("\u001B[30m"),
-        RED("\u001B[31m"),
-        GREEN("\u001B[32m"),
-        YELLOW("\u001B[33m"),
-        BLUE("\u001B[34m"),
-        PURPLE("\u001B[35m"),
-        CYAN("\u001B[36m"),
-        WHITE("\u001B[37m");
-        private String set;
-
-        Color(String set) {
-            this.set = set;
-        }
-
-        public String set() {
-            return set;
-        }
-    }
-
     /*public void updateAfterBuild (); // il worker ha costrito etc...
-
     public void updateAfterMove (); //il player si è mosso
-
     public void communicateWhatActionIsOptional();*/
 }

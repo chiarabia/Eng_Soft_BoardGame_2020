@@ -33,7 +33,7 @@ public class Client implements ViewObserver {
     }
 
     public void onError(){
-        view.displayMessage(Terminal.Color.RED.set() + "Oops... something went wrong");
+        view.displayErrorMessage();
     }
 
     public void onUpdateInitializeGame(SerializableUpdateInitializeGame object){
@@ -50,7 +50,7 @@ public class Client implements ViewObserver {
         view.displayBoard();
     }
 
-    public void onRequestInitializeGame(SerializableRequestInitializeGame object) throws IOException {
+    public void onRequestInitializeGame(SerializableRequestInitializeGame object) {
         view.askForGodPowerAndWorkersInitialPositions(object.getGodPowers());
     }
 
