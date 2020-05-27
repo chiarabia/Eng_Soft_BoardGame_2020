@@ -1,4 +1,4 @@
-package it.polimi.ingsw.client.cli;
+package it.polimi.ingsw.cli;
 
 import it.polimi.ingsw.Position;
 import it.polimi.ingsw.client.ClientBoard;

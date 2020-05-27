@@ -4,10 +4,10 @@ package it.polimi.ingsw.client;
 //      Ͱ-----------> CLIENTBUILDING [5][5]
 
 import it.polimi.ingsw.Position;
-import it.polimi.ingsw.client.cli.Terminal;
+import it.polimi.ingsw.cli.Terminal;
 import it.polimi.ingsw.exceptions.GameEndedException;
 import it.polimi.ingsw.server.serializable.*;
-import java.io.IOException;
+
 import java.util.*;
 
 
