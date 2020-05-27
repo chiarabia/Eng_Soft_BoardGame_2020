@@ -22,7 +22,10 @@ public class ServerAccepter extends Thread {
                         int numOfPlayers = Character.getNumericValue(message.getMessage().charAt(0));
                         if (numOfPlayers == 2) waitingList = twoPlayersWaitingList;
                         else if (numOfPlayers == 3) waitingList = threePlayersWaitingList;
-                        else return;
+                        else {
+                            socket.close();
+                            return;
+                        }
                         waitingList.addToPlayersList(socket);
                         List<Socket> exportedList = waitingList.exportPlayersList();
                         if (exportedList!=null) (new ServerThread(exportedList, waitingList, numOfPlayers)).start();

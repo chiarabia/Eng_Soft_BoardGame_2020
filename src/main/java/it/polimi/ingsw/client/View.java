@@ -28,8 +28,4 @@ public interface View {
     void askForAction(SerializableRequestAction object);
     void askForGodPowerAndWorkersInitialPositions(List<String> godPowers);
     void askForStartupInfos();
-
-    /*public void updateAfterBuild (); // il worker ha costrito etc...
-    public void updateAfterMove (); //il player si è mosso
-    public void communicateWhatActionIsOptional();*/
 }
