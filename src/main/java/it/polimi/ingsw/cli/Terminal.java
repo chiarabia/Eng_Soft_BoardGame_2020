@@ -1,10 +1,11 @@
-package it.polimi.ingsw.client.CLI;
+package it.polimi.ingsw.cli;
 
 import it.polimi.ingsw.Position;
 import it.polimi.ingsw.client.ClientBoard;
+import it.polimi.ingsw.client.ClientPlayer;
 import it.polimi.ingsw.client.View;
-import it.polimi.ingsw.server.serializable.SerializableRequestAction;
-import it.polimi.ingsw.server.serializable.SerializableUpdateInitializeNames;
+import it.polimi.ingsw.client.ViewObserver;
+import it.polimi.ingsw.server.serializable.*;
 
 import java.util.*;
 import java.util.stream.Collectors;
@@ -12,12 +13,13 @@ import java.util.stream.Collectors;
 public class Terminal implements View {
     private final Scanner keyboard = new Scanner(System.in);
     private ClientBoard board;
-
+    private List<ViewObserver> observerList = new ArrayList<>();
+    public void addObserver(ViewObserver observer){observerList.add(observer);}
     public void setBoard(ClientBoard board) {
         this.board = board;
     }
 
-    public void displayPlayerNames(SerializableUpdateInitializeNames names){
+    public synchronized void displayPlayerNames(SerializableUpdateInitializeNames names){
         System.out.print("You are playing with ");
         boolean firstName = true;
         for (int id = 1; id <= board.numOfPlayers(); id++) {
@@ -31,7 +33,7 @@ public class Terminal implements View {
         System.out.println(".");
     }
 
-    public void displayBoard () {
+    public synchronized void displayBoard () {
         System.out.print(Terminal.Color.WHITE.set() + "   ╔═════╤═════╤═════╤═════╤═════╗\n");
         for (int j = 4; j >= 0; j--) {
             String element = "║";
@@ -114,24 +116,28 @@ public class Terminal implements View {
         System.out.print(Terminal.Color.WHITE.set());
     }
 
-    public void displayMessage(String string){
+    public synchronized void displayMessage(String string){
         System.out.println(string);
     }
 
-    public void displayStartUp () {
+    public synchronized void displayErrorMessage(){
+        displayMessage(Terminal.Color.RED.set() + "Oops... something went wrong" + Terminal.Color.WHITE.set());
+    }
+
+    public synchronized void displayStartUp () {
         System.out.println(Terminal.Color.BLUE.set());
         System.out.println("  ╔══ ╔═╗ ╖ ╓ ═╦═ ╔═╗ ╔═╗ ╥ ╖ ╓ ╥ ®");
         System.out.println("  ╚═╗ ╠═╣ ║\\║  ║  ║ ║ ╠\\╝ ║ ║\\║ ║");
         System.out.println("  ══╝ ╜ ╙ ╜ ╙  ╨  ╚═╝ ╜ \\ ╨ ╜ ╙ ╨\n");
     }
 
-    public void displayCells (Set < Position > positions) {
+    public synchronized void displayCells (Set < Position > positions) {
         for (Position p : positions)
             System.out.print("(" + p.getX() + ", " + p.getY() + ") ");
         System.out.println();
     }
 
-    public void displayTurn(){
+    public synchronized void displayTurn(){
         int playerTurnId = board.getPlayerTurnId();
         if (playerTurnId == board.getMyPlayerId()) System.out.println("You are playing");
         else
@@ -139,12 +145,12 @@ public class Terminal implements View {
         return;
     }
 
-    public void displayEndTurn(String message){
+    public synchronized void displayEndTurn(String message){
         System.out.println(message);
 
     }
 
-    public void displayRequestAction(SerializableRequestAction object){
+    public synchronized void displayRequestAction(SerializableRequestAction object){
         if (object.getWorker1Moves().size()>0) {
             System.out.print("Worker 1 possible moves: ");
             displayCells((object).getWorker1Moves());
@@ -178,16 +184,94 @@ public class Terminal implements View {
         }
     }
 
-    public String askForName(){
-        return askForString(Terminal.Color.WHITE.set() + "What's your name? ");
+
+    public synchronized void askForAction(SerializableRequestAction object){
+        new Thread(()-> {
+            boolean isDome;
+            Position position;
+            int workerId = 0;
+            boolean move = false; //questi boolean contengono le intenzioni del player
+            //se il player decide di muoversi, move diventa true.
+            //se il payer non ha scelta, non gli viene permesso di scegliere.
+            boolean build = false;
+            //mostra al player tutte le informazioni sulle mosse che i suoi worker possono eseguire
+            displayRequestAction(object);
+
+            if (object.canDecline()) { //Se il player può terminare il turno
+                if (object.areBuildsEmpty() && object.areMovesEmpty()) {
+                    displayEndTurn("There are no more moves available. The turn is over.");
+                    for (int i = 0; i < observerList.size(); i++) observerList.get(i).onCompletedDecline(); //questo oggetto passa il turno
+                    return;
+                }
+                //chiedo al player se vuole terminare il turno
+                else if (askForDecline()) {
+                    for (int i = 0; i < observerList.size(); i++) observerList.get(i).onCompletedDecline();
+                    return;
+                }
+            }
+
+            //chiedo quale lavoratore il player voglia usare solo se entrambi possono muoversi
+            if (object.canWorkerDoAction(1)&&object.canWorkerDoAction(2)) {
+                workerId = askForWorker(); //se entrambi i lavoratori possono fare qualche azione chiedo al player;
+            } else { //se no capisco io al posto del player qual è l'unico worker che può compiere un'azione
+                int i;
+                for(i = 1; i<=2; i++) {
+                    if (object.canWorkerDoAction(i)) {//in caso contrario non ho bisogno di chiedere al player
+                        workerId = i;
+                    }
+                }
+            }
+
+            if (!object.areMovesEmpty()&&!object.areBuildsEmpty()) { //Se il lavoratore può sia muoversi che costruire chiedo al player
+                while (!move && !build) {
+                    if (askForDecision("move")) move = true;
+                    if (askForDecision("build")) build = true;
+                }
+            } else { //se no scelgo per lui
+                if (object.areMovesEmpty()) build = true;
+                else move = true;
+            }
+
+            if (move) { //se posso solo muovermi  o il player ha scleto di muovermi
+                if (workerId==1) position = askForRightPosition(object.getWorker1Moves()); //chiedo al player la posizione
+                else position = askForRightPosition(object.getWorker2Moves());
+                for (int i = 0; i < observerList.size(); i++) observerList.get(i).onCompletedMove(position, workerId);
+            } else if (build) {
+                if (object.isCanForceDome()) isDome = askForDome(); //chiedo al player se vuole costruire una cupola
+                    //a qualsiasi livello, solo se può farlo con il potere della sua divinità
+                else isDome = false;
+                if (workerId==1) position = askForRightPosition(object.getWorker1Builds()); //chiedo dove il player voglia costruire
+                else position = askForRightPosition(object.getWorker2Builds());
+                for (int i = 0; i < observerList.size(); i++) observerList.get(i).onCompletedBuild(position, workerId, isDome);
+            }
+        }).start();
     }
 
-    public int askForNumOfPlayers(){
-        return askForInt("How many players? ");
+    public synchronized void askForGodPowerAndWorkersInitialPositions(List<String> godPowers){
+        new Thread(()-> {
+            String chosenGodPower = askForGodPower(godPowers);
+            List<Position> myWorkerPositions = askForWorkersInitialPositions();
+            for (int i = 0; i < observerList.size(); i++)
+                observerList.get(i).onCompletedRequestInitializeGame(chosenGodPower, myWorkerPositions);
+        }).start();
     }
 
-    // todo:sistemare
-    public Position askForRightPosition (Set<Position> positions) {
+    public synchronized void askForStartupInfos() {
+        new Thread(()-> {
+            String name = askForString(Terminal.Color.WHITE.set() + "What's your name? ");
+            int numOfPlayers = askForInt("How many players? ");
+            for (int i = 0; i < observerList.size(); i++) observerList.get(i).onCompletedStartup(name, numOfPlayers);
+        }).start();
+    }
+
+
+
+
+
+    // metodi riservati
+
+
+    private synchronized Position askForRightPosition (Set<Position> positions) {
         Position position = null;
         while (!isPositionCorrect(position, positions))
             position = askForPosition();
@@ -195,23 +279,24 @@ public class Terminal implements View {
         return new Position(position1.getX(), position1.getY(), positions.stream().filter(p -> p.getX() == position1.getX() && p.getY() == position1.getY()).map(Position::getZ).collect(Collectors.toList()).get(0));
     }
 
-    public boolean askForDecline(String request) {
-        return askForBoolean(request);
+    private synchronized boolean askForDecline() {
+        return askForBoolean("Do you want to decline(y/n)? ");
     }
 
-    public boolean askForDecision(String action){
+    private synchronized boolean askForDecision(String action){
         return askForBoolean("Do you want to "+action+"(y/n)? ");
     }
 
-    public int askForWorker(){
+    private synchronized int askForWorker(){
         return askForInt("worker id: ");
     }
 
-    public boolean askForDome(){
+    private synchronized boolean askForDome(){
         return askForBoolean("is dome (y/n): ");
     }
 
-    public String askForGodPower (List<String> godPowers){
+
+    private synchronized String askForGodPower (List<String> godPowers){
         String godPower = "";
         if(godPowers.size()==1) return godPowers.get(0);
         while (true) {
@@ -223,42 +308,53 @@ public class Terminal implements View {
         return godPower;
     }
 
-    public List <Position> askForWorkersInitialPositions (){
-        int myWorker1x = askForInt("Worker 1 x: ");
-        int myWorker1y = askForInt("Worker 1 y: ");
-        int myWorker2x = askForInt("Worker 2 x: ");
-        int myWorker2y = askForInt("Worker 2 y: ");
-        List<Position> myWorkerPositions = new ArrayList<>();
-        myWorkerPositions.add(new Position(myWorker1x, myWorker1y, 0));
-        myWorkerPositions.add(new Position(myWorker2x, myWorker2y, 0));
-        return myWorkerPositions;
+    private synchronized List <Position> askForWorkersInitialPositions (){
+        while (true) {
+            System.out.println("Worker 1");
+            Position worker1Position = askForPosition();
+            System.out.println("Worker 2");
+            Position worker2Position = askForPosition();
+            int myWorker1x = worker1Position.getX();
+            int myWorker1y = worker1Position.getY();
+            int myWorker2x = worker2Position.getX();
+            int myWorker2y = worker2Position.getY();
+            List<Position> myWorkerPositions = new ArrayList<>();
+            myWorkerPositions.add(new Position(myWorker1x, myWorker1y, 0));
+            myWorkerPositions.add(new Position(myWorker2x, myWorker2y, 0));
+            boolean isValid = true;
+            for (int i = 1; i < board.numOfPlayers(); i++) {
+                if (board.getPlayer(i) != null) {
+                    if  (
+                        (board.getPlayer(i).getWorker(1).getX() == myWorker1x && board.getPlayer(i).getWorker(1).getY() == myWorker1y) ||
+                        (board.getPlayer(i).getWorker(2).getX() == myWorker1x && board.getPlayer(i).getWorker(2).getY() == myWorker1y) ||
+                        (board.getPlayer(i).getWorker(1).getX() == myWorker2x && board.getPlayer(i).getWorker(1).getY() == myWorker2y) ||
+                        (board.getPlayer(i).getWorker(2).getX() == myWorker2x && board.getPlayer(i).getWorker(2).getY() == myWorker2y)
+                        ) isValid = false;
+                }
+            }
+            if (isValid) return myWorkerPositions;
+        }
     }
 
-    public Position askForPosition(){
+    private synchronized Position askForPosition(){
         int x = askForInt("x: ");
         int y = askForInt("y: ");
         return new Position(x, y, 0);
     }
 
-
-
-    // metodi riservati
-
-    private int askForInt(String request){
+    private synchronized int askForInt(String request){
         try {
             System.out.print(request);
-            int fromKeyboard = keyboard.nextInt();
-            return fromKeyboard;
+            return keyboard.nextInt();
         } catch(Exception e){return 0;}
     }
 
-    private String askForString(String request){
+    private synchronized String askForString(String request){
         System.out.print(request);
-        String fromKeyboard = keyboard.next();
-        return fromKeyboard;
+        return keyboard.next();
     }
 
-    private boolean askForBoolean(String request){
+    private synchronized boolean askForBoolean(String request){
         String fromKeyboard;
         while (true) {
             System.out.print(request);
@@ -269,12 +365,12 @@ public class Terminal implements View {
     }
 
 
-    private boolean isPositionCorrect (Position position, Set < Position > collection){
+    private synchronized boolean isPositionCorrect (Position position, Set < Position > collection){
         if (position == null) return false;
         return collection.stream().anyMatch(x -> x.getX() == position.getX() && x.getY() == position.getY());
     }
 
-    public enum Color {
+    private enum Color {
         RESET("\u001B[0m"),
         BLACK("\u001B[30m"),
         RED("\u001B[31m"),

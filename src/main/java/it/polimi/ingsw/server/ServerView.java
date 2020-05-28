@@ -49,7 +49,7 @@ public class ServerView implements GameObserver{
 
     public void startNewEventGenerator(EventGenerator eventGenerator){
         eventGenerators.add(eventGenerator);
-        for (ProxyObserver p : observerList) eventGenerator.addObserver(p);
+        for (int i = 0; i< observerList.size(); i++) eventGenerator.addObserver(observerList.get(i));
         eventGenerators.get(eventGenerators.size()-1).start();
     }
 
@@ -59,7 +59,7 @@ public class ServerView implements GameObserver{
             startNewEventGenerator(new ServerAsyncReceiver(s, playerId));
             playerId++;
         }
-        for (ProxyObserver p : observerList) p.onInitialization();
+        for (int i = 0; i< observerList.size(); i++)  observerList.get(i).onInitialization();
     }
 
     public void stopLastEventGenerator(){
