@@ -20,25 +20,37 @@ import java.util.ResourceBundle;
 
 public class LoginSceneController implements Initializable {
 
-    Stage stage;
+    MainStage main = new MainStage();
 
     @FXML
-    private Button buttonClicked;
+    private Button startMatchButton;
     @FXML
-    private TextField playerName;
+    private TextField playerNameTextField;
     @FXML
-    private ChoiceBox numberOfPlayers;
-    @FXML
-    private ImageView logo;
+    private ChoiceBox numberOfPlayersChoiceBox;
+
+    private int numberOfPlayers = 0;
+    private String playerName;
+
+    public LoginSceneController() throws IOException {
+    }
 
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
         //Sets the options for the Choice Box to 2 or 3 players
-        numberOfPlayers.getItems().addAll("2", "3");
+        numberOfPlayersChoiceBox.getItems().addAll("2", "3");
+        numberOfPlayersChoiceBox.setOnAction(actionEvent -> {
+            numberOfPlayers = Integer.valueOf((String) numberOfPlayersChoiceBox.getValue());
+        });
+
+        startMatchButton.setOnAction(actionEvent -> {
+            playerName = playerNameTextField.getText();
+            main.setPlayerNameAndNumberOfPlayer(numberOfPlayers,playerName);
+        });
     }
 
-    // this method changes the scene to the Board Scene
+/*    // this method changes the scene to the Board Scene
     public void openSecondScene(ActionEvent event){
         try {
             FXMLLoader loader = new FXMLLoader(getClass().getClassLoader().getResource("BoardScene.fxml"));
@@ -56,5 +68,5 @@ public class LoginSceneController implements Initializable {
         } catch (IOException ex){
             System.err.println(ex);
         }
-    }
+    }*/
 }

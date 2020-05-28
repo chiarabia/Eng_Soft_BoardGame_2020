@@ -26,6 +26,6 @@ public interface View {
 
     // metodi di richiesta input tastiera/mouse
     void askForAction(SerializableRequestAction object);
-    void askForGodPowerAndWorkersInitialPositions(List<String> godPowers);
+    void askForGodPowerAndWorkersInitialPositions(List<GodCard> godCards);
     void askForStartupInfos();
 }

@@ -4,10 +4,13 @@ package it.polimi.ingsw.client;
 //      Ͱ-----------> CLIENTBUILDING [5][5]
 
 import it.polimi.ingsw.Position;
-import it.polimi.ingsw.cli.Terminal;
+import it.polimi.ingsw.client.cli.Terminal;
+import it.polimi.ingsw.client.gui.GUI;
 import it.polimi.ingsw.exceptions.GameEndedException;
 import it.polimi.ingsw.server.serializable.*;
+import org.json.simple.parser.ParseException;
 
+import java.io.IOException;
 import java.util.*;
 
 
@@ -17,12 +20,13 @@ public class Client implements ViewObserver {
     private ClientCommunicator communicator;
     private int port;
     private String IP;
+    GodCardsManager godCardsManager = new GodCardsManager();
 
     public void startClient(int port, String IP) {
         try {
             this.port = port;
             this.IP = IP;
-            view = new Terminal();
+            view = new GUI();
             view.addObserver(this);
             view.displayStartUp(); //Questo metodo fa partire la Cli e la Gui (nella cli fa partire l'ASCII Art)
             view.askForStartupInfos();
@@ -50,8 +54,12 @@ public class Client implements ViewObserver {
         view.displayBoard();
     }
 
-    public void onRequestInitializeGame(SerializableRequestInitializeGame object) {
-        view.askForGodPowerAndWorkersInitialPositions(object.getGodPowers());
+    public void onRequestInitializeGame(SerializableRequestInitializeGame object) throws IOException, ParseException {
+        List<GodCard> godCards = null;
+        for(String s : object.getGodPowers()){
+            godCards.add(godCardsManager.getCard(s));
+        }
+        view.askForGodPowerAndWorkersInitialPositions(godCards);
     }
 
     public void onUpdateDisconnection(SerializableUpdateDisconnection object) throws GameEndedException {
@@ -117,7 +125,8 @@ public class Client implements ViewObserver {
 
     public void onCompletedStartup (String myName, int numOfPlayers) {
         try {
-            board = new ClientBoard(numOfPlayers); //crea una board con 3 player, è copia di quella del model, ma si salva solo le informazioni della caselle con la Z maggiore, quindi al massimo mi pare 25 caselle
+            board = new ClientBoard(numOfPlayers); //crea una board con 3 player, è copia di quella del model, ma si salva solo le informazioni della caselle con la Z maggiore,
+                                                    // quindi al massimo mi pare 25 caselle
             view.setBoard(board); //passa il riferimento alla board creata alla View
             communicator = new ClientCommunicator(port, IP);
             communicator.addObserver(this);
