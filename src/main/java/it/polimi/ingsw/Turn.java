@@ -158,13 +158,14 @@ public class Turn {
     }
 
     public boolean isBuildOptional (Set worker1builds, Set worker2builds) {
-        return (this.isBuildAfterMove()&&
+        return ((this.isBuildAfterMove()||
+                !this.isMoveBeforeBuild())&&
                 !(worker1builds.isEmpty()&&worker2builds.isEmpty()));
     }
 
     public boolean isMoveOptional (Set worker1moves, Set worker2moves) {
         return (this.isMoveBeforeBuild()&&
-                !(worker1moves.isEmpty()&&worker1moves.isEmpty()));
+                !(worker1moves.isEmpty()&&worker2moves.isEmpty()));
     }
 
 }

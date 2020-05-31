@@ -1,12 +1,5 @@
 package it.polimi.ingsw.effects.build;
 
-import static org.junit.jupiter.api.Assertions.assertTrue;
-import static org.junit.jupiter.api.Assertions.assertFalse;
-import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotEquals;
-
 import it.polimi.ingsw.*;
 import it.polimi.ingsw.effects.consolidateBuild.StandardConsolidateBuild;
 import it.polimi.ingsw.effects.consolidateMove.StandardConsolidateMove;
@@ -18,7 +11,9 @@ import org.junit.jupiter.api.Test;
 import java.util.HashSet;
 import java.util.Set;
 
-public class BuildBeforeMoveTest {
+import static org.junit.jupiter.api.Assertions.*;
+
+public class BuildBeforeMoveTest{
     int builds = 1;
     BuildBeforeMove buildBeforeMove = new BuildBeforeMove(builds);
     Cell workerCell;
@@ -122,7 +117,32 @@ public class BuildBeforeMoveTest {
 
 
         assertEquals(buildBeforeMove.build(destinationCell.getPosition(), board, turn), collect );
+    }
 
+    @Test
+    void playerShouldNotBeAbleToMoveTwiceBeforeMove () {
+        workerCell = board.getCell(0,0,0);
+        workerCell.setWorker(worker);
+
+        new StandardConsolidateBuild().buildUp(board.getCell(1,1,0).getPosition(), board, false);
+        turn.updateTurnInfoAfterBuild(board.getCell(1,1,0).getPosition());
+
+        Set <Position> col = new HashSet<>();
+        /*collect.add(new Position (1,1,0));
+        collect.add(new Position (1,2,0));
+        collect.add(new Position (1,3,0));
+        collect.add(new Position (2,3,0));
+        collect.add(new Position (3,3,0));
+        collect.add(new Position (3,2,0));
+        collect.add(new Position (3,1,0));
+        collect.add(new Position (2,1,0));*/
+
+
+        assertAll("noMoveUpAfterBuild",
+                () -> assertTrue(!turn.isMoveBeforeBuild() && turn.isBuildBeforeMove()),
+                () -> assertTrue(turn.getBuildTimes()>0),
+                () -> assertFalse(buildBeforeMove.checkBuildConditions(workerCell, turn)),
+                () -> assertEquals(buildBeforeMove.build(workerCell.getPosition(), board, turn), col));
     }
 
 }

@@ -8,6 +8,8 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotEquals;
 
 import it.polimi.ingsw.*;
+import it.polimi.ingsw.effects.consolidateBuild.StandardConsolidateBuild;
+import it.polimi.ingsw.effects.consolidateMove.StandardConsolidateMove;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestTemplate;

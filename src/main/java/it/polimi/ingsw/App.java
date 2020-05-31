@@ -13,7 +13,7 @@ import java.io.IOException;
 public class App
 {
     public static void main( String[] args ) throws InterruptedException {
-       //(new Server()).startServer(555);
-       (new Client()).startClient(555,  "localhost");
+        (new Server()).startServer(555);
+        (new Client()).startClient(555,  "localhost");
     }
 }

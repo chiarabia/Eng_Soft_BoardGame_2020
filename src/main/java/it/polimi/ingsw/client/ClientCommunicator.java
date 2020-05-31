@@ -79,6 +79,9 @@ public class ClientCommunicator extends Thread {
         if (object instanceof SerializableUpdateTurn) { //messaggio che ricevo quando cambio il turno
             for(int i = 0; i<observerList.size(); i++)observerList.get(i).onUpdateTurn((SerializableUpdateTurn) object);
         }
+        if (object instanceof SerializableUpdateInitializeNames){
+            for(int i = 0; i<observerList.size(); i++)observerList.get(i).onUpdateInitializeNames((SerializableUpdateInitializeNames) object);
+        }
         if (object instanceof SerializableUpdateLoser) { //messaggio che mosra che un gicoatore ah perso
             for(int i = 0; i<observerList.size(); i++)observerList.get(i).onUpdateLoser ((SerializableUpdateLoser) object);
         }
@@ -87,6 +90,17 @@ public class ClientCommunicator extends Thread {
         }
         if (object instanceof SerializableUpdateDisconnection) { //messaggio se salta la connessione
             for(int i = 0; i<observerList.size(); i++)observerList.get(i).onUpdateDisconnection((SerializableUpdateDisconnection) object);
+        }
+        if (object instanceof Message){
+            if (((Message) object).getMessage().equals("Hello")) {
+                for (int i = 0; i < observerList.size(); i++) observerList.get(i).onHello();
+            }
+            else if (((Message) object).getMessage().equals("ERROR_NOT_VALID_NAME")) {
+                for (int i = 0; i < observerList.size(); i++) observerList.get(i).onNotValidNameError();
+            }
+            else {
+                for(int i = 0; i<observerList.size(); i++)observerList.get(i).onPlayerIdAssigned(((Message) object).getMessage());
+            }
         }
     }
 }
