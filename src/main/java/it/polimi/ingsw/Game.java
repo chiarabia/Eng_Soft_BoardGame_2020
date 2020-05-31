@@ -1,15 +1,11 @@
 package it.polimi.ingsw;
 
 import it.polimi.ingsw.effects.GodPower;
-import it.polimi.ingsw.effects.GodPowerManager;
-import it.polimi.ingsw.exceptions.ClientStoppedWorkingException;
 import it.polimi.ingsw.server.GameObserver;
 import it.polimi.ingsw.server.serializable.*;
-import org.json.simple.parser.ParseException;
-import java.io.IOException;
+
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Set;
 
 
 public class Game {
@@ -20,17 +16,50 @@ public class Game {
     private List<GodPower> godPowers;
     private List<GameObserver> observerList;
 
+
     public int getNumOfPlayers() {return numOfPlayers;}
     public Board getBoard() { return board; }
     public Turn getTurn() { return turn; }
     public List<Player> getPlayers() { return players; }
     public List<GodPower> getGodPowers() { return godPowers; }
+    public Player getPlayer(int playerId) {
+        return searchMethod(playerId, getPlayers());
+    }
+    public GodPower getPlayerGodPower(int playerId) {
+        return searchMethod(playerId, getGodPowers());
+    }
+    public Worker getPlayerWorker (int playerId, int workerId) {
+        return getBoard().getWorkerCell(getPlayer(playerId), workerId).getWorker();
+    }
+    public Position getWorkerPosition (int playerId, int workerId) {
+        return getBoard().getWorkerCell(getPlayer(playerId), workerId).getPosition();
+    }
+
+    //This Method reflects the private implementation of players and godPowers list.
+    private <T> T searchMethod (int playerId, List<T> list) {
+       return list.get(correctIndex(playerId));
+    }
+
+    //Per convenzione interna i player ed i loro poteri si trovano in posizione 0,1,2 quindi per
+    //trovare il relativo player conoscendo l'id basta fare -1. Quando un player viene eliminato, il suo riferimento viene posto a null
+    //la dimensione delle liste non cambia.
+    private int correctIndex (int playerId) {
+        return playerId-1;
+    }
 
     public void setNumOfPlayers(int numOfPlayers) {this.numOfPlayers = numOfPlayers;}
     public void setBoard(Board board) {this.board = board; }
     public void setTurn(Turn turn) {this.turn = turn;}
     public void setPlayers(List<Player> players) {this.players = players;}
     public void setGodPowers(List<GodPower> godPowers) {this.godPowers = godPowers;}
+
+    public void removePlayer (int playerId) {
+        getPlayers().set(correctIndex(playerId), null);
+    }
+
+    public void removeGodPower (int playerId) {
+        getGodPowers().set(correctIndex(playerId), null);
+    }
 
     public void addObserver(GameObserver observer){observerList.add(observer);}
 

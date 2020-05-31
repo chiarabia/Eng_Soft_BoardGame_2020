@@ -19,6 +19,8 @@ public class Terminal implements View {
         this.board = board;
     }
 
+    public void displayWaitingRoom(){}
+
     public synchronized void displayPlayerNames(SerializableUpdateInitializeNames names){
         System.out.print("You are playing with ");
         boolean firstName = true;
@@ -54,37 +56,17 @@ public class Terminal implements View {
                         }
                     }
                 }
+                System.out.print(Terminal.Color.WHITE.set() + element);
                 if (isThereAWorker) {
-                    System.out.print(Terminal.Color.WHITE.set() + element + " ");
-                    switch (playerId) {
-                        case 1:
-                            System.out.print(Terminal.Color.RED.set());
-                            break;
-                        case 2:
-                            System.out.print(Terminal.Color.YELLOW.set());
-                            break;
-                        case 3:
-                            System.out.print(Terminal.Color.BLUE.set());
-                            break;
-                    }
-                    System.out.print(" ■  ");
-                } else if (board.getCell(i, j) == null) System.out.print(Terminal.Color.WHITE.set() + element + "     ");
-                else if (board.getCell(i, j).isDome())
-                    System.out.print(Terminal.Color.WHITE.set() + element + " " + Terminal.Color.BLUE.set() + "▲▲▲ ");
-                else {
-                    System.out.print(Terminal.Color.WHITE.set() + element + Terminal.Color.BLUE.set());
-                    switch (board.getCell(i, j).getLevel()) {
-                        case 0:
-                            System.out.print(" ░░░ ");
-                            break;
-                        case 1:
-                            System.out.print(" ▒▒▒ ");
-                            break;
-                        case 2:
-                            System.out.print(" ▓▓▓ ");
-                            break;
-                    }
-                }
+                    System.out.print(" ");
+                    showBuildingUnderWorker (i, j);
+                    setColor(playerId);
+                    System.out.print("■");
+                    showBuildingUnderWorker (i, j);
+                    System.out.print(" ");
+                } else if (board.getCell(i, j) == null) System.out.print("     ");
+                else if (board.getCell(i, j).isDome()) System.out.print(" " + Terminal.Color.BLUE.set() + "▲▲▲ ");
+                else showBuilding(i, j);
                 element = "│";
             }
             System.out.print(Terminal.Color.WHITE.set() + "║");
@@ -92,62 +74,44 @@ public class Terminal implements View {
                 System.out.print(Terminal.Color.WHITE.set() + "\n   ╚═════╧═════╧═════╧═════╧═════╝\n      0     1     2     3     4");
             else System.out.print(Terminal.Color.WHITE.set() + "\n   ╟─────┼─────┼─────┼─────┼─────╢\n");
         }
-        System.out.println();
-        for (int i = 0; i < board.numOfPlayers(); i++) {
-            switch (i) {
-                case 0:
-                    System.out.print(Terminal.Color.RED.set());
-                    break;
-                case 1:
-                    System.out.print(Terminal.Color.YELLOW.set());
-                    break;
-                case 2:
-                    System.out.print(Terminal.Color.BLUE.set());
-                    break;
-            }
-            System.out.print(board.getPlayer(i + 1).getPlayerName());
-            if (!board.getPlayer(i + 1).hasLost() && board.getPlayer(i + 1).getGodPowerName() != null) {
-                System.out.print(": Worker 1 (" + board.getPlayer(i + 1).getWorker(1).getX() + ", " + board.getPlayer(i + 1).getWorker(1).getY() + ")");
-                System.out.print(", Worker 2 (" + board.getPlayer(i + 1).getWorker(2).getX() + ", " + board.getPlayer(i + 1).getWorker(2).getY() + ")");
-                System.out.println(", " + board.getPlayer(i + 1).getGodPowerName());
-            } else if (board.getPlayer(i + 1).getGodPowerName() == null) System.out.println();
-            else System.out.println(" has lost");
-        }
-        System.out.print(Terminal.Color.WHITE.set());
+        displayPlayersController();
     }
 
-    public synchronized void displayMessage(String string){
-        System.out.println(string);
+    public synchronized void displayWinner (int playerId) {
+        if (playerId == board.getMyPlayerId()) displayMessage("You have won!");
+        else displayMessage(board.getPlayer(playerId).getPlayerName() + " has won");
+
     }
 
-    public synchronized void displayErrorMessage(){
-        displayMessage(Terminal.Color.RED.set() + "Oops... something went wrong" + Terminal.Color.WHITE.set());
+    public synchronized void displayLoser (int playerId) {
+        if (playerId == board.getMyPlayerId()) displayMessage("You have lost!");
+        else displayMessage(board.getPlayer(playerId).getPlayerName() + " has lost");
     }
 
-    public synchronized void displayStartUp () {
+    public synchronized void displayDisconnection (int playerId){
+        displayMessage(board.getPlayer(playerId).getPlayerName() + " disconnected");
+    }
+
+    public synchronized void displayError(){
+        displayErrorMessage("Oops... something went wrong");
+    }
+
+    public synchronized void displayBadNameError(){
+        displayErrorMessage("This name is not available");
+    }
+
+    public synchronized void displayStartup () {
         System.out.println(Terminal.Color.BLUE.set());
         System.out.println("  ╔══ ╔═╗ ╖ ╓ ═╦═ ╔═╗ ╔═╗ ╥ ╖ ╓ ╥ ®");
         System.out.println("  ╚═╗ ╠═╣ ║\\║  ║  ║ ║ ╠\\╝ ║ ║\\║ ║");
         System.out.println("  ══╝ ╜ ╙ ╜ ╙  ╨  ╚═╝ ╜ \\ ╨ ╜ ╙ ╨\n");
     }
 
-    public synchronized void displayCells (Set < Position > positions) {
-        for (Position p : positions)
-            System.out.print("(" + p.getX() + ", " + p.getY() + ") ");
-        System.out.println();
-    }
-
     public synchronized void displayTurn(){
         int playerTurnId = board.getPlayerTurnId();
-        if (playerTurnId == board.getMyPlayerId()) System.out.println("You are playing");
-        else
-            System.out.println(board.getPlayer(playerTurnId).getPlayerName() + " now playing");
-        return;
-    }
-
-    public synchronized void displayEndTurn(String message){
-        System.out.println(message);
-
+        setColor(playerTurnId);
+        if (playerTurnId == board.getMyPlayerId()) System.out.println("You" + Color.WHITE.set() + " are playing");
+        else System.out.println(board.getPlayer(playerTurnId).getPlayerName() + Color.WHITE.set() +  " now playing");
     }
 
     public synchronized void displayRequestAction(SerializableRequestAction object){
@@ -199,7 +163,7 @@ public class Terminal implements View {
 
             if (object.canDecline()) { //Se il player può terminare il turno
                 if (object.areBuildsEmpty() && object.areMovesEmpty()) {
-                    displayEndTurn("There are no more moves available. The turn is over.");
+                    displayMessage("There are no more moves available. The turn is over.");
                     for (int i = 0; i < observerList.size(); i++) observerList.get(i).onCompletedDecline(); //questo oggetto passa il turno
                     return;
                 }
@@ -270,6 +234,19 @@ public class Terminal implements View {
 
     // metodi riservati
 
+    private synchronized void displayMessage(String string){
+        System.out.println(string);
+    }
+
+    private synchronized void displayErrorMessage(String message){
+        displayMessage(Terminal.Color.RED.set() + message + Terminal.Color.WHITE.set());
+    }
+
+    private synchronized void displayCells (Set < Position > positions) {
+        for (Position p : positions)
+            System.out.print("(" + p.getX() + ", " + p.getY() + ") ");
+        System.out.println();
+    }
 
     private synchronized Position askForRightPosition (Set<Position> positions) {
         Position position = null;
@@ -360,11 +337,10 @@ public class Terminal implements View {
 
     private synchronized boolean askForBoolean(String request){
         String fromKeyboard;
-        while (true) {
+        do {
             System.out.print(request);
             fromKeyboard = keyboard.next();
-            if (fromKeyboard.toLowerCase().equals("y") || fromKeyboard.toLowerCase().equals("n")) break;
-        }
+        } while (!fromKeyboard.toLowerCase().equals("y") && !fromKeyboard.toLowerCase().equals("n"));
         return fromKeyboard.toLowerCase().equals("y");
     }
 
@@ -374,9 +350,69 @@ public class Terminal implements View {
         return collection.stream().anyMatch(x -> x.getX() == position.getX() && x.getY() == position.getY());
     }
 
+    private synchronized void displayPlayersController(){
+        System.out.println();
+        for (int i = 0; i < board.numOfPlayers(); i++) {
+            setColor(i+1);
+            System.out.print(board.getPlayer(i + 1).getPlayerName());
+            if (!board.getPlayer(i + 1).hasLost() && board.getPlayer(i + 1).getGodPowerName() != null) {
+                System.out.print(": Worker 1 (" + board.getPlayer(i + 1).getWorker(1).getX() + ", " + board.getPlayer(i + 1).getWorker(1).getY() + ")");
+                System.out.print(", Worker 2 (" + board.getPlayer(i + 1).getWorker(2).getX() + ", " + board.getPlayer(i + 1).getWorker(2).getY() + ")");
+                System.out.println(", " + board.getPlayer(i + 1).getGodPowerName());
+            } else if (board.getPlayer(i + 1).getGodPowerName() == null) System.out.println();
+            else System.out.println(" has lost");
+        }
+        System.out.print(Terminal.Color.WHITE.set());
+    }
+
+    private synchronized void showBuilding(int i, int j){
+        System.out.print(Terminal.Color.BLUE.set());
+        switch (board.getCell(i, j).getLevel()) {
+            case 0:
+                System.out.print(" ░░░ ");
+                break;
+            case 1:
+                System.out.print(" ▒▒▒ ");
+                break;
+            case 2:
+                System.out.print(" ▓▓▓ ");
+                break;
+        }
+    }
+
+    private synchronized void showBuildingUnderWorker (int i, int j){
+        if (board.getCell(i, j) == null) System.out.print(" ");
+        else {
+            System.out.print(Terminal.Color.BLUE.set());
+            switch (board.getCell(i, j).getLevel()) {
+                case 0:
+                    System.out.print("░");
+                    break;
+                case 1:
+                    System.out.print("▒");
+                    break;
+                case 2:
+                    System.out.print("▓");
+                    break;
+            }
+        }
+    }
+
+    private synchronized void setColor(int playerId){
+        switch (playerId) {
+            case 1:
+                System.out.print(Terminal.Color.RED.set());
+                break;
+            case 2:
+                System.out.print(Terminal.Color.YELLOW.set());
+                break;
+            case 3:
+                System.out.print(Terminal.Color.CYAN.set());
+                break;
+        }
+    }
+
     private enum Color {
-        RESET("\u001B[0m"),
-        BLACK("\u001B[30m"),
         RED("\u001B[31m"),
         GREEN("\u001B[32m"),
         YELLOW("\u001B[33m"),

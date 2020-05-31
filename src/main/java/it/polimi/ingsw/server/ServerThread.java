@@ -16,18 +16,17 @@ public class ServerThread extends Thread {
     private List<Socket> playersList;
     private List<String> playersNames;
     private ServerWaitingList waitingList;
-    private List <String> scanList(String message) throws IOException {
-        List <String> tempList = new ArrayList<>();
+    private void echoRequest() throws IOException {
         for (int i = 0; i < playersList.size(); i++) {
             try{
-                tempList.add(sendMessageAndWaitForReply(message, i));
+                String reply = sendMessageAndWaitForReply("Hello", i);
+                if (!reply.equals("Hello")) throw new Exception();
             } catch(Exception e){
-                tempList.add(null);
                 playersList.remove(i).close();
+                playersNames.remove(i);
                 i--;
             }
         }
-        return tempList;
     }
     public void sendMessage(String message, int position) {
         sendObject(new Message(message), position);
@@ -50,9 +49,9 @@ public class ServerThread extends Thread {
     }
     public void run(){
         try {
-            playersNames = scanList("Player's name");
+            echoRequest();
             if (playersList.size() < numOfPlayers) {
-                waitingList.importPlayersList(playersList);
+                waitingList.importPlayersList(playersList, playersNames);
                 return;
             }
             for (int i = 0; i < numOfPlayers; i++) sendMessage("You are player " + (i+1), i);
@@ -64,9 +63,10 @@ public class ServerThread extends Thread {
             serverView.startNewEventGenerators(playersList);
         }catch(Exception e){}
     }
-    public ServerThread(List<Socket> playersList, ServerWaitingList waitingList, int numOfPlayers){
+    public ServerThread(List<Socket> playersList, ServerWaitingList waitingList, int numOfPlayers, List <String> names){
         this.playersList = playersList;
         this.waitingList = waitingList;
         this.numOfPlayers = numOfPlayers;
+        this.playersNames = names;
     }
 }

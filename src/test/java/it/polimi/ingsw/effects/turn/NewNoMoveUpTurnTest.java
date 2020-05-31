@@ -2,6 +2,7 @@ package it.polimi.ingsw.effects.turn;
 
 import it.polimi.ingsw.*;
 import it.polimi.ingsw.effects.GodPower;
+import it.polimi.ingsw.effects.move.StandardMove;
 import it.polimi.ingsw.effects.turn.NewNoMoveUpTurn;
 import it.polimi.ingsw.effects.GodPower;
 import it.polimi.ingsw.effects.GodPowerManager;
@@ -14,7 +15,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.*;
 
 public class NewNoMoveUpTurnTest  {
     NewNoMoveUpTurn newNoMoveUpTurn = new NewNoMoveUpTurn();
@@ -24,32 +25,57 @@ public class NewNoMoveUpTurnTest  {
     Player player1 = new Player("pippo", 1);
     Player player2 = new Player("pluto",2);
     Worker worker1 = new Worker(player1, 1);
-    Turn currentTurn = new Turn(player1);
+    Turn currentTurn;
     List<GodPower> godList = new ArrayList<>();
     Board board = new Board();
 
     @BeforeEach
     public void setUp () {
+        godList = new ArrayList<>();
+        board = new Board();
+        currentTurn = new Turn(player1);
     }
 
     @Test
-    void theEnemyShouldHaveNoMoveUppEffectAfterAthenaTurn() throws ParseException, IOException {
+    void theEnemyShouldHaveNoMoveUpEffectAfterAthenaTurn() throws ParseException, IOException {
         athenaGodPower = GodPowerManager.power("AthenaCard.json", 1);
         oppositeGodPower = GodPowerManager.power("HestiaCard.json", 2);
         godList.add(athenaGodPower);
         godList.add(oppositeGodPower);
 
         board.getCell(0,0,0).setWorker(worker1);
+        board.getCell(1,1,0).setBuilding(true);
         board.newCell(1,1,1);
 
         Position workerPosition = board.getCell(0,0,0).getPosition();
         Position destinationPosition = board.getCell(1,1,1).getPosition();
 
+        athenaGodPower.moveInto(board, workerPosition, destinationPosition);
+
+        currentTurn.updateTurnInfoAfterMove(workerPosition, destinationPosition, board);
+        newNoMoveUpTurn.endTurn(currentTurn, godList, player2);
+        assertAll("NoMoveUp", () -> assertTrue(currentTurn.isMoveUp()),
+                () -> assertEquals(godList.get(1).getMove().getClass(), NoMoveUp.class),
+                () -> assertEquals(godList.get(1).getNewTurn().getClass(), RestoreOriginalGodPower.class));
+    }
+
+    @Test
+    void theEnemyShouldNotHaveNoMoveUpEffectAfterAthenaTurn() throws ParseException, IOException {
+        athenaGodPower = GodPowerManager.power("AthenaCard.json", 1);
+        oppositeGodPower = GodPowerManager.power("HestiaCard.json", 2);
+        godList.add(athenaGodPower);
+        godList.add(oppositeGodPower);
+
+        board.getCell(0,0,0).setWorker(worker1);
+        board.newCell(1,1,0);
+
+        Position workerPosition = board.getCell(0,0,0).getPosition();
+        Position destinationPosition = board.getCell(1,1,0).getPosition();
 
         athenaGodPower.moveInto(board, workerPosition, destinationPosition);
 
         currentTurn.updateTurnInfoAfterMove(workerPosition, destinationPosition, board);
-        newNoMoveUpTurn.endTurn(currentTurn, godList, player1);
-        assertEquals(godList.get(1).getMove().getClass(), NoMoveUp.class);
+        newNoMoveUpTurn.endTurn(currentTurn, godList, player2);
+        assertEquals(godList.get(1).getMove().getClass(), new StandardMove(1).getClass());
     }
 }

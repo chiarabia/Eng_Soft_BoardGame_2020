@@ -52,8 +52,8 @@ public class GameTest {
 	}
 
 	@Test
-	void gameShouldCreateTheRightAmountOfGodPowers(){
-		assertEquals(3,gameThreePlayers.getGodPowers().size());
+	void gameShouldStartWithoutGodPowers(){
+		assertEquals(0,gameThreePlayers.getGodPowers().size());
 	}
 
 	@Test
@@ -68,14 +68,6 @@ public class GameTest {
 	void gameShouldSetTheRightBoard(){
 		assertNotNull(gameTwoPlayers.getBoard());
 	}
-
-	@Test
-	void gameInstanceShouldThrowWithIllegalNumberOfPlayer() {
-		assertThrows(Exception.class, () -> {
-			new Game(-1, gamePlayerTwo);
-		});
-	}
-
 
 	@Test
 	void gameInstanceShouldThrowWithNullList() {

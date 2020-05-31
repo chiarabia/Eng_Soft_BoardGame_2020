@@ -1,9 +1,6 @@
 package it.polimi.ingsw.effects.turn;
 
-import it.polimi.ingsw.Board;
-import it.polimi.ingsw.Player;
-import it.polimi.ingsw.Turn;
-import it.polimi.ingsw.Worker;
+import it.polimi.ingsw.*;
 import it.polimi.ingsw.effects.GodPower;
 import it.polimi.ingsw.effects.GodPowerManager;
 import it.polimi.ingsw.effects.build.NotOnSamePosition;
@@ -28,28 +25,42 @@ public class RestoreOriginalGodPowerTest {
     Player player1 = new Player("pippo", 1);
     Player player2 = new Player("pluto",2);
     Worker worker1 = new Worker(player1, 1);
-    Turn currentTurn = new Turn(player1);
+    Turn currentTurn;
     List<GodPower> godList = new ArrayList<>();
     Board board = new Board();
 
     @BeforeEach
     void setUp() throws IOException, ParseException {
+        board = new Board();
+        currentTurn = new Turn(player1);
         godList.add(GodPowerManager.power("AthenaCard.json", 1));
         godList.add(GodPowerManager.power("DemeterCard.json", 2));
     }
 
     @Test
     void originalDemeterGodPowerShouldBeRestored() {
-        currentTurn = new Turn(player2);
+        Turn oldTurn = new Turn(player1);
         assert godList.get(0).getPlayerId()==1;
         assert godList.get(1).getPlayerId()==2;
+
+        board.getCell(0,0,0).setWorker(worker1);
+        board.getCell(1,1,0).setBuilding(true);
+        board.newCell(1,1,1);
+
+        Position workerPosition = board.getCell(0,0,0).getPosition();
+        Position destinationPosition = board.getCell(1,1,1).getPosition();
+
+        godList.get(0).moveInto(board, workerPosition, destinationPosition);
+
+        oldTurn.updateTurnInfoAfterMove(workerPosition, destinationPosition, board);
+
+        currentTurn = godList.get(0).endTurn(oldTurn, godList, player2);
+        assertEquals(godList.get(1).getNewTurn().getClass(),  RestoreOriginalGodPower.class);
 
         restoreOriginalGodPower = new RestoreOriginalGodPower(godList.get(1).copyGodPower(godList.get(1)));
         godList.get(1).setBuild(null); //random modification
         restoreOriginalGodPower.endTurn(currentTurn, godList, player2);
 
-        assertAll("OriginalGod Restored", () -> assertEquals(godList.get(1).getBuild().getClass(), new NotOnSamePosition(2).getClass()));
-
-
+        assertAll("OriginalGod Restored", () -> assertEquals(godList.get(1).getBuild().getClass(), NotOnSamePosition.class));
     }
 }

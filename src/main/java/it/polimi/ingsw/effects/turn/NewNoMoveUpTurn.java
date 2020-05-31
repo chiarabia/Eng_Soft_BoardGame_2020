@@ -24,15 +24,16 @@ public class NewNoMoveUpTurn extends NewTurn {
      * are restored.
      * @param oldTurn The current turn that is about to end
      * @param godPowers The GodPowers of all players in the game
-     * @param player Player of the next turn
+     * @param nextTurnPlayer Player of the next turn
      * @return a new Turn
      */
 
     @Override
-    public Turn endTurn(Turn oldTurn, List<GodPower> godPowers, Player player){
+    public Turn endTurn(Turn oldTurn, List<GodPower> godPowers, Player nextTurnPlayer){
+        int oldTurnPlayerId = oldTurn.getPlayerId();
         if (oldTurn.isMoveUp()) {
             for (int i = 0; i < godPowers.size(); i++) {
-                if (i != godPowers.get(i).getPlayerId()) { //the change has effect only on the opponents' godPowers
+                if ((i != oldTurnPlayerId +1)&& godPowers.get(i)!=null) { //the change has effect only on the opponents' godPowers
                     originalGodPower = godPowers.get(i).copyGodPower(godPowers.get(i)); //Saving the original GodPower
                     originalMove = godPowers.get(i).getMove(); //Collecting the previous Move effect
                     originalNewTurn = godPowers.get(i).getNewTurn(); //Collecting the original NewTurn effect
@@ -47,6 +48,6 @@ public class NewNoMoveUpTurn extends NewTurn {
                 }
             }
         }
-        return new Turn(player);
+        return new Turn(nextTurnPlayer);
     }
 }

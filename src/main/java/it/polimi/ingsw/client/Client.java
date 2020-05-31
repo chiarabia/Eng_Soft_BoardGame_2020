@@ -28,7 +28,7 @@ public class Client implements ViewObserver {
             this.IP = IP;
             view = new GUI();
             view.addObserver(this);
-            view.displayStartUp(); //Questo metodo fa partire la Cli e la Gui (nella cli fa partire l'ASCII Art)
+            view.displayStartup(); //Questo metodo fa partire la Cli e la Gui (nella cli fa partire l'ASCII Art)
             view.askForStartupInfos();
         } catch (Exception e) {
             onError();
@@ -37,7 +37,7 @@ public class Client implements ViewObserver {
     }
 
     public void onError(){
-        view.displayErrorMessage();
+        view.displayError();
     }
 
     public void onUpdateInitializeGame(SerializableUpdateInitializeGame object){
@@ -63,7 +63,7 @@ public class Client implements ViewObserver {
     }
 
     public void onUpdateDisconnection(SerializableUpdateDisconnection object) throws GameEndedException {
-        view.displayMessage(board.getPlayer(object.getPlayerId()).getPlayerName() + " disconnected");
+        view.displayDisconnection((object.getPlayerId()));
         throw new GameEndedException();
     }
 
@@ -72,10 +72,8 @@ public class Client implements ViewObserver {
     }
 
     public void onUpdateWinner(SerializableUpdateWinner object) throws GameEndedException {
-        int playerId;
-        playerId = object.getPlayerId();
-        if (playerId == board.getMyPlayerId()) view.displayMessage("You have won!");
-        else view.displayMessage(board.getPlayer(object.getPlayerId()).getPlayerName() + " has won");
+        int playerId = object.getPlayerId();
+        view.displayWinner(playerId);
         throw new GameEndedException();
     }
 
@@ -85,14 +83,10 @@ public class Client implements ViewObserver {
     }
 
     public void onUpdateLoser (SerializableUpdateLoser object){
-        int playerId;
-        playerId = object.getPlayerId();
-        board.getPlayer(playerId).setLost(true); //setto a null le informazioni del giocatore
+        int playerId = object.getPlayerId();
+        board.getPlayer(playerId).setLost(true);
         view.displayBoard(); //mostro la board, senza i worker del giocatore che ha perso
-        if (playerId == board.getMyPlayerId()) {
-            view.displayMessage("You have lost!"); //se sono io quel gicoatore. ho perso :D
-        } else view.displayMessage(board.getPlayer(playerId).getPlayerName() + " has lost");
-        //se non sono io, mi arriva il messaggio che un altro giocatore ha perso
+        view.displayLoser(playerId);
     }
 
     public void onUpdateBuild(SerializableUpdateBuild object){
@@ -119,6 +113,28 @@ public class Client implements ViewObserver {
         //partenza e arrivo
     }
 
+    public void onUpdateInitializeNames (SerializableUpdateInitializeNames names){
+        for (int id = 1; id <= board.numOfPlayers(); id++)
+            board.setPlayer(new ClientPlayer(names.getPlayersNames().get(id - 1)), id);//aggiungo i nomi alla board
+        view.displayPlayerNames(names); //mostro a schermo i nomi degli altri giocatori
+    }
+
+    public void onHello(){
+        communicator.sendMessage("Hello");
+    }
+
+    public void onPlayerIdAssigned(String message){
+        int playerId = (Character.getNumericValue(message.charAt(15))); //creo il playerID
+        board.setMyPlayerId(playerId); //creo il playerID
+    }
+
+    public void onNotValidNameError() throws GameEndedException {
+        view.displayBadNameError();
+        view.askForStartupInfos();
+        throw new GameEndedException();
+    }
+
+
 
 
     // metodi da lanciare una volta che l'utente ha fornito le informazioni necessarie (dopo che ha premuto OK)
@@ -130,20 +146,9 @@ public class Client implements ViewObserver {
             view.setBoard(board); //passa il riferimento alla board creata alla View
             communicator = new ClientCommunicator(port, IP);
             communicator.addObserver(this);
-            communicator.sendMessage(board.numOfPlayers() + " players"); //invio al server le scelte del nome del plauyer
-            String message = "";
-            while (message.equals("Player's name") || message.equals("")) {
-                message = communicator.waitForMessage();
-                if (message.equals("Player's name")) communicator.sendMessage(myName);
-            }
-            board.setMyPlayerId(Character.getNumericValue(message.charAt(15))); //creo il playerID
-            SerializableUpdateInitializeNames names = (SerializableUpdateInitializeNames) communicator.waitForObject();
-            //aspetto i nomi degli altri giocatori
-            for (int id = 1; id <= board.numOfPlayers(); id++)
-                board.setPlayer(new ClientPlayer(names.getPlayersNames().get(id - 1)), id);
-            //aggiungo i nomi alla board
-            view.displayPlayerNames(names); //mostro a schermo i nomi degli altri giocatori
             communicator.start();
+            communicator.sendObject(new SerializableConnection(numOfPlayers, myName)); //invio al server le scelte del nome del plauyer
+            view.displayWaitingRoom();
         }catch (Exception e){
             onError();
             communicator.stopProcess();
