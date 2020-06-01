@@ -20,12 +20,6 @@ public class BoardSceneController implements Initializable {
     @FXML
     private TextFlow godDescription;
 
-    //sets the name of the player in the Label
-    public void transferMessage(String message){
-        playersName.setText(message);
-    }
-
-
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
 

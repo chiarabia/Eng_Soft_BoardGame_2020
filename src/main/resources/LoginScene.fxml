@@ -35,7 +35,8 @@
                            <Insets left="112.0" />
                         </padding>
                   </Label>
-                  <TextField fx:id="playerNameTextField">
+                  <TextField fx:id="playerNameTextField" onKeyReleased="#keyReleasedProperty">
+
                         <VBox.margin>
                            <Insets left="80.0" right="100.0" top="5.0" />
                         </VBox.margin>
@@ -45,7 +46,7 @@
                            <Insets left="93.0" top="5.0" />
                         </VBox.margin>
                   </Label>
-                  <ChoiceBox fx:id="numberOfPlayersChoiceBox" prefWidth="150.0">
+                  <ChoiceBox fx:id="numberOfPlayersChoiceBox" onKeyReleased="#keyReleasedProperty" prefWidth="150.0">
                         <VBox.margin>
                            <Insets bottom="5.0" left="99.0" top="5.0" />
                         </VBox.margin>

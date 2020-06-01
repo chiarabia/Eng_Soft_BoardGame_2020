@@ -40,19 +40,38 @@ public class LoginSceneController implements Initializable {
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
+
+        startMatchButton.setDisable(true);
+
         //Sets the options for the Choice Box to 2 or 3 players
         numberOfPlayersChoiceBox.getItems().addAll("2", "3");
         numberOfPlayersChoiceBox.setOnAction(actionEvent -> {
             numberOfPlayers = Integer.valueOf((String) numberOfPlayersChoiceBox.getValue());
         });
 
+        //Sends the name and number of player to the client when the play button is clicked
         startMatchButton.setOnAction(actionEvent -> {
+            System.out.print(numberOfPlayers);
             playerName = playerNameTextField.getText();
+            cache.setNumberOfPlayers(numberOfPlayers);
+            cache.setPlayerName(playerName);
             //Client client = new Client();
             //client.onCompletedStartup(playerName,numberOfPlayers);
             List<ViewObserver> observerList = cache.getObserverList();
-            for (int i = 0; i < observerList.size(); i++) observerList.get(i).onCompletedStartup(playerName, numberOfPlayers);
+            for (int i = 0; i < observerList.size(); i++)
+                observerList.get(i).onCompletedStartup(playerName, numberOfPlayers);
         });
+
     }
 
+    //Enables the play button only when the player has given name and number of player
+    public void keyReleasedProperty(){
+        String name = playerNameTextField.getText();
+        numberOfPlayersChoiceBox.setOnAction(actionEvent -> {
+            numberOfPlayers = Integer.valueOf((String) numberOfPlayersChoiceBox.getValue());
+            boolean isDisabled = (name.isEmpty() || name.trim().isEmpty()) || (numberOfPlayers == 0);
+            startMatchButton.setDisable(isDisabled);
+        });
+    }
 }
+
