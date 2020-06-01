@@ -1,5 +1,6 @@
 package it.polimi.ingsw.client.gui.controller;
 
+import it.polimi.ingsw.client.Client;
 import it.polimi.ingsw.client.ViewObserver;
 import it.polimi.ingsw.client.gui.GUICache;
 import javafx.event.ActionEvent;
@@ -31,10 +32,11 @@ public class LoginSceneController implements Initializable {
     private TextField playerNameTextField;
     @FXML
     private ChoiceBox numberOfPlayersChoiceBox;
-    private List<ViewObserver> observerList = new ArrayList<>();
+
 
     private int numberOfPlayers = 0;
     private String playerName;
+    GUICache cache = new GUICache();
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
@@ -46,29 +48,11 @@ public class LoginSceneController implements Initializable {
 
         startMatchButton.setOnAction(actionEvent -> {
             playerName = playerNameTextField.getText();
+            //Client client = new Client();
+            //client.onCompletedStartup(playerName,numberOfPlayers);
+            List<ViewObserver> observerList = cache.getObserverList();
             for (int i = 0; i < observerList.size(); i++) observerList.get(i).onCompletedStartup(playerName, numberOfPlayers);
-            // Devi avere una instance di client
-            // e poi fai Client.onCompletedStartup(.ò)
         });
     }
 
-/*    // this method changes the scene to the Board Scene
-    public void openSecondScene(ActionEvent event){
-        try {
-            FXMLLoader loader = new FXMLLoader(getClass().getClassLoader().getResource("BoardScene.fxml"));
-            Parent root = loader.load();
-            Scene boardScene = new Scene (root);
-
-            BoardSceneController boardSceneController = loader.getController();
-            boardSceneController.transferMessage(playerName.getText());
-
-            Stage window = (Stage)((Node)event.getSource()).getScene().getWindow();
-
-            window.setScene( boardScene);
-            window.show();
-
-        } catch (IOException ex){
-            System.err.println(ex);
-        }
-    }*/
 }

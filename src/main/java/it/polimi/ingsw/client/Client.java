@@ -141,6 +141,10 @@ public class Client implements ViewObserver {
 
     public void onCompletedStartup (String myName, int numOfPlayers) {
         try {
+            System.out.print(myName);
+            System.out.print(numOfPlayers);
+            System.out.print(port);
+            System.out.print(IP);
             board = new ClientBoard(numOfPlayers); //crea una board con 3 player, è copia di quella del model, ma si salva solo le informazioni della caselle con la Z maggiore,
                                                     // quindi al massimo mi pare 25 caselle
             view.setBoard(board); //passa il riferimento alla board creata alla View
@@ -150,6 +154,7 @@ public class Client implements ViewObserver {
             communicator.sendObject(new SerializableConnection(numOfPlayers, myName)); //invio al server le scelte del nome del plauyer
             view.displayWaitingRoom();
         }catch (Exception e){
+            e.printStackTrace();
             onError();
             communicator.stopProcess();
         }

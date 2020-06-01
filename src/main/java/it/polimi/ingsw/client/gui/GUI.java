@@ -18,10 +18,11 @@ public class GUI implements View {
 
     GUICache cache = new GUICache();
     private ClientBoard board;
-    private List<ViewObserver> observerList = new ArrayList<>();
     ChoosingGodSceneRunnable choosingGodSceneRunnable = new ChoosingGodSceneRunnable();
 
-    public void addObserver(ViewObserver observer){observerList.add(observer);}
+    public void addObserver(ViewObserver observer){
+        List<ViewObserver> observerList = cache.getObserverList();
+        observerList.add(observer);}
 
     @Override
     public void displayStartup() {
