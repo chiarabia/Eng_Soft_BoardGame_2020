@@ -96,8 +96,8 @@ public class Terminal implements View {
         displayErrorMessage("Oops... something went wrong");
     }
 
-    public synchronized void displayBadNameError(){
-        displayErrorMessage("This name is not available");
+    public synchronized void displayError(String message){
+        displayErrorMessage(message);
     }
 
     public synchronized void displayStartup () {
@@ -168,7 +168,7 @@ public class Terminal implements View {
                     return;
                 }
                 //chiedo al player se vuole terminare il turno
-                else if (askForDecline()) {
+                else if (askForDecision("decline")) {
                     for (int i = 0; i < observerList.size(); i++) observerList.get(i).onCompletedDecline();
                     return;
                 }
@@ -211,9 +211,16 @@ public class Terminal implements View {
         }).start();
     }
 
-    public synchronized void askForGodPowerAndWorkersInitialPositions(List<GodCard> godPowers){
+    public synchronized void askForInitialGodPower(List<GodCard> godPowers){
         new Thread(()-> {
             String chosenGodPower = askForGodPower(godPowers);
+            for (int i = 0; i < observerList.size(); i++)
+                observerList.get(i).onCompletedInitialGodPower(chosenGodPower);
+        }).start();
+    }
+
+    public synchronized void askForWorkersInitialPositions(String chosenGodPower){
+        new Thread(()-> {
             List<Position> myWorkerPositions = askForWorkersInitialPositions();
             for (int i = 0; i < observerList.size(); i++)
                 observerList.get(i).onCompletedRequestInitializeGame(chosenGodPower, myWorkerPositions);
@@ -254,10 +261,6 @@ public class Terminal implements View {
             position = askForPosition();
         Position position1 = new Position(position.getX(), position.getY(), 0);
         return new Position(position1.getX(), position1.getY(), positions.stream().filter(p -> p.getX() == position1.getX() && p.getY() == position1.getY()).map(Position::getZ).collect(Collectors.toList()).get(0));
-    }
-
-    private synchronized boolean askForDecline() {
-        return askForBoolean("Do you want to decline(y/n)? ");
     }
 
     private synchronized boolean askForDecision(String action){

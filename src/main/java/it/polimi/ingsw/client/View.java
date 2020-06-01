@@ -27,11 +27,12 @@ public interface View {
     void displayDisconnection (int playerId); // Un giocatore si è appena disconnesso
 
     // metodi di errore
-    void displayBadNameError(); // Deve essere visualizzato il messaggio di nickname non disponibile
+    void displayError(String message); // Deve essere visualizzato un messaggio di errore
     void displayError(); // Deve essere visualizzato il messaggio di errore fatale
 
     // metodi di richiesta input tastiera/mouse
     void askForAction(SerializableRequestAction object);
-    void askForGodPowerAndWorkersInitialPositions(List<GodCard> godCards);
+    void askForInitialGodPower(List<GodCard> godCards);
+    void askForWorkersInitialPositions(String chosenGodPower);
     void askForStartupInfos();
 }

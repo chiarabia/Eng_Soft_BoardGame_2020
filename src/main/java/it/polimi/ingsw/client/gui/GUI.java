@@ -1,5 +1,6 @@
 package it.polimi.ingsw.client.gui;
 
+import it.polimi.ingsw.Position;
 import it.polimi.ingsw.client.ClientBoard;
 import it.polimi.ingsw.client.GodCard;
 import it.polimi.ingsw.client.View;
@@ -70,7 +71,7 @@ public class GUI implements View {
     }
 
     @Override
-    public void displayBadNameError() {
+    public void displayError(String message) {
 
     }
 
@@ -96,10 +97,21 @@ public class GUI implements View {
     }
 
     @Override
-    public void askForGodPowerAndWorkersInitialPositions(List<GodCard> godPowers) {
+    // Qui chiede il godPower...
+    public void askForInitialGodPower(List<GodCard> godPowers) {
         cache.setGodPowers(godPowers);
         Platform.runLater(choosingGodSceneRunnable);
 
+        //alla fine deve chiamare onCompletedInitialGodPower(String chosenGodPower);
+    }
+
+    @Override
+    //...qui prende in ingresso il godPower precedentemente scelto, chiede le posizioni iniziali e resistuisce entrambe le informazioni
+    //chosenGodPower qui è solo di passaggio, viene conservato per arrivare a destinazione (cioè onCompletedRequestInitializeGame)
+    public void askForWorkersInitialPositions(String chosenGodPower) {
+
+
+        //alla fine deve chiamare onCompletedRequestInitializeGame(String chosenGodPower, List< Position > myWorkerPositions);
     }
 
     @Override

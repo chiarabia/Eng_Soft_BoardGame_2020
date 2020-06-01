@@ -20,13 +20,12 @@ public class Client implements ViewObserver {
     private ClientCommunicator communicator;
     private int port;
     private String IP;
-    GodCardsManager godCardsManager = new GodCardsManager();
 
     public void startClient(int port, String IP) {
         try {
             this.port = port;
             this.IP = IP;
-            view = new GUI();
+            view = new Terminal();//GUI();
             view.addObserver(this);
             view.displayStartup(); //Questo metodo fa partire la Cli e la Gui (nella cli fa partire l'ASCII Art)
             view.askForStartupInfos();
@@ -55,14 +54,14 @@ public class Client implements ViewObserver {
     }
 
     public void onRequestInitializeGame(SerializableRequestInitializeGame object) throws IOException, ParseException {
-        List<GodCard> godCards = null;
-        for(String s : object.getGodPowers()){
-            godCards.add(godCardsManager.getCard(s));
-        }
-        view.askForGodPowerAndWorkersInitialPositions(godCards);
+        List<GodCard> godCards = new ArrayList<>();
+        for(String s : object.getGodPowers())
+            godCards.add(GodCardsManager.getCard(s));
+        view.askForInitialGodPower(godCards);
     }
 
-    public void onUpdateDisconnection(SerializableUpdateDisconnection object) throws GameEndedException {
+    public void onUpdateDisconnection(SerializableUpdateDisconnection object) throws Exception {
+        if ((object).getPlayerId()==board.getMyPlayerId()) throw new Exception();
         view.displayDisconnection((object.getPlayerId()));
         throw new GameEndedException();
     }
@@ -129,7 +128,7 @@ public class Client implements ViewObserver {
     }
 
     public void onNotValidNameError() throws GameEndedException {
-        view.displayBadNameError();
+        view.displayError("This name is not available");
         view.askForStartupInfos();
         throw new GameEndedException();
     }
@@ -141,14 +140,11 @@ public class Client implements ViewObserver {
 
     public void onCompletedStartup (String myName, int numOfPlayers) {
         try {
-            System.out.print(myName);
-            System.out.print(numOfPlayers);
-            System.out.print(port);
-            System.out.print(IP);
-            board = new ClientBoard(numOfPlayers); //crea una board con 3 player, è copia di quella del model, ma si salva solo le informazioni della caselle con la Z maggiore,
-                                                    // quindi al massimo mi pare 25 caselle
-            view.setBoard(board); //passa il riferimento alla board creata alla View
             communicator = new ClientCommunicator(port, IP);
+        }catch (Exception e){ onError(); }
+        try{
+            board = new ClientBoard(numOfPlayers); //crea una board con 3 player, è copia di quella del model, ma si salva solo le informazioni della caselle con la Z maggiore, quindi al massimo mi pare 25 caselle
+            view.setBoard(board); //passa il riferimento alla board creata alla View
             communicator.addObserver(this);
             communicator.start();
             communicator.sendObject(new SerializableConnection(numOfPlayers, myName)); //invio al server le scelte del nome del plauyer
@@ -170,6 +166,10 @@ public class Client implements ViewObserver {
 
     public void onCompletedDecline(){
         communicator.sendObject(new SerializableDeclineLastAction());
+    }
+
+    public void onCompletedInitialGodPower(String chosenGodPower){
+        view.askForWorkersInitialPositions(chosenGodPower);
     }
 
     public void onCompletedRequestInitializeGame(String chosenGodPower, List<Position> myWorkerPositions){

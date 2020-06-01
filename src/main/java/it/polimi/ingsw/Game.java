@@ -9,7 +9,7 @@ import java.util.List;
 
 
 public class Game {
-    private int numOfPlayers;
+    private final int numOfPlayers;
     private Board board;
     private Turn turn;
     private List<Player> players;
@@ -47,7 +47,6 @@ public class Game {
         return playerId-1;
     }
 
-    public void setNumOfPlayers(int numOfPlayers) {this.numOfPlayers = numOfPlayers;}
     public void setBoard(Board board) {this.board = board; }
     public void setTurn(Turn turn) {this.turn = turn;}
     public void setPlayers(List<Player> players) {this.players = players;}
@@ -77,10 +76,6 @@ public class Game {
 
     public void notifyUpdateAllAndAnswerOnePlayer(SerializableUpdate update, SerializableRequest request){
         for (int i = 0; i < observerList.size(); i++) observerList.get(i).updateAllAndAnswerOnePlayer(update, request);
-    }
-
-    public void notifyUpdateAllAndAnswerOnePlayer(List <SerializableUpdate> updates, SerializableRequest request) {
-        for (int i = 0; i < observerList.size(); i++) observerList.get(i).updateAllAndAnswerOnePlayer(updates, request);
     }
 
 
