@@ -36,6 +36,7 @@
                         </padding>
                   </Label>
                   <TextField fx:id="playerNameTextField" onKeyReleased="#keyReleasedProperty">
+
                         <VBox.margin>
                            <Insets left="80.0" right="100.0" top="5.0" />
                         </VBox.margin>

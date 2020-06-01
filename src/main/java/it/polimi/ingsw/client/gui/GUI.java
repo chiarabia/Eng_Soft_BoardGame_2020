@@ -4,7 +4,9 @@ import it.polimi.ingsw.client.ClientBoard;
 import it.polimi.ingsw.client.GodCard;
 import it.polimi.ingsw.client.View;
 import it.polimi.ingsw.client.ViewObserver;
+
 import it.polimi.ingsw.client.gui.runnable.BoardSceneRunnable;
+
 import it.polimi.ingsw.client.gui.runnable.ChoosingGodSceneRunnable;
 import it.polimi.ingsw.client.gui.runnable.LoginSceneRunnable;
 import it.polimi.ingsw.client.gui.runnable.WaitingSceneRunnable;

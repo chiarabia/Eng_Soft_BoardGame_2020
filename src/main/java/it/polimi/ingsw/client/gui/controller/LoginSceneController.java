@@ -40,6 +40,7 @@ public class LoginSceneController implements Initializable {
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
+
         startMatchButton.setDisable(true);
 
         //Sets the options for the Choice Box to 2 or 3 players
@@ -63,7 +64,7 @@ public class LoginSceneController implements Initializable {
 
     }
 
-    //Enables the play button only when the players has given name and number of player
+    //Enables the play button only when the player has given name and number of player
     public void keyReleasedProperty(){
         String name = playerNameTextField.getText();
         numberOfPlayersChoiceBox.setOnAction(actionEvent -> {
@@ -72,5 +73,5 @@ public class LoginSceneController implements Initializable {
             startMatchButton.setDisable(isDisabled);
         });
     }
-
 }
+
