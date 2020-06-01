@@ -12,7 +12,7 @@
 <?import javafx.scene.layout.VBox?>
 
 <?import javafx.scene.image.Image?>
-<StackPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="712.9" minWidth="1282.0" prefHeight="712.9" prefWidth="1282.0" style="-fx-background-color:#31c3fd;" stylesheets="CSS/MatchSetup.css" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="it.polimi.ingsw.client.gui.LoginSceneController">
+<StackPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="712.9" minWidth="1282.0" prefHeight="712.9" prefWidth="1282.0" style="-fx-background-color:#31c3fd;" stylesheets="CSS/MatchSetup.css" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="it.polimi.ingsw.client.gui.controller.LoginSceneController">
 <BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="710.9" minWidth="1280.0" prefHeight="710.9" prefWidth="1280.0" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1">
    <center>
       <FlowPane id="flowPaneCenter" alignment="CENTER" maxHeight="513.9" maxWidth="516.6" minHeight="513.9" minWidth="516.6" orientation="VERTICAL" prefHeight="513.9" prefWidth="516.6" BorderPane.alignment="CENTER">
@@ -35,7 +35,7 @@
                            <Insets left="112.0" />
                         </padding>
                   </Label>
-                  <TextField fx:id="playerName">
+                  <TextField fx:id="playerNameTextField">
                         <VBox.margin>
                            <Insets left="80.0" right="100.0" top="5.0" />
                         </VBox.margin>
@@ -45,12 +45,12 @@
                            <Insets left="93.0" top="5.0" />
                         </VBox.margin>
                   </Label>
-                  <ChoiceBox fx:id="numberOfPlayers" prefWidth="150.0">
+                  <ChoiceBox fx:id="numberOfPlayersChoiceBox" prefWidth="150.0">
                         <VBox.margin>
                            <Insets bottom="5.0" left="99.0" top="5.0" />
                         </VBox.margin>
                   </ChoiceBox>
-                  <Button fx:id="buttonClicked" alignment="CENTER" mnemonicParsing="false" onAction="#openSecondScene" text="Play">
+                  <Button fx:id="startMatchButton" alignment="CENTER" mnemonicParsing="false" text="Play">
                         <VBox.margin>
                            <Insets bottom="5.0" left="155.0" />
                         </VBox.margin>

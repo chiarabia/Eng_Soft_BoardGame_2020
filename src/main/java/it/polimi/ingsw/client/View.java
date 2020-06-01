@@ -31,7 +31,7 @@ public interface View {
     void displayError(); // Deve essere visualizzato il messaggio di errore fatale
 
     // metodi di richiesta input tastiera/mouse
-    void askForAction(SerializableRequestAction object); // Bisogna chiedere al giocatore quale azione eseguire
-    void askForGodPowerAndWorkersInitialPositions(List<String> godPowers); // Bisogna chiedere al giocatore divinità e posizioni iniziali
-    void askForStartupInfos(); // Bisogna chiedere al giocatore nome e numero giocatori
+    void askForAction(SerializableRequestAction object);
+    void askForGodPowerAndWorkersInitialPositions(List<GodCard> godCards);
+    void askForStartupInfos();
 }

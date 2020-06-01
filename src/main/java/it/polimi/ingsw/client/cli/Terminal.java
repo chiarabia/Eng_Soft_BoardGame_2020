@@ -2,6 +2,7 @@ package it.polimi.ingsw.client.cli;
 
 import it.polimi.ingsw.Position;
 import it.polimi.ingsw.client.ClientBoard;
+import it.polimi.ingsw.client.GodCard;
 import it.polimi.ingsw.client.View;
 import it.polimi.ingsw.client.ViewObserver;
 import it.polimi.ingsw.server.serializable.*;
@@ -210,7 +211,7 @@ public class Terminal implements View {
         }).start();
     }
 
-    public synchronized void askForGodPowerAndWorkersInitialPositions(List<String> godPowers){
+    public synchronized void askForGodPowerAndWorkersInitialPositions(List<GodCard> godPowers){
         new Thread(()-> {
             String chosenGodPower = askForGodPower(godPowers);
             List<Position> myWorkerPositions = askForWorkersInitialPositions();
@@ -272,14 +273,18 @@ public class Terminal implements View {
     }
 
 
-    private synchronized String askForGodPower (List<String> godPowers){
+    private synchronized String askForGodPower (List<GodCard> godPowers){
+        List<String> godNames = new ArrayList<>();
+        for (int i = 0 ; i < godPowers.size(); i++){
+            godNames.add(godPowers.get(i).getGodName());
+        }
         String godPower = "";
-        if(godPowers.size()==1) return godPowers.get(0);
+        if(godNames.size()==1) return godNames.get(0);
         while (true) {
-            for (String s : godPowers) System.out.print(s + " ");
+            for (String s : godNames) System.out.print(s + " ");
             godPower = askForString("left, choose God Power: ");
             String finalGodPower = godPower;
-            if  (godPowers.stream().anyMatch(x -> x.equals(finalGodPower))) break;
+            if  (godNames.stream().anyMatch(x -> x.equals(finalGodPower))) break;
         }
         return godPower;
     }

@@ -11,8 +11,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 
-// contiene metodi di invio messaggi e gestisce la ricezione
-
+/**
+ * Contiene metodi di invio messaggi e gestisce la ricezione
+ */
 public class ClientCommunicator extends Thread {
     private final Socket serverSocket;
     private List<Client> observerList = new ArrayList<>();
