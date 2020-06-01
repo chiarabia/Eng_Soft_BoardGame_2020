@@ -1,5 +1,7 @@
-package it.polimi.ingsw.client.gui;
+package it.polimi.ingsw.client.gui.controller;
 
+import it.polimi.ingsw.client.ViewObserver;
+import it.polimi.ingsw.client.gui.GUICache;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -16,11 +18,12 @@ import javafx.collections.FXCollections;
 import javax.swing.text.html.ImageView;
 import java.io.IOException;
 import java.net.URL;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.ResourceBundle;
+import java.util.concurrent.ConcurrentSkipListMap;
 
 public class LoginSceneController implements Initializable {
-
-    MainStage main = new MainStage();
 
     @FXML
     private Button startMatchButton;
@@ -28,13 +31,10 @@ public class LoginSceneController implements Initializable {
     private TextField playerNameTextField;
     @FXML
     private ChoiceBox numberOfPlayersChoiceBox;
+    private List<ViewObserver> observerList = new ArrayList<>();
 
     private int numberOfPlayers = 0;
     private String playerName;
-
-    public LoginSceneController() throws IOException {
-    }
-
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
@@ -46,7 +46,9 @@ public class LoginSceneController implements Initializable {
 
         startMatchButton.setOnAction(actionEvent -> {
             playerName = playerNameTextField.getText();
-            main.setPlayerNameAndNumberOfPlayer(numberOfPlayers,playerName);
+            for (int i = 0; i < observerList.size(); i++) observerList.get(i).onCompletedStartup(playerName, numberOfPlayers);
+            // Devi avere una instance di client
+            // e poi fai Client.onCompletedStartup(.ò)
         });
     }
 

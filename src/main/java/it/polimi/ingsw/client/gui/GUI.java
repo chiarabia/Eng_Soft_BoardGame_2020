@@ -1,27 +1,40 @@
 package it.polimi.ingsw.client.gui;
 
-import it.polimi.ingsw.Position;
 import it.polimi.ingsw.client.ClientBoard;
 import it.polimi.ingsw.client.GodCard;
 import it.polimi.ingsw.client.View;
 import it.polimi.ingsw.client.ViewObserver;
+import it.polimi.ingsw.client.gui.runnable.ChoosingGodSceneRunnable;
+import it.polimi.ingsw.client.gui.runnable.LoginSceneRunnable;
+import it.polimi.ingsw.client.gui.runnable.WaitingSceneRunnable;
 import it.polimi.ingsw.server.serializable.SerializableRequestAction;
 import it.polimi.ingsw.server.serializable.SerializableUpdateInitializeNames;
 import javafx.application.Platform;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Set;
 
 public class GUI implements View {
 
     GUICache cache = new GUICache();
     private ClientBoard board;
     private List<ViewObserver> observerList = new ArrayList<>();
-    ChoosingGodSceneRunnable ChoosingGodSceneRunnable = new ChoosingGodSceneRunnable();
+    ChoosingGodSceneRunnable choosingGodSceneRunnable = new ChoosingGodSceneRunnable();
 
     public void addObserver(ViewObserver observer){observerList.add(observer);}
+
+    @Override
+    public void displayStartup() {
+        new Thread(()-> {
+            MainStage.launch(MainStage.class);
+        }).start();
+    }
+
+    @Override
+    public void displayWaitingRoom() {
+        Platform.runLater(new WaitingSceneRunnable());
+    }
+
     public void setBoard(ClientBoard board) {
         this.board = board;
     }
@@ -31,28 +44,34 @@ public class GUI implements View {
 
     }
 
-    @Override
-    public void displayMessage(String message) {
-
-    }
-
-    @Override
-    public void displayErrorMessage() {
-
-    }
-
-    @Override
-    public void displayStartUp() {
-        MainStage.launch();
-    }
-
-    @Override
-    public void displayCells(Set<Position> positions) {
-
-    }
 
     @Override
     public void displayTurn() {
+
+    }
+
+    @Override
+    public void displayWinner(int playerId) {
+
+    }
+
+    @Override
+    public void displayLoser(int playerId) {
+
+    }
+
+    @Override
+    public void displayDisconnection(int playerId) {
+
+    }
+
+    @Override
+    public void displayBadNameError() {
+
+    }
+
+    @Override
+    public void displayError() {
 
     }
 
@@ -66,10 +85,6 @@ public class GUI implements View {
 
     }
 
-    @Override
-    public void displayEndTurn(String request) {
-
-    }
 
     @Override
     public void askForAction(SerializableRequestAction object) {
@@ -79,14 +94,18 @@ public class GUI implements View {
     @Override
     public void askForGodPowerAndWorkersInitialPositions(List<GodCard> godPowers) {
         cache.setGodPowers(godPowers);
-        Platform.runLater(ChoosingGodSceneRunnable);
+        Platform.runLater(choosingGodSceneRunnable);
 
     }
 
     @Override
     public void askForStartupInfos() {
-        int numberOfPlayers = cache.getNumberOfPlayers();
-        String playersName = cache.getPlayerName();
-        for (int i = 0; i < observerList.size(); i++) observerList.get(i).onCompletedStartup(playersName, numberOfPlayers);
+        // I can't call Platform.runLater until the JavaFX application has started.
+        try {
+            MainStage.getLock().take();
+        } catch (Exception ignored) {};
+
+        Platform.runLater(new LoginSceneRunnable());
+
     }
 }

@@ -7,10 +7,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class GUICache {
-
-    Stage primaryStage;
     int numberOfPlayers = 2;
-    String playerName;
+    String playerName = "Unknown";
     List<GodCard> godPowers;
 
 
@@ -19,12 +17,6 @@ public class GUICache {
     public List<GodCard> getGodPowers(){return godPowers;}
 
     public void setGodPowers(List<GodCard> godsNames){godPowers = godsNames;}
-
-    public void setStage(Stage primaryStage){
-        primaryStage.setTitle("Santorini");
-        primaryStage.setMinHeight(774);
-        primaryStage.setMinWidth(1386);
-    }
-
-    public Stage getPrimaryStage(){return primaryStage;}
+    public void setNumberOfPlayers(int number){numberOfPlayers = number;}
+    public void setPlayerName(String name){playerName = name;}
 }

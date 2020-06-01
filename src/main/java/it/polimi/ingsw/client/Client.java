@@ -31,8 +31,8 @@ public class Client implements ViewObserver {
             view.displayStartup(); //Questo metodo fa partire la Cli e la Gui (nella cli fa partire l'ASCII Art)
             view.askForStartupInfos();
         } catch (Exception e) {
+            e.printStackTrace();
             onError();
-            communicator.stopProcess();
         }
     }
 

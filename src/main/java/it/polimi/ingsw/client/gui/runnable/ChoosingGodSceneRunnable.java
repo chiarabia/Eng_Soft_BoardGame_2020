@@ -1,5 +1,7 @@
-package it.polimi.ingsw.client.gui;
+package it.polimi.ingsw.client.gui.runnable;
 
+import it.polimi.ingsw.client.gui.GUICache;
+import it.polimi.ingsw.client.gui.MainStage;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
 import javafx.scene.Parent;
@@ -20,8 +22,7 @@ public class ChoosingGodSceneRunnable implements Runnable {
             Parent root = loader.load();
             Scene boardScene = new Scene (root);
 
-            Stage window = cache.getPrimaryStage();
-            cache.setStage(window);
+            Stage window = MainStage.getStage();
 
             window.setScene(boardScene);
             window.show();
