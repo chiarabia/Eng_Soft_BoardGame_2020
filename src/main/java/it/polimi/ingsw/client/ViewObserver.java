@@ -7,8 +7,8 @@ import java.util.List;
 
 public interface ViewObserver {
     void onCompletedStartup (String myName, int numOfPlayers); //Il giocatore ha appena scelto nome e numero giocatori
-    void onCompletedInitialGodPower(String chosenGodPower); // Il giocatore ha appena scelto la divinità
-    void onCompletedRequestInitializeGame(String chosenGodPower, List<Position> myWorkerPositions); // Il giocatore ha appena scelto anche le posizioni iniziali
+    void onCompletedInitializeGodPower(String chosenGodPower); // Il giocatore ha appena scelto la divinità
+    void onCompletedInitializeWorkerPositions(List<Position> myWorkerPositions); // Il giocatore ha appena scelto anche le posizioni iniziali
     void onCompletedBuild(Position position, int workerId, boolean isDome); // Il giocatore ha appena scelto di costruire in una posizione
     void onCompletedMove(Position position, int workerId); // Il giocatore ha appena scelto di muovere in una posizione
     void onCompletedDecline(); // Il giocatore ha appena scelto di rifiutare un'azione opzionale

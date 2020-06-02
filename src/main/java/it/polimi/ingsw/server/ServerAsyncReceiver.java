@@ -27,7 +27,10 @@ public class ServerAsyncReceiver extends EventGenerator {
                     ObjectInputStream fileObjectIn = new ObjectInputStream(socket.getInputStream());
                     reactToClient(fileObjectIn.readObject());
                 }
-            } catch (Exception e) {reactToClient( new Message("Error"));}
+            } catch (Exception e) {
+                e.printStackTrace();
+                reactToClient( new Message("Error"));
+            }
     }
 
     public ServerAsyncReceiver(Socket socket, int playerId){
@@ -47,10 +50,15 @@ public class ServerAsyncReceiver extends EventGenerator {
             for (int i = 0; i < observerList.size(); i++)
                 observerList.get(i).onConsolidateBuild(playerId, serializableFromClient.getNewPosition(), serializableFromClient.isForceDome());
         }
-        if (fromClient instanceof SerializableInitializeGame) {
-            SerializableInitializeGame serializableFromClient = (SerializableInitializeGame) fromClient;
+        if (fromClient instanceof SerializableInitializeGodPower) {
+            SerializableInitializeGodPower serializableFromClient = (SerializableInitializeGodPower) fromClient;
             for (int i = 0; i < observerList.size(); i++)
-                observerList.get(i).onInitialization(playerId, serializableFromClient.getWorkerPositions(), serializableFromClient.getGodPower());
+                observerList.get(i).onGodPowerInitialization(playerId, serializableFromClient.getGodPower());
+        }
+        if (fromClient instanceof SerializableInitializeWorkerPositions) {
+            SerializableInitializeWorkerPositions serializableFromClient = (SerializableInitializeWorkerPositions) fromClient;
+            for (int i = 0; i < observerList.size(); i++)
+                observerList.get(i).onWorkerPositionsInitialization(playerId, serializableFromClient.getWorkerPositions());
         }
         if (fromClient instanceof SerializableDeclineLastAction) {
             for (int i = 0; i < observerList.size(); i++) observerList.get(i).onEndedTurn(playerId);

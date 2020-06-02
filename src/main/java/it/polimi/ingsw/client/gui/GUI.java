@@ -36,6 +36,12 @@ public class GUI implements View {
     }
 
     @Override
+    public void displayGameStart(){}
+
+    @Override
+    public void displayBoardScreen(){}
+
+    @Override
     public void displayWaitingRoom() {
         Platform.runLater(new WaitingSceneRunnable());
     }
@@ -46,6 +52,11 @@ public class GUI implements View {
 
     @Override
     public void displayPlayerNames(SerializableUpdateInitializeNames names) {
+
+    }
+
+    @Override
+    public void displayGodPower(int playerId){
 
     }
 
@@ -97,21 +108,18 @@ public class GUI implements View {
     }
 
     @Override
-    // Qui chiede il godPower...
     public void askForInitialGodPower(List<GodCard> godPowers) {
         cache.setGodPowers(godPowers);
         Platform.runLater(choosingGodSceneRunnable);
 
-        //alla fine deve chiamare onCompletedInitialGodPower(String chosenGodPower);
+        //alla fine deve chiamare onCompletedInitializeGodPower(String chosenGodPower)
     }
 
     @Override
-    //...qui prende in ingresso il godPower precedentemente scelto, chiede le posizioni iniziali e resistuisce entrambe le informazioni
-    //chosenGodPower qui è solo di passaggio, viene conservato per arrivare a destinazione (cioè onCompletedRequestInitializeGame)
-    public void askForWorkersInitialPositions(String chosenGodPower) {
+    public void askForInitialWorkerPositions() {
 
 
-        //alla fine deve chiamare onCompletedRequestInitializeGame(String chosenGodPower, List< Position > myWorkerPositions);
+        //alla fine deve chiamare onCompletedInitializeWorkerPositions(List<Position> myWorkerPositions)
     }
 
     @Override

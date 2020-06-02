@@ -51,6 +51,7 @@ public class ClientCommunicator extends Thread {
         } catch (Exception e) {
             for(int i = 0; i<observerList.size(); i++)observerList.get(i).onError();
             stopProcess();
+            e.printStackTrace();
         }
     }
 
@@ -60,11 +61,17 @@ public class ClientCommunicator extends Thread {
 
     //metodo principale, gestisce tutti messaggi col server e invia le risposte al server
     private void reactToServer(Object object) throws Exception {
-        if (object instanceof SerializableUpdateInitializeGame) { //ricevo un oggetto contente i GodPower dei vari giocatori che vengono aggiunti alla board
-            for(int i = 0; i<observerList.size(); i++)observerList.get(i).onUpdateInitializeGame((SerializableUpdateInitializeGame) object);
+        if (object instanceof SerializableUpdateInitializeWorkerPositions) { //ricevo un oggetto contente i GodPower dei vari giocatori che vengono aggiunti alla board
+            for(int i = 0; i<observerList.size(); i++)observerList.get(i).onUpdateInitializeWorkerPositions((SerializableUpdateInitializeWorkerPositions) object);
         }
-        if (object instanceof SerializableRequestInitializeGame) { // chiedo quale GodPower il plauer voglia scegleire
-            for(int i = 0; i<observerList.size(); i++)observerList.get(i).onRequestInitializeGame((SerializableRequestInitializeGame) object);
+        if (object instanceof SerializableUpdateInitializeGodPower) { //ricevo un oggetto contente i GodPower dei vari giocatori che vengono aggiunti alla board
+            for(int i = 0; i<observerList.size(); i++)observerList.get(i).onUpdateInitializeGodPower((SerializableUpdateInitializeGodPower) object);
+        }
+        if (object instanceof SerializableRequestInitializeGodPower) { // chiedo quale GodPower il plauer voglia scegleire
+            for(int i = 0; i<observerList.size(); i++)observerList.get(i).onRequestInitializeGodPower((SerializableRequestInitializeGodPower) object);
+        }
+        if (object instanceof SerializableRequestInitializeWorkerPositions) { // chiedo quale GodPower il plauer voglia scegleire
+            for(int i = 0; i<observerList.size(); i++)observerList.get(i).onRequestInitializeWorkerPositions();
         }
         if (object instanceof SerializableUpdateMove) {   //messaggio che ricevo dopo aver consolidato una move
             for(int i = 0; i<observerList.size(); i++)observerList.get(i).onUpdateMove((SerializableUpdateMove) object);

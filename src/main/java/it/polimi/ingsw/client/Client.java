@@ -20,12 +20,13 @@ public class Client implements ViewObserver {
     private ClientCommunicator communicator;
     private int port;
     private String IP;
+    private boolean isGameStarted = false;
 
     public void startClient(int port, String IP) {
         try {
             this.port = port;
             this.IP = IP;
-            view = new GUI();//GUI();
+            view = new Terminal();
             view.addObserver(this);
             view.displayStartup(); //Questo metodo fa partire la Cli e la Gui (nella cli fa partire l'ASCII Art)
             view.askForStartupInfos();
@@ -39,12 +40,10 @@ public class Client implements ViewObserver {
         view.displayError();
     }
 
-    public void onUpdateInitializeGame(SerializableUpdateInitializeGame object){
-        String godPower = object.getGodPower();
+    public void onUpdateInitializeWorkerPositions(SerializableUpdateInitializeWorkerPositions object){
         int whichPlayerId = object.getPlayerId();
         Position positionWorker1 = object.getWorkerPositions().get(0);
         Position positionWorker2 = object.getWorkerPositions().get(1);
-        board.getPlayer(whichPlayerId).setGodPowerName(godPower);
         //setto i worker dei vari giocatori
         board.getPlayer(whichPlayerId).getWorker(1).setX(positionWorker1.getX());
         board.getPlayer(whichPlayerId).getWorker(1).setY(positionWorker1.getY());
@@ -53,11 +52,23 @@ public class Client implements ViewObserver {
         view.displayBoard();
     }
 
-    public void onRequestInitializeGame(SerializableRequestInitializeGame object) throws IOException, ParseException {
+    public void onUpdateInitializeGodPower(SerializableUpdateInitializeGodPower object){
+        String godPower = object.getGodPower();
+        int whichPlayerId = object.getPlayerId();
+        board.getPlayer(whichPlayerId).setGodPowerName(godPower);
+        view.displayGodPower(whichPlayerId);
+        if (whichPlayerId==board.numOfPlayers()) view.displayBoardScreen();
+    }
+
+    public void onRequestInitializeGodPower(SerializableRequestInitializeGodPower object) throws IOException, ParseException {
         List<GodCard> godCards = new ArrayList<>();
         for(String s : object.getGodPowers())
             godCards.add(GodCardsManager.getCard(s));
         view.askForInitialGodPower(godCards);
+    }
+
+    public void onRequestInitializeWorkerPositions(){
+        view.askForInitialWorkerPositions();
     }
 
     public void onUpdateDisconnection(SerializableUpdateDisconnection object) throws Exception {
@@ -78,6 +89,10 @@ public class Client implements ViewObserver {
 
     public void onUpdateTurn (SerializableUpdateTurn object){
         board.setPlayerTurnId( object.getPlayerId());
+        if (!isGameStarted){
+            isGameStarted = true;
+            view.displayGameStart();
+        }
         view.displayTurn(); //mostro a schermo che il gicoatore di turno è un altro
     }
 
@@ -168,12 +183,11 @@ public class Client implements ViewObserver {
         communicator.sendObject(new SerializableDeclineLastAction());
     }
 
-    public void onCompletedInitialGodPower(String chosenGodPower){
-        view.askForWorkersInitialPositions(chosenGodPower);
+    public void onCompletedInitializeGodPower(String chosenGodPower){
+        communicator.sendObject(new SerializableInitializeGodPower(chosenGodPower));
     }
 
-    public void onCompletedRequestInitializeGame(String chosenGodPower, List<Position> myWorkerPositions){
-        communicator.sendObject(new SerializableInitializeGame(myWorkerPositions, chosenGodPower));
+    public void onCompletedInitializeWorkerPositions(List<Position> myWorkerPositions){
+        communicator.sendObject(new SerializableInitializeWorkerPositions(myWorkerPositions));
     }
-
 }
