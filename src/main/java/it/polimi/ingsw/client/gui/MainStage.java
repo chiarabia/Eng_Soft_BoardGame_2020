@@ -21,7 +21,12 @@ public class MainStage extends Application {
 
 	private static Stage stage;
 
+	public static ArrayList<Object> playerData = new ArrayList<>();
+	public static List<GodCard> godPowers;
+
+	public static ArrayList<Object> getPlayerData(){return playerData;}
 	public static List<ViewObserver> getObserverList(){return observerList;}
+	public static List<GodCard> getGodPowers(){return godPowers;}
 
 	public static Stage getStage() {
 		return stage;

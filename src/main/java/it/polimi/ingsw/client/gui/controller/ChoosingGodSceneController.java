@@ -2,11 +2,14 @@ package it.polimi.ingsw.client.gui.controller;
 
 import it.polimi.ingsw.client.GodCard;
 import it.polimi.ingsw.client.gui.GUICache;
+import it.polimi.ingsw.client.gui.MainStage;
 import it.polimi.ingsw.effects.GodPower;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.scene.Node;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.layout.HBox;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
 import javafx.scene.text.Text;
@@ -14,11 +17,18 @@ import javafx.scene.text.TextFlow;
 
 import java.io.IOException;
 import java.net.URL;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.ResourceBundle;
 
 public class ChoosingGodSceneController implements Initializable {
 
+    @FXML
+    HBox HBox1;
+    @FXML
+    HBox HBox2;
+    @FXML
+    HBox HBox3;
     GUICache cache = new GUICache();
 
     List<GodCard> godPowers;
@@ -43,26 +53,23 @@ public class ChoosingGodSceneController implements Initializable {
     @FXML
     ImageView godPower3;
 
-    public ChoosingGodSceneController() throws IOException {
-    }
-
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
         //setFirstGod("01.png", "Your move: Your Worker may move into an opponent Worker's space (using normal movement rules) and force their Worker to the space yours just vacated (swapping their positions)", "Apollo");
-        godPowers = cache.getGodPowers();
-        numberOfPlayers = cache.getNumberOfPlayers();
+        HBox3.setVisible(false);
+        ArrayList<Object> playerData = MainStage.getPlayerData();
+        List<GodCard> godPowers = MainStage.getGodPowers();
+        numberOfPlayers = (Integer)playerData.get(1);
         GodCard firstGod = godPowers.get(0);
         setFirstGod(firstGod);
         GodCard secondGod = godPowers.get(1);
         setSecondGod(secondGod);
-        if (numberOfPlayers == 3) {
+        if (numberOfPlayers == 3){
             GodCard thirdGod = godPowers.get(2);
-
+            setThirdGod(thirdGod);
+            HBox3.setVisible(true);
         }
-
     }
-
-
 
     void setFirstGod(GodCard firstGod){
         //set God Name
@@ -124,6 +131,19 @@ public class ChoosingGodSceneController implements Initializable {
         Text godName = new Text(name);
         godName.setFont(Font.font("Verdana", FontWeight.BOLD, 15));
         return godName;
+    }
+
+    public void clickHBox(javafx.scene.input.MouseEvent event) {
+        Node clickedNode = event.getPickResult().getIntersectedNode();
+        if (clickedNode == HBox1) {
+
+        }
+        else if(clickedNode == HBox2){
+
+        }
+        else if(numberOfPlayers == 3 && clickedNode == HBox3){
+
+        }
     }
 }
 

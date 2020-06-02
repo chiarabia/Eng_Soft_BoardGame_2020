@@ -54,8 +54,9 @@ public class LoginSceneController implements Initializable {
         startMatchButton.setOnAction(actionEvent -> {
             System.out.print(numberOfPlayers);
             playerName = playerNameTextField.getText();
-            cache.setNumberOfPlayers(numberOfPlayers);
-            cache.setPlayerName(playerName);
+            ArrayList<Object> playerData = MainStage.getPlayerData();
+            playerData.add(playerName);
+            playerData.add(numberOfPlayers);
             //Client client = new Client();
             //client.onCompletedStartup(playerName,numberOfPlayers);
             List<ViewObserver> observerList = MainStage.getObserverList();

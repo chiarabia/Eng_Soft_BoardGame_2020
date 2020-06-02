@@ -29,6 +29,7 @@ public class ChoosingGodSceneRunnable implements Runnable {
 
         } catch (IOException ex){
             System.err.println(ex);
+            ex.printStackTrace();
         }
     }
 }
