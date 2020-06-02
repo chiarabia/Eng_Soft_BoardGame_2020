@@ -3,6 +3,7 @@ package it.polimi.ingsw.client.gui.controller;
 import it.polimi.ingsw.client.Client;
 import it.polimi.ingsw.client.ViewObserver;
 import it.polimi.ingsw.client.gui.GUICache;
+import it.polimi.ingsw.client.gui.MainStage;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -57,7 +58,7 @@ public class LoginSceneController implements Initializable {
             cache.setPlayerName(playerName);
             //Client client = new Client();
             //client.onCompletedStartup(playerName,numberOfPlayers);
-            List<ViewObserver> observerList = cache.getObserverList();
+            List<ViewObserver> observerList = MainStage.getObserverList();
             for (int i = 0; i < observerList.size(); i++)
                 observerList.get(i).onCompletedStartup(playerName, numberOfPlayers);
         });
