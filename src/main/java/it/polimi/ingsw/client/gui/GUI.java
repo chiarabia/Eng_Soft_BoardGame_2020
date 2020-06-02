@@ -25,7 +25,7 @@ public class GUI implements View {
     ChoosingGodSceneRunnable choosingGodSceneRunnable = new ChoosingGodSceneRunnable();
 
     public void addObserver(ViewObserver observer){
-        List<ViewObserver> observerList = cache.getObserverList();
+        List<ViewObserver> observerList = MainStage.getObserverList();
         observerList.add(observer);}
 
     @Override
