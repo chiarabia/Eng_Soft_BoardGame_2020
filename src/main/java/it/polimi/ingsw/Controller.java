@@ -169,22 +169,46 @@ public class Controller implements ProxyObserver {
 
     @Override
     // Primo metodo lanciato del controller, avvia MVC e procedura di InitializeGame
-    public void onInitialization(){
+    public void onGodPowerInitialization(){
         try {
             godPowersLeft = GodPowerManager.createGodPowers(getNumOfPlayers());
             List<String> godPowersNames = getGodPowersLeftNames();
             List<String> playersNames = new ArrayList<>();
             for (Player player : getPlayers()) playersNames.add(player.getName());
             SerializableUpdateInitializeNames update = new SerializableUpdateInitializeNames(playersNames);
-            SerializableRequest request = new SerializableRequestInitializeGame(1, godPowersNames);
+            SerializableRequest request = new SerializableRequestInitializeGodPower(1, godPowersNames);
             game.notifyUpdateAllAndAnswerOnePlayer(update, request);
         } catch (Exception e){}
     }
 
     @Override
     // Prosegue nella procedura di InitializeGame avanzando di un player
-    public void onInitialization(int playerId, List<Position> workerPositions, String godPower) {
+    public void onGodPowerInitialization(int playerId, String godPower) {
         chooseGodPower(godPower);
+
+        SerializableUpdateInitializeGodPower update = new SerializableUpdateInitializeGodPower(godPower, playerId);
+        if (playerId == getPlayers().size()){ // tutti i god powers sono stati scelti
+            game.notifyJustUpdateAll(update);
+            onWorkerPositionsInitialization();
+        } else {
+            SerializableRequest request = new SerializableRequestInitializeGodPower(playerId + 1, getGodPowersLeftNames());
+            game.notifyUpdateAllAndAnswerOnePlayer(update, request);
+        }
+    }
+
+
+    @Override
+    // Primo metodo lanciato del controller, avvia MVC e procedura di InitializeGame
+    public void onWorkerPositionsInitialization(){
+        try {
+            SerializableRequest request = new SerializableRequestInitializeWorkerPositions(1);
+            game.notifyAnswerOnePlayer(request);
+        } catch (Exception e){}
+    }
+
+    @Override
+    // Prosegue nella procedura di InitializeGame avanzando di un player
+    public void onWorkerPositionsInitialization(int playerId, List<Position> workerPositions) {
         Player player = getPlayer(playerId);
 
         Worker worker1 = new Worker(player, 1);
@@ -199,7 +223,7 @@ public class Controller implements ProxyObserver {
         worker1Cell.setWorker(worker1);
         worker2Cell.setWorker(worker2);
 
-        SerializableUpdateInitializeGame update = new SerializableUpdateInitializeGame(workerPositions, godPower, playerId);
+        SerializableUpdateInitializeWorkerPositions update = new SerializableUpdateInitializeWorkerPositions(workerPositions, playerId);
         if (playerId == getPlayers().size()){ // tutti i worker sono pronti, il primo turno ha inizio
             SerializableUpdateTurn updateTurn = new SerializableUpdateTurn(1);
             game.setTurn(new Turn(getPlayers().get(0)));
@@ -208,9 +232,8 @@ public class Controller implements ProxyObserver {
             tempUpdates.add(updateTurn);
             game.notifyJustUpdateAll(tempUpdates);
             nextOperation();
-
         } else {
-            SerializableRequest request = new SerializableRequestInitializeGame(playerId + 1, getGodPowersLeftNames());
+            SerializableRequest request = new SerializableRequestInitializeWorkerPositions(playerId + 1);
             game.notifyUpdateAllAndAnswerOnePlayer(update, request);
         }
     }

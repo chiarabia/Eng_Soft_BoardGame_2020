@@ -4,18 +4,14 @@ import it.polimi.ingsw.Position;
 
 import java.util.List;
 
-public class SerializableInitializeGame implements Serializable {
+public class SerializableInitializeWorkerPositions implements Serializable {
     private final List<Position> workerPositions;
-    private final String godPower;
 
     public List<Position> getWorkerPositions() {
         return workerPositions;
     }
 
-    public String getGodPower() { return godPower; }
-
-    public SerializableInitializeGame(List<Position> workerPositions, String godPower) {
-        this.godPower = godPower;
+    public SerializableInitializeWorkerPositions(List<Position> workerPositions) {
         this.workerPositions = workerPositions;
     }
 }

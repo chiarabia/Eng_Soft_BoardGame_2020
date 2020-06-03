@@ -19,7 +19,12 @@ public class Terminal implements View {
         this.board = board;
     }
 
-    public void displayWaitingRoom(){}
+    public synchronized void displayWaitingRoom(){}
+
+    public synchronized void displayBoardScreen(){
+        System.out.println();
+        displayBoard();
+    }
 
     public synchronized void displayPlayerNames(SerializableUpdateInitializeNames names){
         System.out.print("You are playing with ");
@@ -27,12 +32,17 @@ public class Terminal implements View {
         for (int id = 1; id <= board.numOfPlayers(); id++) {
             if (id != board.getMyPlayerId()) {
                 if (firstName) {
+                    setColor(id);
                     System.out.print(names.getPlayersNames().get(id - 1));
                     firstName = false;
-                } else System.out.print(" and " + names.getPlayersNames().get(id - 1));
+                } else {
+                    System.out.print(Color.WHITE.set()+" and ");
+                    setColor(id);
+                    System.out.print (names.getPlayersNames().get(id - 1));
+                }
             }
         }
-        System.out.println(".");
+        System.out.println(Color.WHITE.set()+".\n");
     }
 
     public synchronized void displayBoard () {
@@ -78,18 +88,21 @@ public class Terminal implements View {
     }
 
     public synchronized void displayWinner (int playerId) {
-        if (playerId == board.getMyPlayerId()) displayMessage("You have won!");
-        else displayMessage(board.getPlayer(playerId).getPlayerName() + " has won");
+        setColor(playerId);
+        if (playerId == board.getMyPlayerId()) System.out.println("You" + Color.WHITE.set() + " have won!");
+        else System.out.println(board.getPlayer(playerId).getPlayerName() + Color.WHITE.set() +  " has won");
 
     }
 
     public synchronized void displayLoser (int playerId) {
-        if (playerId == board.getMyPlayerId()) displayMessage("You have lost!");
-        else displayMessage(board.getPlayer(playerId).getPlayerName() + " has lost");
+        setColor(playerId);
+        if (playerId == board.getMyPlayerId()) System.out.println("You" + Color.WHITE.set() + " have lost!");
+        else System.out.println(board.getPlayer(playerId).getPlayerName() + Color.WHITE.set() +  " has lost");
     }
 
     public synchronized void displayDisconnection (int playerId){
-        displayMessage(board.getPlayer(playerId).getPlayerName() + " disconnected");
+        setColor(playerId);
+        System.out.println(board.getPlayer(playerId).getPlayerName() + Color.WHITE.set() +  " disconnected");
     }
 
     public synchronized void displayError(){
@@ -100,11 +113,25 @@ public class Terminal implements View {
         displayErrorMessage(message);
     }
 
+    public synchronized void displayGameStart(){
+        System.out.println();
+    }
+
     public synchronized void displayStartup () {
         System.out.println(Terminal.Color.BLUE.set());
         System.out.println("  ╔══ ╔═╗ ╖ ╓ ═╦═ ╔═╗ ╔═╗ ╥ ╖ ╓ ╥ ®");
         System.out.println("  ╚═╗ ╠═╣ ║\\║  ║  ║ ║ ╠\\╝ ║ ║\\║ ║");
         System.out.println("  ══╝ ╜ ╙ ╜ ╙  ╨  ╚═╝ ╜ \\ ╨ ╜ ╙ ╨\n");
+    }
+
+    public synchronized void displayGodPower(int playerId){
+        String godPowerName = board.getPlayer(playerId).getGodPowerName();
+        String playerName = board.getPlayer(playerId).getPlayerName();
+        if (playerId != board.getMyPlayerId()) {
+            setColor(playerId);
+            System.out.print(playerName + Color.WHITE.set());
+            System.out.println(" has chosen "+godPowerName);
+        }
     }
 
     public synchronized void displayTurn(){
@@ -163,7 +190,7 @@ public class Terminal implements View {
 
             if (object.canDecline()) { //Se il player può terminare il turno
                 if (object.areBuildsEmpty() && object.areMovesEmpty()) {
-                    displayMessage("There are no more moves available. The turn is over.");
+                    displayMessage("The turn is over");
                     for (int i = 0; i < observerList.size(); i++) observerList.get(i).onCompletedDecline(); //questo oggetto passa il turno
                     return;
                 }
@@ -215,15 +242,15 @@ public class Terminal implements View {
         new Thread(()-> {
             String chosenGodPower = askForGodPower(godPowers);
             for (int i = 0; i < observerList.size(); i++)
-                observerList.get(i).onCompletedInitialGodPower(chosenGodPower);
+                observerList.get(i).onCompletedInitializeGodPower(chosenGodPower);
         }).start();
     }
 
-    public synchronized void askForWorkersInitialPositions(String chosenGodPower){
+    public synchronized void askForInitialWorkerPositions(){
         new Thread(()-> {
             List<Position> myWorkerPositions = askForWorkersInitialPositions();
             for (int i = 0; i < observerList.size(); i++)
-                observerList.get(i).onCompletedRequestInitializeGame(chosenGodPower, myWorkerPositions);
+                observerList.get(i).onCompletedInitializeWorkerPositions(myWorkerPositions);
         }).start();
     }
 
@@ -282,10 +309,19 @@ public class Terminal implements View {
             godNames.add(godPowers.get(i).getGodName());
         }
         String godPower = "";
-        if(godNames.size()==1) return godNames.get(0);
+        if(godNames.size()==1) {
+            setColor(board.getMyPlayerId());
+            System.out.println("You"+Color.WHITE.set()+" choose: " + godNames.get(0));
+            return godNames.get(0);
+        }
         while (true) {
-            for (String s : godNames) System.out.print(s + " ");
-            godPower = askForString("left, choose God Power: ");
+            setColor(board.getMyPlayerId());
+            System.out.print("You"+Color.WHITE.set()+" choose (");
+            for (int i = 0; i<godNames.size(); i++) {
+                if (i!=godNames.size()-1) System.out.print(godNames.get(i) + "/");
+                else System.out.print(godNames.get(i));
+            }
+            godPower = askForString("): ");
             String finalGodPower = godPower;
             if  (godNames.stream().anyMatch(x -> x.equals(finalGodPower))) break;
         }
@@ -358,11 +394,13 @@ public class Terminal implements View {
         for (int i = 0; i < board.numOfPlayers(); i++) {
             setColor(i+1);
             System.out.print(board.getPlayer(i + 1).getPlayerName());
-            if (!board.getPlayer(i + 1).hasLost() && board.getPlayer(i + 1).getGodPowerName() != null) {
+            if (!board.getPlayer(i + 1).hasLost() && board.getPlayer(i + 1).getWorker(1).getX() != -1) {
                 System.out.print(": Worker 1 (" + board.getPlayer(i + 1).getWorker(1).getX() + ", " + board.getPlayer(i + 1).getWorker(1).getY() + ")");
                 System.out.print(", Worker 2 (" + board.getPlayer(i + 1).getWorker(2).getX() + ", " + board.getPlayer(i + 1).getWorker(2).getY() + ")");
                 System.out.println(", " + board.getPlayer(i + 1).getGodPowerName());
-            } else if (board.getPlayer(i + 1).getGodPowerName() == null) System.out.println();
+            } else if (board.getPlayer(i + 1).getWorker(1).getX() == -1) {
+                System.out.println(": "+board.getPlayer(i + 1).getGodPowerName());
+            }
             else System.out.println(" has lost");
         }
         System.out.print(Terminal.Color.WHITE.set());
