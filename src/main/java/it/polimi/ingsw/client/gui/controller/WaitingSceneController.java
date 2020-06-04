@@ -9,6 +9,6 @@ import java.util.ResourceBundle;
 public class WaitingSceneController implements Initializable {
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
-        //MainStage.getLock().add(new Object());
+
     }
 }

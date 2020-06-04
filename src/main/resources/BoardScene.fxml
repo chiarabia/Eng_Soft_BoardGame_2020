@@ -1,22 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.geometry.Insets?>
-<?import javafx.scene.control.Label?>
-<?import javafx.scene.image.ImageView?>
-<?import javafx.scene.layout.BorderPane?>
-<?import javafx.scene.layout.ColumnConstraints?>
-<?import javafx.scene.layout.FlowPane?>
-<?import javafx.scene.layout.GridPane?>
-<?import javafx.scene.layout.Pane?>
-<?import javafx.scene.layout.RowConstraints?>
-<?import javafx.scene.layout.StackPane?>
-<?import javafx.scene.layout.VBox?>
-<?import javafx.scene.text.Font?>
-<?import javafx.scene.text.TextFlow?>
+<?import javafx.geometry.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.image.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.*?>
 
-<?import javafx.scene.image.Image?>
-<StackPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="774" minWidth="1386" prefHeight="774" prefWidth="1386" style="-fx-background-color:#37b9fd;" stylesheets="CSS/Board.css" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="it.polimi.ingsw.client.gui.controller.BoardSceneController">
-      <BorderPane fx:id="board" maxHeight="774" maxWidth="1386" prefHeight="774" prefWidth="1386" minHeight="774" minWidth="1386" BorderPane.alignment="CENTER">
+<StackPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="774" minWidth="1386" prefHeight="774" prefWidth="1386" style="-fx-background-color:#37b9fd;" stylesheets="CSS/Board.css" xmlns="http://javafx.com/javafx/10.0.2-internal" xmlns:fx="http://javafx.com/fxml/1" fx:controller="it.polimi.ingsw.client.gui.controller.BoardSceneController">
+      <BorderPane fx:id="board" maxHeight="774" maxWidth="1386" minHeight="774" minWidth="1386" prefHeight="774" prefWidth="1386" BorderPane.alignment="CENTER">
          <center>
             <GridPane fx:id="GridPane" minHeight="500" minWidth="500" prefHeight="500.9" prefWidth="500" BorderPane.alignment="CENTER">
 
@@ -34,100 +25,106 @@
                   <RowConstraints minHeight="100" prefHeight="100" vgrow="SOMETIMES" />
                   <RowConstraints minHeight="100" prefHeight="100" vgrow="SOMETIMES" />
                </rowConstraints>
-               <children>
-                  <StackPane minHeight="107.3" minWidth="150.0" prefHeight="107.3" prefWidth="150.0" GridPane.columnIndex="3" GridPane.rowIndex="2" />
-                  <StackPane minHeight="107.3" minWidth="97.3" prefHeight="107.3" prefWidth="97.3" GridPane.columnIndex="4" GridPane.rowIndex="2" />
-                  <StackPane minHeight="104.0" minWidth="104.0" prefHeight="104.0" prefWidth="104.0" GridPane.columnIndex="3" GridPane.rowIndex="3" />
-                  <StackPane minHeight="104.0" minWidth="97.3" prefHeight="104.0" prefWidth="97.3" GridPane.columnIndex="4" GridPane.rowIndex="3" />
-                  <StackPane minHeight="100.0" minWidth="104.0" prefHeight="100.0" prefWidth="104.0" GridPane.columnIndex="3" GridPane.rowIndex="4" />
-                  <StackPane minHeight="100.0" minWidth="97.3" prefHeight="100.0" prefWidth="97.3" GridPane.columnIndex="4" GridPane.rowIndex="4" />
-                  <StackPane minHeight="100.0" minWidth="100.0" prefHeight="100.0" prefWidth="100.0" />
-                  <StackPane minHeight="100.0" minWidth="106.6" prefHeight="100.0" prefWidth="106.6" GridPane.columnIndex="1" />
-                  <StackPane minHeight="105.3" minWidth="106.0" prefHeight="105.3" prefWidth="106.0" GridPane.columnIndex="2" />
-                  <StackPane minHeight="100.0" minWidth="104.0" prefHeight="100.0" prefWidth="104.0" GridPane.columnIndex="3" />
-                  <StackPane minHeight="100.0" minWidth="97.3" prefHeight="100.0" prefWidth="97.3" GridPane.columnIndex="4" />
-                  <StackPane minHeight="105.3" minWidth="100.0" prefHeight="105.3" prefWidth="100.0" GridPane.rowIndex="1" />
-                  <StackPane minHeight="105.3" minWidth="106.6" prefHeight="105.3" prefWidth="106.6" GridPane.columnIndex="1" GridPane.rowIndex="1" />
-                  <StackPane minHeight="105.3" minWidth="106.0" prefHeight="105.3" prefWidth="106.0" GridPane.columnIndex="2" GridPane.rowIndex="1" />
-                  <StackPane minHeight="105.3" minWidth="104.0" prefHeight="105.3" prefWidth="104.0" GridPane.columnIndex="3" GridPane.rowIndex="1" />
-                  <StackPane minHeight="105.3" minWidth="97.3" prefHeight="105.3" prefWidth="97.3" GridPane.columnIndex="4" GridPane.rowIndex="1" />
-                  <StackPane minHeight="107.3" minWidth="100.0" prefHeight="107.3" prefWidth="100.0" GridPane.rowIndex="2" />
-                  <StackPane minHeight="107.3" minWidth="106.6" prefHeight="107.3" prefWidth="106.6" GridPane.columnIndex="1" GridPane.rowIndex="2" />
-                  <StackPane minHeight="107.3" minWidth="106.0" prefHeight="107.3" prefWidth="106.0" GridPane.columnIndex="2" GridPane.rowIndex="2" />
-                  <StackPane minHeight="107.3" minWidth="100.0" prefHeight="107.3" prefWidth="100.0" GridPane.rowIndex="3" />
-                  <StackPane minHeight="104.0" minWidth="106.6" prefHeight="104.0" prefWidth="106.6" GridPane.columnIndex="1" GridPane.rowIndex="3" />
-                  <StackPane minHeight="104.0" minWidth="106.0" prefHeight="104.0" prefWidth="106.0" GridPane.columnIndex="2" GridPane.rowIndex="3" />
-                  <StackPane minHeight="100.0" minWidth="100.0" prefHeight="100.0" prefWidth="100.0" GridPane.rowIndex="4" />
-                  <StackPane minHeight="100.0" minWidth="106.6" prefHeight="100.0" prefWidth="106.6" GridPane.columnIndex="1" GridPane.rowIndex="4" />
-                  <StackPane minHeight="100.0" minWidth="106.0" prefHeight="100.0" prefWidth="106.0" GridPane.columnIndex="2" GridPane.rowIndex="4" />
-                  <StackPane minHeight="100.0" minWidth="100.0" prefHeight="100.0" prefWidth="100.0" />
-               </children>
+               <StackPane minHeight="107.3" minWidth="150.0" prefHeight="107.3" prefWidth="150.0" GridPane.columnIndex="3" GridPane.rowIndex="2" />
+               <StackPane minHeight="107.3" minWidth="97.3" prefHeight="107.3" prefWidth="97.3" GridPane.columnIndex="4" GridPane.rowIndex="2" />
+               <StackPane minHeight="104.0" minWidth="104.0" prefHeight="104.0" prefWidth="104.0" GridPane.columnIndex="3" GridPane.rowIndex="3" />
+               <StackPane minHeight="104.0" minWidth="97.3" prefHeight="104.0" prefWidth="97.3" GridPane.columnIndex="4" GridPane.rowIndex="3" />
+               <StackPane minHeight="100.0" minWidth="104.0" prefHeight="100.0" prefWidth="104.0" GridPane.columnIndex="3" GridPane.rowIndex="4" />
+               <StackPane minHeight="100.0" minWidth="97.3" prefHeight="100.0" prefWidth="97.3" GridPane.columnIndex="4" GridPane.rowIndex="4" />
+               <StackPane minHeight="100.0" minWidth="100.0" prefHeight="100.0" prefWidth="100.0" />
+               <StackPane minHeight="100.0" minWidth="106.6" prefHeight="100.0" prefWidth="106.6" GridPane.columnIndex="1" />
+               <StackPane minHeight="105.3" minWidth="106.0" prefHeight="105.3" prefWidth="106.0" GridPane.columnIndex="2" />
+               <StackPane minHeight="100.0" minWidth="104.0" prefHeight="100.0" prefWidth="104.0" GridPane.columnIndex="3" />
+               <StackPane minHeight="100.0" minWidth="97.3" prefHeight="100.0" prefWidth="97.3" GridPane.columnIndex="4" />
+               <StackPane minHeight="105.3" minWidth="100.0" prefHeight="105.3" prefWidth="100.0" GridPane.rowIndex="1" />
+               <StackPane minHeight="105.3" minWidth="106.6" prefHeight="105.3" prefWidth="106.6" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+               <StackPane minHeight="105.3" minWidth="106.0" prefHeight="105.3" prefWidth="106.0" GridPane.columnIndex="2" GridPane.rowIndex="1" />
+               <StackPane minHeight="105.3" minWidth="104.0" prefHeight="105.3" prefWidth="104.0" GridPane.columnIndex="3" GridPane.rowIndex="1" />
+               <StackPane minHeight="105.3" minWidth="97.3" prefHeight="105.3" prefWidth="97.3" GridPane.columnIndex="4" GridPane.rowIndex="1" />
+               <StackPane minHeight="107.3" minWidth="100.0" prefHeight="107.3" prefWidth="100.0" GridPane.rowIndex="2" />
+               <StackPane minHeight="107.3" minWidth="106.6" prefHeight="107.3" prefWidth="106.6" GridPane.columnIndex="1" GridPane.rowIndex="2" />
+               <StackPane minHeight="107.3" minWidth="106.0" prefHeight="107.3" prefWidth="106.0" GridPane.columnIndex="2" GridPane.rowIndex="2" />
+               <StackPane minHeight="107.3" minWidth="100.0" prefHeight="107.3" prefWidth="100.0" GridPane.rowIndex="3" />
+               <StackPane minHeight="104.0" minWidth="106.6" prefHeight="104.0" prefWidth="106.6" GridPane.columnIndex="1" GridPane.rowIndex="3" />
+               <StackPane minHeight="104.0" minWidth="106.0" prefHeight="104.0" prefWidth="106.0" GridPane.columnIndex="2" GridPane.rowIndex="3" />
+               <StackPane minHeight="100.0" minWidth="100.0" prefHeight="100.0" prefWidth="100.0" GridPane.rowIndex="4" />
+               <StackPane minHeight="100.0" minWidth="106.6" prefHeight="100.0" prefWidth="106.6" GridPane.columnIndex="1" GridPane.rowIndex="4" />
+               <StackPane minHeight="100.0" minWidth="106.0" prefHeight="100.0" prefWidth="106.0" GridPane.columnIndex="2" GridPane.rowIndex="4" />
+               <StackPane minHeight="100.0" minWidth="100.0" prefHeight="100.0" prefWidth="100.0" />
             </GridPane>
          </center>
          <right>
             <FlowPane fx:id="FlowPaneRight" minHeight="500" minWidth="428" prefHeight="200.0" prefWidth="200.0" BorderPane.alignment="CENTER">
+            <VBox prefHeight="450.0" prefWidth="200.0">
                <children>
-                  <VBox fx:id="ListOfPlayers" prefHeight="200.0" prefWidth="100.0">
-                     <FlowPane.margin>
-                        <Insets left="150.0" top="300.0" />
-                     </FlowPane.margin>
+                  <Button fx:id="moveButton" mnemonicParsing="false" prefHeight="50.0" prefWidth="200.0" text="Move" textFill="WHITE">
+                     <VBox.margin>
+                        <Insets bottom="50.0" />
+                     </VBox.margin>
+                     <font>
+                        <Font size="20.0" />
+                     </font></Button>
+                  <Button fx:id="buildButton" mnemonicParsing="false" prefHeight="50.0" prefWidth="200.0" text="Build" textFill="WHITE">
+                     <font>
+                        <Font size="20.0" />
+                     </font></Button>
+                     <VBox fx:id="ListOfPlayers" prefHeight="200.0" prefWidth="100.0">
+                     <VBox.margin>
+                        <Insets top="100.0" />
+                     </VBox.margin>
                      <children>
-                        <Label text="" textFill="#fc0000">
+                        <TextFlow prefHeight="200.0" prefWidth="200.0">
                            <VBox.margin>
-                              <Insets bottom="10.0" left="10.0" top="45.0" />
+                              <Insets bottom="15.0" left="15.0" right="15.0" top="15.0" />
                            </VBox.margin>
-                        </Label>
-                        <Label text="">
-                           <VBox.margin>
-                              <Insets bottom="10.0" left="10.0" top="10.0" />
-                           </VBox.margin>
-                        </Label>
+                        </TextFlow>
                      </children>
-                  </VBox>
-               </children></FlowPane>
+                     </VBox>
+               </children>
+               <opaqueInsets>
+                  <Insets />
+               </opaqueInsets>
+               <FlowPane.margin>
+                  <Insets left="114.0" top="50.0" />
+               </FlowPane.margin>
+            </VBox>
+            </FlowPane>
          </right>
          <top>
             <FlowPane fx:id="FlowPaneTop" prefHeight="144" prefWidth="1386" BorderPane.alignment="CENTER">
-               <children>
-                  <Label fx:id="playersName" alignment="CENTER" contentDisplay="CENTER" prefHeight="45.0" prefWidth="115.0" text="Label" textAlignment="CENTER">
-                     <font>
-                        <Font size="36.0" />
-                     </font>
-                     <FlowPane.margin>
-                        <Insets left="100.0" top="25.0" />
-                     </FlowPane.margin>
-                     <padding>
-                        <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
-                     </padding>
-                  </Label>
+               <Label fx:id="playerNameLabel" alignment="CENTER" contentDisplay="CENTER" prefHeight="63.0" prefWidth="180.0" text="Label" textAlignment="CENTER">
+                  <font>
+                     <Font size="36.0" />
+                  </font>
+                  <FlowPane.margin>
+                     <Insets left="100.0" top="25.0" />
+                  </FlowPane.margin>
+                  <padding>
+                     <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+                  </padding>
+               </Label>
                <ImageView fitHeight="83.6" fitWidth="329.3" pickOnBounds="true" preserveRatio="true">
                   <FlowPane.margin>
                      <Insets left="750.0" top="10.0" />
                   </FlowPane.margin>
-                 <image>
-                     <Image url="components/santoriniLogo.png" backgroundLoading="true"/>
-                  </image>
+<!--                  <Image url="components/santoriniLogo.png" backgroundLoading="true"/>-->
                </ImageView>
-               </children>
             </FlowPane>
          </top>
          <left>
             <FlowPane fx:id="FlowPaneLeft" orientation="VERTICAL" prefHeight="500" prefWidth="427" rowValignment="BOTTOM" BorderPane.alignment="CENTER">
-            <children>
-               <ImageView fx:id="godCard" fitHeight="235.0" fitWidth="140.0" >
+               <ImageView fx:id="godCard" fitHeight="235.0" fitWidth="140.0">
                   <FlowPane.margin>
                      <Insets left="75.0" top="50.0" />
                   </FlowPane.margin>
-                  <image>
-                     <Image url="godCards/01.png" backgroundLoading="true"/>
-                  </image>
+<!--                  <Image url="godCards/01.png" backgroundLoading="true"/>-->
                </ImageView>
                <TextFlow fx:id="godDescription" prefHeight="100.0" prefWidth="200.0">
                   <FlowPane.margin>
                      <Insets left="50.0" top="50.0" />
                   </FlowPane.margin>
                </TextFlow>
-            </children></FlowPane>
+            </FlowPane>
          </left>
          <bottom>
             <FlowPane fx:id="FlowPaneBottom" prefHeight="100" prefWidth="1386" BorderPane.alignment="CENTER" />

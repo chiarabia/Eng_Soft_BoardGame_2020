@@ -39,7 +39,9 @@ public class GUI implements View {
     public void displayGameStart(){}
 
     @Override
-    public void displayBoardScreen(){}
+    public void displayBoardScreen(){
+        Platform.runLater(new BoardSceneRunnable());
+    }
 
     @Override
     public void displayWaitingRoom() {
@@ -53,7 +55,6 @@ public class GUI implements View {
 
     @Override
     public void displayPlayerNames(SerializableUpdateInitializeNames names) {
-        Platform.runLater(choosingGodSceneRunnable);
     }
 
     @Override
@@ -113,9 +114,6 @@ public class GUI implements View {
         List<GodCard> godCards = MainStage.getGodPowers();
         godCards.addAll(godPowers);
 
-       /* try {
-            MainStage.getLock().take();
-        } catch (Exception ignored) {}*/
         Platform.runLater(choosingGodSceneRunnable);
 
         //alla fine deve chiamare onCompletedInitializeGodPower(String chosenGodPower)

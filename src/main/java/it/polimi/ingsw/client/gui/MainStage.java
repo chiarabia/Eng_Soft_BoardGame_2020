@@ -22,17 +22,21 @@ public class MainStage extends Application {
 	private static Stage stage;
 
 	public static ArrayList<Object> playerData = new ArrayList<>();
-	public static List<GodCard> godPowers;
+	public static List<GodCard> godPowers = new ArrayList<>();
 
 	public static ArrayList<Object> getPlayerData(){return playerData;}
 	public static List<ViewObserver> getObserverList(){return observerList;}
 	public static List<GodCard> getGodPowers(){return godPowers;}
+
+
+
 
 	public static Stage getStage() {
 		return stage;
 	}
 
 	public static BlockingQueue<Object> getLock() { return lock; }
+
 
 	public static void main() {
 		launch();
@@ -50,7 +54,7 @@ public class MainStage extends Application {
 		primaryStage.setMinWidth(1386);
 
 		//sets the first Scene as the Loading Scene
-		Parent root = FXMLLoader.load(getClass().getClassLoader().getResource("MainScene.fxml"));
+		Parent root = FXMLLoader.load(getClass().getClassLoader().getResource("LoginScene.fxml"));
 
 		Scene scene = new Scene(root);
 		primaryStage.setScene(scene);

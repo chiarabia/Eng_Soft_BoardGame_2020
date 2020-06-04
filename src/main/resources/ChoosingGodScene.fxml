@@ -20,17 +20,17 @@
                <Insets left="250.0" right="250.0" top="44.0"/>
             </VBox.margin>
             <ImageView fx:id="godPortrait1" fitHeight="150.0" fitWidth="150.0" pickOnBounds="true"
-                       preserveRatio="true" style="-fx-background-radius: 25px;">
+                       preserveRatio="true" style="-fx-background-radius: 25px;" onMouseClicked="#clickHBox">
                <HBox.margin>
                   <Insets bottom="14.0" left="100.0" top="14.0"/>
                </HBox.margin>
             </ImageView>
-            <TextFlow fx:id="godDescription1" prefHeight="200.0" prefWidth="300.0">
+            <TextFlow fx:id="godDescription1" prefHeight="200.0" prefWidth="300.0" onMouseClicked="#clickHBox">
                <HBox.margin>
                   <Insets bottom="14.0" left="20.0" top="14.0"/>
                </HBox.margin>
             </TextFlow>
-            <ImageView fx:id="godPower1" fitHeight="150.0" fitWidth="150.0" pickOnBounds="true" preserveRatio="true">
+            <ImageView fx:id="godPower1" fitHeight="150.0" fitWidth="150.0" pickOnBounds="true" preserveRatio="true" onMouseClicked="#clickHBox">
                <HBox.margin>
                   <Insets bottom="14.0" left="20.0" top="14.0"/>
                </HBox.margin>
@@ -41,17 +41,17 @@
                <Insets left="250.0" right="250.0" top="44.0"/>
             </VBox.margin>
             <ImageView fx:id="godPortrait2" fitHeight="150.0" fitWidth="150.0" pickOnBounds="true"
-                       preserveRatio="true">
+                       preserveRatio="true" onMouseClicked="#clickHBox">
                <HBox.margin>
                   <Insets bottom="14.0" left="100.0" top="14.0"/>
                </HBox.margin>
             </ImageView>
-            <TextFlow fx:id="godDescription2" prefHeight="200.0" prefWidth="300.0">
+            <TextFlow fx:id="godDescription2" prefHeight="200.0" prefWidth="300.0" onMouseClicked="#clickHBox">
                <HBox.margin>
                   <Insets bottom="14.0" left="20.0" top="14.0"/>
                </HBox.margin>
             </TextFlow>
-            <ImageView fx:id="godPower2" fitHeight="150.0" fitWidth="150.0" pickOnBounds="true" preserveRatio="true">
+            <ImageView fx:id="godPower2" fitHeight="150.0" fitWidth="150.0" pickOnBounds="true" preserveRatio="true" onMouseClicked="#clickHBox">
                <HBox.margin>
                   <Insets bottom="14.0" left="20.0" top="14.0"/>
                </HBox.margin>
@@ -62,17 +62,17 @@
                <Insets left="250.0" right="250.0" top="44.0"/>
             </VBox.margin>
             <ImageView fx:id="godPortrait3" fitHeight="150.0" fitWidth="150.0" pickOnBounds="true"
-                       preserveRatio="true">
+                       preserveRatio="true" onMouseClicked="#clickHBox">
                <HBox.margin>
                   <Insets bottom="14.0" left="100.0" top="14.0"/>
                </HBox.margin>
             </ImageView>
-            <TextFlow fx:id="godDescription3" prefHeight="200.0" prefWidth="300.0">
+            <TextFlow fx:id="godDescription3" prefHeight="200.0" prefWidth="300.0" onMouseClicked="#clickHBox">
                <HBox.margin>
                   <Insets bottom="14.0" left="20.0" top="14.0"/>
                </HBox.margin>
             </TextFlow>
-            <ImageView fx:id="godPower3" fitHeight="150.0" fitWidth="150.0" pickOnBounds="true" preserveRatio="true">
+            <ImageView fx:id="godPower3" fitHeight="150.0" fitWidth="150.0" pickOnBounds="true" preserveRatio="true" onMouseClicked="#clickHBox">
                <HBox.margin>
                   <Insets bottom="14.0" left="20.0" top="14.0"/>
                </HBox.margin>
@@ -82,7 +82,7 @@
    </center>
       <top>
          <FlowPane prefHeight="60.0" prefWidth="200.0" BorderPane.alignment="CENTER">
-            <Label text="Player Is Choosing..." textAlignment="CENTER">
+            <Label text="Choose a God Power" textAlignment="CENTER">
                <font>
                   <Font size="36.0"/>
                </font>

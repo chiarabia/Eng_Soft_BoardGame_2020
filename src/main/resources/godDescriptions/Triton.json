@@ -1,5 +1,5 @@
 {
     "name" : "Triton",
     "description" : "Your move: Each time your Worker moves onto a perimeter space (ground or block), it may immediately move again.",
-    "image" : "29.png"
+    "image code" : "29.png"
 }
