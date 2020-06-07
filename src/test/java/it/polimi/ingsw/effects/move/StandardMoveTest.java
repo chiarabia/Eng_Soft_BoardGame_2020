@@ -152,4 +152,16 @@ public class StandardMoveTest {
         //assert board.getStream().filter(a-> a.isFree()).count() == 24;
     }
 
+    @Test
+    void PlayerCouldnotMoveIfSourrendedByDomes () {
+        workerCell = board.getCell(0,4,0);
+        workerCell.setWorker(worker);
+
+        board.getCell(0,3,0).setDome(true);
+        board.getCell(1,3,0).setDome(true);
+        board.getCell(1,4,0).setDome(true);
+
+        assertTrue(standardMove.move(workerCell.getPosition(), board, turn).isEmpty());
+    }
+
 }

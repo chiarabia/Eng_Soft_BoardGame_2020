@@ -16,6 +16,7 @@ public class Controller implements ProxyObserver {
     private Game game;
     private List <GodPower> godPowersLeft;
     private ServerView serverView;
+
     public Controller(Game game, ServerView serverView) {
         this.game = game;
         this.serverView = serverView;
@@ -26,7 +27,6 @@ public class Controller implements ProxyObserver {
         Turn turn = getTurn();
         Board board = getBoard();
         int playerId = turn.getPlayerId();
-        Player currentPlayer = getPlayer(playerId);
         SerializableRequest request;
 
         boolean canForceDome = getPlayerGodPower(playerId).isAskToBuildDomes();
@@ -34,15 +34,15 @@ public class Controller implements ProxyObserver {
         Position worker2Position = getWorkerPosition(playerId, 2);
 
         Set<Position> worker1Moves  =  getPlayerGodPower(playerId).move(worker1Position , board, turn);
-        Set<Position> worker2Moves  =  getPlayerGodPower(playerId).move(worker2Position , board, turn);
         Set<Position> worker1Builds =  getPlayerGodPower(playerId).build(worker1Position, board, turn);
+        Set<Position> worker2Moves  =  getPlayerGodPower(playerId).move(worker2Position , board, turn);
         Set<Position> worker2Builds =  getPlayerGodPower(playerId).build(worker2Position, board, turn);
 
         if (checkLose(playerId, worker1Moves, worker1Builds, worker2Moves, worker2Builds, turn)) {
-            return;
+            //return;
         }
         else if (checkWin (playerId, null, null)) {
-            return;
+           // return;
         }
         else {
             request = new SerializableRequestAction(playerId,
@@ -113,13 +113,9 @@ public class Controller implements ProxyObserver {
     // Gestisce la sconfitta di un giocatore
     public void onPlayerLoss(int playerId)  {
         int nextPlayerId = nextPlayerId(playerId);
-        Position worker1Position =  getWorkerPosition(playerId, 1);
-        Position worker2Position =  getWorkerPosition(playerId, 2);
         List<GodPower> godPowerList = getGodPowers();
-        List<Player> playersList = getPlayers();
-        Board board = getBoard();
 
-        Turn newTurn = getPlayerGodPower(playerId).endTurn(getTurn(), godPowerList, getPlayer(playerId)); // termina il turno precedente
+        Turn newTurn = getPlayerGodPower(playerId).endTurn(getTurn(), godPowerList, getPlayer(nextPlayerId)); // termina il turno precedente
         game.setTurn(newTurn); // setta il turno successivo
         removePlayerInfos(playerId); //rimuove tutte le informazioni del giocatore dalla partita
 
@@ -158,9 +154,9 @@ public class Controller implements ProxyObserver {
     }
 
     private boolean checkLose (int playerId, Set<Position> worker1Moves, Set<Position> worker1Builds, Set<Position> worker2Moves, Set<Position> worker2Builds, Turn turn) {
-        StandardLoseCondition standardLoseCondition = getPlayerGodPower(playerId).getLoseCondition();
+        StandardLoseCondition playerLoseCondition = getPlayerGodPower(playerId).getLoseCondition();
 
-        if (!turn.canDecline() && standardLoseCondition.lose(worker1Moves, worker1Builds) && standardLoseCondition.lose(worker2Moves, worker2Builds)) {
+        if (!turn.canDecline() && playerLoseCondition.lose(worker1Moves, worker1Builds) && playerLoseCondition.lose(worker2Moves, worker2Builds)) {
             onPlayerLoss(playerId);
             return true;
         }
@@ -265,10 +261,12 @@ public class Controller implements ProxyObserver {
     }
 
     private void removePlayerInfos (int playerId) {
-        game.removePlayer(playerId); // setta il Player a null
-        game.removeGodPower(playerId); // setta il GodPower a null
         getBoard().getCell(getWorkerPosition(playerId, 1)).setWorker(null); // rimuove i worker dalle celle
         getBoard().getCell(getWorkerPosition(playerId, 2)).setWorker(null);
+        game.removeGodPower(playerId); // setta il GodPower a null
+        game.removePlayer(playerId); // setta il Player a null
+
+
     }
 
     private int getNumOfPlayers() {return game.getNumOfPlayers();}
@@ -287,5 +285,9 @@ public class Controller implements ProxyObserver {
     }
     private Position getWorkerPosition(int playerId, int workerId) {
         return game.getWorkerPosition(playerId, workerId);
+    }
+
+    public List<GodPower> getGodPowersLeft() {
+        return godPowersLeft;
     }
 }

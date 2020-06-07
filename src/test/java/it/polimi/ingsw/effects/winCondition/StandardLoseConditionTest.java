@@ -3,8 +3,11 @@ package it.polimi.ingsw.effects.winCondition;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertThrows;
-import it.polimi.ingsw.Cell;
-import it.polimi.ingsw.Position;
+
+import it.polimi.ingsw.*;
+import it.polimi.ingsw.effects.build.StandardBuild;
+import it.polimi.ingsw.effects.move.StandardMove;
+import org.junit.Assert;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -60,6 +63,48 @@ public class StandardLoseConditionTest {
             loseCondition.lose(null, null);
         });
     }
+
+    @Test
+    void playerShouldNotPlayASingleTurn() {
+        Player player1 = new Player("Pippo",1);
+        Player player2 = new Player("Pluto", 2);
+        Player player3 = new Player("Pluto", 3);
+        Worker worker1player1 = new Worker(player1, 1);
+        Worker worker2player1 = new Worker(player1, 2);
+        Worker worker1player2 = new Worker(player2, 1);
+        Worker worker2player2 = new Worker(player2, 2);
+        Worker worker1player3 = new Worker(player3, 1);
+        Worker worker2player3 = new Worker(player3, 2);
+        Board board = new Board();
+        board.getCell(0,0,0).setWorker(worker1player1);
+        board.getCell(0,1,0).setWorker(worker2player1);
+        board.getCell(1,1,0).setWorker(worker1player2);
+        board.getCell(1,0,0).setWorker(worker2player2);
+        board.getCell(0,2,0).setWorker(worker1player3);
+        board.getCell(1,2,0).setWorker(worker2player3);
+
+        Cell worker1Cell = board.getCell(0,0,0);
+        Cell worker2Cell = board.getCell(0,1,0);
+
+        StandardMove standardMove = new StandardMove(1);
+        StandardBuild standardBuild = new StandardBuild (1);
+
+        Turn turn = new Turn(player1);
+
+        Set<Position> worker1moves = standardMove.move(worker1Cell.getPosition(), board, turn);
+        Set<Position> worker2moves = standardMove.move(worker2Cell.getPosition(), board, turn);
+        Set<Position> worker1builds = standardBuild.build(worker1Cell.getPosition(), board, turn);
+        Set<Position> worker2builds = standardBuild.build(worker2Cell.getPosition(), board, turn);
+
+
+        StandardLoseCondition standardLoseCondition = new StandardLoseCondition();
+        Assert.assertTrue(standardLoseCondition.lose(worker1moves, worker2builds)&&standardLoseCondition.lose(worker2moves, worker2builds));
+
+
+
+
+    }
+
 
 }
 
