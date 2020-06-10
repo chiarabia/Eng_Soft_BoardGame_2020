@@ -103,6 +103,8 @@ public class GUI implements View {
 
     @Override
     public void displayBoard() {
+        //actionsCodes.clear();
+        //actionsCodes.add(0);
     }
 
 

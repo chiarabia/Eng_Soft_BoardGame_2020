@@ -119,8 +119,8 @@ public class BoardSceneController implements Initializable {
         //gets the Position of the Worker
         Position WorkerPosition = (Position) workerCells.get(workerNumber+1);
         workerPositions.add(WorkerPosition);
-        //when there are two Positions it gives them to the client
-        if (workerNumber == 1){
+        //when there are two Workers it gives them to the client
+        if (workerNumber == 3){
             for (int i = 0; i < observerList.size(); i++)
                 observerList.get(i).onCompletedInitializeWorkerPositions(workerPositions);
         }
