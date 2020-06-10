@@ -1,6 +1,6 @@
 package it.polimi.ingsw.client.gui.runnable;
 
-import it.polimi.ingsw.client.gui.GUICache;
+
 import it.polimi.ingsw.client.gui.MainStage;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;

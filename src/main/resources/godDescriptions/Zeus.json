@@ -1,5 +1,5 @@
 {
     "name" : "Zeus",
     "description" : "Your Build: Your Worker may build under itself in its current space, forcing it up one level. You do not win by forcing yourself up to the third level.",
-    "image" : "30.png"
+    "image code" : "30.png"
 }

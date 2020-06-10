@@ -1,12 +1,15 @@
 package it.polimi.ingsw.client.gui.controller;
 
 import it.polimi.ingsw.client.GodCard;
-import it.polimi.ingsw.client.gui.GUICache;
+import it.polimi.ingsw.client.ViewObserver;
+import it.polimi.ingsw.client.gui.MainStage;
 import it.polimi.ingsw.effects.GodPower;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.scene.Node;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.layout.HBox;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
 import javafx.scene.text.Text;
@@ -14,14 +17,19 @@ import javafx.scene.text.TextFlow;
 
 import java.io.IOException;
 import java.net.URL;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.ResourceBundle;
 
 public class ChoosingGodSceneController implements Initializable {
 
-    GUICache cache = new GUICache();
+    @FXML
+    HBox HBox1;
+    @FXML
+    HBox HBox2;
+    @FXML
+    HBox HBox3;
 
-    List<GodCard> godPowers;
     int numberOfPlayers;
 
     @FXML
@@ -43,36 +51,37 @@ public class ChoosingGodSceneController implements Initializable {
     @FXML
     ImageView godPower3;
 
-    public ChoosingGodSceneController() throws IOException {
-    }
-
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
-        //setFirstGod("01.png", "Your move: Your Worker may move into an opponent Worker's space (using normal movement rules) and force their Worker to the space yours just vacated (swapping their positions)", "Apollo");
-        godPowers = cache.getGodPowers();
-        numberOfPlayers = cache.getNumberOfPlayers();
+        HBox3.setVisible(false);
+        HBox2.setVisible(false);
+        ArrayList<Object> playerData = MainStage.getPlayerData();
+        List<GodCard> godPowers = MainStage.getGodPowers();
+        numberOfPlayers = (Integer)playerData.get(1);
         GodCard firstGod = godPowers.get(0);
         setFirstGod(firstGod);
-        GodCard secondGod = godPowers.get(1);
-        setSecondGod(secondGod);
-        if (numberOfPlayers == 3) {
-            GodCard thirdGod = godPowers.get(2);
-
+        int numberOfGods = godPowers.size();
+        if(numberOfGods == 2){
+            GodCard secondGod = godPowers.get(1);
+            setSecondGod(secondGod);
+            HBox2.setVisible(true);
         }
-
+        if (numberOfGods == 3){
+            GodCard thirdGod = godPowers.get(2);
+            setThirdGod(thirdGod);
+            HBox3.setVisible(true);
+        }
     }
-
-
 
     void setFirstGod(GodCard firstGod){
         //set God Name
-        String name = firstGod.getGodName();
-        Text godName = setGodNameProperties(name);
+        String name1 = firstGod.getGodName();
+        Text godName1 = setGodNameProperties(name1);
         Text newLine = new Text("\n");
         //Set God Description
         String text = firstGod.getGodDescription();
         Text godDescrip1 = new Text(text);
-        godDescription1.getChildren().add(godName);
+        godDescription1.getChildren().add(godName1);
         godDescription1.getChildren().add(newLine);
         godDescription1.getChildren().add(godDescrip1);
         //set Portrait
@@ -86,12 +95,14 @@ public class ChoosingGodSceneController implements Initializable {
 
     void setSecondGod(GodCard secondGod){
         //set God Name
-        String name = secondGod.getGodName();
-        Text godName = setGodNameProperties(name);
+        String name2 = secondGod.getGodName();
+        Text godName2 = setGodNameProperties(name2);
         Text newLine = new Text("\n");
         //Set God Description
         String text = secondGod.getGodDescription();
         Text godDescrip2 = new Text(text);
+        godDescription2.getChildren().add(godName2);
+        godDescription2.getChildren().add(newLine);
         godDescription2.getChildren().add(godDescrip2);
         //set Portrait
         String godCode = secondGod.getGodImage();
@@ -104,12 +115,14 @@ public class ChoosingGodSceneController implements Initializable {
 
     void setThirdGod(GodCard thirdGod){
         //set God Name
-        String name = thirdGod.getGodName();
-        Text godName = setGodNameProperties(name);
+        String name3 = thirdGod.getGodName();
+        Text godName3 = setGodNameProperties(name3);
         Text newLine = new Text("\n");
         //set God Description
         String text = thirdGod.getGodDescription();
         Text godDescrip3 = new Text(text);
+        godDescription3.getChildren().add(godName3);
+        godDescription3.getChildren().add(newLine);
         godDescription3.getChildren().add(godDescrip3);
         //set Portrait
         String godCode = thirdGod.getGodImage();
@@ -124,6 +137,40 @@ public class ChoosingGodSceneController implements Initializable {
         Text godName = new Text(name);
         godName.setFont(Font.font("Verdana", FontWeight.BOLD, 15));
         return godName;
+    }
+
+    public void clickHBox(javafx.scene.input.MouseEvent event) {
+        Node clickedNode = event.getPickResult().getIntersectedNode();
+        List<GodCard> godPowers = MainStage.getGodPowers();
+        List<ViewObserver> observerList = MainStage.getObserverList();
+        int numberOfGods = godPowers.size();
+        if (clickedNode == HBox1 || clickedNode == godDescription1 || clickedNode == godPortrait1 || clickedNode == godPower1) {
+            GodCard firstGod = godPowers.get(0);
+            String chosenGodPower = firstGod.getGodName();
+            System.out.print("clicked on 1 \n");
+            godPowers.clear();
+            godPowers.add(firstGod);
+            for (int i = 0; i < observerList.size(); i++)
+                observerList.get(i).onCompletedInitializeGodPower(chosenGodPower);
+        }
+        else if(numberOfGods == 2 && (clickedNode == HBox2 || clickedNode == godDescription2 || clickedNode == godPortrait2 || clickedNode == godPower2)){
+            GodCard secondGod = godPowers.get(1);
+            String chosenGodPower = secondGod.getGodName();
+            System.out.print("clicked on 2 \n");
+            godPowers.clear();
+            godPowers.add(secondGod);
+            for (int i = 0; i < observerList.size(); i++)
+                observerList.get(i).onCompletedInitializeGodPower(chosenGodPower);
+        }
+        else if(numberOfGods == 3 && (clickedNode == HBox3 || clickedNode == godDescription3 || clickedNode == godPortrait3 || clickedNode == godPower3)){
+            GodCard thirdGod = godPowers.get(2);
+            String chosenGodPower = thirdGod.getGodName();
+            godPowers.clear();
+            godPowers.add(thirdGod);
+                    System.out.print("clicked on 3 \n");
+            for (int i = 0; i < observerList.size(); i++)
+                observerList.get(i).onCompletedInitializeGodPower(chosenGodPower);
+        }
     }
 }
 

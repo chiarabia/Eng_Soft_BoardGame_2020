@@ -11,93 +11,85 @@
 <?import javafx.scene.text.Font?>
 <?import javafx.scene.text.TextFlow?>
 
-<?import javafx.scene.image.Image?>
 <StackPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="712.9" minWidth="1282.0" prefHeight="712.9" prefWidth="1282.0" style="-fx-background-image: url('PreGameImages/choosingGodSceneBackground.png'); -fx-background-repeat: no-repeat; -fx-background-size: cover" stylesheets="CSS/ChoosingGod.css" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="it.polimi.ingsw.client.gui.controller.ChoosingGodSceneController">
 <BorderPane maxHeight="712.0" maxWidth="1282.0" minHeight="712.0" minWidth="1282.0" prefHeight="712.9" prefWidth="1282.0" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1">
    <center>
       <VBox minHeight="719.0" minWidth="1282.0" prefHeight="200.0" prefWidth="100.0" BorderPane.alignment="CENTER">
-         <children>
-            <HBox fx:id="HBox1" minHeight="178.0" prefHeight="178.0" prefWidth="200.0">
-               <children>
-                  <ImageView fx:id="godPortrait1" fitHeight="150.0" fitWidth="150.0" pickOnBounds="true" preserveRatio="true" style="-fx-background-radius: 25px;">
-                     <HBox.margin>
-                        <Insets bottom="14.0" left="100.0" top="14.0" />
-                     </HBox.margin>
-                  </ImageView>
-                  <TextFlow fx:id="godDescription1" prefHeight="200.0" prefWidth="300.0">
-                     <HBox.margin>
-                        <Insets bottom="14.0" left="20.0" top="14.0" />
-                     </HBox.margin>
-                  </TextFlow>
-                  <ImageView fx:id="godPower1" fitHeight="150.0" fitWidth="150.0" pickOnBounds="true" preserveRatio="true">
-                     <HBox.margin>
-                        <Insets bottom="14.0" left="20.0" top="14.0" />
-                     </HBox.margin>
-                  </ImageView>
-               </children>
-               <VBox.margin>
-                  <Insets left="250.0" right="250.0" top="44.0" />
-               </VBox.margin>
-            </HBox>
-            <HBox fx:id="HBox2" minHeight="178.0" prefHeight="178.0" prefWidth="200.0">
-               <children>
-                  <ImageView fx:id="godPortrait2" fitHeight="150.0" fitWidth="150.0" pickOnBounds="true" preserveRatio="true">
-                     <HBox.margin>
-                        <Insets bottom="14.0" left="100.0" top="14.0" />
-                     </HBox.margin>
-                  </ImageView>
-                  <TextFlow fx:id="godDescription2" prefHeight="200.0" prefWidth="300.0">
-                     <HBox.margin>
-                        <Insets bottom="14.0" left="20.0" top="14.0" />
-                     </HBox.margin>
-                  </TextFlow>
-                  <ImageView fx:id="godPower2" fitHeight="150.0" fitWidth="150.0" pickOnBounds="true" preserveRatio="true">
-                     <HBox.margin>
-                        <Insets bottom="14.0" left="20.0" top="14.0" />
-                     </HBox.margin>
-                  </ImageView>
-               </children>
-               <VBox.margin>
-                  <Insets left="250.0" right="250.0" top="44.0" />
-               </VBox.margin>
-            </HBox>
-            <HBox fx:id="HBox3" minHeight="178.0" prefHeight="178.0" prefWidth="200.0">
-               <children>
-                  <ImageView fx:id="godPortrait3" fitHeight="150.0" fitWidth="150.0" pickOnBounds="true" preserveRatio="true">
-                     <HBox.margin>
-                        <Insets bottom="14.0" left="100.0" top="14.0" />
-                     </HBox.margin>
-                  </ImageView>
-                  <TextFlow fx:id="godDescription3" prefHeight="200.0" prefWidth="300.0">
-                     <HBox.margin>
-                        <Insets bottom="14.0" left="20.0" top="14.0" />
-                     </HBox.margin>
-                  </TextFlow>
-                  <ImageView fx:id="godPower3" fitHeight="150.0" fitWidth="150.0" pickOnBounds="true" preserveRatio="true">
-                     <HBox.margin>
-                        <Insets bottom="14.0" left="20.0" top="14.0" />
-                     </HBox.margin>
-                  </ImageView>
-               </children>
-               <VBox.margin>
-                  <Insets left="250.0" right="250.0" top="44.0" />
-               </VBox.margin>
-            </HBox>
-         </children>
+         <HBox fx:id="HBox1" minHeight="178.0" prefHeight="178.0" prefWidth="200.0" onMouseClicked="#clickHBox">
+            <VBox.margin>
+               <Insets left="250.0" right="250.0" top="44.0"/>
+            </VBox.margin>
+            <ImageView fx:id="godPortrait1" fitHeight="150.0" fitWidth="150.0" pickOnBounds="true"
+                       preserveRatio="true" style="-fx-background-radius: 25px;" onMouseClicked="#clickHBox">
+               <HBox.margin>
+                  <Insets bottom="14.0" left="100.0" top="14.0"/>
+               </HBox.margin>
+            </ImageView>
+            <TextFlow fx:id="godDescription1" prefHeight="200.0" prefWidth="300.0" onMouseClicked="#clickHBox">
+               <HBox.margin>
+                  <Insets bottom="14.0" left="20.0" top="14.0"/>
+               </HBox.margin>
+            </TextFlow>
+            <ImageView fx:id="godPower1" fitHeight="150.0" fitWidth="150.0" pickOnBounds="true" preserveRatio="true" onMouseClicked="#clickHBox">
+               <HBox.margin>
+                  <Insets bottom="14.0" left="20.0" top="14.0"/>
+               </HBox.margin>
+            </ImageView>
+         </HBox>
+         <HBox fx:id="HBox2" minHeight="178.0" prefHeight="178.0" prefWidth="200.0" onMouseClicked="#clickHBox">
+            <VBox.margin>
+               <Insets left="250.0" right="250.0" top="44.0"/>
+            </VBox.margin>
+            <ImageView fx:id="godPortrait2" fitHeight="150.0" fitWidth="150.0" pickOnBounds="true"
+                       preserveRatio="true" onMouseClicked="#clickHBox">
+               <HBox.margin>
+                  <Insets bottom="14.0" left="100.0" top="14.0"/>
+               </HBox.margin>
+            </ImageView>
+            <TextFlow fx:id="godDescription2" prefHeight="200.0" prefWidth="300.0" onMouseClicked="#clickHBox">
+               <HBox.margin>
+                  <Insets bottom="14.0" left="20.0" top="14.0"/>
+               </HBox.margin>
+            </TextFlow>
+            <ImageView fx:id="godPower2" fitHeight="150.0" fitWidth="150.0" pickOnBounds="true" preserveRatio="true" onMouseClicked="#clickHBox">
+               <HBox.margin>
+                  <Insets bottom="14.0" left="20.0" top="14.0"/>
+               </HBox.margin>
+            </ImageView>
+         </HBox>
+         <HBox fx:id="HBox3" minHeight="178.0" prefHeight="178.0" prefWidth="200.0" onMouseClicked="#clickHBox">
+            <VBox.margin>
+               <Insets left="250.0" right="250.0" top="44.0"/>
+            </VBox.margin>
+            <ImageView fx:id="godPortrait3" fitHeight="150.0" fitWidth="150.0" pickOnBounds="true"
+                       preserveRatio="true" onMouseClicked="#clickHBox">
+               <HBox.margin>
+                  <Insets bottom="14.0" left="100.0" top="14.0"/>
+               </HBox.margin>
+            </ImageView>
+            <TextFlow fx:id="godDescription3" prefHeight="200.0" prefWidth="300.0" onMouseClicked="#clickHBox">
+               <HBox.margin>
+                  <Insets bottom="14.0" left="20.0" top="14.0"/>
+               </HBox.margin>
+            </TextFlow>
+            <ImageView fx:id="godPower3" fitHeight="150.0" fitWidth="150.0" pickOnBounds="true" preserveRatio="true" onMouseClicked="#clickHBox">
+               <HBox.margin>
+                  <Insets bottom="14.0" left="20.0" top="14.0"/>
+               </HBox.margin>
+            </ImageView>
+         </HBox>
       </VBox>
    </center>
       <top>
          <FlowPane prefHeight="60.0" prefWidth="200.0" BorderPane.alignment="CENTER">
-            <children>
-               <Label text="Player Is Choosing..." textAlignment="CENTER">
-                  <font>
-                     <Font size="36.0" />
-                  </font>
-                  <FlowPane.margin>
-                     <Insets left="470.0" />
-                  </FlowPane.margin>
-               </Label>
-            </children>
+            <Label text="Choose a God Power" textAlignment="CENTER">
+               <font>
+                  <Font size="36.0"/>
+               </font>
+               <FlowPane.margin>
+                  <Insets left="470.0"/>
+               </FlowPane.margin>
+            </Label>
          </FlowPane>
       </top>
 </BorderPane>
