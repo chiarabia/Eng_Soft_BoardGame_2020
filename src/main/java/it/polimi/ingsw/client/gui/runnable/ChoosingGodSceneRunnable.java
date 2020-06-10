@@ -1,6 +1,6 @@
 package it.polimi.ingsw.client.gui.runnable;
 
-import it.polimi.ingsw.client.gui.GUICache;
+
 import it.polimi.ingsw.client.gui.MainStage;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
@@ -13,7 +13,7 @@ import java.util.EventObject;
 
 public class ChoosingGodSceneRunnable implements Runnable {
 
-    GUICache cache = new GUICache();
+
 
     @Override
     public void run() {
@@ -29,6 +29,7 @@ public class ChoosingGodSceneRunnable implements Runnable {
 
         } catch (IOException ex){
             System.err.println(ex);
+            ex.printStackTrace();
         }
     }
 }

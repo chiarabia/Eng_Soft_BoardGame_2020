@@ -1,0 +1,11 @@
+.moveButton{
+    -fx-background-image: url('/components/moveButtonSelected.png');
+    -fx-background-repeat: no-repeat;
+    -fx-background-size: cover;
+}
+
+.buildButton{
+    -fx-background-image: url('/components/buildButtonSelected.png');
+    -fx-background-repeat: no-repeat;
+    -fx-background-size: cover;
+}

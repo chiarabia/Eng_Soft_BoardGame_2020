@@ -2,7 +2,6 @@ package it.polimi.ingsw.client.gui.controller;
 
 import it.polimi.ingsw.client.Client;
 import it.polimi.ingsw.client.ViewObserver;
-import it.polimi.ingsw.client.gui.GUICache;
 import it.polimi.ingsw.client.gui.MainStage;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -37,7 +36,6 @@ public class LoginSceneController implements Initializable {
 
     private int numberOfPlayers = 0;
     private String playerName;
-    GUICache cache = new GUICache();
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
@@ -54,10 +52,9 @@ public class LoginSceneController implements Initializable {
         startMatchButton.setOnAction(actionEvent -> {
             System.out.print(numberOfPlayers);
             playerName = playerNameTextField.getText();
-            cache.setNumberOfPlayers(numberOfPlayers);
-            cache.setPlayerName(playerName);
-            //Client client = new Client();
-            //client.onCompletedStartup(playerName,numberOfPlayers);
+            ArrayList<Object> playerData = MainStage.getPlayerData();
+            playerData.add(playerName);
+            playerData.add(numberOfPlayers);
             List<ViewObserver> observerList = MainStage.getObserverList();
             for (int i = 0; i < observerList.size(); i++)
                 observerList.get(i).onCompletedStartup(playerName, numberOfPlayers);
@@ -65,7 +62,7 @@ public class LoginSceneController implements Initializable {
 
     }
 
-    //Enables the play button only when the player has given name and number of player
+    //Enables the play button only when the player has given name and number of players
     public void keyReleasedProperty(){
         String name = playerNameTextField.getText();
         numberOfPlayersChoiceBox.setOnAction(actionEvent -> {
