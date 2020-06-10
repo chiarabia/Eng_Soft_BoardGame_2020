@@ -1,4 +1,4 @@
-#GridPane{
+#gridPane{
     -fx-background-image: url('/Board/SantoriniBoardOnly.png');
     -fx-background-repeat: no-repeat;
     -fx-background-size: cover;
@@ -10,7 +10,7 @@
     -fx-background-size: cover;
 }
 
-#ListOfPlayers{
+#NotificationsBackground{
     -fx-background-color:#95df8f;
     -fx-background-radius: 25px;
 }
@@ -20,7 +20,7 @@
     -fx-background-radius: 25px
 }
 
-#godDescription{
+#godDescriptionTextFlow{
     -fx-background-color:#95df8f;
     -fx-background-radius: 25px;
 }

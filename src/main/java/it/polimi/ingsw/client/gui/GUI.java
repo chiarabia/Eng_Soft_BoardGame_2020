@@ -20,9 +20,10 @@ import java.util.List;
 
 public class GUI implements View {
 
-    GUICache cache = new GUICache();
     private ClientBoard board;
     ChoosingGodSceneRunnable choosingGodSceneRunnable = new ChoosingGodSceneRunnable();
+    List<String> notifications;
+    List<Integer> actionsCodes;
 
     public void addObserver(ViewObserver observer){
         List<ViewObserver> observerList = MainStage.getObserverList();
@@ -40,11 +41,13 @@ public class GUI implements View {
 
     @Override
     public void displayBoardScreen(){
+        //displays the BoardScene
         Platform.runLater(new BoardSceneRunnable());
     }
 
     @Override
     public void displayWaitingRoom() {
+        //displays the WaitingRoomScene
         Platform.runLater(new WaitingSceneRunnable());
 
     }
@@ -100,7 +103,6 @@ public class GUI implements View {
 
     @Override
     public void displayBoard() {
-        Platform.runLater(new BoardSceneRunnable());
     }
 
 
@@ -111,9 +113,11 @@ public class GUI implements View {
 
     @Override
     public void askForInitialGodPower(List<GodCard> godPowers) {
+        //stores in GodCards the godPowers choosed by the server
         List<GodCard> godCards = MainStage.getGodPowers();
         godCards.addAll(godPowers);
 
+        //displays the choosingGodScene
         Platform.runLater(choosingGodSceneRunnable);
 
         //alla fine deve chiamare onCompletedInitializeGodPower(String chosenGodPower)
@@ -121,7 +125,13 @@ public class GUI implements View {
 
     @Override
     public void askForInitialWorkerPositions() {
-
+        //adds the current notification for the player
+        notifications = MainStage.getNotifications();
+        notifications.add("Choose your workers positions by clicking on the board");
+        //sets the actionCode to 1 for the askForInitialiWorkerPosition phase
+        actionsCodes = MainStage.getActionsCodes();
+        actionsCodes.clear();
+        actionsCodes.add(1);
 
         //alla fine deve chiamare onCompletedInitializeWorkerPositions(List<Position> myWorkerPositions)
     }
@@ -133,7 +143,10 @@ public class GUI implements View {
             MainStage.getLock().take();
         } catch (Exception ignored) {};
 
+        //displays the LoginScene
         Platform.runLater(new LoginSceneRunnable());
 
     }
+
+
 }

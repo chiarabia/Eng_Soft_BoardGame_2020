@@ -2,7 +2,6 @@ package it.polimi.ingsw.client.gui.controller;
 
 import it.polimi.ingsw.client.GodCard;
 import it.polimi.ingsw.client.ViewObserver;
-import it.polimi.ingsw.client.gui.GUICache;
 import it.polimi.ingsw.client.gui.MainStage;
 import it.polimi.ingsw.effects.GodPower;
 import javafx.fxml.FXML;
