@@ -19,14 +19,14 @@ public class Terminal implements View {
         this.board = board;
     }
 
-    public synchronized void displayWaitingRoom(){}
+    public void displayWaitingRoom(){}
 
-    public synchronized void displayBoardScreen(){
+    public void displayBoardScreen(){
         System.out.println();
         displayBoard();
     }
 
-    public synchronized void displayPlayerNames(SerializableUpdateInitializeNames names){
+    public void displayPlayerNames(SerializableUpdateInitializeNames names){
         System.out.print("You are playing with ");
         boolean firstName = true;
         for (int id = 1; id <= board.numOfPlayers(); id++) {
@@ -45,7 +45,7 @@ public class Terminal implements View {
         System.out.println(Color.WHITE.set()+".\n");
     }
 
-    public synchronized void displayBoard () {
+    public void displayBoard () {
         System.out.print(Terminal.Color.WHITE.set() + "   ╔═════╤═════╤═════╤═════╤═════╗\n");
         for (int j = 4; j >= 0; j--) {
             String element = "║";
@@ -87,44 +87,44 @@ public class Terminal implements View {
         displayPlayersController();
     }
 
-    public synchronized void displayWinner (int playerId) {
+    public void displayWinner (int playerId) {
         setColor(playerId);
         if (playerId == board.getMyPlayerId()) System.out.println("You" + Color.WHITE.set() + " have won!");
         else System.out.println(board.getPlayer(playerId).getPlayerName() + Color.WHITE.set() +  " has won");
 
     }
 
-    public synchronized void displayLoser (int playerId) {
+    public void displayLoser (int playerId) {
         setColor(playerId);
         if (playerId == board.getMyPlayerId()) System.out.println("You" + Color.WHITE.set() + " have lost!");
         else System.out.println(board.getPlayer(playerId).getPlayerName() + Color.WHITE.set() +  " has lost");
     }
 
-    public synchronized void displayDisconnection (int playerId){
+    public void displayDisconnection (int playerId){
         setColor(playerId);
         System.out.println(board.getPlayer(playerId).getPlayerName() + Color.WHITE.set() +  " disconnected");
     }
 
-    public synchronized void displayError(){
+    public void displayError(){
         displayErrorMessage("Oops... something went wrong");
     }
 
-    public synchronized void displayError(String message){
+    public void displayError(String message){
         displayErrorMessage(message);
     }
 
-    public synchronized void displayGameStart(){
+    public void displayGameStart(){
         System.out.println();
     }
 
-    public synchronized void displayStartup () {
+    public void displayStartup () {
         System.out.println(Terminal.Color.BLUE.set());
         System.out.println("  ╔══ ╔═╗ ╖ ╓ ═╦═ ╔═╗ ╔═╗ ╥ ╖ ╓ ╥ ®");
         System.out.println("  ╚═╗ ╠═╣ ║\\║  ║  ║ ║ ╠\\╝ ║ ║\\║ ║");
         System.out.println("  ══╝ ╜ ╙ ╜ ╙  ╨  ╚═╝ ╜ \\ ╨ ╜ ╙ ╨\n");
     }
 
-    public synchronized void displayGodPower(int playerId){
+    public void displayGodPower(int playerId){
         String godPowerName = board.getPlayer(playerId).getGodPowerName();
         String playerName = board.getPlayer(playerId).getPlayerName();
         if (playerId != board.getMyPlayerId()) {
@@ -134,14 +134,14 @@ public class Terminal implements View {
         }
     }
 
-    public synchronized void displayTurn(){
+    public void displayTurn(){
         int playerTurnId = board.getPlayerTurnId();
         setColor(playerTurnId);
         if (playerTurnId == board.getMyPlayerId()) System.out.println("You" + Color.WHITE.set() + " are playing");
         else System.out.println(board.getPlayer(playerTurnId).getPlayerName() + Color.WHITE.set() +  " now playing");
     }
 
-    public synchronized void displayRequestAction(SerializableRequestAction object){
+    public void displayRequestAction(SerializableRequestAction object){
         if (object.getWorker1Moves().size()>0) {
             System.out.print("Worker 1 possible moves: ");
             displayCells((object).getWorker1Moves());
@@ -176,8 +176,7 @@ public class Terminal implements View {
     }
 
 
-    public synchronized void askForAction(SerializableRequestAction object){
-        new Thread(()-> {
+    public void askForAction(SerializableRequestAction object){
             boolean isDome;
             Position position;
             int workerId = 0;
@@ -235,31 +234,24 @@ public class Terminal implements View {
                 else position = askForRightPosition(object.getWorker2Builds());
                 for (int i = 0; i < observerList.size(); i++) observerList.get(i).onCompletedBuild(position, workerId, isDome);
             }
-        }).start();
     }
 
-    public synchronized void askForInitialGodPower(List<GodCard> godPowers){
-        new Thread(()-> {
+    public void askForInitialGodPower(List<GodCard> godPowers){
             String chosenGodPower = askForGodPower(godPowers);
             for (int i = 0; i < observerList.size(); i++)
                 observerList.get(i).onCompletedInitializeGodPower(chosenGodPower);
-        }).start();
     }
 
-    public synchronized void askForInitialWorkerPositions(){
-        new Thread(()-> {
+    public void askForInitialWorkerPositions(){
             List<Position> myWorkerPositions = askForWorkersInitialPositions();
             for (int i = 0; i < observerList.size(); i++)
                 observerList.get(i).onCompletedInitializeWorkerPositions(myWorkerPositions);
-        }).start();
     }
 
-    public synchronized void askForStartupInfos() {
-        new Thread(()-> {
+    public void askForStartupInfos() {
             String name = askForString(Terminal.Color.WHITE.set() + "What's your name? ");
             int numOfPlayers = askForInt("How many players? ");
             for (int i = 0; i < observerList.size(); i++) observerList.get(i).onCompletedStartup(name, numOfPlayers);
-        }).start();
     }
 
 
@@ -268,21 +260,21 @@ public class Terminal implements View {
 
     // metodi riservati
 
-    private synchronized void displayMessage(String string){
+    private void displayMessage(String string){
         System.out.println(string);
     }
 
-    private synchronized void displayErrorMessage(String message){
+    private void displayErrorMessage(String message){
         displayMessage(Terminal.Color.RED.set() + message + Terminal.Color.WHITE.set());
     }
 
-    private synchronized void displayCells (Set < Position > positions) {
+    private void displayCells (Set < Position > positions) {
         for (Position p : positions)
             System.out.print("(" + p.getX() + ", " + p.getY() + ") ");
         System.out.println();
     }
 
-    private synchronized Position askForRightPosition (Set<Position> positions) {
+    private Position askForRightPosition (Set<Position> positions) {
         Position position = null;
         while (!isPositionCorrect(position, positions))
             position = askForPosition();
@@ -290,20 +282,20 @@ public class Terminal implements View {
         return new Position(position1.getX(), position1.getY(), positions.stream().filter(p -> p.getX() == position1.getX() && p.getY() == position1.getY()).map(Position::getZ).collect(Collectors.toList()).get(0));
     }
 
-    private synchronized boolean askForDecision(String action){
+    private boolean askForDecision(String action){
         return askForBoolean("Do you want to "+action+"(y/n)? ");
     }
 
-    private synchronized int askForWorker(){
+    private int askForWorker(){
         return askForInt("worker id: ");
     }
 
-    private synchronized boolean askForDome(){
+    private boolean askForDome(){
         return askForBoolean("is dome (y/n): ");
     }
 
 
-    private synchronized String askForGodPower (List<GodCard> godPowers){
+    private String askForGodPower (List<GodCard> godPowers){
         List<String> godNames = new ArrayList<>();
         for (int i = 0 ; i < godPowers.size(); i++){
             godNames.add(godPowers.get(i).getGodName());
@@ -328,7 +320,7 @@ public class Terminal implements View {
         return godPower;
     }
 
-    private synchronized List <Position> askForWorkersInitialPositions (){
+    private List <Position> askForWorkersInitialPositions (){
         while (true) {
             System.out.println("Worker 1");
             Position worker1Position = askForPosition();
@@ -356,25 +348,25 @@ public class Terminal implements View {
         }
     }
 
-    private synchronized Position askForPosition(){
+    private Position askForPosition(){
         int x = askForInt("x: ");
         int y = askForInt("y: ");
         return new Position(x, y, 0);
     }
 
-    private synchronized int askForInt(String request){
+    private int askForInt(String request){
         try {
             System.out.print(request);
             return keyboard.nextInt();
         } catch(Exception e){return 0;}
     }
 
-    private synchronized String askForString(String request){
+    private String askForString(String request){
         System.out.print(request);
         return keyboard.next();
     }
 
-    private synchronized boolean askForBoolean(String request){
+    private boolean askForBoolean(String request){
         String fromKeyboard;
         do {
             System.out.print(request);
@@ -384,12 +376,12 @@ public class Terminal implements View {
     }
 
 
-    private synchronized boolean isPositionCorrect (Position position, Set < Position > collection){
+    private boolean isPositionCorrect (Position position, Set < Position > collection){
         if (position == null) return false;
         return collection.stream().anyMatch(x -> x.getX() == position.getX() && x.getY() == position.getY());
     }
 
-    private synchronized void displayPlayersController(){
+    private void displayPlayersController(){
         System.out.println();
         for (int i = 0; i < board.numOfPlayers(); i++) {
             setColor(i+1);
@@ -406,7 +398,7 @@ public class Terminal implements View {
         System.out.print(Terminal.Color.WHITE.set());
     }
 
-    private synchronized void showBuilding(int i, int j){
+    private void showBuilding(int i, int j){
         System.out.print(Terminal.Color.BLUE.set());
         switch (board.getCell(i, j).getLevel()) {
             case 0:
@@ -421,7 +413,7 @@ public class Terminal implements View {
         }
     }
 
-    private synchronized void showBuildingUnderWorker (int i, int j){
+    private void showBuildingUnderWorker (int i, int j){
         if (board.getCell(i, j) == null) System.out.print(" ");
         else {
             System.out.print(Terminal.Color.BLUE.set());
@@ -439,7 +431,7 @@ public class Terminal implements View {
         }
     }
 
-    private synchronized void setColor(int playerId){
+    private void setColor(int playerId){
         switch (playerId) {
             case 1:
                 System.out.print(Terminal.Color.RED.set());

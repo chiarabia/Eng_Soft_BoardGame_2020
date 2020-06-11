@@ -16,6 +16,7 @@ public class Controller implements ProxyObserver {
     private Game game;
     private List <GodPower> godPowersLeft;
     private ServerView serverView;
+    private boolean isDisconnected = false;
 
     public Controller(Game game, ServerView serverView) {
         this.game = game;
@@ -97,10 +98,11 @@ public class Controller implements ProxyObserver {
     @Override
     // Notifica i player della disconnessione
     public void onPlayerDisconnection(int playerId) {
-        if (getPlayer(playerId)!=null) { // Se la disconnessione di un player non è dovuta a una sconfitta...
+        if (getPlayer(playerId)!=null && !isDisconnected) { // Se la disconnessione di un player non è dovuta a una sconfitta e se non è ancora stato lanciato il segnale di disconnessione...
             SerializableUpdate update = new SerializableUpdateDisconnection(playerId);
             game.notifyJustUpdateAll(update); // aggiorna i players della disconnessione
             serverView.stopAllEventGenerators(); // termina tutti i thread legati alla partita
+            isDisconnected = true; // dichiara la disconnessione avvenuta
         }
     }
 
@@ -166,6 +168,7 @@ public class Controller implements ProxyObserver {
     @Override
     // Primo metodo lanciato del controller, avvia MVC e procedura di InitializeGame
     public void onGodPowerInitialization(){
+        System.out.println("Game initialization started");
         try {
             godPowersLeft = GodPowerManager.createGodPowers(getNumOfPlayers());
             List<String> godPowersNames = getGodPowersLeftNames();
@@ -227,6 +230,7 @@ public class Controller implements ProxyObserver {
             tempUpdates.add(update);
             tempUpdates.add(updateTurn);
             game.notifyJustUpdateAll(tempUpdates);
+            System.out.println("Game started");
             nextOperation();
         } else {
             SerializableRequest request = new SerializableRequestInitializeWorkerPositions(playerId + 1);

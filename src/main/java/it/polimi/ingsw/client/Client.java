@@ -22,11 +22,12 @@ public class Client implements ViewObserver {
     private String IP;
     private boolean isGameStarted = false;
 
-    public void startClient(int port, String IP) {
+    public void startClient(int port, String IP, boolean GUI) {
         try {
             this.port = port;
             this.IP = IP;
-            view = new GUI();
+            if (GUI) view = new GUI();
+            else view = new Terminal();
             view.addObserver(this);
             view.displayStartup(); //Questo metodo fa partire la Cli e la Gui (nella cli fa partire l'ASCII Art)
             view.askForStartupInfos();

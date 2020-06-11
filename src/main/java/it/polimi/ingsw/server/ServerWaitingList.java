@@ -19,6 +19,7 @@ public class ServerWaitingList {
     }
     public synchronized void addToPlayersList(Socket socket, String name) throws BadNameException {
         if (!isNameValid(name)) throw new BadNameException();
+        System.out.println(name + " accepted for " + numOfPlayers + " players game");
         playersList.add(socket);
         namesList.add(name);
         List<Socket> exportedList = exportPlayersList();

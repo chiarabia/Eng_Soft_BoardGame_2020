@@ -23,7 +23,7 @@ public class ServerThread extends Thread {
                 if (!reply.equals("Hello")) throw new Exception();
             } catch(Exception e){
                 playersList.remove(i).close();
-                playersNames.remove(i);
+                System.out.println(playersNames.remove(i) + " disconnected");
                 i--;
             }
         }
@@ -52,6 +52,7 @@ public class ServerThread extends Thread {
             echoRequest();
             if (playersList.size() < numOfPlayers) {
                 waitingList.importPlayersList(playersList, playersNames);
+                System.out.println("Game ended");
                 return;
             }
             for (int i = 0; i < numOfPlayers; i++) sendMessage("You are player " + (i+1), i);

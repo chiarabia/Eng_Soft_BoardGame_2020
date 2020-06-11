@@ -69,5 +69,6 @@ public class ServerView implements GameObserver{
 
     public void stopAllEventGenerators(){
         while (eventGenerators.size()>0) stopLastEventGenerator();
+        System.out.println("Game ended");
     }
 }
