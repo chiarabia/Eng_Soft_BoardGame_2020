@@ -43,8 +43,6 @@ public class BoardSceneController implements Initializable {
     List<String> notifications;
     List<Integer> actionsCodes;
     List<Position> workerPositions = new ArrayList<>();
-    List<Object> workerCells = new ArrayList<>();
-    int workerNumber=0;
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
@@ -107,22 +105,24 @@ public class BoardSceneController implements Initializable {
     }
 
     //gives the position of the workers to the observer and displays the worker on the board
-    public void displayWorker(int workerNumber){
+    public void displayWorker(StackPane cell, Position position){
         List<ViewObserver> observerList = MainStage.getObserverList();
         //gets the clicked StackPane
-        StackPane cellWorker = (StackPane) workerCells.get(workerNumber);
+        StackPane cellWorker = cell;
         //adds the worker image on top of the StackPane
         ImageView worker = new ImageView(new Image("/worker/w1.png"));
         worker.setFitHeight(100);
         worker.setFitWidth(100);
         cellWorker.getChildren().add(worker);
         //gets the Position of the Worker
-        Position WorkerPosition = (Position) workerCells.get(workerNumber+1);
+        Position WorkerPosition = position;
         workerPositions.add(WorkerPosition);
         //when there are two Workers it gives them to the client
-        if (workerNumber == 3){
+        if (workerPositions.size() == 2){
             for (int i = 0; i < observerList.size(); i++)
                 observerList.get(i).onCompletedInitializeWorkerPositions(workerPositions);
+            actionsCodes.clear();
+            notificationsTextFlow.getChildren().clear();
         }
     }
 
@@ -135,14 +135,11 @@ public class BoardSceneController implements Initializable {
             System.out.println(String.format("Node clicked at: column=%d, row=%d", column, row));
             //adds the StackPane of the cell that we clicked in workerCells
             StackPane cell = (StackPane) getNodeFromGridPane(gridPane, column, row);
-            workerCells.add(cell);
             //adds the Position of the cell that we clicked in workerCells
             Position workerPosition = new Position(column, row, 0);
-            workerCells.add(workerPosition);
             //asks to display the worker image and store it for the observer
-            displayWorker(workerNumber);
+            displayWorker(cell,workerPosition);
             //updates the workerNumber
-            workerNumber = workerNumber + 2;
         }
     }
 
