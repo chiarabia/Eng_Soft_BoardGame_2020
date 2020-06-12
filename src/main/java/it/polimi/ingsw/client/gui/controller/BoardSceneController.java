@@ -42,7 +42,12 @@ public class BoardSceneController implements Initializable {
     GodCard chosenGodCard;
     List<String> notifications;
     List<Integer> actionsCodes;
-    List<Position> workerPositions = new ArrayList<>();
+    List<Position> startingWorkerPositions = new ArrayList<>();
+    Position newWorkerPosition;
+    StackPane newWorkerCell;
+    Position newBuildingPostion;
+    StackPane newWorkerBuild;
+    String levelOfBuilding;
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
@@ -65,9 +70,11 @@ public class BoardSceneController implements Initializable {
 
 
         moveButton.setOnAction(actionEvent -> {
+            addWorkerImage(newWorkerCell,1);
         });
 
         buildButton.setOnAction(actionEvent -> {
+            addBuildingImage(newWorkerBuild,levelOfBuilding);
         });
     }
 
@@ -110,17 +117,14 @@ public class BoardSceneController implements Initializable {
         //gets the clicked StackPane
         StackPane cellWorker = cell;
         //adds the worker image on top of the StackPane
-        ImageView worker = new ImageView(new Image("/worker/w1.png"));
-        worker.setFitHeight(100);
-        worker.setFitWidth(100);
-        cellWorker.getChildren().add(worker);
+        addWorkerImage(cellWorker,1 );
         //gets the Position of the Worker
         Position WorkerPosition = position;
-        workerPositions.add(WorkerPosition);
+        startingWorkerPositions.add(WorkerPosition);
         //when there are two Workers it gives them to the client
-        if (workerPositions.size() == 2){
+        if (startingWorkerPositions.size() == 2){
             for (int i = 0; i < observerList.size(); i++)
-                observerList.get(i).onCompletedInitializeWorkerPositions(workerPositions);
+                observerList.get(i).onCompletedInitializeWorkerPositions(startingWorkerPositions);
             actionsCodes.clear();
             notificationsTextFlow.getChildren().clear();
         }
@@ -141,6 +145,7 @@ public class BoardSceneController implements Initializable {
             displayWorker(cell,workerPosition);
             //updates the workerNumber
         }
+        else{}
     }
 
     //gets the node in a cell of the gridpane
@@ -151,6 +156,37 @@ public class BoardSceneController implements Initializable {
             }
         }
         return null;
+    }
+
+    //Enables the move button only when the player can move
+    public void keyReleasedPropertyMove(){
+
+    }
+
+    //Enables the move button only when the player can build
+    public void keyReleasedPropertyBuild(){
+
+    }
+
+    //adds an imageView of the workers
+    public void addWorkerImage(StackPane cell, int player){
+        ImageView worker = new ImageView(new Image("/worker/w" + player +".png"));
+        worker.setFitHeight(100);
+        worker.setFitWidth(100);
+        cell.getChildren().add(worker);
+    }
+
+    //adds an imageView of a building
+    public void addBuildingImage(StackPane cell, String level){
+        Image building = new Image(level);
+        BackgroundSize buildingSize = new BackgroundSize(100,100, false,false, true, true);
+        BackgroundImage buildingBackground= new BackgroundImage(building, BackgroundRepeat.NO_REPEAT, BackgroundRepeat.NO_REPEAT, BackgroundPosition.CENTER, buildingSize );
+        cell.setBackground(new Background(buildingBackground));
+    }
+
+    //removes the image of a Worker
+    public void removeWorkerImage(StackPane cell){
+        cell.getChildren().clear();
     }
 
 }
