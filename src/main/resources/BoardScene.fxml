@@ -55,14 +55,14 @@
             <FlowPane fx:id="FlowPaneRight" minHeight="500" minWidth="428" prefHeight="200.0" prefWidth="200.0" BorderPane.alignment="CENTER">
             <VBox prefHeight="450.0" prefWidth="200.0">
                <children>
-                  <Button fx:id="moveButton" mnemonicParsing="false" prefHeight="50.0" prefWidth="200.0" text="Move" textFill="WHITE">
+                  <Button fx:id="moveButton" mnemonicParsing="false" prefHeight="50.0" prefWidth="200.0" text="Move" textFill="WHITE" onKeyReleased="#keyReleasedPropertyMove">
                      <VBox.margin>
                         <Insets bottom="50.0" />
                      </VBox.margin>
                      <font>
                         <Font size="20.0" />
                      </font></Button>
-                  <Button fx:id="buildButton" mnemonicParsing="false" prefHeight="50.0" prefWidth="200.0" text="Build" textFill="WHITE">
+                  <Button fx:id="buildButton" mnemonicParsing="false" prefHeight="50.0" prefWidth="200.0" text="Build" textFill="WHITE" onKeyReleased="#keyReleasedPropertyBuild">
                      <font>
                         <Font size="20.0" />
                      </font></Button>
