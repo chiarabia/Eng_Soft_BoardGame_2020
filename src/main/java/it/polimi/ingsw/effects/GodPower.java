@@ -33,7 +33,6 @@ public class GodPower {
     private NewTurn newTurn;
 
     private boolean askToBuildDomes = false;
-    private boolean askToBuildBeforeMoveAndNotMoveUp = false;
 
     public Set<Position> move (Position workerPosition, Board board, Turn turn)  {
         return move.move(workerPosition, board, turn);
@@ -202,13 +201,5 @@ public class GodPower {
     }
     public void addBlockingWinConditions(StandardWinCondition blockingWinConditions) {
         this.blockingWinConditions.add(blockingWinConditions);
-    }
-
-    public boolean isAskToBuildBeforeMoveAndNotMoveUp() {
-        return askToBuildBeforeMoveAndNotMoveUp;
-    }
-
-    public void setAskToBuildBeforeMoveAndNotMoveUp(boolean askToBuildBeforeMoveAndNotMoveUp) {
-        this.askToBuildBeforeMoveAndNotMoveUp = askToBuildBeforeMoveAndNotMoveUp;
     }
 }

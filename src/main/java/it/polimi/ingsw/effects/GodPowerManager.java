@@ -41,7 +41,7 @@ public class GodPowerManager {
      */
 
     private static List <String> chooseGodFiles (int numOfPlayers) throws IOException {
-        List <String> cards = new ArrayList();
+        List <String> cards = new ArrayList<>();
         Stream<Path> paths = Files.walk(Paths.get(ROOT));
         paths.filter(Files::isRegularFile).forEach(x->{cards.add(x.toString().substring(ROOT.length()));});
         // the card list contains all 14 strings of JSON file names (eg "ApolloCard.json")
@@ -95,7 +95,6 @@ public class GodPowerManager {
 
         switch (build) {
             case "askToBuildBeforeMoveAndNotMoveUp":
-                godPower.setAskToBuildBeforeMoveAndNotMoveUp(true);
                 godPower.setBuild(new BuildBeforeMove(numOfBuilds)); break; //todo:dovrebbe essere giusto ma boh
             case "buildBeforeMove":
                 godPower.setBuild(new BuildBeforeMove(1)); break;

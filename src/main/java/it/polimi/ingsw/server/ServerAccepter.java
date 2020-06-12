@@ -39,7 +39,9 @@ public class ServerAccepter extends Thread {
                             fileObjectOut.flush();
                             socket.close();
                         } catch (Exception ex) {}
-                    } catch (Exception e) {}
+                    } catch (Exception e) {
+                        try { socket.close(); } catch (Exception ex) {}
+                    }
                 })).start();
             }
         } catch (IOException e) {
