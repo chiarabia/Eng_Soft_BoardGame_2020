@@ -1,8 +1,10 @@
 package it.polimi.ingsw.server;
 
 import it.polimi.ingsw.exceptions.BadNameException;
+import it.polimi.ingsw.exceptions.ClientStoppedWorkingException;
 import it.polimi.ingsw.server.serializable.Message;
 
+import java.io.IOException;
 import java.io.ObjectOutputStream;
 import java.net.Socket;
 import java.util.ArrayList;
@@ -12,12 +14,7 @@ public class ServerWaitingList {
     private final int numOfPlayers;
     private List<Socket> playersList;
     private List<String> namesList;
-    private synchronized boolean isNameValid (String name){
-        for (int i = 0; i < namesList.size(); i++)
-            if (namesList.get(i).equals(name)) return false;
-        return true;
-    }
-    public synchronized void addToPlayersList(Socket socket, String name) throws BadNameException {
+    public synchronized void addToPlayersList(Socket socket, String name) throws BadNameException, IOException {
         if (!isNameValid(name)) throw new BadNameException();
         System.out.println(name + " accepted for " + numOfPlayers + " players game");
         playersList.add(socket);
@@ -26,24 +23,37 @@ public class ServerWaitingList {
         if (exportedList!=null) {
             List <String> tempNames = new ArrayList<>();
             for (int i = 0; i < numOfPlayers; i++) tempNames.add(namesList.remove(0));
-            (new ServerThread(exportedList, this, numOfPlayers, tempNames)).start();
+            (new ServerThread(exportedList, numOfPlayers, tempNames)).start();
         }
     }
-    public synchronized void importPlayersList(List <Socket> list, List <String> names){
-        List <Socket> tempList = new ArrayList<>();
-        tempList.addAll(list);
-        tempList.addAll(playersList);
-        playersList = tempList;
-        List <String> tempNames = new ArrayList<>();
-        tempNames.addAll(names);
-        tempNames.addAll(namesList);
-        namesList = tempNames;
-    }
-    private synchronized List <Socket> exportPlayersList(){
+    private synchronized List <Socket> exportPlayersList() {
         if (playersList.size()<numOfPlayers) return null;
         List<Socket> list = new ArrayList<>();
-        for (int i = 0; i < numOfPlayers; i++) list.add(playersList.remove(0));
+        for (int j = 0; j < numOfPlayers; j++) list.add(playersList.remove(0));
         return list;
+    }
+    private synchronized String sendMessageAndWaitForReply(String message, int position) throws ClientStoppedWorkingException {
+        try {
+            ObjectOutputStream fileObjectOut = new ObjectOutputStream(playersList.get(position).getOutputStream());
+            fileObjectOut.writeObject(new Message(message));
+            fileObjectOut.flush();
+        } catch (Exception e){}
+        return ((Message)(new ServerSyncReceiver()).receiveObject(playersList.get(position))).getMessage();
+    }
+    private synchronized boolean isNameValid (String name) throws IOException {
+        for (int i = 0; i < playersList.size(); i++) {
+            try{
+                String reply = sendMessageAndWaitForReply("Hello", i);
+                if (!reply.equals("Hello")) throw new Exception();
+            } catch(Exception e){
+                playersList.remove(i).close();
+                System.out.println(namesList.remove(i) + " disconnected");
+                i--;
+            }
+        }
+        for (int i = 0; i < namesList.size(); i++)
+            if (namesList.get(i).equals(name)) return false;
+        return true;
     }
     public ServerWaitingList(int numOfPlayers){
         playersList = new ArrayList<>();

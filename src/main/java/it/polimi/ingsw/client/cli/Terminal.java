@@ -45,47 +45,13 @@ public class Terminal implements View {
         System.out.println(Color.WHITE.set()+".\n");
     }
 
-    public void displayBoard () {
-        System.out.print(Terminal.Color.WHITE.set() + "   ╔═════╤═════╤═════╤═════╤═════╗\n");
-        for (int j = 4; j >= 0; j--) {
-            String element = "║";
-            System.out.print(" " + j + " ");
-            for (int i = 0; i < 5; i++) {
-                boolean isThereAWorker = false;
-                int playerId = 0;
-                for (int k = 0; k < board.numOfPlayers(); k++) {
-                    if (!board.getPlayer(k + 1).hasLost()) {
-                        int worker1x = board.getPlayer(k + 1).getWorker(1).getX();
-                        int worker1y = board.getPlayer(k + 1).getWorker(1).getY();
-                        int worker2x = board.getPlayer(k + 1).getWorker(2).getX();
-                        int worker2y = board.getPlayer(k + 1).getWorker(2).getY();
-                        if ((i == worker1x && j == worker1y) || (i == worker2x && j == worker2y)) {
-                            isThereAWorker = true;
-                            playerId = k + 1;
-                            break;
-                        }
-                    }
-                }
-                System.out.print(Terminal.Color.WHITE.set() + element);
-                if (isThereAWorker) {
-                    System.out.print(" ");
-                    showBuildingUnderWorker (i, j);
-                    setColor(playerId);
-                    System.out.print("■");
-                    showBuildingUnderWorker (i, j);
-                    System.out.print(" ");
-                } else if (board.getCell(i, j) == null) System.out.print("     ");
-                else if (board.getCell(i, j).isDome()) System.out.print(" " + Terminal.Color.BLUE.set() + "▲▲▲ ");
-                else showBuilding(i, j);
-                element = "│";
-            }
-            System.out.print(Terminal.Color.WHITE.set() + "║");
-            if (j == 0)
-                System.out.print(Terminal.Color.WHITE.set() + "\n   ╚═════╧═════╧═════╧═════╧═════╝\n      0     1     2     3     4");
-            else System.out.print(Terminal.Color.WHITE.set() + "\n   ╟─────┼─────┼─────┼─────┼─────╢\n");
-        }
-        displayPlayersController();
-    }
+    public void displayBoard(SerializableUpdateMove update){displayBoard();}
+
+    public void displayBoard(SerializableUpdateBuild update){displayBoard();}
+
+    public void displayBoard(SerializableUpdateLoser update){displayBoard();}
+
+    public void displayBoard(SerializableUpdateInitializeWorkerPositions update){displayBoard();}
 
     public void displayWinner (int playerId) {
         setColor(playerId);
@@ -103,10 +69,6 @@ public class Terminal implements View {
     public void displayDisconnection (int playerId){
         setColor(playerId);
         System.out.println(board.getPlayer(playerId).getPlayerName() + Color.WHITE.set() +  " disconnected");
-    }
-
-    public void displayError(){
-        displayErrorMessage("Oops... something went wrong");
     }
 
     public void displayError(String message){
@@ -411,6 +373,48 @@ public class Terminal implements View {
                 System.out.print(" ▓▓▓ ");
                 break;
         }
+    }
+
+    private void displayBoard () {
+        System.out.print(Terminal.Color.WHITE.set() + "   ╔═════╤═════╤═════╤═════╤═════╗\n");
+        for (int j = 4; j >= 0; j--) {
+            String element = "║";
+            System.out.print(" " + j + " ");
+            for (int i = 0; i < 5; i++) {
+                boolean isThereAWorker = false;
+                int playerId = 0;
+                for (int k = 0; k < board.numOfPlayers(); k++) {
+                    if (!board.getPlayer(k + 1).hasLost()) {
+                        int worker1x = board.getPlayer(k + 1).getWorker(1).getX();
+                        int worker1y = board.getPlayer(k + 1).getWorker(1).getY();
+                        int worker2x = board.getPlayer(k + 1).getWorker(2).getX();
+                        int worker2y = board.getPlayer(k + 1).getWorker(2).getY();
+                        if ((i == worker1x && j == worker1y) || (i == worker2x && j == worker2y)) {
+                            isThereAWorker = true;
+                            playerId = k + 1;
+                            break;
+                        }
+                    }
+                }
+                System.out.print(Terminal.Color.WHITE.set() + element);
+                if (isThereAWorker) {
+                    System.out.print(" ");
+                    showBuildingUnderWorker (i, j);
+                    setColor(playerId);
+                    System.out.print("■");
+                    showBuildingUnderWorker (i, j);
+                    System.out.print(" ");
+                } else if (board.getCell(i, j) == null) System.out.print("     ");
+                else if (board.getCell(i, j).isDome()) System.out.print(" " + Terminal.Color.BLUE.set() + "▲▲▲ ");
+                else showBuilding(i, j);
+                element = "│";
+            }
+            System.out.print(Terminal.Color.WHITE.set() + "║");
+            if (j == 0)
+                System.out.print(Terminal.Color.WHITE.set() + "\n   ╚═════╧═════╧═════╧═════╧═════╝\n      0     1     2     3     4");
+            else System.out.print(Terminal.Color.WHITE.set() + "\n   ╟─────┼─────┼─────┼─────┼─────╢\n");
+        }
+        displayPlayersController();
     }
 
     private void showBuildingUnderWorker (int i, int j){

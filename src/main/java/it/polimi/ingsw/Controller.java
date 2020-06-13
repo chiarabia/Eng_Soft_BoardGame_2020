@@ -39,24 +39,18 @@ public class Controller implements ProxyObserver {
         Set<Position> worker2Moves  =  getPlayerGodPower(playerId).move(worker2Position , board, turn);
         Set<Position> worker2Builds =  getPlayerGodPower(playerId).build(worker2Position, board, turn);
 
-        if (checkLose(playerId, worker1Moves, worker1Builds, worker2Moves, worker2Builds, turn)) {
-            //return;
-        }
-        else if (checkWin (playerId, null, null)) {
-           // return;
-        }
-        else {
-            request = new SerializableRequestAction(playerId,
-                        turn.isMoveOptional(worker1Moves, worker2Moves),                    //controllo se le mosse sono opzionali o meno controllando i valori di turno
-                        turn.isBuildOptional(worker1Builds, worker2Builds),
-                        turn.canDecline(),                                                  //controllo se entrambi i valori sono a true
-                        worker1Moves, worker2Moves,
-                        worker1Builds, worker2Builds,
-                        canForceDome);
+        if (checkLose(playerId, worker1Moves, worker1Builds, worker2Moves, worker2Builds, turn)) return;
+        if (checkWin (playerId, null, null)) return;
 
-            game.notifyAnswerOnePlayer(request);
-            return;
-        }
+        request = new SerializableRequestAction(playerId,
+                    turn.isMoveOptional(worker1Moves, worker2Moves),                    //controllo se le mosse sono opzionali o meno controllando i valori di turno
+                    turn.isBuildOptional(worker1Builds, worker2Builds),
+                    turn.canDecline(),                                                  //controllo se entrambi i valori sono a true
+                    worker1Moves, worker2Moves,
+                    worker1Builds, worker2Builds,
+                    canForceDome);
+
+        game.notifyAnswerOnePlayer(request);
     }
 
     @Override

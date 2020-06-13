@@ -8,8 +8,7 @@ import it.polimi.ingsw.client.ViewObserver;
 import it.polimi.ingsw.client.gui.controller.BoardSceneController;
 import it.polimi.ingsw.client.gui.runnable.*;
 
-import it.polimi.ingsw.server.serializable.SerializableRequestAction;
-import it.polimi.ingsw.server.serializable.SerializableUpdateInitializeNames;
+import it.polimi.ingsw.server.serializable.*;
 import javafx.application.Platform;
 import javafx.scene.text.Text;
 
@@ -108,20 +107,27 @@ public class GUI implements View {
                 BoardSceneController.notificationsTextFlow.getChildren().clear();
             BoardSceneController.notificationsTextFlow.getChildren().add(notification);
             });
-
-    }
-
-    @Override
     public void displayRequestAction(SerializableRequestAction object) {
 
     }
 
     @Override
-    public void displayBoard() {
+    public void displayBoard(SerializableUpdateMove update) {
         //actionsCodes.clear();
         //actionsCodes.add(0);
     }
 
+    @Override
+    public void displayBoard(SerializableUpdateBuild update) {
+    }
+
+    @Override
+    public void displayBoard(SerializableUpdateLoser update) {
+    }
+
+    @Override
+    public void displayBoard(SerializableUpdateInitializeWorkerPositions update) {
+    }
 
     @Override
     public void askForAction(SerializableRequestAction object) {
