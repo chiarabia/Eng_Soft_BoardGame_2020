@@ -5,11 +5,13 @@ import it.polimi.ingsw.client.GodCard;
 import it.polimi.ingsw.client.View;
 import it.polimi.ingsw.client.ViewObserver;
 
+import it.polimi.ingsw.client.gui.controller.BoardSceneController;
 import it.polimi.ingsw.client.gui.runnable.*;
 
 import it.polimi.ingsw.server.serializable.SerializableRequestAction;
 import it.polimi.ingsw.server.serializable.SerializableUpdateInitializeNames;
 import javafx.application.Platform;
+import javafx.scene.text.Text;
 
 import java.util.List;
 
@@ -38,6 +40,10 @@ public class GUI implements View {
     public void displayBoardScreen(){
         //displays the BoardScene
         Platform.runLater(new BoardSceneRunnable());
+
+        Platform.runLater(()->{
+            BoardSceneController.notificationsTextFlow.getChildren().add(new Text("welcome"));
+        });
     }
 
     @Override
@@ -78,16 +84,30 @@ public class GUI implements View {
 
     @Override
     public void displayDisconnection(int playerId) {
-
+        Platform.runLater(()->{
+            Text notification = new Text (board.getPlayer(playerId).getPlayerName() + "has disconnected");
+            BoardSceneController.notificationsTextFlow.getChildren().add(notification);
+        });
     }
 
     @Override
     public void displayError(String message) {
-
+        Platform.runLater(()->{
+        Text notification = new Text (message);
+            if (BoardSceneController.notificationsTextFlow.getChildren().size() != 0)
+                BoardSceneController.notificationsTextFlow.getChildren().clear();
+            BoardSceneController.notificationsTextFlow.getChildren().add(notification);
+        });
     }
 
     @Override
     public void displayError() {
+        Platform.runLater(()->{
+            Text notification = new Text ("Oops... something went wrong");
+            if (BoardSceneController.notificationsTextFlow.getChildren().size() != 0)
+                BoardSceneController.notificationsTextFlow.getChildren().clear();
+            BoardSceneController.notificationsTextFlow.getChildren().add(notification);
+            });
 
     }
 
@@ -123,8 +143,13 @@ public class GUI implements View {
     @Override
     public void askForInitialWorkerPositions() {
         //adds the current notification for the player
-        notifications = MainStage.getNotifications();
-        notifications.add("Choose your workers positions by clicking on the board");
+        Platform.runLater(()->{
+            Text notification = new Text ("Choose your workers positions by clicking on the board");
+            if (BoardSceneController.notificationsTextFlow.getChildren().size() != 0)
+                BoardSceneController.notificationsTextFlow.getChildren().clear();
+            BoardSceneController.notificationsTextFlow.getChildren().add(notification);
+        });
+
         //sets the actionCode to 1 for the askForInitialiWorkerPosition phase
         actionsCodes = MainStage.getActionsCodes();
         actionsCodes.clear();

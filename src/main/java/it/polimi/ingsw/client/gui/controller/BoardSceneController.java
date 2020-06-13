@@ -12,10 +12,9 @@ import javafx.scene.control.Label;
 import javafx.scene.image.ImageView;
 import javafx.scene.image.Image;
 import javafx.scene.layout.*;
-import javafx.scene.text.Font;
-import javafx.scene.text.FontWeight;
 import javafx.scene.text.Text;
 import javafx.scene.text.TextFlow;
+
 
 import java.net.URL;
 import java.util.ArrayList;
@@ -37,10 +36,9 @@ public class BoardSceneController implements Initializable {
     @FXML
     private TextFlow godDescriptionTextFlow;
     @FXML
-    private TextFlow notificationsTextFlow;
+    public static TextFlow notificationsTextFlow;
 
     GodCard chosenGodCard;
-    List<String> notifications;
     List<Integer> actionsCodes;
     List<Position> startingWorkerPositions = new ArrayList<>();
     Position newWorkerPosition;
@@ -64,9 +62,9 @@ public class BoardSceneController implements Initializable {
         displayPlayerName();
 
         //if we are in the askForWorkerInitialPositionPhase
-        if (actionCode == 1){
+   /*     if (actionCode == 1){
             displayNotifications();
-        }
+        }*/
 
 
         moveButton.setOnAction(actionEvent -> {
@@ -83,6 +81,7 @@ public class BoardSceneController implements Initializable {
      * @param card the God Card Object with the name of the god, the description and the image
      */
     public void setGodDetails(GodCard card){
+        MainStage.getLock().add(new Object());
         //set God Description
         String text = card.getGodDescription();
         Text godDescrp = new Text(text);
@@ -100,7 +99,7 @@ public class BoardSceneController implements Initializable {
         playerNameLabel.setText(playerName);
     }
 
-    //displays in the bottom right of the screen a notification for the player
+/*    //displays in the bottom right of the screen a notification for the player
     public void displayNotifications(){
         //gets the notification from the MainStage
         notifications = MainStage.getNotifications();
@@ -109,7 +108,7 @@ public class BoardSceneController implements Initializable {
         Text notificationText = new Text(notificationToDisplay);
         notificationText.setFont(Font.font("Verdana", FontWeight.BOLD, 15));
         notificationsTextFlow.getChildren().add(notificationText);
-    }
+    }*/
 
     //gives the position of the workers to the observer and displays the worker on the board
     public void displayWorker(StackPane cell, Position position){
