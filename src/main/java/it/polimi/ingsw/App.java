@@ -1,12 +1,11 @@
 package it.polimi.ingsw;
+
 import it.polimi.ingsw.client.Client;
 import it.polimi.ingsw.server.Server;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
-import org.json.simple.parser.ParseException;
 
 import java.io.FileReader;
-import java.io.IOException;
 
 /**
  * Hello world!
@@ -29,6 +28,7 @@ public class App
 
             if (server) (new Server()).startServer(port);
             else (new Client()).startClient(port, ip, GUI);
-        }catch(Exception e){ System.out.println("An error occurred");}
+        }catch(Exception e){ System.out.println("An error occurred");
+        e.printStackTrace();}
     }
 }

@@ -38,8 +38,10 @@ public class CantWinMovingOnPerimeterTest {
     //positive
     @Test
     void playerIsNotBlockedByTheCondition(){
-        workerCell = new Cell(1,1 ,2);
-        destinationCell = new Cell(2,1 ,3);
+        board.newCell(1,1,2);
+        board.newCell(2,1,3);
+        workerCell = board.getCell(1,1 ,2);
+        destinationCell = board.getCell(2,1 ,3);
 
         assertTrue(winCondition.win(workerCell.getPosition(), destinationCell.getPosition(), board));
     }

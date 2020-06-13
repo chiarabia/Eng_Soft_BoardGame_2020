@@ -1,7 +1,5 @@
 package it.polimi.ingsw;
 
-import it.polimi.ingsw.effects.build.BuildBeforeMove;
-
 import java.util.Set;
 
 /**
@@ -167,7 +165,6 @@ public class Turn {
         return (this.isMoveBeforeBuild()&&
                 !(worker1moves.isEmpty()&&worker2moves.isEmpty()));
     }
-
 }
 
 

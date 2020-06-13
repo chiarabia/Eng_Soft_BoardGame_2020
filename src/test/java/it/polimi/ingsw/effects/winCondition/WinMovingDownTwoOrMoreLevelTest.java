@@ -50,8 +50,10 @@ public class WinMovingDownTwoOrMoreLevelTest {
     //positive
     @Test
     void playerDoesNotWinBecauseMovesDownButNotByTwoLevels(){
-        workerCell = new Cell (1,1,2);
-        destinationCell = new Cell (1,1,1);
+        board.newCell(1,1,2);
+        board.newCell(1,1,1);
+        workerCell = board.getCell (1,1,2);
+        destinationCell = board.getCell(1,1,1);
 
         assertFalse(winCondition.win(workerCell.getPosition(),destinationCell.getPosition(),board));
     }
