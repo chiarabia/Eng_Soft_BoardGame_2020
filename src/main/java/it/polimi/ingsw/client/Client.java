@@ -38,7 +38,7 @@ public class Client implements ViewObserver {
     }
 
     public void onError(){
-        view.displayError();
+        view.displayError("Oops... something went wrong");
     }
 
     public void onUpdateInitializeWorkerPositions(SerializableUpdateInitializeWorkerPositions object){
@@ -50,7 +50,7 @@ public class Client implements ViewObserver {
         board.getPlayer(whichPlayerId).getWorker(1).setY(positionWorker1.getY());
         board.getPlayer(whichPlayerId).getWorker(2).setX(positionWorker2.getX());
         board.getPlayer(whichPlayerId).getWorker(2).setY(positionWorker2.getY());
-        view.displayBoard();
+        view.displayBoard(object);
     }
 
     public void onUpdateInitializeGodPower(SerializableUpdateInitializeGodPower object){
@@ -100,7 +100,7 @@ public class Client implements ViewObserver {
     public void onUpdateLoser (SerializableUpdateLoser object){
         int playerId = object.getPlayerId();
         board.getPlayer(playerId).setLost(true);
-        view.displayBoard(); //mostro la board, senza i worker del giocatore che ha perso
+        view.displayBoard(object); //mostro la board, senza i worker del giocatore che ha perso
         view.displayLoser(playerId);
     }
 
@@ -113,7 +113,7 @@ public class Client implements ViewObserver {
         if (board.getCell(x, y) != null) oldLevel = board.getCell(x, y).getLevel(); //ricavo qual era la z prima di costruire
         else oldLevel = -1;
         board.setCell(new ClientBuilding(oldLevel + 1, isDome), x, y); // costruisco sopra l'ultima casella presente
-        view.displayBoard(); //mostro le modifiche a schermo
+        view.displayBoard(object); //mostro le modifiche a schermo
     }
 
     public void onUpdateMove(SerializableUpdateMove object){
@@ -124,7 +124,7 @@ public class Client implements ViewObserver {
         y = object.getNewPosition().getY();
         board.getPlayer(playerId).getWorker(workerId).setX(x); //apporto modifiche alla board del client
         board.getPlayer(playerId).getWorker(workerId).setY(y);
-        view.displayBoard(); //mostro le modifiche a schermo (credo proprio che per la GUI serva un metodo che dica quali sono le caselle di
+        view.displayBoard(object); //mostro le modifiche a schermo (credo proprio che per la GUI serva un metodo che dica quali sono le caselle di
         //partenza e arrivo
     }
 
@@ -157,7 +157,10 @@ public class Client implements ViewObserver {
     public void onCompletedStartup (String myName, int numOfPlayers) {
         try {
             communicator = new ClientCommunicator(port, IP);
-        }catch (Exception e){ onError(); }
+        }catch (Exception e){
+            onError();
+            return;
+        }
         try{
             board = new ClientBoard(numOfPlayers); //crea una board con 3 player, è copia di quella del model, ma si salva solo le informazioni della caselle con la Z maggiore, quindi al massimo mi pare 25 caselle
             view.setBoard(board); //passa il riferimento alla board creata alla View

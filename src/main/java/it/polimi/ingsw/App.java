@@ -25,7 +25,7 @@ public class App
             int port = Math.toIntExact((Long) jsonObject.get("port"));
 
             //todo:inserire lettura da args[] che EVENTUALMENTE modifica i quattro valori appena impostati
-
+            
             if (server) (new Server()).startServer(port);
             else (new Client()).startClient(port, ip, GUI);
         }catch(Exception e){ System.out.println("An error occurred");

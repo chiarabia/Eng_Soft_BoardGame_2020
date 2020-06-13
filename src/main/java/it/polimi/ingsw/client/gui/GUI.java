@@ -1,21 +1,15 @@
 package it.polimi.ingsw.client.gui;
 
-import it.polimi.ingsw.Position;
 import it.polimi.ingsw.client.ClientBoard;
 import it.polimi.ingsw.client.GodCard;
 import it.polimi.ingsw.client.View;
 import it.polimi.ingsw.client.ViewObserver;
 
-import it.polimi.ingsw.client.gui.runnable.BoardSceneRunnable;
+import it.polimi.ingsw.client.gui.runnable.*;
 
-import it.polimi.ingsw.client.gui.runnable.ChoosingGodSceneRunnable;
-import it.polimi.ingsw.client.gui.runnable.LoginSceneRunnable;
-import it.polimi.ingsw.client.gui.runnable.WaitingSceneRunnable;
-import it.polimi.ingsw.server.serializable.SerializableRequestAction;
-import it.polimi.ingsw.server.serializable.SerializableUpdateInitializeNames;
+import it.polimi.ingsw.server.serializable.*;
 import javafx.application.Platform;
 
-import java.util.ArrayList;
 import java.util.List;
 
 public class GUI implements View {
@@ -73,12 +67,12 @@ public class GUI implements View {
 
     @Override
     public void displayWinner(int playerId) {
-
+        Platform.runLater(new WinSceneRunnable());
     }
 
     @Override
     public void displayLoser(int playerId) {
-
+        Platform.runLater(new LoseSceneRunnable());
     }
 
     @Override
@@ -92,21 +86,27 @@ public class GUI implements View {
     }
 
     @Override
-    public void displayError() {
-
-    }
-
-    @Override
     public void displayRequestAction(SerializableRequestAction object) {
 
     }
 
     @Override
-    public void displayBoard() {
+    public void displayBoard(SerializableUpdateMove update) {
         //actionsCodes.clear();
         //actionsCodes.add(0);
     }
 
+    @Override
+    public void displayBoard(SerializableUpdateBuild update) {
+    }
+
+    @Override
+    public void displayBoard(SerializableUpdateLoser update) {
+    }
+
+    @Override
+    public void displayBoard(SerializableUpdateInitializeWorkerPositions update) {
+    }
 
     @Override
     public void askForAction(SerializableRequestAction object) {

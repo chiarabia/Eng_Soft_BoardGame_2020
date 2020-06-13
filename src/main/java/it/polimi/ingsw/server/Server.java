@@ -10,11 +10,11 @@ import static java.lang.Thread.sleep;
 public class Server {
     public static int serverPort;
     public void startServer() throws InterruptedException {
-        System.out.println("Server started");
         ServerSocket serverSocket;
         ServerAccepter playersAccepter;
         while (true) {
             try {
+                System.out.println("Server started");
                 serverSocket = new ServerSocket(serverPort);
                 playersAccepter = new ServerAccepter(serverSocket);
                 playersAccepter.start();
