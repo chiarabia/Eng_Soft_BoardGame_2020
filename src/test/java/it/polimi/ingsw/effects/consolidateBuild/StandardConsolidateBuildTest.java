@@ -1,7 +1,7 @@
 package it.polimi.ingsw.effects.consolidateBuild;
 
 import it.polimi.ingsw.*;
-import it.polimi.ingsw.server.serializable.SerializableUpdateInfos;
+import it.polimi.ingsw.server.serializable.SerializableUpdateActions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -11,7 +11,7 @@ import static org.junit.jupiter.api.Assertions.*;
 public class StandardConsolidateBuildTest {
     StandardConsolidateBuild standardConsolidateBuild = new StandardConsolidateBuild();
     Cell buildingCell;
-    SerializableUpdateInfos updateInfos;
+    SerializableUpdateActions updateInfos;
     Board board;
     boolean forceDome;
     Player player = new Player("pippo",12);

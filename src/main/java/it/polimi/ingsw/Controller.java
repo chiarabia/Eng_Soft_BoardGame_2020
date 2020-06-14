@@ -91,10 +91,10 @@ public class Controller implements ProxyObserver {
     // Notifica i player della disconnessione
     public void onPlayerDisconnection(int playerId) {
         if (getPlayer(playerId)!=null && !isDisconnected) { // Se la disconnessione di un player non è dovuta a una sconfitta e se non è ancora stato lanciato il segnale di disconnessione...
+            isDisconnected = true; // dichiara la disconnessione avvenuta
             SerializableUpdate update = new SerializableUpdateDisconnection(playerId);
             game.notifyJustUpdateAll(update); // aggiorna i players della disconnessione
             serverView.stopAllEventGenerators(); // termina tutti i thread legati alla partita
-            isDisconnected = true; // dichiara la disconnessione avvenuta
         }
     }
 

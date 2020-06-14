@@ -1,11 +1,8 @@
 package it.polimi.ingsw.client;
 
-import it.polimi.ingsw.Position;
 import it.polimi.ingsw.server.serializable.*;
 
-import java.util.ArrayList;
 import java.util.List;
-import java.util.Set;
 
 // Metodi che Client invoca su CLI e GUI
 
@@ -22,9 +19,7 @@ public interface View {
     void displayBoardScreen(); // Sono stati appena scelti tutti i god powers, ora partono le richieste di posizioni iniziali dei workers ai players
     void displayGameStart(); // La partita ha ora inizio
     void displayRequestAction(SerializableRequestAction object); // Un'azione è stata appena richiesta al giocatore
-    void displayBoard(SerializableUpdateInfos update);
-    //void displayBoard(SerializableUpdateMove update); // Sono state effettuate modifiche alla board che devono ora essere riprodotte graficamente
-    //void displayBoard(SerializableUpdateBuild update);
+    void displayBoard(SerializableUpdateActions update); // Sono state effettuate modifiche alla board che devono ora essere riprodotte graficamente
     void displayBoard(SerializableUpdateLoser update);
     void displayBoard(SerializableUpdateInitializeWorkerPositions update);
     void displayTurn(); // Un nuovo turno è appena iniziato

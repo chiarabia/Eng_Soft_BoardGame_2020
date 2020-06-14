@@ -7,11 +7,6 @@ import org.json.simple.parser.JSONParser;
 
 import java.io.FileReader;
 
-/**
- * Hello world!
- *
- */
-
 public class App
 {
     private final static String ROOT = "src/main/java/it/polimi/ingsw/Configuration.json";
@@ -24,8 +19,27 @@ public class App
             String ip = (String) jsonObject.get("ip");
             int port = Math.toIntExact((Long) jsonObject.get("port"));
 
-            //todo:inserire lettura da args[] che EVENTUALMENTE modifica i quattro valori appena impostati
-            
+            try {
+                for (int i = 0; i < args.length; i++) {
+                    String argument = args[i];
+                    switch (argument) {
+                        case "--role":
+                            server = args[i + 1].equals("server");
+                            break;
+                        case "--ui":
+                            GUI = args[i + 1].equals("GUI");
+                            break;
+                        case "--ip":
+                            ip = args[i + 1];
+                            break;
+                        case "--port":
+                            port = Integer.parseInt(args[i + 1]);
+                            break;
+                    }
+                }
+            } catch (Exception e){}
+
+            //server = true;
             if (server) (new Server()).startServer(port);
             else (new Client()).startClient(port, ip, GUI);
         }catch(Exception e){ System.out.println("An error occurred");

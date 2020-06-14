@@ -1,13 +1,12 @@
 package it.polimi.ingsw.effects.consolidateMove;
 
 import it.polimi.ingsw.*;
-import it.polimi.ingsw.server.serializable.SerializableUpdate;
-import it.polimi.ingsw.server.serializable.SerializableUpdateInfos;
+import it.polimi.ingsw.server.serializable.SerializableUpdateActions;
 import it.polimi.ingsw.server.serializable.SerializableUpdateMove;
 
 
 public class SwapWorker extends StandardConsolidateMove {
-        public SerializableUpdateInfos moveInto (Board board, Position workerPosition, Position destinationPosition){
+        public SerializableUpdateActions moveInto (Board board, Position workerPosition, Position destinationPosition){
             Cell workerCell = board.getCell(workerPosition);
             Cell destinationCell = board.getCell(destinationPosition);
 
@@ -26,10 +25,10 @@ public class SwapWorker extends StandardConsolidateMove {
                 SerializableUpdateMove myWorkerInfos = new SerializableUpdateMove(workerPosition,destinationPosition, myPlayerId, myWorkerId);
                 SerializableUpdateMove enemyWorkerInfos = new SerializableUpdateMove(destinationPosition, workerPosition, enemyPlayerId, enemyWorkerId);
 
-                SerializableUpdateInfos serializableUpdateInfos = new SerializableUpdateInfos();
-                serializableUpdateInfos.addMoveAction(myWorkerInfos);
-                serializableUpdateInfos.addMoveAction(enemyWorkerInfos);
-                return serializableUpdateInfos;
+                SerializableUpdateActions serializableUpdateActions = new SerializableUpdateActions();
+                serializableUpdateActions.addMoveAction(myWorkerInfos);
+                serializableUpdateActions.addMoveAction(enemyWorkerInfos);
+                return serializableUpdateActions;
             }
         }
     }

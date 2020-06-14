@@ -1,7 +1,7 @@
 package it.polimi.ingsw.effects.consolidateMove;
 
 import it.polimi.ingsw.*;
-import it.polimi.ingsw.server.serializable.SerializableUpdateInfos;
+import it.polimi.ingsw.server.serializable.SerializableUpdateActions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -17,7 +17,7 @@ public class SwapWorkerTest {
     Player player2 = new Player("pluto", 2);
     Worker worker11 = new Worker(player1, 1);
     Worker worker21 = new Worker(player2, 1);
-    SerializableUpdateInfos updateInfos;
+    SerializableUpdateActions updateInfos;
 
     @BeforeEach
     void setUp() {

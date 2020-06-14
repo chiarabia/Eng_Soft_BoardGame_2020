@@ -6,13 +6,10 @@ import it.polimi.ingsw.Player;
 import it.polimi.ingsw.Worker;
 import it.polimi.ingsw.Turn;
 
-import it.polimi.ingsw.server.serializable.SerializableUpdateInfos;
+import it.polimi.ingsw.server.serializable.SerializableUpdateActions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.assertEquals;
-
-import java.util.HashSet;
-import java.util.Set;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -25,7 +22,7 @@ public class StandardConsolidateMoveTest {
     Turn turn;
     Player player = new Player("pippo",12);
     Worker worker = new Worker(player, 12);
-    SerializableUpdateInfos updateInfos;
+    SerializableUpdateActions updateInfos;
 
     @BeforeEach
     void setUp(){

@@ -45,7 +45,7 @@ public class Terminal implements View {
         System.out.println(Color.WHITE.set()+".\n");
     }
     @Override
-    public void displayBoard(SerializableUpdateInfos update) {
+    public void displayBoard(SerializableUpdateActions update) {
         displayBoard();
     }
 
@@ -164,7 +164,7 @@ public class Terminal implements View {
 
             //chiedo quale lavoratore il player voglia usare solo se entrambi possono muoversi
             if (object.canWorkerDoAction(1)&&object.canWorkerDoAction(2)) {
-                workerId = askForWorker(); //se entrambi i lavoratori possono fare qualche azione chiedo al player;
+                workerId = askForWorkerId(); //se entrambi i lavoratori possono fare qualche azione chiedo al player;
             } else { //se no capisco io al posto del player qual è l'unico worker che può compiere un'azione
                 int i;
                 for(i = 1; i<=2; i++) {
@@ -188,7 +188,8 @@ public class Terminal implements View {
                 if (workerId==1) position = askForRightPosition(object.getWorker1Moves()); //chiedo al player la posizione
                 else position = askForRightPosition(object.getWorker2Moves());
                 for (int i = 0; i < observerList.size(); i++) observerList.get(i).onCompletedMove(position, workerId);
-            } else if (build) {
+            }
+            if (build) {
                 if (object.isCanForceDome()) isDome = askForDome(); //chiedo al player se vuole costruire una cupola
                     //a qualsiasi livello, solo se può farlo con il potere della sua divinità
                 else isDome = false;
@@ -248,8 +249,13 @@ public class Terminal implements View {
         return askForBoolean("Do you want to "+action+"(y/n)? ");
     }
 
-    private int askForWorker(){
-        return askForInt("worker id: ");
+    private int askForWorkerId(){
+        int workerId;
+        while (true) {
+            workerId = askForInt("worker id: ");
+            if (workerId > 0 && workerId < 3) break;
+        }
+        return workerId;
     }
 
     private boolean askForDome(){
@@ -311,8 +317,12 @@ public class Terminal implements View {
     }
 
     private Position askForPosition(){
-        int x = askForInt("x: ");
-        int y = askForInt("y: ");
+        int x, y;
+        while (true) {
+            x = askForInt("x: ");
+            y = askForInt("y: ");
+            if (x >= 0 && y >= 0 && x < 5 && y < 5) break;
+        }
         return new Position(x, y, 0);
     }
 
@@ -451,11 +461,9 @@ public class Terminal implements View {
 
     private enum Color {
         RED("\u001B[31m"),
-        GREEN("\u001B[32m"),
         YELLOW("\u001B[33m"),
-        BLUE("\u001B[34m"),
-        PURPLE("\u001B[35m"),
         CYAN("\u001B[36m"),
+        BLUE("\u001B[34m"),
         WHITE("\u001B[37m");
         private String set;
 

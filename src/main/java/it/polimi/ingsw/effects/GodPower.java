@@ -11,8 +11,7 @@ import it.polimi.ingsw.effects.winCondition.StandardLoseCondition;
 import it.polimi.ingsw.effects.winCondition.StandardWinCondition;
 import it.polimi.ingsw.Position;
 import it.polimi.ingsw.Turn;
-import it.polimi.ingsw.server.serializable.SerializableUpdate;
-import it.polimi.ingsw.server.serializable.SerializableUpdateInfos;
+import it.polimi.ingsw.server.serializable.SerializableUpdateActions;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -45,12 +44,12 @@ public class GodPower {
     }
 
     //returns the state of the board after the worker has moved
-    public SerializableUpdateInfos moveInto (Board board, Position workerPosition, Position destinationPosition) {
+    public SerializableUpdateActions moveInto (Board board, Position workerPosition, Position destinationPosition) {
         return consolidateMove.moveInto(board, workerPosition, destinationPosition);
     }
 
     //returns the state of the board after the workers has built
-    public SerializableUpdateInfos buildUp (Position buildingPosition, Board board, boolean god_power) {
+    public SerializableUpdateActions buildUp (Position buildingPosition, Board board, boolean god_power) {
         return consolidateBuild.buildUp(buildingPosition, board, god_power);
     }
 

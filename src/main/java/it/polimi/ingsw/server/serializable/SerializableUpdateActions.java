@@ -14,11 +14,11 @@ import java.util.List;
  * In seguito ad una buildup è possibile che sia presente un oggetto anche in update Move, come nel caso della buildUp di UnderWorker.
  */
 
-public class SerializableUpdateInfos implements SerializableUpdate {
+public class SerializableUpdateActions implements SerializableUpdate {
         List<SerializableUpdateMove> updateMove;
         List<SerializableUpdateBuild> updateBuild;
 
-        public SerializableUpdateInfos() {
+        public SerializableUpdateActions() {
             this.updateMove = new ArrayList<>();
             this.updateBuild = new ArrayList<>();
         }
@@ -42,13 +42,13 @@ public class SerializableUpdateInfos implements SerializableUpdate {
                 this.updateBuild.add(updateBuild);
             }
         }
-        public void mergeInfos (SerializableUpdateInfos serializableUpdateInfos) {
-            if (serializableUpdateInfos!=null) {
-                if (serializableUpdateInfos.getUpdateBuild()!=null){
-                    this.updateBuild.addAll(serializableUpdateInfos.getUpdateBuild());
+        public void mergeInfos (SerializableUpdateActions serializableUpdateActions) {
+            if (serializableUpdateActions !=null) {
+                if (serializableUpdateActions.getUpdateBuild()!=null){
+                    this.updateBuild.addAll(serializableUpdateActions.getUpdateBuild());
                 }
-                if (serializableUpdateInfos.getUpdateMove()!=null){
-                    this.updateMove.addAll(serializableUpdateInfos.getUpdateMove());
+                if (serializableUpdateActions.getUpdateMove()!=null){
+                    this.updateMove.addAll(serializableUpdateActions.getUpdateMove());
                 }
             }
         }

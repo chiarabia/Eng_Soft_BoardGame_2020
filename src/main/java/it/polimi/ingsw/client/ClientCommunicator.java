@@ -36,10 +36,6 @@ public class ClientCommunicator extends Thread {
         sendObject(new Message(message));
     }
 
-    public String waitForMessage () throws IOException, ClassNotFoundException {
-        return ((Message) waitForObject()).getMessage();
-    }
-
     public void stopProcess(){
         try { serverSocket.close(); } catch (Exception e){}
     }
@@ -74,17 +70,9 @@ public class ClientCommunicator extends Thread {
             for(int i = 0; i<observerList.size(); i++)observerList.get(i).onRequestInitializeWorkerPositions();
         }
 
-        if (object instanceof SerializableUpdateInfos) {
-            for (Client client : observerList) client.onUpdateAction((SerializableUpdateInfos) object);
+        if (object instanceof SerializableUpdateActions) {
+            for (Client client : observerList) client.onUpdateAction((SerializableUpdateActions) object);
         }
-        /*
-        if (object instanceof SerializableUpdateMove) {   //messaggio che ricevo dopo aver consolidato una move
-            for(int i = 0; i<observerList.size(); i++)observerList.get(i).onUpdateMove((SerializableUpdateMove) object);
-        }
-        if (object instanceof SerializableUpdateBuild) {//messaggio che ricevo dopo aver consolidato una build
-            for(int i = 0; i<observerList.size(); i++)observerList.get(i).onUpdateBuild((SerializableUpdateBuild) object);
-        }*/
-
         //in questo messaggio sono contenute le informazioni sulle mosse disponibili per entrambi i workers
         //le informazioni riguardo all'opzionalità delle suddette azioni, se il player è in condizioni di passare il turno oppure no
         if (object instanceof SerializableRequestAction) {
@@ -106,11 +94,14 @@ public class ClientCommunicator extends Thread {
             for(int i = 0; i<observerList.size(); i++)observerList.get(i).onUpdateDisconnection((SerializableUpdateDisconnection) object);
         }
         if (object instanceof Message){
-            if (((Message) object).getMessage().equals("Hello")) {
+            if (((Message) object).getMessage().equals("HELLO")) {
                 for (int i = 0; i < observerList.size(); i++) observerList.get(i).onHello();
             }
             else if (((Message) object).getMessage().equals("ERROR_NOT_VALID_NAME")) {
-                for (int i = 0; i < observerList.size(); i++) observerList.get(i).onNotValidNameError();
+                for (int i = 0; i < observerList.size(); i++) observerList.get(i).onRestart(1);
+            }
+            else if (((Message) object).getMessage().equals("ERROR_NOT_VALID_NUM_OF_PLAYERS")) {
+                for (int i = 0; i < observerList.size(); i++) observerList.get(i).onRestart(2);
             }
             else {
                 for(int i = 0; i<observerList.size(); i++)observerList.get(i).onPlayerIdAssigned(((Message) object).getMessage());

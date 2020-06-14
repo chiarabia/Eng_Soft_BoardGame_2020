@@ -1,7 +1,7 @@
 package it.polimi.ingsw.effects.consolidateBuild;
 
 import it.polimi.ingsw.*;
-import it.polimi.ingsw.server.serializable.SerializableUpdateInfos;
+import it.polimi.ingsw.server.serializable.SerializableUpdateActions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -14,7 +14,7 @@ public class UnderWorkerTest {
     Cell destinationCell;
     Player player = new Player("pippo",12);
     Worker worker = new Worker(player, 12);
-    SerializableUpdateInfos updateInfos;
+    SerializableUpdateActions updateInfos;
 
     @BeforeEach
     void setUP () {

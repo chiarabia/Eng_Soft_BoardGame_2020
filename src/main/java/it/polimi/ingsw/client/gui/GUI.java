@@ -1,6 +1,5 @@
 package it.polimi.ingsw.client.gui;
 
-import it.polimi.ingsw.Position;
 import it.polimi.ingsw.client.ClientBoard;
 import it.polimi.ingsw.client.GodCard;
 import it.polimi.ingsw.client.View;
@@ -121,7 +120,7 @@ public class GUI implements View {
     }
 
     @Override
-    public void displayBoard(SerializableUpdateInfos update) {
+    public void displayBoard(SerializableUpdateActions update) {
 
     }
     /*

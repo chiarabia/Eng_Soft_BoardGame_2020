@@ -3,12 +3,12 @@ package it.polimi.ingsw.effects.consolidateMove;
 import it.polimi.ingsw.Board;
 import it.polimi.ingsw.Cell;
 import it.polimi.ingsw.Position;
-import it.polimi.ingsw.server.serializable.SerializableUpdateInfos;
+import it.polimi.ingsw.server.serializable.SerializableUpdateActions;
 import it.polimi.ingsw.server.serializable.SerializableUpdateMove;
 
 
 public class StandardConsolidateMove {
-    public SerializableUpdateInfos moveInto (Board board, Position workerPosition, Position destinationPosition){
+    public SerializableUpdateActions moveInto (Board board, Position workerPosition, Position destinationPosition){
         Cell workerCell = board.getCell(workerPosition);
         Cell destinationCell = board.getCell(destinationPosition);
         destinationCell.setWorker(workerCell.getWorker());
@@ -18,8 +18,8 @@ public class StandardConsolidateMove {
         int workerId = destinationCell.getWorkerId();
 
         SerializableUpdateMove updateMove = new SerializableUpdateMove(workerPosition, destinationPosition, playerId, workerId);
-        SerializableUpdateInfos serializableUpdateInfos = new SerializableUpdateInfos();
-        serializableUpdateInfos.addMoveAction(updateMove);
-        return serializableUpdateInfos;
+        SerializableUpdateActions serializableUpdateActions = new SerializableUpdateActions();
+        serializableUpdateActions.addMoveAction(updateMove);
+        return serializableUpdateActions;
     }
 }

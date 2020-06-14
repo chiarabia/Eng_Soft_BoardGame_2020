@@ -1,15 +1,9 @@
 package it.polimi.ingsw.effects.consolidateMove;
 
 import it.polimi.ingsw.*;
-import it.polimi.ingsw.effects.consolidateBuild.StandardConsolidateBuild;
-import it.polimi.ingsw.effects.winCondition.StandardLoseCondition;
-import it.polimi.ingsw.server.serializable.SerializableUpdate;
-import it.polimi.ingsw.server.serializable.SerializableUpdateInfos;
+import it.polimi.ingsw.server.serializable.SerializableUpdateActions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-
-import java.util.HashSet;
-import java.util.Set;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.junit.jupiter.api.Assertions.assertSame;
@@ -24,7 +18,7 @@ public class PushWorkerTest {
     Player player2 = new Player("pluto", 21);
     Worker worker1 = new Worker(player1, 1);
     Worker worker2 = new Worker(player2, 1);
-    SerializableUpdateInfos updateInfos;
+    SerializableUpdateActions updateInfos;
 
     @BeforeEach
     void setUp(){

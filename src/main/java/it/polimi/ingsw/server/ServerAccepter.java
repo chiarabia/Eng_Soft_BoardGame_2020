@@ -28,16 +28,13 @@ public class ServerAccepter extends Thread {
                         if (numOfPlayers == 2) waitingList = twoPlayersWaitingList;
                         else if (numOfPlayers == 3) waitingList = threePlayersWaitingList;
                         else {
-                            socket.close();
+                            sendError(socket, "ERROR_NOT_VALID_NUM_OF_PLAYERS");
                             return;
                         }
                         waitingList.addToPlayersList(socket, name);
                     } catch (BadNameException e){
                         try {
-                            ObjectOutputStream fileObjectOut = new ObjectOutputStream(socket.getOutputStream());
-                            fileObjectOut.writeObject(new Message("ERROR_NOT_VALID_NAME"));
-                            fileObjectOut.flush();
-                            socket.close();
+                            sendError(socket, "ERROR_NOT_VALID_NAME");
                         } catch (Exception ex) {}
                     } catch (Exception e) {
                         try { socket.close(); } catch (Exception ex) {}
@@ -47,6 +44,12 @@ public class ServerAccepter extends Thread {
         } catch (IOException e) {
             try { (new Server()).startServer(serverSocket.getLocalPort()); } catch (InterruptedException ex) {}
         }
+    }
+    private void sendError (Socket socket, String message) throws IOException {
+        ObjectOutputStream fileObjectOut = new ObjectOutputStream(socket.getOutputStream());
+        fileObjectOut.writeObject(new Message(message));
+        fileObjectOut.flush();
+        socket.close();
     }
     public ServerAccepter(ServerSocket serverSocket){
         this.serverSocket = serverSocket;

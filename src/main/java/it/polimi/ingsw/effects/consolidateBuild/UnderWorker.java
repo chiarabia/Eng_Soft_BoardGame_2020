@@ -3,15 +3,14 @@ package it.polimi.ingsw.effects.consolidateBuild;
 import it.polimi.ingsw.Board;
 import it.polimi.ingsw.Cell;
 import it.polimi.ingsw.Position;
-import it.polimi.ingsw.server.serializable.SerializableUpdate;
 import it.polimi.ingsw.server.serializable.SerializableUpdateBuild;
-import it.polimi.ingsw.server.serializable.SerializableUpdateInfos;
+import it.polimi.ingsw.server.serializable.SerializableUpdateActions;
 import it.polimi.ingsw.server.serializable.SerializableUpdateMove;
 
 public class UnderWorker extends StandardConsolidateBuild {
 
     @Override
-    public SerializableUpdateInfos buildUp(Position buildingPosition, Board board, boolean forceDome) {
+    public SerializableUpdateActions buildUp(Position buildingPosition, Board board, boolean forceDome) {
         Cell tempBuildingCell = board.getCell(buildingPosition);
 
         if (tempBuildingCell.isWorker()) {
@@ -29,12 +28,12 @@ public class UnderWorker extends StandardConsolidateBuild {
                     board.getCell(buildingPosition)
                             .isDome());
             SerializableUpdateMove updateMove = new SerializableUpdateMove(buildingPosition, newPosition, playerId, workerId);
-            SerializableUpdateInfos serializableUpdateInfos = new SerializableUpdateInfos();
+            SerializableUpdateActions serializableUpdateActions = new SerializableUpdateActions();
 
-            serializableUpdateInfos.addBuildAction(updateBuild);
-            serializableUpdateInfos.addMoveAction(updateMove);
+            serializableUpdateActions.addBuildAction(updateBuild);
+            serializableUpdateActions.addMoveAction(updateMove);
             
-            return serializableUpdateInfos;
+            return serializableUpdateActions;
         }
 
         else

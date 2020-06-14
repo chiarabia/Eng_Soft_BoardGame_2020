@@ -105,12 +105,12 @@ public class Client implements ViewObserver {
     }
 
 
-    public void onUpdateAction(SerializableUpdateInfos object) {
+    public void onUpdateAction(SerializableUpdateActions object) {
         for(int i =0; i < object.getUpdateBuild().size(); i++) {
-            onUpdateBuild(object.getUpdateBuild().get(0));
+            onUpdateBuild(object.getUpdateBuild().get(i));
         }
         for(int i =0; i < object.getUpdateMove().size(); i++) {
-            onUpdateMove(object.getUpdateMove().get(0));
+            onUpdateMove(object.getUpdateMove().get(i));
         }
         view.displayBoard(object); //mostro le modifiche a schermo e passo alla GUI tutte le informazioni
     }
@@ -146,7 +146,7 @@ public class Client implements ViewObserver {
     }
 
     public void onHello(){
-        communicator.sendMessage("Hello");
+        communicator.sendMessage("HELLO");
     }
 
     public void onPlayerIdAssigned(String message){
@@ -154,11 +154,17 @@ public class Client implements ViewObserver {
         board.setMyPlayerId(playerId); //creo il playerID
     }
 
-    public void onNotValidNameError() throws GameEndedException {
-        view.displayError("This name is not available");
+    public void onRestart(int error) throws GameEndedException {
+        String message = null;
+        switch (error){
+            case 1: message = "This name is not available"; break;
+            case 2: message = "This number of players is not correct"; break;
+        }
+        view.displayError(message);
         view.askForStartupInfos();
         throw new GameEndedException();
     }
+
 
 
 

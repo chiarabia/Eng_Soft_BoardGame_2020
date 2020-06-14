@@ -43,8 +43,8 @@ public class ServerWaitingList {
     private synchronized boolean isNameValid (String name) throws IOException {
         for (int i = 0; i < playersList.size(); i++) {
             try{
-                String reply = sendMessageAndWaitForReply("Hello", i);
-                if (!reply.equals("Hello")) throw new Exception();
+                String reply = sendMessageAndWaitForReply("HELLO", i);
+                if (!reply.equals("HELLO")) throw new Exception();
             } catch(Exception e){
                 playersList.remove(i).close();
                 System.out.println(namesList.remove(i) + " disconnected");
