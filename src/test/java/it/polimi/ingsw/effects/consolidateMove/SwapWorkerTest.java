@@ -1,15 +1,11 @@
 package it.polimi.ingsw.effects.consolidateMove;
 
-import it.polimi.ingsw.Board;
-import it.polimi.ingsw.Cell;
-import it.polimi.ingsw.Player;
-import it.polimi.ingsw.Worker;
-import it.polimi.ingsw.Turn;
+import it.polimi.ingsw.*;
+import it.polimi.ingsw.server.serializable.SerializableUpdateInfos;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;
-import static org.junit.jupiter.api.Assertions.assertSame;
 
 public class SwapWorkerTest {
     SwapWorker swapWorker = new SwapWorker();
@@ -21,11 +17,13 @@ public class SwapWorkerTest {
     Player player2 = new Player("pluto", 2);
     Worker worker11 = new Worker(player1, 1);
     Worker worker21 = new Worker(player2, 1);
+    SerializableUpdateInfos updateInfos;
 
     @BeforeEach
     void setUp() {
         turn = new Turn(player1);
         board = new Board();
+        updateInfos = null;
     }
 
     @Test
@@ -38,14 +36,18 @@ public class SwapWorkerTest {
         workerCell.setWorker(worker11);
         board.newCell(1, 1, 1);
         destinationCell = board.getCell(1, 1, 1);
+        destinationCell.setWorker(worker21);
 
-        swapWorker.moveInto(board, workerCell.getPosition(), destinationCell.getPosition());
+        updateInfos = swapWorker.moveInto(board, workerCell.getPosition(), destinationCell.getPosition());
 
-        assertAll("moveInto", () -> assertTrue(workerCell.isFree()),
+        assertAll("moveInto", () -> assertFalse(workerCell.isFree()),
                 () -> assertTrue(destinationCell.isWorker()),
                 () -> assertSame(destinationCell.getWorker(), worker11),
-                () -> assertSame(destinationCell.getPlayer(), player1));
-
+                () -> assertSame(workerCell.getWorker(), worker21),
+                () -> assertSame(destinationCell.getPlayer(), player1),
+                () -> assertEquals(2, updateInfos.getUpdateMove().size()),
+                () -> assertSame(updateInfos.getUpdateMove().get(0).getStartingPosition(), workerCell.getPosition()),
+                () -> assertSame(updateInfos.getUpdateMove().get(0).getNewPosition(), destinationCell.getPosition()));
     }
 
     @Test
@@ -90,9 +92,7 @@ public class SwapWorkerTest {
 
     @Test
     void swapWorkerThrowsExceptionWithNullParameters() {
-        assertThrows(NullPointerException.class, () -> {
-            swapWorker.moveInto(null, null, null);
-        });
+        assertThrows(NullPointerException.class, () -> swapWorker.moveInto(null, null, null));
     }
 
     @Test

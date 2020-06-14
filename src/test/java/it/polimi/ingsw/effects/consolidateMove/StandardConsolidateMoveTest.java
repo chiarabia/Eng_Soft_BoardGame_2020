@@ -6,6 +6,7 @@ import it.polimi.ingsw.Player;
 import it.polimi.ingsw.Worker;
 import it.polimi.ingsw.Turn;
 
+import it.polimi.ingsw.server.serializable.SerializableUpdateInfos;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -24,11 +25,13 @@ public class StandardConsolidateMoveTest {
     Turn turn;
     Player player = new Player("pippo",12);
     Worker worker = new Worker(player, 12);
+    SerializableUpdateInfos updateInfos;
 
     @BeforeEach
     void setUp(){
         turn = new Turn(player);
         board = new Board();
+        updateInfos = null;
     }
 
     //positive
@@ -39,9 +42,11 @@ public class StandardConsolidateMoveTest {
         workerCell.setWorker(worker);
         board.newCell(1,1,1);
         destinationCell = board.getCell(1,1,1);
-        standardConsolidateMove.moveInto(board, workerCell.getPosition(), destinationCell.getPosition());
-        assertTrue(destinationCell.isWorker());
-
+        updateInfos = standardConsolidateMove.moveInto(board, workerCell.getPosition(), destinationCell.getPosition());
+        assertAll("MovingOnSameLevel", () -> assertTrue(destinationCell.isWorker()),
+                () -> assertEquals(1, updateInfos.getUpdateMove().size()),
+                () -> assertSame(updateInfos.getUpdateMove().get(0).getNewPosition(), destinationCell.getPosition()),
+                () -> assertSame(updateInfos.getUpdateMove().get(0).getStartingPosition(), workerCell.getPosition()));
     }
 
     //positive

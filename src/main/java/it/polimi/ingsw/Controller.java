@@ -71,8 +71,8 @@ public class Controller implements ProxyObserver {
         Position workerPosition = getWorkerPosition(playerId, workerId);
         getPlayerGodPower(playerId).moveInto(board, workerPosition, newPosition); // consolida la mossa
         getTurn().updateTurnInfoAfterMove(workerPosition, newPosition, board); // aggiorna Turn
-        SerializableUpdate update = new SerializableUpdateMove(newPosition, playerId, workerId);
-        game.notifyJustUpdateAll(update); // aggiorna i players della move
+        //SerializableUpdate update = new SerializableUpdateMove(newPosition, playerId, workerId);
+        //game.notifyJustUpdateAll(update); // aggiorna i players della move
 
         checkWin(playerId, workerPosition, newPosition); // se la move determina una vittoria apre la procedura di vittoria...
         nextOperation(); //...altrimenti apre una nuova operazione
