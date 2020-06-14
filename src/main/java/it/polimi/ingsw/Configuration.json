@@ -1,6 +1,6 @@
 {
-  "role": "clientsd",
-  "ui": "GUI",
+  "role": "client",
+  "ui": "CLI",
   "ip": "localhost",
   "port": 555
 }

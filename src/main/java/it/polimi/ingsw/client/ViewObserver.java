@@ -1,6 +1,8 @@
 package it.polimi.ingsw.client;
 
 import it.polimi.ingsw.Position;
+import it.polimi.ingsw.server.serializable.SerializableUpdateInfos;
+
 import java.util.List;
 
 // Metodi che CLI e GUI invocano su Client dopo che l'utente ha fornito le informazioni necessarie (dopo che ha premuto OK)

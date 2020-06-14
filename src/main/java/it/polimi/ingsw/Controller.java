@@ -69,10 +69,9 @@ public class Controller implements ProxyObserver {
     public void onConsolidateMove(int playerId, int workerId, Position newPosition) {
         Board board = getBoard();
         Position workerPosition = getWorkerPosition(playerId, workerId);
-        getPlayerGodPower(playerId).moveInto(board, workerPosition, newPosition); // consolida la mossa
+        SerializableUpdate update = getPlayerGodPower(playerId).moveInto(board, workerPosition, newPosition); // consolida la mossa
         getTurn().updateTurnInfoAfterMove(workerPosition, newPosition, board); // aggiorna Turn
-        //SerializableUpdate update = new SerializableUpdateMove(newPosition, playerId, workerId);
-        //game.notifyJustUpdateAll(update); // aggiorna i players della move
+        game.notifyJustUpdateAll(update); // aggiorna i players della move
 
         checkWin(playerId, workerPosition, newPosition); // se la move determina una vittoria apre la procedura di vittoria...
         nextOperation(); //...altrimenti apre una nuova operazione
@@ -82,9 +81,8 @@ public class Controller implements ProxyObserver {
     // Gestisce una ConsolidateBuild
     public void onConsolidateBuild(int playerId, Position newPosition, boolean forceDome) {
         Board board = getBoard();
-        getPlayerGodPower(playerId).buildUp(newPosition, board, forceDome); // consolida la build
+        SerializableUpdate update = getPlayerGodPower(playerId).buildUp(newPosition, board, forceDome); // consolida la build
         getTurn().updateTurnInfoAfterBuild(newPosition); // aggiorna Turn
-        SerializableUpdate update = new SerializableUpdateBuild(newPosition, board.getCell(newPosition).isDome());
         game.notifyJustUpdateAll(update); // aggiorna i players della build
         nextOperation(); // apre una nuova operazione
     }

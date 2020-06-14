@@ -121,6 +121,11 @@ public class GUI implements View {
     }
 
     @Override
+    public void displayBoard(SerializableUpdateInfos update) {
+
+    }
+    /*
+    @Override
     public void displayBoard(SerializableUpdateMove update) {
 
 
@@ -133,7 +138,7 @@ public class GUI implements View {
         Platform.runLater(()->{
             BoardSceneController.updateBuilding(newPosition, dome);
         });
-    }
+    }*/
 
     @Override
     public void displayBoard(SerializableUpdateLoser update) {

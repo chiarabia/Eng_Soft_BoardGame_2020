@@ -104,7 +104,18 @@ public class Client implements ViewObserver {
         view.displayLoser(playerId);
     }
 
-    public void onUpdateBuild(SerializableUpdateBuild object){
+
+    public void onUpdateAction(SerializableUpdateInfos object) {
+        for(int i =0; i < object.getUpdateBuild().size(); i++) {
+            onUpdateBuild(object.getUpdateBuild().get(0));
+        }
+        for(int i =0; i < object.getUpdateMove().size(); i++) {
+            onUpdateMove(object.getUpdateMove().get(0));
+        }
+        view.displayBoard(object); //mostro le modifiche a schermo e passo alla GUI tutte le informazioni
+    }
+
+    private void onUpdateBuild(SerializableUpdateBuild object){
         boolean isDome;
         int oldLevel, x, y;
         x = object.getNewPosition().getX(); //estraggo informazioni
@@ -113,10 +124,10 @@ public class Client implements ViewObserver {
         if (board.getCell(x, y) != null) oldLevel = board.getCell(x, y).getLevel(); //ricavo qual era la z prima di costruire
         else oldLevel = -1;
         board.setCell(new ClientBuilding(oldLevel + 1, isDome), x, y); // costruisco sopra l'ultima casella presente
-        view.displayBoard(object); //mostro le modifiche a schermo
+       // view.displayBoard(object); //mostro le modifiche a schermo
     }
 
-    public void onUpdateMove(SerializableUpdateMove object){
+    private void onUpdateMove(SerializableUpdateMove object){
         int playerId, workerId, x, y;
         playerId = object.getPlayerId(); //estraggo le informazioni
         workerId = object.getWorkerId();
@@ -124,7 +135,7 @@ public class Client implements ViewObserver {
         y = object.getNewPosition().getY();
         board.getPlayer(playerId).getWorker(workerId).setX(x); //apporto modifiche alla board del client
         board.getPlayer(playerId).getWorker(workerId).setY(y);
-        view.displayBoard(object); //mostro le modifiche a schermo (credo proprio che per la GUI serva un metodo che dica quali sono le caselle di
+        //view.displayBoard(object); //mostro le modifiche a schermo (credo proprio che per la GUI serva un metodo che dica quali sono le caselle di
         //partenza e arrivo
     }
 

@@ -63,26 +63,26 @@ public class Game {
     public void addObserver(GameObserver observer){observerList.add(observer);}
 
     public void notifyJustUpdateAll(SerializableUpdate update) {
-        for (int i = 0; i < observerList.size(); i++) observerList.get(i).justUpdateAll(update);
+        for (GameObserver gameObserver : observerList) gameObserver.justUpdateAll(update);
     }
 
     public void notifyJustUpdateAll(List<SerializableUpdate> updates) {
-        for (int i = 0; i < observerList.size(); i++) observerList.get(i).justUpdateAll(updates);
+        for (GameObserver gameObserver : observerList) gameObserver.justUpdateAll(updates);
     }
 
     public void notifyAnswerOnePlayer(SerializableRequest request) {
-        for (int i = 0; i < observerList.size(); i++) observerList.get(i).answerOnePlayer(request);
+        for (GameObserver gameObserver : observerList) gameObserver.answerOnePlayer(request);
     }
 
     public void notifyUpdateAllAndAnswerOnePlayer(SerializableUpdate update, SerializableRequest request){
-        for (int i = 0; i < observerList.size(); i++) observerList.get(i).updateAllAndAnswerOnePlayer(update, request);
+        for (GameObserver gameObserver : observerList) gameObserver.updateAllAndAnswerOnePlayer(update, request);
     }
 
 
     /**
      * This class creates a match
-     * @param numOfPlayers
-     * @param playersNames
+     * @param numOfPlayers number of players of the match
+     * @param playersNames List of players' names
      */
     public Game (int numOfPlayers, List<String> playersNames) {
         this.numOfPlayers = numOfPlayers;

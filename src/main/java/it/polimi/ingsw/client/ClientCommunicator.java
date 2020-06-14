@@ -49,7 +49,7 @@ public class ClientCommunicator extends Thread {
             while (true) { reactToServer(waitForObject()); }
         } catch (GameEndedException e) {stopProcess();
         } catch (Exception e) {
-            for(int i = 0; i<observerList.size(); i++)observerList.get(i).onError();
+            for (Client client : observerList) client.onError();
             stopProcess();
             e.printStackTrace();
         }
@@ -73,12 +73,18 @@ public class ClientCommunicator extends Thread {
         if (object instanceof SerializableRequestInitializeWorkerPositions) { // chiedo quale GodPower il plauer voglia scegleire
             for(int i = 0; i<observerList.size(); i++)observerList.get(i).onRequestInitializeWorkerPositions();
         }
+
+        if (object instanceof SerializableUpdateInfos) {
+            for (Client client : observerList) client.onUpdateAction((SerializableUpdateInfos) object);
+        }
+        /*
         if (object instanceof SerializableUpdateMove) {   //messaggio che ricevo dopo aver consolidato una move
             for(int i = 0; i<observerList.size(); i++)observerList.get(i).onUpdateMove((SerializableUpdateMove) object);
         }
         if (object instanceof SerializableUpdateBuild) {//messaggio che ricevo dopo aver consolidato una build
             for(int i = 0; i<observerList.size(); i++)observerList.get(i).onUpdateBuild((SerializableUpdateBuild) object);
-        }
+        }*/
+
         //in questo messaggio sono contenute le informazioni sulle mosse disponibili per entrambi i workers
         //le informazioni riguardo all'opzionalità delle suddette azioni, se il player è in condizioni di passare il turno oppure no
         if (object instanceof SerializableRequestAction) {

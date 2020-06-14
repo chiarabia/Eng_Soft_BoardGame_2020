@@ -44,10 +44,10 @@ public class Terminal implements View {
         }
         System.out.println(Color.WHITE.set()+".\n");
     }
-
-    public void displayBoard(SerializableUpdateMove update){displayBoard();}
-
-    public void displayBoard(SerializableUpdateBuild update){displayBoard();}
+    @Override
+    public void displayBoard(SerializableUpdateInfos update) {
+        displayBoard();
+    }
 
     public void displayBoard(SerializableUpdateLoser update){displayBoard();}
 
