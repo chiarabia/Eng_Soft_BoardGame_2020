@@ -1,5 +1,6 @@
 package it.polimi.ingsw.client.gui;
 
+import it.polimi.ingsw.Position;
 import it.polimi.ingsw.client.ClientBoard;
 import it.polimi.ingsw.client.GodCard;
 import it.polimi.ingsw.client.View;
@@ -10,6 +11,8 @@ import it.polimi.ingsw.client.gui.runnable.*;
 
 import it.polimi.ingsw.server.serializable.*;
 import javafx.application.Platform;
+import javafx.scene.text.Font;
+import javafx.scene.text.FontWeight;
 import javafx.scene.text.Text;
 
 import java.util.List;
@@ -18,7 +21,6 @@ public class GUI implements View {
 
     private ClientBoard board;
     ChoosingGodSceneRunnable choosingGodSceneRunnable = new ChoosingGodSceneRunnable();
-    List<String> notifications;
     List<Integer> actionsCodes;
 
     public void addObserver(ViewObserver observer){
@@ -41,7 +43,9 @@ public class GUI implements View {
         Platform.runLater(new BoardSceneRunnable());
 
         Platform.runLater(()->{
-            BoardSceneController.notificationsTextFlow.getChildren().add(new Text("welcome"));
+            Text oldText = BoardSceneController.getNotification();
+            setTextFormat(oldText);
+            oldText.setText("Welcome!");
         });
     }
 
@@ -73,52 +77,62 @@ public class GUI implements View {
 
     @Override
     public void displayWinner(int playerId) {
-        Platform.runLater(new WinSceneRunnable());
+        Platform.runLater(()->{
+            String notification = board.getPlayer(playerId).getPlayerName() + " won!!";
+            Text oldText = BoardSceneController.getNotification();
+            setTextFormat(oldText);
+            oldText.setText(notification);
+        });
     }
 
     @Override
     public void displayLoser(int playerId) {
-        Platform.runLater(new LoseSceneRunnable());
+        Platform.runLater(()->{
+            String notification = board.getPlayer(playerId).getPlayerName() + " lost";
+            Text oldText = BoardSceneController.getNotification();
+            setTextFormat(oldText);
+            oldText.setText(notification);
+        });
+
     }
 
     @Override
     public void displayDisconnection(int playerId) {
         Platform.runLater(()->{
-            Text notification = new Text (board.getPlayer(playerId).getPlayerName() + "has disconnected");
-            BoardSceneController.notificationsTextFlow.getChildren().add(notification);
+            String notification = board.getPlayer(playerId).getPlayerName() + " has disconnected";
+            Text oldText = BoardSceneController.getNotification();
+            setTextFormat(oldText);
+            oldText.setText(notification);
         });
     }
 
     @Override
     public void displayError(String message) {
         Platform.runLater(()->{
-        Text notification = new Text (message);
-            if (BoardSceneController.notificationsTextFlow.getChildren().size() != 0)
-                BoardSceneController.notificationsTextFlow.getChildren().clear();
-            BoardSceneController.notificationsTextFlow.getChildren().add(notification);
+            Text oldText = BoardSceneController.getNotification();
+            setTextFormat(oldText);
+            oldText.setText(message);
         });
     }
 
     @Override
-    public void displayError() {
-        Platform.runLater(()->{
-            Text notification = new Text ("Oops... something went wrong");
-            if (BoardSceneController.notificationsTextFlow.getChildren().size() != 0)
-                BoardSceneController.notificationsTextFlow.getChildren().clear();
-            BoardSceneController.notificationsTextFlow.getChildren().add(notification);
-            });
     public void displayRequestAction(SerializableRequestAction object) {
 
     }
 
     @Override
     public void displayBoard(SerializableUpdateMove update) {
-        //actionsCodes.clear();
-        //actionsCodes.add(0);
+
+
     }
 
     @Override
     public void displayBoard(SerializableUpdateBuild update) {
+        Position newPosition = update.getNewPosition();
+        boolean dome = update.isDome();
+        Platform.runLater(()->{
+            BoardSceneController.updateBuilding(newPosition, dome);
+        });
     }
 
     @Override
@@ -150,10 +164,10 @@ public class GUI implements View {
     public void askForInitialWorkerPositions() {
         //adds the current notification for the player
         Platform.runLater(()->{
-            Text notification = new Text ("Choose your workers positions by clicking on the board");
-            if (BoardSceneController.notificationsTextFlow.getChildren().size() != 0)
-                BoardSceneController.notificationsTextFlow.getChildren().clear();
-            BoardSceneController.notificationsTextFlow.getChildren().add(notification);
+            String notification ="Choose your workers positions by clicking on the board";
+            Text oldText = BoardSceneController.getNotification();
+            setTextFormat(oldText);
+            oldText.setText(notification);
         });
 
         //sets the actionCode to 1 for the askForInitialiWorkerPosition phase
@@ -177,4 +191,7 @@ public class GUI implements View {
     }
 
 
+    public void setTextFormat(Text notification){
+        notification.setFont(Font.font("Verdana", FontWeight.BOLD, 15));
+    }
 }
