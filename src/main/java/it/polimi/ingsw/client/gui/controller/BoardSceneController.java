@@ -12,10 +12,9 @@ import javafx.scene.control.Label;
 import javafx.scene.image.ImageView;
 import javafx.scene.image.Image;
 import javafx.scene.layout.*;
-import javafx.scene.text.Font;
-import javafx.scene.text.FontWeight;
 import javafx.scene.text.Text;
 import javafx.scene.text.TextFlow;
+
 
 import java.net.URL;
 import java.util.ArrayList;
@@ -25,7 +24,7 @@ import java.util.ResourceBundle;
 public class BoardSceneController implements Initializable {
 
     @FXML
-    private GridPane gridPane;
+    private static GridPane gridPane;
     @FXML
     private Button moveButton;
     @FXML
@@ -37,10 +36,12 @@ public class BoardSceneController implements Initializable {
     @FXML
     private TextFlow godDescriptionTextFlow;
     @FXML
-    private TextFlow notificationsTextFlow;
+    public TextFlow notificationsTextFlow;
+
+    public static Text notification = new Text("Welcome!");
+
 
     GodCard chosenGodCard;
-    List<String> notifications;
     List<Integer> actionsCodes;
     List<Position> startingWorkerPositions = new ArrayList<>();
     Position newWorkerPosition;
@@ -49,6 +50,8 @@ public class BoardSceneController implements Initializable {
     StackPane newWorkerBuild;
     String levelOfBuilding;
 
+    public static Text getNotification(){return notification;}
+
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
         //get the godPower
@@ -56,18 +59,10 @@ public class BoardSceneController implements Initializable {
         chosenGodCard = godPowers.get(0);
         //set the god card image and description
         setGodDetails(chosenGodCard);
-
-        //get the game phase code
-        actionsCodes = MainStage.getActionsCodes();
-        int actionCode = actionsCodes.get(0);
         //displays the name of the player in the label on the top left
         displayPlayerName();
 
-        //if we are in the askForWorkerInitialPositionPhase
-        if (actionCode == 1){
-            displayNotifications();
-        }
-
+        notificationsTextFlow.getChildren().add(notification);
 
         moveButton.setOnAction(actionEvent -> {
             addWorkerImage(newWorkerCell,1);
@@ -83,6 +78,7 @@ public class BoardSceneController implements Initializable {
      * @param card the God Card Object with the name of the god, the description and the image
      */
     public void setGodDetails(GodCard card){
+        MainStage.getLock().add(new Object());
         //set God Description
         String text = card.getGodDescription();
         Text godDescrp = new Text(text);
@@ -98,17 +94,6 @@ public class BoardSceneController implements Initializable {
         ArrayList<Object> playerData = MainStage.getPlayerData();
         String playerName = (String)playerData.get(0);
         playerNameLabel.setText(playerName);
-    }
-
-    //displays in the bottom right of the screen a notification for the player
-    public void displayNotifications(){
-        //gets the notification from the MainStage
-        notifications = MainStage.getNotifications();
-        //adds the String to the TextFlow
-        String notificationToDisplay = notifications.get(0);
-        Text notificationText = new Text(notificationToDisplay);
-        notificationText.setFont(Font.font("Verdana", FontWeight.BOLD, 15));
-        notificationsTextFlow.getChildren().add(notificationText);
     }
 
     //gives the position of the workers to the observer and displays the worker on the board
@@ -149,9 +134,9 @@ public class BoardSceneController implements Initializable {
     }
 
     //gets the node in a cell of the gridpane
-    private Node getNodeFromGridPane(GridPane gridPane, int col, int row) {
+    public static Node getNodeFromGridPane(GridPane gridPane, int x, int y) {
         for (Node node : gridPane.getChildren()) {
-            if (GridPane.getColumnIndex(node) == col && GridPane.getRowIndex(node) == row) {
+            if (GridPane.getColumnIndex(node) == x && GridPane.getRowIndex(node) == y) {
                 return node;
             }
         }
@@ -168,8 +153,17 @@ public class BoardSceneController implements Initializable {
 
     }
 
+    public static void updateBuilding(Position newPosition, boolean dome){
+        String level = "level1.png";
+        if (dome == true) level = "dome.png";
+        StackPane newBuildingCell = (StackPane)getNodefromPosition(gridPane,newPosition);
+        int z = newPosition.getZ();
+        if (dome == false) level = "level" + z + ".png";
+        addBuildingImage(newBuildingCell,level);
+    }
+
     //adds an imageView of the workers
-    public void addWorkerImage(StackPane cell, int player){
+    public static void addWorkerImage(StackPane cell, int player){
         ImageView worker = new ImageView(new Image("/worker/w" + player +".png"));
         worker.setFitHeight(100);
         worker.setFitWidth(100);
@@ -177,7 +171,7 @@ public class BoardSceneController implements Initializable {
     }
 
     //adds an imageView of a building
-    public void addBuildingImage(StackPane cell, String level){
+    public static void addBuildingImage(StackPane cell, String level){
         Image building = new Image(level);
         BackgroundSize buildingSize = new BackgroundSize(100,100, false,false, true, true);
         BackgroundImage buildingBackground= new BackgroundImage(building, BackgroundRepeat.NO_REPEAT, BackgroundRepeat.NO_REPEAT, BackgroundPosition.CENTER, buildingSize );
@@ -185,8 +179,18 @@ public class BoardSceneController implements Initializable {
     }
 
     //removes the image of a Worker
-    public void removeWorkerImage(StackPane cell){
+    public static void removeWorkerImage(StackPane cell){
         cell.getChildren().clear();
     }
 
+    public static Node getNodefromPosition(GridPane gridPane, Position position){
+        int x = position.getX();
+        int y = position.getY();
+        for (Node node : gridPane.getChildren()) {
+            if (GridPane.getColumnIndex(node) == x && GridPane.getRowIndex(node) == y) {
+                return node;
+            }
+        }
+        return null;
+    }
 }
