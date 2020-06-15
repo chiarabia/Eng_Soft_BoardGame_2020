@@ -30,9 +30,9 @@ public class Board {
     public Cell getCell(int x, int y, int z) {
         Position temp_position = new Position(x, y, z);
 
-        for (int i = 0; i < board.size(); i++) {
-            if (board.get(i).getPosition().equals(temp_position))
-                return board.get(i);
+        for (Cell cell : board) {
+            if (cell.getPosition().equals(temp_position))
+                return cell;
         }
 
         return null;
@@ -46,9 +46,7 @@ public class Board {
     //This method adds new Cells
     public void newCell(int x, int y, int z) {
         //check for duplicates
-        if (getCell(x, y, z) != null)
-            return;
-        else {
+        if (getCell(x, y, z) == null) {
             Cell temp_cell = new Cell(x, y, z);
             board.add(temp_cell);
         }
@@ -64,7 +62,7 @@ public class Board {
         return getStream()
                 .filter(a -> a.getX() == x && a.getY() == y)
                 .mapToInt(e -> 1)
-                .reduce(-1, (a, b) -> a + b);
+                .reduce(-1, Integer::sum);
     }
 
     /**
@@ -102,11 +100,11 @@ public class Board {
     }
 
     public Cell getWorkerCell (Player player, int workerId) {
-        for (int i = 0; i < board.size(); i++) {
-            if (board.get(i).isWorker()
-                    && board.get(i).getPlayerId() == player.getId()
-                        && (board.get(i).getWorkerId() == workerId))
-                return board.get(i);
+        for (Cell cell : board) {
+            if (cell.isWorker()
+                    && cell.getPlayerId() == player.getId()
+                    && (cell.getWorkerId() == workerId))
+                return cell;
         }
         return null;
     }

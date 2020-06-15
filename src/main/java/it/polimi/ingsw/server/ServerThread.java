@@ -15,25 +15,8 @@ public class ServerThread extends Thread {
     private int numOfPlayers;
     private List<Socket> playersList;
     private List<String> playersNames;
-    private ServerWaitingList waitingList;
-    private void echoRequest() throws IOException {
-        for (int i = 0; i < playersList.size(); i++) {
-            try{
-                String reply = sendMessageAndWaitForReply("Hello", i);
-                if (!reply.equals("Hello")) throw new Exception();
-            } catch(Exception e){
-                playersList.remove(i).close();
-                playersNames.remove(i);
-                i--;
-            }
-        }
-    }
     public void sendMessage(String message, int position) {
         sendObject(new Message(message), position);
-    }
-    public String sendMessageAndWaitForReply(String message, int position) throws ClientStoppedWorkingException {
-        sendMessage(message, position);
-        return ((Message)(new ServerSyncReceiver()).receiveObject(playersList.get(position))).getMessage();
     }
     public void sendObject(Object object, int position) {
         try {
@@ -48,12 +31,6 @@ public class ServerThread extends Thread {
         }
     }
     public void run(){
-        try {
-            echoRequest();
-            if (playersList.size() < numOfPlayers) {
-                waitingList.importPlayersList(playersList, playersNames);
-                return;
-            }
             for (int i = 0; i < numOfPlayers; i++) sendMessage("You are player " + (i+1), i);
             ServerView serverView = new ServerView(this); // View
             Game game = new Game(numOfPlayers, playersNames); // Model
@@ -61,11 +38,9 @@ public class ServerThread extends Thread {
             game.addObserver(serverView);
             serverView.addObserver(controller);
             serverView.startNewEventGenerators(playersList);
-        }catch(Exception e){}
     }
-    public ServerThread(List<Socket> playersList, ServerWaitingList waitingList, int numOfPlayers, List <String> names){
+    public ServerThread(List<Socket> playersList, int numOfPlayers, List <String> names){
         this.playersList = playersList;
-        this.waitingList = waitingList;
         this.numOfPlayers = numOfPlayers;
         this.playersNames = names;
     }

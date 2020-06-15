@@ -10,4 +10,8 @@ public class GodCard {
         this.godDescription = godDescription;
         this.godImage = godImage;
     }
+
+    public String getGodName(){return godName;}
+    public String getGodDescription(){return godDescription;}
+    public String getGodImage(){return godImage;}
 }

@@ -1,5 +1,6 @@
-package it.polimi.ingsw.client.gui;
+package it.polimi.ingsw.client.gui.controller;
 
+import it.polimi.ingsw.client.gui.MainStage;
 import javafx.fxml.Initializable;
 
 import java.net.URL;

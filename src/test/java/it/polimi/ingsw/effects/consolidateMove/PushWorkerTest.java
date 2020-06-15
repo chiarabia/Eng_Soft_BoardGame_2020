@@ -1,13 +1,9 @@
 package it.polimi.ingsw.effects.consolidateMove;
 
 import it.polimi.ingsw.*;
-import it.polimi.ingsw.effects.consolidateBuild.StandardConsolidateBuild;
-import it.polimi.ingsw.effects.winCondition.StandardLoseCondition;
+import it.polimi.ingsw.server.serializable.SerializableUpdateActions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-
-import java.util.HashSet;
-import java.util.Set;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.junit.jupiter.api.Assertions.assertSame;
@@ -22,11 +18,14 @@ public class PushWorkerTest {
     Player player2 = new Player("pluto", 21);
     Worker worker1 = new Worker(player1, 1);
     Worker worker2 = new Worker(player2, 1);
+    SerializableUpdateActions updateInfos;
 
     @BeforeEach
     void setUp(){
         turn = new Turn(player1);
         board = new Board();
+        updateInfos = null;
+
     }
 
     @Test
@@ -44,13 +43,16 @@ public class PushWorkerTest {
         board.getCell(3,1,0).setBuilding(true);
         board.getCell(3,1,1).setBuilding(true);
 
-        pushWorker.moveInto(board, workerCell.getPosition(), destinationCell.getPosition());
+        updateInfos = pushWorker.moveInto(board, workerCell.getPosition(), destinationCell.getPosition());
         assertAll("Push Worker",
                 () -> assertTrue(workerCell.isFree()),
                 () -> assertTrue(destinationCell.isWorker()),
                 () -> assertTrue(board.getCell(3,1,2).isWorker()),
                 () -> assertSame(worker1, destinationCell.getWorker()),
-                ()-> assertSame(worker2, board.getCell(3,1,2).getWorker()));
+                ()->  assertSame(worker2, board.getCell(3,1,2).getWorker()),
+                () -> assertEquals(2, updateInfos.getUpdateMove().size()),
+                () -> assertEquals(updateInfos.getUpdateMove().get(0).getNewPosition(), new Position(3,1,2)),
+                () -> assertEquals(updateInfos.getUpdateMove().get(1).getNewPosition(), new Position(2,1,2)));
     }
 
     @Test
@@ -154,8 +156,10 @@ public class PushWorkerTest {
         workerCell = board.getCell(0,0,0);
         workerCell.setWorker(worker1);
         destinationCell = board.getCell(0,1,0);
-        pushWorker.moveInto(board,workerCell.getPosition(),destinationCell.getPosition());
-        assertTrue(destinationCell.isWorker());
+        updateInfos = pushWorker.moveInto(board,workerCell.getPosition(),destinationCell.getPosition());
+        assertAll("movingIntoFreeCell", () -> assertTrue(destinationCell.isWorker()),
+                () -> assertSame(updateInfos.getUpdateMove().size(), 1),
+                () -> assertEquals(updateInfos.getUpdateMove().get(0).getStartingPosition(), workerCell.getPosition()));
     }
 
     //positive

@@ -1,4 +1,4 @@
-#GridPane{
+#gridPane{
     -fx-background-image: url('/Board/SantoriniBoardOnly.png');
     -fx-background-repeat: no-repeat;
     -fx-background-size: cover;
@@ -10,18 +10,30 @@
     -fx-background-size: cover;
 }
 
-#ListOfPlayers{
+#NotificationsBackground{
     -fx-background-color:#95df8f;
     -fx-background-radius: 25px;
 }
 
-#playersName{
+#playerNameLabel{
     -fx-background-color:#95df8f;
     -fx-background-radius: 25px
 }
 
-#godDescription{
+#godDescriptionTextFlow{
     -fx-background-color:#95df8f;
     -fx-background-radius: 25px;
+}
+
+#moveButton{
+    -fx-background-image: url('/components/moveButtonNotSelected.png');
+    -fx-background-repeat: no-repeat;
+    -fx-background-size: cover;
+ }
+
+#buildButton{
+    -fx-background-image: url('/components/buildButtonNotSelected.png');
+    -fx-background-repeat: no-repeat;
+    -fx-background-size: cover;
 }
 

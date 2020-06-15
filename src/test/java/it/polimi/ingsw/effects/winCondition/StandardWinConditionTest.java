@@ -39,8 +39,10 @@ public class StandardWinConditionTest {
     //positive
     @Test
     void playerDoesNotWinBecauseMovesOnSameLevel() {
-        workerCell = new Cell(1, 1, 3);
-        destinationCell = new Cell(1, 1, 3);
+        board.newCell(1,1,3);
+        board.newCell(1,1,3);
+        workerCell = board.getCell(1, 1, 3);
+        destinationCell = board.getCell(1, 1, 3);
 
 
         assertFalse(winCondition.win(workerCell.getPosition(), destinationCell.getPosition(),board));
@@ -49,8 +51,10 @@ public class StandardWinConditionTest {
     //positive
     @Test
     void playerDoesNotWinBecauseMovesUpButNotOnLevel3(){
-        workerCell = new Cell (1,1,1);
-        destinationCell = new Cell (1,1,2);
+        board.newCell(1,1,1);
+        board.newCell(1,1,2);
+        workerCell = board.getCell(1,1,1);
+        destinationCell = board.getCell(1,1,2);
 
         assertFalse(winCondition.win(workerCell.getPosition(),destinationCell.getPosition(),board));
     }

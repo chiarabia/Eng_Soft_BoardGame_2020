@@ -9,7 +9,7 @@ import java.util.List;
 
 
 public class Game {
-    private int numOfPlayers;
+    private final int numOfPlayers;
     private Board board;
     private Turn turn;
     private List<Player> players;
@@ -47,7 +47,6 @@ public class Game {
         return playerId-1;
     }
 
-    public void setNumOfPlayers(int numOfPlayers) {this.numOfPlayers = numOfPlayers;}
     public void setBoard(Board board) {this.board = board; }
     public void setTurn(Turn turn) {this.turn = turn;}
     public void setPlayers(List<Player> players) {this.players = players;}
@@ -64,30 +63,26 @@ public class Game {
     public void addObserver(GameObserver observer){observerList.add(observer);}
 
     public void notifyJustUpdateAll(SerializableUpdate update) {
-        for (int i = 0; i < observerList.size(); i++) observerList.get(i).justUpdateAll(update);
+        for (GameObserver gameObserver : observerList) gameObserver.justUpdateAll(update);
     }
 
     public void notifyJustUpdateAll(List<SerializableUpdate> updates) {
-        for (int i = 0; i < observerList.size(); i++) observerList.get(i).justUpdateAll(updates);
+        for (GameObserver gameObserver : observerList) gameObserver.justUpdateAll(updates);
     }
 
     public void notifyAnswerOnePlayer(SerializableRequest request) {
-        for (int i = 0; i < observerList.size(); i++) observerList.get(i).answerOnePlayer(request);
+        for (GameObserver gameObserver : observerList) gameObserver.answerOnePlayer(request);
     }
 
     public void notifyUpdateAllAndAnswerOnePlayer(SerializableUpdate update, SerializableRequest request){
-        for (int i = 0; i < observerList.size(); i++) observerList.get(i).updateAllAndAnswerOnePlayer(update, request);
-    }
-
-    public void notifyUpdateAllAndAnswerOnePlayer(List <SerializableUpdate> updates, SerializableRequest request) {
-        for (int i = 0; i < observerList.size(); i++) observerList.get(i).updateAllAndAnswerOnePlayer(updates, request);
+        for (GameObserver gameObserver : observerList) gameObserver.updateAllAndAnswerOnePlayer(update, request);
     }
 
 
     /**
      * This class creates a match
-     * @param numOfPlayers
-     * @param playersNames
+     * @param numOfPlayers number of players of the match
+     * @param playersNames List of players' names
      */
     public Game (int numOfPlayers, List<String> playersNames) {
         this.numOfPlayers = numOfPlayers;

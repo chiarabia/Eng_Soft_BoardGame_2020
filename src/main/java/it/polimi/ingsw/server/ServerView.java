@@ -59,7 +59,7 @@ public class ServerView implements GameObserver{
             startNewEventGenerator(new ServerAsyncReceiver(s, playerId));
             playerId++;
         }
-        for (int i = 0; i< observerList.size(); i++)  observerList.get(i).onInitialization();
+        for (int i = 0; i< observerList.size(); i++)  observerList.get(i).onGodPowerInitialization();
     }
 
     public void stopLastEventGenerator(){
@@ -69,5 +69,6 @@ public class ServerView implements GameObserver{
 
     public void stopAllEventGenerators(){
         while (eventGenerators.size()>0) stopLastEventGenerator();
+        System.out.println("Game ended");
     }
 }

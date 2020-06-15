@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.FlowPane?>
+
+<?import javafx.scene.image.Image?>
+
+<?import javafx.scene.layout.StackPane?>
+<StackPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="712.9" minWidth="1386" prefHeight="712.9" prefWidth="1282.0" style="-fx-background-color:#31c3fd;" stylesheets="CSS/MatchSetup.css" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="it.polimi.ingsw.client.gui.controller.WinSceneController">
+    <BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="712.9" minWidth="1282.0" prefHeight="712.9" prefWidth="1282.0" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1">
+        <center>
+            <FlowPane id="flowPaneCenter" alignment="CENTER" maxWidth="516.6" maxHeight="513.9" minHeight="513.9" minWidth="516.6" orientation="VERTICAL" prefHeight="513.9" prefWidth="516.6" BorderPane.alignment="CENTER">
+                <children>
+                    <ImageView fitHeight="257.6" fitWidth="237.6" pickOnBounds="true" preserveRatio="true">
+                        <image>
+                            <Image url="components/VICTORY.png" />
+                        </image>
+                        <FlowPane.margin>
+                            <Insets bottom="15.0" left="25.0" />
+                        </FlowPane.margin>
+                    </ImageView>
+                </children>
+                <BorderPane.margin>
+                    <Insets />
+                </BorderPane.margin>
+            </FlowPane>
+        </center>
+    </BorderPane>
+</StackPane>

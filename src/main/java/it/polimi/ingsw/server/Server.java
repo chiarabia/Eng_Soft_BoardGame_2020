@@ -14,11 +14,15 @@ public class Server {
         ServerAccepter playersAccepter;
         while (true) {
             try {
+                System.out.println("Server started");
                 serverSocket = new ServerSocket(serverPort);
                 playersAccepter = new ServerAccepter(serverSocket);
                 playersAccepter.start();
                 break;
-            } catch (IOException e) { sleep(10000); }
+            } catch (IOException e) {
+                System.out.println("An error occurred, restarting in 10 seconds...");
+                sleep(10000);
+            }
         }
     }
     public void startServer(int port) throws InterruptedException {

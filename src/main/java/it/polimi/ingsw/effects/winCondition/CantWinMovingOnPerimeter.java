@@ -19,10 +19,8 @@ public class CantWinMovingOnPerimeter extends StandardWinCondition {
 
     @Override
     public boolean win(Position workerPosition, Position destinationPosition, Board board) {
-        if (workerPosition==null && destinationPosition==null) return true;
-        Cell workerCell = board.getCell(workerPosition);
+        if (workerPosition==null &&  destinationPosition==null) return true;
         Cell destinationCell = board.getCell(destinationPosition);
-        if (workerCell==null && destinationCell==null) return true; // non capisco a cosa serva
         return (!destinationCell.isPerimetral());
     }
 }

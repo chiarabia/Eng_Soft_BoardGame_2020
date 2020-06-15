@@ -1,4 +1,4 @@
-#HBox1, #HBox3, #HBox2{
+#HBox1, #HBox2, #HBox3{
     -fx-background-color: #dfd2c3;
     -fx-background-radius: 25px;
     -fx-border-color: #554c46;
@@ -11,5 +11,4 @@
     -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.5), 10, 0, 0, 0);
 }
 
-#godDescription1, #godDescription2, #godDescription3{
-}
+

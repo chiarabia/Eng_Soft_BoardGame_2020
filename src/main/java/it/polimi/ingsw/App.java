@@ -1,19 +1,48 @@
 package it.polimi.ingsw;
+
 import it.polimi.ingsw.client.Client;
 import it.polimi.ingsw.server.Server;
-import org.json.simple.parser.ParseException;
+import org.json.simple.JSONObject;
+import org.json.simple.parser.JSONParser;
 
-import java.io.IOException;
-
-/**
- * Hello world!
- *
- */
+import java.io.FileReader;
 
 public class App
 {
+    private final static String ROOT = "src/main/java/it/polimi/ingsw/Configuration.json";
     public static void main( String[] args ) throws InterruptedException {
-        (new Server()).startServer(555);
-        (new Client()).startClient(555,  "localhost");
+        try {
+            FileReader fileReader = new FileReader(ROOT);
+            JSONObject jsonObject = (JSONObject) (new JSONParser()).parse(fileReader);
+            boolean server = (jsonObject.get("role")).equals("server");
+            boolean GUI = (jsonObject.get("ui")).equals("GUI");
+            String ip = (String) jsonObject.get("ip");
+            int port = Math.toIntExact((Long) jsonObject.get("port"));
+
+            try {
+                for (int i = 0; i < args.length; i++) {
+                    String argument = args[i];
+                    switch (argument) {
+                        case "--role":
+                            server = args[i + 1].equals("server");
+                            break;
+                        case "--ui":
+                            GUI = args[i + 1].equals("GUI");
+                            break;
+                        case "--ip":
+                            ip = args[i + 1];
+                            break;
+                        case "--port":
+                            port = Integer.parseInt(args[i + 1]);
+                            break;
+                    }
+                }
+            } catch (Exception e){}
+
+            //server = true;
+            if (server) (new Server()).startServer(port);
+            else (new Client()).startClient(port, ip, GUI);
+        }catch(Exception e){ System.out.println("An error occurred");
+        e.printStackTrace();}
     }
 }

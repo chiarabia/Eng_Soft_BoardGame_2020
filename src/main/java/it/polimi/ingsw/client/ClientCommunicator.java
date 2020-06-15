@@ -11,8 +11,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 
-// contiene metodi di invio messaggi e gestisce la ricezione
-
+/**
+ * Contiene metodi di invio messaggi e gestisce la ricezione
+ */
 public class ClientCommunicator extends Thread {
     private final Socket serverSocket;
     private List<Client> observerList = new ArrayList<>();
@@ -35,10 +36,6 @@ public class ClientCommunicator extends Thread {
         sendObject(new Message(message));
     }
 
-    public String waitForMessage () throws IOException, ClassNotFoundException {
-        return ((Message) waitForObject()).getMessage();
-    }
-
     public void stopProcess(){
         try { serverSocket.close(); } catch (Exception e){}
     }
@@ -48,8 +45,9 @@ public class ClientCommunicator extends Thread {
             while (true) { reactToServer(waitForObject()); }
         } catch (GameEndedException e) {stopProcess();
         } catch (Exception e) {
-            for(int i = 0; i<observerList.size(); i++)observerList.get(i).onError();
+            for (Client client : observerList) client.onError();
             stopProcess();
+            e.printStackTrace();
         }
     }
 
@@ -59,17 +57,21 @@ public class ClientCommunicator extends Thread {
 
     //metodo principale, gestisce tutti messaggi col server e invia le risposte al server
     private void reactToServer(Object object) throws Exception {
-        if (object instanceof SerializableUpdateInitializeGame) { //ricevo un oggetto contente i GodPower dei vari giocatori che vengono aggiunti alla board
-            for(int i = 0; i<observerList.size(); i++)observerList.get(i).onUpdateInitializeGame((SerializableUpdateInitializeGame) object);
+        if (object instanceof SerializableUpdateInitializeWorkerPositions) { //ricevo un oggetto contente i GodPower dei vari giocatori che vengono aggiunti alla board
+            for(int i = 0; i<observerList.size(); i++)observerList.get(i).onUpdateInitializeWorkerPositions((SerializableUpdateInitializeWorkerPositions) object);
         }
-        if (object instanceof SerializableRequestInitializeGame) { // chiedo quale GodPower il plauer voglia scegleire
-            for(int i = 0; i<observerList.size(); i++)observerList.get(i).onRequestInitializeGame((SerializableRequestInitializeGame) object);
+        if (object instanceof SerializableUpdateInitializeGodPower) { //ricevo un oggetto contente i GodPower dei vari giocatori che vengono aggiunti alla board
+            for(int i = 0; i<observerList.size(); i++)observerList.get(i).onUpdateInitializeGodPower((SerializableUpdateInitializeGodPower) object);
         }
-        if (object instanceof SerializableUpdateMove) {   //messaggio che ricevo dopo aver consolidato una move
-            for(int i = 0; i<observerList.size(); i++)observerList.get(i).onUpdateMove((SerializableUpdateMove) object);
+        if (object instanceof SerializableRequestInitializeGodPower) { // chiedo quale GodPower il plauer voglia scegleire
+            for(int i = 0; i<observerList.size(); i++)observerList.get(i).onRequestInitializeGodPower((SerializableRequestInitializeGodPower) object);
         }
-        if (object instanceof SerializableUpdateBuild) {//messaggio che ricevo dopo aver consolidato una build
-            for(int i = 0; i<observerList.size(); i++)observerList.get(i).onUpdateBuild((SerializableUpdateBuild) object);
+        if (object instanceof SerializableRequestInitializeWorkerPositions) { // chiedo quale GodPower il plauer voglia scegleire
+            for(int i = 0; i<observerList.size(); i++)observerList.get(i).onRequestInitializeWorkerPositions();
+        }
+
+        if (object instanceof SerializableUpdateActions) {
+            for (Client client : observerList) client.onUpdateAction((SerializableUpdateActions) object);
         }
         //in questo messaggio sono contenute le informazioni sulle mosse disponibili per entrambi i workers
         //le informazioni riguardo all'opzionalità delle suddette azioni, se il player è in condizioni di passare il turno oppure no
@@ -92,11 +94,14 @@ public class ClientCommunicator extends Thread {
             for(int i = 0; i<observerList.size(); i++)observerList.get(i).onUpdateDisconnection((SerializableUpdateDisconnection) object);
         }
         if (object instanceof Message){
-            if (((Message) object).getMessage().equals("Hello")) {
+            if (((Message) object).getMessage().equals("HELLO")) {
                 for (int i = 0; i < observerList.size(); i++) observerList.get(i).onHello();
             }
             else if (((Message) object).getMessage().equals("ERROR_NOT_VALID_NAME")) {
-                for (int i = 0; i < observerList.size(); i++) observerList.get(i).onNotValidNameError();
+                for (int i = 0; i < observerList.size(); i++) observerList.get(i).onRestart(1);
+            }
+            else if (((Message) object).getMessage().equals("ERROR_NOT_VALID_NUM_OF_PLAYERS")) {
+                for (int i = 0; i < observerList.size(); i++) observerList.get(i).onRestart(2);
             }
             else {
                 for(int i = 0; i<observerList.size(); i++)observerList.get(i).onPlayerIdAssigned(((Message) object).getMessage());

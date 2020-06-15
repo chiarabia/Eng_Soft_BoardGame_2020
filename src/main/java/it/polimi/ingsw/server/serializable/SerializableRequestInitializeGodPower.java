@@ -2,7 +2,7 @@ package it.polimi.ingsw.server.serializable;
 
 import java.util.List;
 
-public class SerializableRequestInitializeGame implements SerializableRequest {
+public class SerializableRequestInitializeGodPower implements SerializableRequest {
     private final int playerId;
     private final List<String> godPowers;
 
@@ -13,7 +13,7 @@ public class SerializableRequestInitializeGame implements SerializableRequest {
 
     public List<String> getGodPowers() { return godPowers; }
 
-    public SerializableRequestInitializeGame(int playerId, List<String> godPowers) {
+    public SerializableRequestInitializeGodPower(int playerId, List<String> godPowers) {
         this.godPowers = godPowers;
         this.playerId = playerId;
     }

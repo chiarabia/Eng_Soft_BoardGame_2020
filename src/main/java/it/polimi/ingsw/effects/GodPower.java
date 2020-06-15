@@ -11,6 +11,7 @@ import it.polimi.ingsw.effects.winCondition.StandardLoseCondition;
 import it.polimi.ingsw.effects.winCondition.StandardWinCondition;
 import it.polimi.ingsw.Position;
 import it.polimi.ingsw.Turn;
+import it.polimi.ingsw.server.serializable.SerializableUpdateActions;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -33,7 +34,6 @@ public class GodPower {
     private NewTurn newTurn;
 
     private boolean askToBuildDomes = false;
-    private boolean askToBuildBeforeMoveAndNotMoveUp = false;
 
     public Set<Position> move (Position workerPosition, Board board, Turn turn)  {
         return move.move(workerPosition, board, turn);
@@ -44,13 +44,13 @@ public class GodPower {
     }
 
     //returns the state of the board after the worker has moved
-    public void moveInto (Board board, Position workerPosition, Position destinationPosition) {
-        consolidateMove.moveInto(board, workerPosition, destinationPosition);
+    public SerializableUpdateActions moveInto (Board board, Position workerPosition, Position destinationPosition) {
+        return consolidateMove.moveInto(board, workerPosition, destinationPosition);
     }
 
     //returns the state of the board after the workers has built
-    public void buildUp (Position buildingPosition, Board board, boolean god_power) {
-        consolidateBuild.buildUp(buildingPosition, board, god_power);
+    public SerializableUpdateActions buildUp (Position buildingPosition, Board board, boolean god_power) {
+        return consolidateBuild.buildUp(buildingPosition, board, god_power);
     }
 
     public Turn endTurn (Turn oldTurn, List<GodPower> godPowers, Player player){
@@ -202,13 +202,5 @@ public class GodPower {
     }
     public void addBlockingWinConditions(StandardWinCondition blockingWinConditions) {
         this.blockingWinConditions.add(blockingWinConditions);
-    }
-
-    public boolean isAskToBuildBeforeMoveAndNotMoveUp() {
-        return askToBuildBeforeMoveAndNotMoveUp;
-    }
-
-    public void setAskToBuildBeforeMoveAndNotMoveUp(boolean askToBuildBeforeMoveAndNotMoveUp) {
-        this.askToBuildBeforeMoveAndNotMoveUp = askToBuildBeforeMoveAndNotMoveUp;
     }
 }
