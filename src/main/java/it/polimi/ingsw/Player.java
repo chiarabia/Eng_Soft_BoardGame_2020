@@ -11,12 +11,14 @@ import java.util.ArrayList;
 public class Player {
     private final String name;
     private final int id;
-    private ArrayList<Worker> workers = new ArrayList();
+    private ArrayList<Worker> workers = new ArrayList<>();
 
     public Player (String name, int id){
         this.id = id;
         this.name = name;
     }
+
+    public boolean areWorkersSet () {return workers.size()>0;}
 
     public int getId() {
         return id;
@@ -46,7 +48,7 @@ public class Player {
     @Override
     public boolean equals(Object obj) {
         if (obj instanceof Player)
-            return this.name == ((Player) obj).name &&
+            return this.name.equals(((Player) obj).name) &&
                     this.id == ((Player) obj).id;
         return false;
     }
