@@ -12,8 +12,8 @@ public class App
 {
     private static String getRoot(){
         String root = ClassLoader.getSystemClassLoader().getResource("configurations/Configuration.json").getPath();
-        if (root.substring(2,3).equals(":")) return root.substring(3, root.length()-18) + "cards/";
-        else return root.substring(0, root.length()-18);
+        if (root.substring(2,3).equals(":")) return root.substring(3, root.length());
+        else return root;
     }
     public static void main( String[] args ) throws InterruptedException {
         try {
