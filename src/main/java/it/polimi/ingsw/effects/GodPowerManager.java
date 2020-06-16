@@ -46,10 +46,8 @@ public class GodPowerManager {
 
     private static List <String> chooseGodFiles (int numOfPlayers) throws IOException {
         List <String> cards = new ArrayList<>();
-        try {
-            Stream<Path> paths = Files.walk(Paths.get(getRoot()));
-            paths.filter(Files::isRegularFile).forEach(x->{cards.add(x.toString().substring(getRoot().length()));});
-        }catch (Exception e){e.printStackTrace();return null;}
+        Stream<Path> paths = Files.walk(Paths.get(getRoot()));
+        paths.filter(Files::isRegularFile).forEach(x->{cards.add(x.toString().substring(getRoot().length()));});
         // the card list contains all 14 strings of JSON file names (eg "ApolloCard.json")
 
         Random rand = new Random();
