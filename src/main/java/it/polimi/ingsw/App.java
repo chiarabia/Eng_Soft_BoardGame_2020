@@ -6,13 +6,18 @@ import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 
 import java.io.FileReader;
+import java.io.InputStream;
 
 public class App
 {
-    private final static String ROOT = "src/main/java/it/polimi/ingsw/Configuration.json";
+    private static String getRoot(){
+        String root = ClassLoader.getSystemClassLoader().getResource("configurations/Configuration.json").getPath();
+        if (root.substring(2,3).equals(":")) return root.substring(3, root.length());
+        else return root;
+    }
     public static void main( String[] args ) throws InterruptedException {
         try {
-            FileReader fileReader = new FileReader(ROOT);
+            FileReader fileReader = new FileReader(getRoot());
             JSONObject jsonObject = (JSONObject) (new JSONParser()).parse(fileReader);
             boolean server = (jsonObject.get("role")).equals("server");
             boolean GUI = (jsonObject.get("ui")).equals("GUI");

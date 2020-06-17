@@ -19,7 +19,7 @@ import javafx.scene.text.Text;
 import java.util.List;
 
 public class GUI implements View {
-
+    private FXMLLoader boardSceneLoader;
     private ClientBoard board;
     ChoosingGodSceneRunnable choosingGodSceneRunnable = new ChoosingGodSceneRunnable();
 
@@ -40,7 +40,9 @@ public class GUI implements View {
     @Override
     public void displayBoardScreen(){
         //displays the BoardScene
-        Platform.runLater(new BoardSceneRunnable());
+        BoardSceneRunnable boardSceneRunnable = new BoardSceneRunnable();
+        boardSceneLoader = boardSceneRunnable.getLoader();
+        Platform.runLater(boardSceneRunnable);
 
         Platform.runLater(()->{
             Text oldText = BoardSceneController.getNotification();
