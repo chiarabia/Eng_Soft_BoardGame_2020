@@ -10,10 +10,13 @@ import java.io.IOException;
 
 public class BoardSceneRunnable implements Runnable {
 
+	private FXMLLoader loader;
+
+	public FXMLLoader getLoader(){return loader;}
+
 	@Override
 	public void run() {
 		try {
-			FXMLLoader loader = new FXMLLoader(getClass().getClassLoader().getResource("BoardScene.fxml"));
 			Parent root = loader.load();
 			Scene BoardScene = new Scene (root);
 
@@ -27,4 +30,7 @@ public class BoardSceneRunnable implements Runnable {
 		}
 	}
 
+	public BoardSceneRunnable() {
+		this.loader = new FXMLLoader(getClass().getClassLoader().getResource("BoardScene.fxml"));
+	}
 }

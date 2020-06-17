@@ -25,30 +25,26 @@ public class Controller implements ProxyObserver {
 
     // Decide quale player deve eseguire quale operazione, appoggiandosi alle informazioni di Turn e GodPower
     public void nextOperation(){
-        Turn turn = getTurn();
-        Board board = getBoard();
-        int playerId = turn.getPlayerId();
-        SerializableRequest request;
-
+        int playerId = getTurn().getPlayerId();
         boolean canForceDome = getPlayerGodPower(playerId).isAskToBuildDomes();
         Position worker1Position = getWorkerPosition(playerId, 1);
         Position worker2Position = getWorkerPosition(playerId, 2);
 
-        Set<Position> worker1Moves  =  getPlayerGodPower(playerId).move(worker1Position , board, turn);
-        Set<Position> worker1Builds =  getPlayerGodPower(playerId).build(worker1Position, board, turn);
-        Set<Position> worker2Moves  =  getPlayerGodPower(playerId).move(worker2Position , board, turn);
-        Set<Position> worker2Builds =  getPlayerGodPower(playerId).build(worker2Position, board, turn);
+        Set<Position> worker1Moves  =  getPlayerGodPower(playerId).move(worker1Position , getBoard(), getTurn());
+        Set<Position> worker1Builds =  getPlayerGodPower(playerId).build(worker1Position, getBoard(), getTurn());
+        Set<Position> worker2Moves  =  getPlayerGodPower(playerId).move(worker2Position , getBoard(), getTurn());
+        Set<Position> worker2Builds =  getPlayerGodPower(playerId).build(worker2Position, getBoard(), getTurn());
 
-        if (checkLose(playerId, worker1Moves, worker1Builds, worker2Moves, worker2Builds, turn)) return;
+        if (checkLose(playerId, worker1Moves, worker1Builds, worker2Moves, worker2Builds, getTurn())) return;
         if (checkWin (playerId, null, null)) return;
 
-        request = new SerializableRequestAction(playerId,
-                    turn.isMoveOptional(worker1Moves, worker2Moves),                    //controllo se le mosse sono opzionali o meno controllando i valori di turno
-                    turn.isBuildOptional(worker1Builds, worker2Builds),
-                    turn.canDecline(),                                                  //controllo se entrambi i valori sono a true
-                    worker1Moves, worker2Moves,
-                    worker1Builds, worker2Builds,
-                    canForceDome);
+        SerializableRequest request = new SerializableRequestAction(playerId,
+                                            getTurn().isMoveOptional(worker1Moves, worker2Moves),                    //controllo se le mosse sono opzionali o meno controllando i valori di turno
+                                            getTurn().isBuildOptional(worker1Builds, worker2Builds),
+                                            getTurn().canDecline(),                                                  //controllo se entrambi i valori sono a true
+                                            worker1Moves, worker2Moves,
+                                            worker1Builds, worker2Builds,
+                                            canForceDome);
 
         game.notifyAnswerOnePlayer(request);
     }
@@ -56,6 +52,11 @@ public class Controller implements ProxyObserver {
     @Override
     // Termina il turno corrente
     public void onEndedTurn (int playerId) {
+        if (!(playerId == getTurn().getPlayerId())){ // INITIAL CHECK
+            game.notifyAnswerOnePlayer(new SerializableRequestError(playerId, "REJECTED"));
+            return;
+        }
+
         int nextPlayerId = nextPlayerId(playerId);
         Turn newTurn = getPlayerGodPower(playerId).endTurn(getTurn(), getGodPowers(), getPlayer(nextPlayerId)); // termina il turno precedente, serve l'end turn del giocatore corrente
         game.setTurn(newTurn); // setta il turno successivo
@@ -67,6 +68,19 @@ public class Controller implements ProxyObserver {
     @Override
     // Gestisce una ConsolidateMove
     public void onConsolidateMove(int playerId, int workerId, Position newPosition) {
+        Position worker1Position = getWorkerPosition(getTurn().getPlayerId(), 1);
+        Position worker2Position = getWorkerPosition(getTurn().getPlayerId(), 2);
+        Set<Position> worker1Moves  =  getPlayerGodPower(getTurn().getPlayerId()).move(worker1Position , getBoard(), getTurn());
+        Set<Position> worker2Moves  =  getPlayerGodPower(getTurn().getPlayerId()).move(worker2Position , getBoard(), getTurn());
+
+        if (!(playerId == getTurn().getPlayerId() && // INITIAL CHECK
+            (workerId == 1 || workerId == 2) &&
+            newPosition != null &&
+            (workerId==1 && worker1Moves.stream().anyMatch(x->x.equals(newPosition)) || workerId==2 && worker2Moves.stream().anyMatch(x->x.equals(newPosition))) )){
+                game.notifyAnswerOnePlayer(new SerializableRequestError(playerId, "REJECTED"));
+                return;
+        }
+
         Board board = getBoard();
         Position workerPosition = getWorkerPosition(playerId, workerId);
         SerializableUpdate update = getPlayerGodPower(playerId).moveInto(board, workerPosition, newPosition); // consolida la mossa
@@ -80,6 +94,20 @@ public class Controller implements ProxyObserver {
     @Override
     // Gestisce una ConsolidateBuild
     public void onConsolidateBuild(int playerId, Position newPosition, boolean forceDome) {
+        Position worker1Position = getWorkerPosition(getTurn().getPlayerId(), 1);
+        Position worker2Position = getWorkerPosition(getTurn().getPlayerId(), 2);
+        Set<Position> worker1Builds =  getPlayerGodPower(getTurn().getPlayerId()).build(worker1Position, getBoard(), getTurn());
+        Set<Position> worker2Builds =  getPlayerGodPower(getTurn().getPlayerId()).build(worker2Position, getBoard(), getTurn());
+
+        if (!(playerId == getTurn().getPlayerId() && // INITIAL CHECK
+            newPosition != null &&
+            (!forceDome || getPlayerGodPower(playerId).isAskToBuildDomes()) &&
+            (worker1Builds.stream().anyMatch(x->x.equals(newPosition))||worker2Builds.stream().anyMatch(x->x.equals(newPosition))) )){
+                game.notifyAnswerOnePlayer(new SerializableRequestError(playerId, "REJECTED"));
+                return;
+        }
+
+
         Board board = getBoard();
         SerializableUpdate update = getPlayerGodPower(playerId).buildUp(newPosition, board, forceDome); // consolida la build
         getTurn().updateTurnInfoAfterBuild(newPosition); // aggiorna Turn
@@ -159,7 +187,7 @@ public class Controller implements ProxyObserver {
 
     @Override
     // Primo metodo lanciato del controller, avvia MVC e procedura di InitializeGame
-    public void onGodPowerInitialization(){
+    public void onInitialization(){
         System.out.println("Game initialization started");
         try {
             godPowersLeft = GodPowerManager.createGodPowers(getNumOfPlayers());
@@ -175,6 +203,14 @@ public class Controller implements ProxyObserver {
     @Override
     // Prosegue nella procedura di InitializeGame avanzando di un player
     public void onGodPowerInitialization(int playerId, String godPower) {
+        if (!(playerId > 0 && playerId <= getNumOfPlayers() && // INITIAL CHECK
+                getGodPowers().size() == playerId - 1 &&
+                godPower != null &&
+                godPowersLeft.stream().map(GodPower::getGodName).anyMatch(x->x.equals(godPower)))){
+            game.notifyAnswerOnePlayer(new SerializableRequestError(playerId, "REJECTED"));
+            return;
+        }
+
         chooseGodPower(godPower);
 
         SerializableUpdateInitializeGodPower update = new SerializableUpdateInitializeGodPower(godPower, playerId);
@@ -188,7 +224,6 @@ public class Controller implements ProxyObserver {
     }
 
 
-    @Override
     // Primo metodo lanciato del controller, avvia MVC e procedura di InitializeGame
     public void onWorkerPositionsInitialization(){
         try {
@@ -200,17 +235,27 @@ public class Controller implements ProxyObserver {
     @Override
     // Prosegue nella procedura di InitializeGame avanzando di un player
     public void onWorkerPositionsInitialization(int playerId, List<Position> workerPositions) {
-        Player player = getPlayer(playerId);
+        if (!(playerId > 0 && playerId <= getNumOfPlayers() && // INITIAL CHECK
+            getPlayer(playerId) !=null &&
+            workerPositions != null &&
+            workerPositions.size() == 2 &&
+            !workerPositions.get(0).equals(workerPositions.get(1)) &&
+            workerPositions.stream().allMatch(x->x.getZ()==0) &&
+            !getPlayer(playerId).areWorkersSet() &&
+            ((playerId > 1 && getPlayer(playerId-1).areWorkersSet())||playerId==1) &&
+            getBoard().isFreeZone(workerPositions.get(0).getX(), workerPositions.get(0).getY()) &&
+            getBoard().isFreeZone(workerPositions.get(1).getX(), workerPositions.get(1).getY()) )){
+                game.notifyAnswerOnePlayer(new SerializableRequestError(playerId, "REJECTED"));
+                return;
+        }
 
+        Player player = getPlayer(playerId);
         Worker worker1 = new Worker(player, 1);
         Worker worker2 = new Worker(player, 2);
-
         player.addWorker(worker1);
         player.addWorker(worker2);
-
         Cell worker1Cell = getBoard().getCell(workerPositions.get(0));
         Cell worker2Cell = getBoard().getCell(workerPositions.get(1));
-
         worker1Cell.setWorker(worker1);
         worker2Cell.setWorker(worker2);
 
@@ -261,8 +306,6 @@ public class Controller implements ProxyObserver {
         getBoard().getCell(getWorkerPosition(playerId, 2)).setWorker(null);
         game.removeGodPower(playerId); // setta il GodPower a null
         game.removePlayer(playerId); // setta il Player a null
-
-
     }
 
     private int getNumOfPlayers() {return game.getNumOfPlayers();}

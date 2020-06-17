@@ -301,7 +301,7 @@ public class Terminal implements View {
             List<Position> myWorkerPositions = new ArrayList<>();
             myWorkerPositions.add(new Position(myWorker1x, myWorker1y, 0));
             myWorkerPositions.add(new Position(myWorker2x, myWorker2y, 0));
-            boolean isValid = true;
+            boolean isValid = !(myWorker1x == myWorker2x && myWorker1y == myWorker2y);
             for (int i = 1; i < board.numOfPlayers(); i++) {
                 if (board.getPlayer(i) != null) {
                     if  (
@@ -455,6 +455,9 @@ public class Terminal implements View {
                 break;
             case 3:
                 System.out.print(Terminal.Color.CYAN.set());
+                break;
+            default:
+                System.out.print(Terminal.Color.WHITE.set());
                 break;
         }
     }

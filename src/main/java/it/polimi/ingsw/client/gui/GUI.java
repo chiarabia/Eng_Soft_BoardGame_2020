@@ -10,6 +10,7 @@ import it.polimi.ingsw.client.gui.runnable.*;
 
 import it.polimi.ingsw.server.serializable.*;
 import javafx.application.Platform;
+import javafx.fxml.FXMLLoader;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
 import javafx.scene.text.Text;
@@ -17,7 +18,7 @@ import javafx.scene.text.Text;
 import java.util.List;
 
 public class GUI implements View {
-
+    private FXMLLoader boardSceneLoader;
     private ClientBoard board;
     ChoosingGodSceneRunnable choosingGodSceneRunnable = new ChoosingGodSceneRunnable();
     List<Integer> actionsCodes;
@@ -39,7 +40,9 @@ public class GUI implements View {
     @Override
     public void displayBoardScreen(){
         //displays the BoardScene
-        Platform.runLater(new BoardSceneRunnable());
+        BoardSceneRunnable boardSceneRunnable = new BoardSceneRunnable();
+        boardSceneLoader = boardSceneRunnable.getLoader();
+        Platform.runLater(boardSceneRunnable);
 
         Platform.runLater(()->{
             Text oldText = BoardSceneController.getNotification();

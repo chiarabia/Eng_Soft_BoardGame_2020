@@ -9,29 +9,26 @@ import java.io.IOException;
 import java.io.ObjectOutputStream;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.util.ArrayList;
 import java.util.List;
 
 public class ServerAccepter extends Thread {
     private ServerSocket serverSocket;
+    private List <ServerWaitingList> waitingLists;
     public void run() {
-        ServerWaitingList twoPlayersWaitingList = new ServerWaitingList(2);
-        ServerWaitingList threePlayersWaitingList = new ServerWaitingList(3);
         try {
             while (true) {
                 Socket socket = serverSocket.accept();
                 (new Thread (()->{
                     try {
-                        ServerWaitingList waitingList;
                         SerializableConnection connection = (SerializableConnection) (new ServerSyncReceiver()).receiveObject(socket);
                         int numOfPlayers = connection.getNumOfPlayers();
                         String name = connection.getName();
-                        if (numOfPlayers == 2) waitingList = twoPlayersWaitingList;
-                        else if (numOfPlayers == 3) waitingList = threePlayersWaitingList;
-                        else {
+                        if (numOfPlayers < 2 || numOfPlayers > waitingLists.size()+1){
                             sendError(socket, "ERROR_NOT_VALID_NUM_OF_PLAYERS");
                             return;
                         }
-                        waitingList.addToPlayersList(socket, name);
+                        waitingLists.get(numOfPlayers-2).addToPlayersList(socket, name);
                     } catch (BadNameException e){
                         try {
                             sendError(socket, "ERROR_NOT_VALID_NAME");
@@ -53,5 +50,7 @@ public class ServerAccepter extends Thread {
     }
     public ServerAccepter(ServerSocket serverSocket){
         this.serverSocket = serverSocket;
+        this.waitingLists = new ArrayList<>();
+        for (int i = 2; i <= 3; i++) waitingLists.add(new ServerWaitingList(i));
     }
 }
