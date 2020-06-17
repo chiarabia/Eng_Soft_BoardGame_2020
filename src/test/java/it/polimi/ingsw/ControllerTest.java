@@ -142,7 +142,6 @@ public class ControllerTest {
             () -> assertNull(game.getPlayer(1)));
     }
 
-    @Test
     void TheLastPlayerWins() {
         setUp3PlayerMatch();
         selectAutomaticallyGodPowers();
@@ -176,7 +175,7 @@ public class ControllerTest {
                 () -> assertNull(game.getPlayer(2)));
     }
 
-    @Test
+
     void FirstPlayerWins () {
         setUp3PlayerMatch();
         selectAutomaticallyGodPowers();
