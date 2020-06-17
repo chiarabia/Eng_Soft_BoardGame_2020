@@ -21,6 +21,7 @@ public class Server {
                 break;
             } catch (IOException e) {
                 System.out.println("An error occurred, restarting in 10 seconds...");
+                e.printStackTrace();
                 sleep(10000);
             }
         }

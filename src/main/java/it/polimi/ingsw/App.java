@@ -12,8 +12,10 @@ public class App
 {
     private static String getRoot(){
         String root = ClassLoader.getSystemClassLoader().getResource("configurations/Configuration.json").getPath();
-        if (root.substring(2,3).equals(":")) return root.substring(3, root.length());
-        else return root;
+        if (root.substring(0,5).equals("file:")) root = root.substring(5, root.length());
+        if (root.substring(2,3).equals(":")) root = root.substring(3, root.length());
+        //return root;
+        return "src/main/resources/configurations/Configuration.json";
     }
     public static void main( String[] args ) throws InterruptedException {
         try {

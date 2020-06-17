@@ -32,8 +32,10 @@ public class GodPowerManager {
     /*JSON files' path*/
     private static String getRoot(){
         String root = ClassLoader.getSystemClassLoader().getResource("configurations/Configuration.json").getPath();
-        if (root.substring(2,3).equals(":")) return root.substring(3, root.length()-18) + "cards/";
-        else return  root.substring(0, root.length()-18) + "cards/";
+        if (root.substring(0,5).equals("file:")) root = root.substring(5, root.length());
+        if (root.substring(2,3).equals(":")) root = root.substring(3, root.length());
+        //return root.substring(0, root.length()-18) + "cards/";
+        return "src/main/resources/configurations/cards/";
     }
 
     /**
