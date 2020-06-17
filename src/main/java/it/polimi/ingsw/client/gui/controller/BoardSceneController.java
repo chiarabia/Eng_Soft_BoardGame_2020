@@ -23,8 +23,10 @@ import java.util.ResourceBundle;
 
 public class BoardSceneController implements Initializable {
 
+
+    public static GridPane gridPane;
     @FXML
-    private static GridPane gridPane;
+    private BorderPane board;
     @FXML
     private Button moveButton;
     @FXML
@@ -38,11 +40,14 @@ public class BoardSceneController implements Initializable {
     @FXML
     public TextFlow notificationsTextFlow;
 
+    public static List<Integer> actionsCodes = new ArrayList<>();
+
+
+
     public static Text notification = new Text("Welcome!");
 
 
     GodCard chosenGodCard;
-    List<Integer> actionsCodes;
     List<Position> startingWorkerPositions = new ArrayList<>();
     Position newWorkerPosition;
     StackPane newWorkerCell;
@@ -54,6 +59,9 @@ public class BoardSceneController implements Initializable {
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
+        popualateGridPane(gridPane);
+        board.setCenter(gridPane);
+        actionsCodes.add(0);
         //get the godPower
         List<GodCard> godPowers = MainStage.getGodPowers();
         chosenGodCard = godPowers.get(0);
@@ -72,6 +80,8 @@ public class BoardSceneController implements Initializable {
             addBuildingImage(newWorkerBuild,levelOfBuilding);
         });
     }
+
+    public static List<Integer> getActionsCodes() {return actionsCodes;}
 
     /**
      * Sets the god image card and god description on the screen
@@ -116,7 +126,7 @@ public class BoardSceneController implements Initializable {
     }
 
     //handles the click event on a cell of the board
-    public void onCellClicked(javafx.scene.input.MouseEvent event) {
+    public  void onCellClicked(javafx.scene.input.MouseEvent event) {
         int column = GridPane.getColumnIndex((Node) event.getSource());
         int row = GridPane.getRowIndex((Node) event.getSource());
         //if we are in the askWorkerInitialPosition phase
@@ -130,7 +140,7 @@ public class BoardSceneController implements Initializable {
             displayWorker(cell,workerPosition);
             //updates the workerNumber
         }
-        else{}
+
     }
 
     //gets the node in a cell of the gridpane
@@ -151,6 +161,18 @@ public class BoardSceneController implements Initializable {
     //Enables the move button only when the player can build
     public void keyReleasedPropertyBuild(){
 
+    }
+
+    public static void updateWorker(Position newPosition, Position oldPosition, int playerID){
+        StackPane newCell = (StackPane)getNodefromPosition(gridPane, newPosition);
+        StackPane oldCell = (StackPane)getNodefromPosition(gridPane, oldPosition);
+        removeWorkerImage(oldCell);
+        addWorkerImage(newCell,playerID);
+    }
+
+    public static void updateWorkerInitialPosition (Position newPosition, int playerID){
+        StackPane newCell = (StackPane)getNodefromPosition(gridPane, newPosition);
+        addWorkerImage(newCell,playerID);
     }
 
     public static void updateBuilding(Position newPosition, boolean dome){
@@ -192,5 +214,30 @@ public class BoardSceneController implements Initializable {
             }
         }
         return null;
+    }
+
+    public static void updateActionCode(int code){
+        actionsCodes.clear();
+        actionsCodes.add(code);
+    }
+
+    public static void popualateGridPane(GridPane gridPane){
+        StackPane newStackPane = new StackPane();
+        newStackPane.setMaxHeight(100);
+        newStackPane.setMaxWidth(100);
+        newStackPane.setMinHeight(100);
+        newStackPane.setMinWidth(100);
+        gridPane.setPrefSize(500, 500);
+        gridPane.setMaxWidth(500);
+        gridPane.setMaxHeight(500);
+        gridPane.setMinHeight(500);
+        gridPane.setMinWidth(500);
+        for (int x = 0; x<5 ; x++){
+            for(int y=0; x<5; y++) gridPane.add(newStackPane,x,y);
+        }
+        Image board = new Image("/Board/SantoriniBoardOnly.png");
+        BackgroundSize boardSize = new BackgroundSize(500,500, false,false, true, true);
+        BackgroundImage boardBackground= new BackgroundImage(board, BackgroundRepeat.NO_REPEAT, BackgroundRepeat.NO_REPEAT, BackgroundPosition.CENTER, boardSize );
+        gridPane.setBackground(new Background(boardBackground));
     }
 }

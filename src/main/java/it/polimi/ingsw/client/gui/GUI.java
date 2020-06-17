@@ -1,5 +1,6 @@
 package it.polimi.ingsw.client.gui;
 
+import it.polimi.ingsw.Position;
 import it.polimi.ingsw.client.ClientBoard;
 import it.polimi.ingsw.client.GodCard;
 import it.polimi.ingsw.client.View;
@@ -10,6 +11,7 @@ import it.polimi.ingsw.client.gui.runnable.*;
 
 import it.polimi.ingsw.server.serializable.*;
 import javafx.application.Platform;
+import javafx.fxml.FXMLLoader;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
 import javafx.scene.text.Text;
@@ -20,7 +22,6 @@ public class GUI implements View {
 
     private ClientBoard board;
     ChoosingGodSceneRunnable choosingGodSceneRunnable = new ChoosingGodSceneRunnable();
-    List<Integer> actionsCodes;
 
     public void addObserver(ViewObserver observer){
         List<ViewObserver> observerList = MainStage.getObserverList();
@@ -121,23 +122,30 @@ public class GUI implements View {
 
     @Override
     public void displayBoard(SerializableUpdateActions update) {
+        List<SerializableUpdateMove> updateMove = update.getUpdateMove();
+        List<SerializableUpdateBuild> updateBuild = update.getUpdateBuild();
 
+        if(updateBuild.isEmpty() == false){
+            for (int i = 0; i < updateBuild.size(); i++){
+                Position newPosition = updateBuild.get(0).getNewPosition();
+                boolean dome = updateBuild.get(0).isDome();
+                Platform.runLater(()->{
+                    BoardSceneController.updateBuilding(newPosition, dome);
+                });
+            }
+        }
+
+        if(updateMove.isEmpty() == false){
+           for (int i = 0; i < updateMove.size(); i++){
+               Position newPosition = updateMove.get(i).getNewPosition();
+               Position oldPosition = updateMove.get(i).getStartingPosition();
+               int playerID = updateMove.get(i).getPlayerId();
+               Platform.runLater(()->{
+                   BoardSceneController.updateWorker(newPosition,oldPosition,playerID);
+               });
+           }
+        }
     }
-    /*
-    @Override
-    public void displayBoard(SerializableUpdateMove update) {
-
-
-    }
-
-    @Override
-    public void displayBoard(SerializableUpdateBuild update) {
-        Position newPosition = update.getNewPosition();
-        boolean dome = update.isDome();
-        Platform.runLater(()->{
-            BoardSceneController.updateBuilding(newPosition, dome);
-        });
-    }*/
 
     @Override
     public void displayBoard(SerializableUpdateLoser update) {
@@ -145,6 +153,11 @@ public class GUI implements View {
 
     @Override
     public void displayBoard(SerializableUpdateInitializeWorkerPositions update) {
+        List<Position> workerPositions = update.getWorkerPositions();
+        Platform.runLater(()->{
+            for (int i=0; i < workerPositions.size(); i++){
+                BoardSceneController.updateWorkerInitialPosition(workerPositions.get(i),update.getPlayerId());}
+        });
     }
 
     @Override
@@ -172,12 +185,9 @@ public class GUI implements View {
             Text oldText = BoardSceneController.getNotification();
             setTextFormat(oldText);
             oldText.setText(notification);
+            //sets the actionCode to 1 for the askForInitialiWorkerPosition phase
+            BoardSceneController.updateActionCode(1);
         });
-
-        //sets the actionCode to 1 for the askForInitialiWorkerPosition phase
-        actionsCodes = MainStage.getActionsCodes();
-        actionsCodes.clear();
-        actionsCodes.add(1);
 
         //alla fine deve chiamare onCompletedInitializeWorkerPositions(List<Position> myWorkerPositions)
     }
@@ -198,4 +208,5 @@ public class GUI implements View {
     public void setTextFormat(Text notification){
         notification.setFont(Font.font("Verdana", FontWeight.BOLD, 15));
     }
+
 }
