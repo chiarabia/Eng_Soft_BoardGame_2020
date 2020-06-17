@@ -9,7 +9,7 @@
 <StackPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="774" minWidth="1386" prefHeight="774" prefWidth="1386" style="-fx-background-color:#37b9fd;" stylesheets="CSS/Board.css" xmlns="http://javafx.com/javafx/10.0.2-internal" xmlns:fx="http://javafx.com/fxml/1" fx:controller="it.polimi.ingsw.client.gui.controller.BoardSceneController">
       <BorderPane fx:id="board" maxHeight="774" maxWidth="1386" minHeight="774" minWidth="1386" prefHeight="774" prefWidth="1386" BorderPane.alignment="CENTER">
          <center>
-<!--            <GridPane fx:id="gridPane" minHeight="500" minWidth="500" prefHeight="500.9" prefWidth="500" BorderPane.alignment="CENTER">
+            <GridPane fx:id="gridPane" minHeight="500" minWidth="500" prefHeight="500.9" prefWidth="500" BorderPane.alignment="CENTER">
                <columnConstraints>
                   <ColumnConstraints hgrow="SOMETIMES" minWidth="100.0" prefWidth="100.0" />
                   <ColumnConstraints hgrow="SOMETIMES" minWidth="100" prefWidth="100" />
@@ -49,7 +49,7 @@
                <StackPane  prefHeight="100.0" prefWidth="100.0" GridPane.columnIndex="0" GridPane.rowIndex="4" onMouseClicked="#onCellClicked"/>
                <StackPane  prefHeight="100.0" prefWidth="100.0" GridPane.columnIndex="1" GridPane.rowIndex="4" onMouseClicked="#onCellClicked"/>
                <StackPane  prefHeight="100.0" prefWidth="100.0" GridPane.columnIndex="2" GridPane.rowIndex="4" onMouseClicked="#onCellClicked"/>
-            </GridPane>-->
+            </GridPane>
          </center>
          <right>
             <FlowPane fx:id="FlowPaneRight" minHeight="500" minWidth="428" prefHeight="200.0" prefWidth="200.0" BorderPane.alignment="CENTER">

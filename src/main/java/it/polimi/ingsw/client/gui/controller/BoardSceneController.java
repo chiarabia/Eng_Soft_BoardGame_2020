@@ -24,7 +24,8 @@ import java.util.ResourceBundle;
 public class BoardSceneController implements Initializable {
 
 
-    public static GridPane gridPane;
+    @FXML
+    public GridPane gridPane;
     @FXML
     private BorderPane board;
     @FXML
@@ -59,7 +60,7 @@ public class BoardSceneController implements Initializable {
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
-        popualateGridPane(gridPane);
+        //popualateGridPane(gridPane);
         board.setCenter(gridPane);
         actionsCodes.add(0);
         //get the godPower
@@ -126,7 +127,7 @@ public class BoardSceneController implements Initializable {
     }
 
     //handles the click event on a cell of the board
-    public  void onCellClicked(javafx.scene.input.MouseEvent event) {
+    public void onCellClicked(javafx.scene.input.MouseEvent event) {
         int column = GridPane.getColumnIndex((Node) event.getSource());
         int row = GridPane.getRowIndex((Node) event.getSource());
         //if we are in the askWorkerInitialPosition phase
@@ -144,7 +145,7 @@ public class BoardSceneController implements Initializable {
     }
 
     //gets the node in a cell of the gridpane
-    public static Node getNodeFromGridPane(GridPane gridPane, int x, int y) {
+    public Node getNodeFromGridPane(GridPane gridPane, int x, int y) {
         for (Node node : gridPane.getChildren()) {
             if (GridPane.getColumnIndex(node) == x && GridPane.getRowIndex(node) == y) {
                 return node;
@@ -163,19 +164,19 @@ public class BoardSceneController implements Initializable {
 
     }
 
-    public static void updateWorker(Position newPosition, Position oldPosition, int playerID){
+    public void updateWorker(Position newPosition, Position oldPosition, int playerID){
         StackPane newCell = (StackPane)getNodefromPosition(gridPane, newPosition);
         StackPane oldCell = (StackPane)getNodefromPosition(gridPane, oldPosition);
         removeWorkerImage(oldCell);
         addWorkerImage(newCell,playerID);
     }
 
-    public static void updateWorkerInitialPosition (Position newPosition, int playerID){
+    public void updateWorkerInitialPosition (Position newPosition, int playerID){
         StackPane newCell = (StackPane)getNodefromPosition(gridPane, newPosition);
         addWorkerImage(newCell,playerID);
     }
 
-    public static void updateBuilding(Position newPosition, boolean dome){
+    public void updateBuilding(Position newPosition, boolean dome){
         String level = "level1.png";
         if (dome == true) level = "dome.png";
         StackPane newBuildingCell = (StackPane)getNodefromPosition(gridPane,newPosition);
@@ -185,7 +186,7 @@ public class BoardSceneController implements Initializable {
     }
 
     //adds an imageView of the workers
-    public static void addWorkerImage(StackPane cell, int player){
+    public void addWorkerImage(StackPane cell, int player){
         ImageView worker = new ImageView(new Image("/worker/w" + player +".png"));
         worker.setFitHeight(100);
         worker.setFitWidth(100);
@@ -193,7 +194,7 @@ public class BoardSceneController implements Initializable {
     }
 
     //adds an imageView of a building
-    public static void addBuildingImage(StackPane cell, String level){
+    public void addBuildingImage(StackPane cell, String level){
         Image building = new Image(level);
         BackgroundSize buildingSize = new BackgroundSize(100,100, false,false, true, true);
         BackgroundImage buildingBackground= new BackgroundImage(building, BackgroundRepeat.NO_REPEAT, BackgroundRepeat.NO_REPEAT, BackgroundPosition.CENTER, buildingSize );
@@ -201,11 +202,11 @@ public class BoardSceneController implements Initializable {
     }
 
     //removes the image of a Worker
-    public static void removeWorkerImage(StackPane cell){
+    public void removeWorkerImage(StackPane cell){
         cell.getChildren().clear();
     }
 
-    public static Node getNodefromPosition(GridPane gridPane, Position position){
+    public Node getNodefromPosition(GridPane gridPane, Position position){
         int x = position.getX();
         int y = position.getY();
         for (Node node : gridPane.getChildren()) {
@@ -221,7 +222,7 @@ public class BoardSceneController implements Initializable {
         actionsCodes.add(code);
     }
 
-    public static void popualateGridPane(GridPane gridPane){
+/*    public static void popualateGridPane(GridPane gridPane){
         StackPane newStackPane = new StackPane();
         newStackPane.setMaxHeight(100);
         newStackPane.setMaxWidth(100);
@@ -239,5 +240,5 @@ public class BoardSceneController implements Initializable {
         BackgroundSize boardSize = new BackgroundSize(500,500, false,false, true, true);
         BackgroundImage boardBackground= new BackgroundImage(board, BackgroundRepeat.NO_REPEAT, BackgroundRepeat.NO_REPEAT, BackgroundPosition.CENTER, boardSize );
         gridPane.setBackground(new Background(boardBackground));
-    }
+    }*/
 }

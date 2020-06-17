@@ -12,6 +12,7 @@ import it.polimi.ingsw.client.gui.runnable.*;
 import it.polimi.ingsw.server.serializable.*;
 import javafx.application.Platform;
 import javafx.fxml.FXMLLoader;
+import javafx.scene.Parent;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
 import javafx.scene.text.Text;
@@ -20,6 +21,7 @@ import java.util.List;
 
 public class GUI implements View {
     private FXMLLoader boardSceneLoader;
+    private BoardSceneController boardSceneController;
     private ClientBoard board;
     ChoosingGodSceneRunnable choosingGodSceneRunnable = new ChoosingGodSceneRunnable();
 
@@ -126,13 +128,14 @@ public class GUI implements View {
     public void displayBoard(SerializableUpdateActions update) {
         List<SerializableUpdateMove> updateMove = update.getUpdateMove();
         List<SerializableUpdateBuild> updateBuild = update.getUpdateBuild();
+        assignController(boardSceneLoader);
 
         if(updateBuild.isEmpty() == false){
             for (int i = 0; i < updateBuild.size(); i++){
                 Position newPosition = updateBuild.get(0).getNewPosition();
                 boolean dome = updateBuild.get(0).isDome();
                 Platform.runLater(()->{
-                    BoardSceneController.updateBuilding(newPosition, dome);
+                    boardSceneController.updateBuilding(newPosition, dome);
                 });
             }
         }
@@ -143,7 +146,7 @@ public class GUI implements View {
                Position oldPosition = updateMove.get(i).getStartingPosition();
                int playerID = updateMove.get(i).getPlayerId();
                Platform.runLater(()->{
-                   BoardSceneController.updateWorker(newPosition,oldPosition,playerID);
+                   boardSceneController.updateWorker(newPosition,oldPosition,playerID);
                });
            }
         }
@@ -156,9 +159,10 @@ public class GUI implements View {
     @Override
     public void displayBoard(SerializableUpdateInitializeWorkerPositions update) {
         List<Position> workerPositions = update.getWorkerPositions();
+        assignController(boardSceneLoader);
         Platform.runLater(()->{
             for (int i=0; i < workerPositions.size(); i++){
-                BoardSceneController.updateWorkerInitialPosition(workerPositions.get(i),update.getPlayerId());}
+                boardSceneController.updateWorkerInitialPosition(workerPositions.get(i),update.getPlayerId());}
         });
     }
 
@@ -211,4 +215,13 @@ public class GUI implements View {
         notification.setFont(Font.font("Verdana", FontWeight.BOLD, 15));
     }
 
+    public void assignController(FXMLLoader loader){
+        try {
+            FXMLLoader boardLoader = loader;
+            Parent root = (Parent) loader.load();
+            boardSceneController = loader.getController();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
 }
