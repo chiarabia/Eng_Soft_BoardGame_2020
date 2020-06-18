@@ -14,7 +14,7 @@ public class App{
             JSONObject jsonObject = JSONManager.readMyJSONAsText("configurations/Configuration.json");
 
             boolean server = (jsonObject.get("role")).equals("server");
-            boolean GUI = (jsonObject.get("ui")).equals("GUI")||args.length==0;
+            boolean GUI = (jsonObject.get("ui")).equals("GUI");
             String ip = (String) jsonObject.get("ip");
             int port = Math.toIntExact((Long) jsonObject.get("port"));
 

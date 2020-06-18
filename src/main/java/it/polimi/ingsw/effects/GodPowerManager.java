@@ -30,11 +30,6 @@ public class GodPowerManager {
      */
     private static int opponentsCantWinOnPerimeterPlayer;
 
-    /*JSON files' path*/
-    private static String getRoot(){
-        return "src/main/resources/configurations/cards/";
-    }
-
     /**
      * This method randomly extracts different 'numOfPlayers' cards in the form of List <String>,
      * regardless of names and/or number of cards in the Cards folder
@@ -43,11 +38,16 @@ public class GodPowerManager {
      * @throws IOException IO Exception
      */
 
-    private static List <String> chooseGodFiles (int numOfPlayers) throws IOException {
-        List <String> cards = new ArrayList<>();
-        Stream<Path> paths = Files.walk(Paths.get(getRoot()));
-        paths.filter(Files::isRegularFile).forEach(x->{cards.add(x.toString().substring(getRoot().length()));});
-        // the card list contains all 14 strings of JSON file names (eg "ApolloCard.json")
+    private static List <JSONObject> chooseGodFiles (int numOfPlayers) throws IOException, ParseException {
+        List <JSONObject> cards = new ArrayList<>();
+        int counter = 1;
+        while (true){
+            JSONObject card = JSONManager.readMyJSONAsText("configurations/cards/GodCard"+counter+".json");
+            if (card==null) break;
+            cards.add(card);
+            counter++;
+        }
+        // the card list contains all 14 strings of JSON file names (eg "GodCard1.json")
 
         Random rand = new Random();
         int numOfAvailableCards = cards.size();
@@ -63,8 +63,7 @@ public class GodPowerManager {
      * @param numOfPlayer Player ID
      */
 
-    public static GodPower power (String nameOfFile, int numOfPlayer) throws IOException, ParseException {
-        JSONObject jsonObject = JSONManager.readMyJSONAsText("configurations/cards/" + nameOfFile);
+    public static GodPower power (JSONObject jsonObject, int numOfPlayer) throws IOException, ParseException {
         //Effects' strings
         String move = (String) jsonObject.get("move");
         String build = (String) jsonObject.get("build");
@@ -97,7 +96,7 @@ public class GodPowerManager {
 
         switch (build) {
             case "askToBuildBeforeMoveAndNotMoveUp":
-                godPower.setBuild(new BuildBeforeMove(numOfBuilds)); break; //todo:dovrebbe essere giusto ma boh
+                godPower.setBuild(new BuildBeforeMove(numOfBuilds)); break;
             case "buildBeforeMove":
                 godPower.setBuild(new BuildBeforeMove(1)); break;
             case "askToBuildDomes":
@@ -174,7 +173,7 @@ public class GodPowerManager {
     public static List<GodPower> createGodPowers (int numOfPlayers) throws ParseException, IOException {
         opponentsCantWinOnPerimeterPlayer = 0;
         List <GodPower> godPowerList = new ArrayList<>();
-        List <String> godFiles = chooseGodFiles(numOfPlayers);
+        List <JSONObject> godFiles = chooseGodFiles(numOfPlayers);
 
         for (int i = 1; i <= numOfPlayers; i++)
             godPowerList.add(power(godFiles.get(i-1), i));
