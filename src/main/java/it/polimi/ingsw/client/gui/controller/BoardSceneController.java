@@ -91,6 +91,7 @@ public class BoardSceneController implements Initializable {
 
      @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
+         //disables all button and set the Dome and Decline button as not visible
          moveButton.setDisable(true);
          buildButton.setDisable(true);
          declineButton.setDisable(true);
@@ -111,19 +112,25 @@ public class BoardSceneController implements Initializable {
         //setTextFormat(notification);
         notificationsTextFlow.getChildren().add(notification);
 
+        //handles the click on the Move Button
         moveButton.setOnAction(actionEvent -> {
+            //sends the position and worker id of the worker that has been moved
             List<ViewObserver> observerList = MainStage.getObserverList();
             for (int i = 0; i < observerList.size(); i++) observerList.get(i).onCompletedMove(newWorkerPosition, workerSelected);
         });
 
+        //handles the click on the Build Button
         buildButton.setOnAction(actionEvent -> {
+            //sends the position of the new building, the worker id of the worker that made the action and if the building is a dome
             List<ViewObserver> observerList = MainStage.getObserverList();
             boolean isDome = false;
             if(newBuildingPostion.getZ()==4) isDome = true;
             for (int i = 0; i < observerList.size(); i++) observerList.get(i).onCompletedBuild(newBuildingPostion, workerSelected, isDome);
         });
 
+        //handles the click on the dome button
         domeButton.setOnAction(actionEvent -> {
+            //sends the position of the new dome building and the worker id
             List<ViewObserver> observerList = MainStage.getObserverList();
             for (int i = 0; i < observerList.size(); i++) observerList.get(i).onCompletedBuild(newBuildingPostion, workerSelected, true);
         });
