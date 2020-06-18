@@ -134,17 +134,6 @@ public class BoardSceneController implements Initializable {
         });
     }
 
-    public void setMovePossible (boolean isPossible) {isMovePossible = isPossible;}
-    public void setBuildPossible (boolean isPossible) {isBuildPossible = isPossible;}
-    public void setDomeAtAnyLevelPossible (boolean isPossible) {isDomeAtAnyLevelPossible = isPossible;}
-    public void setDeclinePossible (boolean isPossible) {isDeclinePossible = isPossible;}
-    public void setOldFirstWorkerPosition(Position firstWorker){oldFirstWorkerPosition = firstWorker;}
-    public void setOldSecondWorkerPosition(Position secondWorker){oldSecondWorkerPosition = secondWorker;}
-    public void setWorker1MovesPosition(Set<Position> firstWorkerMoves){worker1MovesPosition = firstWorkerMoves;}
-    public void setWorker2MovesPosition(Set<Position> secondWorkerMoves){worker2MovesPosition = secondWorkerMoves;}
-    public void setWorker1BuildPosition(Set<Position> firstWorkerBuilds){worker1BuildsPosition = firstWorkerBuilds;}
-    public void setWorker2BuildPosition(Set<Position> secondWorkerBuilds){worker2BuildsPosition = secondWorkerBuilds;}
-    public static Text getNotification() {return notification;}
 
     /**
      * Sets the god image card and god description on the screen
@@ -272,27 +261,6 @@ public class BoardSceneController implements Initializable {
         return null;
     }
 
-   /* //Enables the move button only when the player can move
-    public void keyReleasedPropertyMove(){
-        boolean moveButtonT = isActionPossible;
-        moveButton.setDisable(moveButtonT);
-    }
-
-    //Enables the move button only when the player can build
-    public void keyReleasedPropertyBuild(){
-        buildButton.setDisable(buildButtonActive);
-    }
-
-    //Enables the move button only when the player can build a dome at any level
-    public void keyReleasedPropertyDome(){
-        domeButton.setDisable(domeButtonActive);
-    }
-
-    //Enables the move button only when the player can decline making an action
-    public void keyReleasedPropertyDecline(){
-        declineButton.setDisable(declineButtonActive);
-    }*/
-
     public void updateWorker(Position newPosition, Position oldPosition, int playerID){
         StackPane newCell = (StackPane)getNodeFromPosition(gridPane, newPosition);
         StackPane oldCell = (StackPane)getNodeFromPosition(gridPane, oldPosition);
@@ -396,6 +364,23 @@ public class BoardSceneController implements Initializable {
         if (code == 2) cell.getChildren().remove(selectedImage);
     }
 
+    public void displayNotificationsDuringTurn(String notification){
+        Text notificationText = new Text(notification);
+        setTextFormat(notificationText);
+        notificationsTextFlow.getChildren().add(notificationText);
+    }
+
+    public void setMovePossible (boolean isPossible) {isMovePossible = isPossible;}
+    public void setBuildPossible (boolean isPossible) {isBuildPossible = isPossible;}
+    public void setDomeAtAnyLevelPossible (boolean isPossible) {isDomeAtAnyLevelPossible = isPossible;}
+    public void setDeclinePossible (boolean isPossible) {isDeclinePossible = isPossible;}
+    public void setOldFirstWorkerPosition(Position firstWorker){oldFirstWorkerPosition = firstWorker;}
+    public void setOldSecondWorkerPosition(Position secondWorker){oldSecondWorkerPosition = secondWorker;}
+    public void setWorker1MovesPosition(Set<Position> firstWorkerMoves){worker1MovesPosition = firstWorkerMoves;}
+    public void setWorker2MovesPosition(Set<Position> secondWorkerMoves){worker2MovesPosition = secondWorkerMoves;}
+    public void setWorker1BuildPosition(Set<Position> firstWorkerBuilds){worker1BuildsPosition = firstWorkerBuilds;}
+    public void setWorker2BuildPosition(Set<Position> secondWorkerBuilds){worker2BuildsPosition = secondWorkerBuilds;}
+    public static Text getNotification() {return notification;}
 
     public static void setTextFormat(Text notification){
         notification.setFont(Font.font("Verdana", FontWeight.BOLD, 10));
@@ -407,12 +392,6 @@ public class BoardSceneController implements Initializable {
 
     public void setVisibleDeclineButton(boolean visibility){
         declineButton.setVisible(visibility);
-    }
-
-    public void displayNotificationsDuringTurn(String notification){
-        Text notificationText = new Text(notification);
-        setTextFormat(notificationText);
-        notificationsTextFlow.getChildren().add(notificationText);
     }
 
 }
