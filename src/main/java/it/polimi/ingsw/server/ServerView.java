@@ -59,7 +59,7 @@ public class ServerView implements GameObserver{
             startNewEventGenerator(new ServerAsyncReceiver(s, playerId));
             playerId++;
         }
-        for (int i = 0; i< observerList.size(); i++)  observerList.get(i).onGodPowerInitialization();
+        for (int i = 0; i< observerList.size(); i++)  observerList.get(i).onInitialization();
     }
 
     public void stopLastEventGenerator(){

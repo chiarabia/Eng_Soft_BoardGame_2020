@@ -31,13 +31,13 @@ public class ControllerTest {
     @Test
     void threeGodsPowersAreCorrectlyCreateIn3PlayerMatch () {
         setUp3PlayerMatch();
-        controller.onGodPowerInitialization();
+        controller.onInitialization();
         assertEquals(3, controller.getGodPowersLeft().size());
     }
     @Test
     void twoGodsPowersAreCorrectlyCreateIn3PlayerMatch () {
         setUp2PlayerMatch();
-        controller.onGodPowerInitialization();
+        controller.onInitialization();
         assertEquals(2, controller.getGodPowersLeft().size());
     }
     @Test
@@ -142,7 +142,6 @@ public class ControllerTest {
             () -> assertNull(game.getPlayer(1)));
     }
 
-    @Test
     void TheLastPlayerWins() {
         setUp3PlayerMatch();
         selectAutomaticallyGodPowers();
@@ -176,7 +175,7 @@ public class ControllerTest {
                 () -> assertNull(game.getPlayer(2)));
     }
 
-    @Test
+
     void FirstPlayerWins () {
         setUp3PlayerMatch();
         selectAutomaticallyGodPowers();
@@ -311,7 +310,7 @@ public class ControllerTest {
     }
 
     private void selectAutomaticallyGodPowers () {
-        controller.onGodPowerInitialization();
+        controller.onInitialization();
         for (int i = 0; i < game.getPlayers().size(); i++) {
             String firstGodPower = controller.getGodPowersLeft().get(0).getGodName();
             controller.onGodPowerInitialization(i + 1, firstGodPower);

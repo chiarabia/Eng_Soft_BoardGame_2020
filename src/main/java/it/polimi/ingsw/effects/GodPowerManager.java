@@ -30,7 +30,13 @@ public class GodPowerManager {
     private static int opponentsCantWinOnPerimeterPlayer;
 
     /*JSON files' path*/
-    private final static String ROOT = "src/main/java/it/polimi/ingsw/cards/";
+    private static String getRoot(){
+        String root = ClassLoader.getSystemClassLoader().getResource("configurations/Configuration.json").getPath();
+        if (root.substring(0,5).equals("file:")) root = root.substring(5, root.length());
+        if (root.substring(2,3).equals(":")) root = root.substring(3, root.length());
+        //return root.substring(0, root.length()-18) + "cards/";
+        return "src/main/resources/configurations/cards/";
+    }
 
     /**
      * This method randomly extracts different 'numOfPlayers' cards in the form of List <String>,
@@ -42,8 +48,8 @@ public class GodPowerManager {
 
     private static List <String> chooseGodFiles (int numOfPlayers) throws IOException {
         List <String> cards = new ArrayList<>();
-        Stream<Path> paths = Files.walk(Paths.get(ROOT));
-        paths.filter(Files::isRegularFile).forEach(x->{cards.add(x.toString().substring(ROOT.length()));});
+        Stream<Path> paths = Files.walk(Paths.get(getRoot()));
+        paths.filter(Files::isRegularFile).forEach(x->{cards.add(x.toString().substring(getRoot().length()));});
         // the card list contains all 14 strings of JSON file names (eg "ApolloCard.json")
 
         Random rand = new Random();
@@ -61,7 +67,7 @@ public class GodPowerManager {
      */
 
     public static GodPower power (String nameOfFile, int numOfPlayer) throws IOException, ParseException {
-        FileReader fileReader = new FileReader(ROOT + nameOfFile);
+        FileReader fileReader = new FileReader(getRoot()+nameOfFile);
         JSONObject jsonObject = (JSONObject) (new JSONParser()).parse(fileReader);
         //Effects' strings
         String move = (String) jsonObject.get("move");
@@ -170,9 +176,8 @@ public class GodPowerManager {
      */
 
     public static List<GodPower> createGodPowers (int numOfPlayers) throws ParseException, IOException {
-
         opponentsCantWinOnPerimeterPlayer = 0;
-        List <GodPower> godPowerList = new ArrayList();
+        List <GodPower> godPowerList = new ArrayList<>();
         List <String> godFiles = chooseGodFiles(numOfPlayers);
 
         for (int i = 1; i <= numOfPlayers; i++)

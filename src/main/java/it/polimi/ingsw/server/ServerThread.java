@@ -31,7 +31,7 @@ public class ServerThread extends Thread {
         }
     }
     public void run(){
-            for (int i = 0; i < numOfPlayers; i++) sendMessage("You are player " + (i+1), i);
+            for (int i = 0; i < numOfPlayers; i++) sendMessage("PLAYER_" + (i+1), i);
             ServerView serverView = new ServerView(this); // View
             Game game = new Game(numOfPlayers, playersNames); // Model
             Controller controller = new Controller(game, serverView); // Controller

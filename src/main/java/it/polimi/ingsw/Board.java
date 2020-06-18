@@ -66,14 +66,14 @@ public class Board {
     }
 
     /**
-     * This method tells us if a Cell is free
+     * This method tells us if a zone is free
      *
-     * @param x coordinate x of the Cell
-     * @param y coordinate y of the Cell
-     * @return true if the Cell is free, false otherwise
+     * @param x coordinate x of the zone
+     * @param y coordinate y of the zone
+     * @return true if the zone is free, false otherwise
      */
     public boolean isFreeZone(int x, int y) {
-        if (x < 0 || y < 0) return false; //the Cell is outside the limits of the board
+        if (x < 0 || y < 0 || x > 4 || y > 4) return false; //the Cell is outside the limits of the board
 
         //counting the elements present in the stream in the selected Cell
         long count = board.stream()

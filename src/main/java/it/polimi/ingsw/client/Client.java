@@ -150,7 +150,7 @@ public class Client implements ViewObserver {
     }
 
     public void onPlayerIdAssigned(String message){
-        int playerId = (Character.getNumericValue(message.charAt(15))); //creo il playerID
+        int playerId = (Character.getNumericValue(message.charAt(message.length()-1))); //creo il playerID
         board.setMyPlayerId(playerId); //creo il playerID
     }
 

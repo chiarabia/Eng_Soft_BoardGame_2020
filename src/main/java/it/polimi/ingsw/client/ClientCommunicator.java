@@ -103,7 +103,7 @@ public class ClientCommunicator extends Thread {
             else if (((Message) object).getMessage().equals("ERROR_NOT_VALID_NUM_OF_PLAYERS")) {
                 for (int i = 0; i < observerList.size(); i++) observerList.get(i).onRestart(2);
             }
-            else {
+            else if (((Message) object).getMessage().substring(0, 7).equals("PLAYER_")) {
                 for(int i = 0; i<observerList.size(); i++)observerList.get(i).onPlayerIdAssigned(((Message) object).getMessage());
             }
         }
