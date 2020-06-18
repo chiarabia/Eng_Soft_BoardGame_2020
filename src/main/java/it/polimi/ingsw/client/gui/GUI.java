@@ -11,19 +11,17 @@ import it.polimi.ingsw.client.gui.runnable.*;
 
 import it.polimi.ingsw.server.serializable.*;
 import javafx.application.Platform;
-import javafx.fxml.FXMLLoader;
-import javafx.scene.Parent;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
 import javafx.scene.text.Text;
-
+import java.util.ArrayList;
 import java.util.List;
 
 public class GUI implements View {
-    private FXMLLoader boardSceneLoader;
-    private BoardSceneController boardSceneController;
+    private static BoardSceneController boardSceneController;
     private ClientBoard board;
     ChoosingGodSceneRunnable choosingGodSceneRunnable = new ChoosingGodSceneRunnable();
+    BoardSceneRunnable boardSceneRunnable;
 
     public void addObserver(ViewObserver observer){
         List<ViewObserver> observerList = MainStage.getObserverList();
@@ -42,10 +40,11 @@ public class GUI implements View {
     @Override
     public void displayBoardScreen(){
         //displays the BoardScene
-        BoardSceneRunnable boardSceneRunnable = new BoardSceneRunnable();
-        boardSceneLoader = boardSceneRunnable.getLoader();
+        boardSceneRunnable = new BoardSceneRunnable();
+        boardSceneController = boardSceneRunnable.getBoardSceneController();
         Platform.runLater(boardSceneRunnable);
-
+        ArrayList<Object> playerData = MainStage.getPlayerData();
+        playerData.add(board.getMyPlayerId());
         Platform.runLater(()->{
             Text oldText = BoardSceneController.getNotification();
             setTextFormat(oldText);
@@ -76,7 +75,24 @@ public class GUI implements View {
 
     @Override
     public void displayTurn() {
-
+        int currentPlayerID = board.getPlayerTurnId();
+        int myPlayerID = board.getMyPlayerId();
+        if (myPlayerID == currentPlayerID){
+            Platform.runLater(()->{
+                String notification = "It's your turn!";
+                Text oldText = BoardSceneController.getNotification();
+                setTextFormat(oldText);
+                oldText.setText(notification);
+            });
+        }
+        else {
+            Platform.runLater(()->{
+                String notification = "It's" + board.getPlayer(currentPlayerID).getPlayerName() + "turn!";
+                Text oldText = BoardSceneController.getNotification();
+                setTextFormat(oldText);
+                oldText.setText(notification);
+            });
+        }
     }
 
     @Override
@@ -115,7 +131,7 @@ public class GUI implements View {
         Platform.runLater(()->{
             Text oldText = BoardSceneController.getNotification();
             setTextFormat(oldText);
-            oldText.setText(message);
+            oldText.setText(message);;
         });
     }
 
@@ -128,9 +144,9 @@ public class GUI implements View {
     public void displayBoard(SerializableUpdateActions update) {
         List<SerializableUpdateMove> updateMove = update.getUpdateMove();
         List<SerializableUpdateBuild> updateBuild = update.getUpdateBuild();
-        assignController(boardSceneLoader);
 
-        if(updateBuild.isEmpty() == false){
+
+        if(!updateBuild.isEmpty()){
             for (int i = 0; i < updateBuild.size(); i++){
                 Position newPosition = updateBuild.get(0).getNewPosition();
                 boolean dome = updateBuild.get(0).isDome();
@@ -140,7 +156,7 @@ public class GUI implements View {
             }
         }
 
-        if(updateMove.isEmpty() == false){
+        if(!updateMove.isEmpty()){
            for (int i = 0; i < updateMove.size(); i++){
                Position newPosition = updateMove.get(i).getNewPosition();
                Position oldPosition = updateMove.get(i).getStartingPosition();
@@ -159,16 +175,65 @@ public class GUI implements View {
     @Override
     public void displayBoard(SerializableUpdateInitializeWorkerPositions update) {
         List<Position> workerPositions = update.getWorkerPositions();
-        assignController(boardSceneLoader);
+        int playerID = update.getPlayerId();
+
+        boardSceneController = boardSceneRunnable.getBoardSceneController();
         Platform.runLater(()->{
-            for (int i=0; i < workerPositions.size(); i++){
-                boardSceneController.updateWorkerInitialPosition(workerPositions.get(i),update.getPlayerId());}
+            if (playerID != board.getMyPlayerId()) {
+                for (int i = 0; i < workerPositions.size(); i++) {
+                    boardSceneController.updateWorkerInitialPosition(workerPositions.get(i), update.getPlayerId());
+                }
+            }
         });
     }
 
     @Override
     public void askForAction(SerializableRequestAction object) {
+        BoardSceneController.updateActionCode(2);
+        int currentPlayerID = board.getPlayerTurnId();
+        Position firstWorkerPosition = getWorkerPostions(currentPlayerID,1);
+        Position secondWorkerPosition = getWorkerPostions(currentPlayerID,2);
 
+        Platform.runLater(()->{
+            boardSceneController.setOldFirstWorkerPosition(firstWorkerPosition);
+            boardSceneController.setOldSecondWorkerPosition(secondWorkerPosition);
+            boardSceneController.setVisibleDeclineButton(false);
+            boardSceneController.setVisibleDomeButton(false);
+        });
+
+        //move
+        if (!object.areMovesEmpty()) {
+            Platform.runLater(() -> {
+                boardSceneController.displayNotificationsDuringTurn("You can move");
+                boardSceneController.setMovePossible(true);
+                boardSceneController.setWorker1MovesPosition(object.getWorker1Moves());
+                boardSceneController.setWorker2MovesPosition(object.getWorker2Moves());
+            });
+        }
+        //build
+        if(!object.areBuildsEmpty()){
+            Platform.runLater(() -> {
+                boardSceneController.displayNotificationsDuringTurn("You can build");
+                boardSceneController.setBuildPossible(true);
+                boardSceneController.setWorker1BuildPosition(object.getWorker2Builds());
+                boardSceneController.setWorker2BuildPosition(object.getWorker2Builds());
+            });
+        }
+        //build and dome building allowed
+        if(!object.areBuildsEmpty() &&  object.isCanForceDome()){
+            Platform.runLater(() -> {
+                boardSceneController.setDomeAtAnyLevelPossible(true);
+                boardSceneController.setVisibleDomeButton(true);
+            });
+        }
+        //can decline allowed
+        if(object.canDecline()){
+            Platform.runLater(() -> {
+                boardSceneController.displayNotificationsDuringTurn("You can decline the action, just press can decline");
+                boardSceneController.setDeclinePossible(true);
+                boardSceneController.setVisibleDomeButton(true);
+            });
+        }
     }
 
     @Override
@@ -215,13 +280,12 @@ public class GUI implements View {
         notification.setFont(Font.font("Verdana", FontWeight.BOLD, 15));
     }
 
-    public void assignController(FXMLLoader loader){
-        try {
-            FXMLLoader boardLoader = loader;
-            Parent root = (Parent) loader.load();
-            boardSceneController = loader.getController();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+    public Position getWorkerPostions(int playerID, int workerID){
+        int x = board.getPlayer(playerID).getWorker(workerID).getX();
+        int y = board.getPlayer(playerID).getWorker(workerID).getY();
+        Position workerPosition = new Position(x,y,0);
+        return workerPosition;
     }
-}
+
+    }
+
