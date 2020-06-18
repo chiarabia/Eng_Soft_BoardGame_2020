@@ -29,6 +29,7 @@ public class GUI implements View {
 
     @Override
     public void displayStartup() {
+    	//starts the MainStage javafx application
         new Thread(()-> {
             MainStage.launch(MainStage.class);
         }).start();
@@ -41,11 +42,16 @@ public class GUI implements View {
     public void displayBoardScreen(){
         //displays the BoardScene
         boardSceneRunnable = new BoardSceneRunnable();
+        //gets the boardSceneController
         boardSceneController = boardSceneRunnable.getBoardSceneController();
+        //displays the boardScene
         Platform.runLater(boardSceneRunnable);
+        //adds the PlayerId of the player to the playerData cache
         ArrayList<Object> playerData = MainStage.getPlayerData();
         playerData.add(board.getMyPlayerId());
+
         Platform.runLater(()->{
+        	//displays a welcome message
             Text oldText = BoardSceneController.getNotification();
             setTextFormat(oldText);
             oldText.setText("Welcome!");
@@ -98,6 +104,7 @@ public class GUI implements View {
     @Override
     public void displayWinner(int playerId) {
         Platform.runLater(()->{
+        	//displays a winner notification of the winner
             String notification = board.getPlayer(playerId).getPlayerName() + " won!!";
             Text oldText = BoardSceneController.getNotification();
             setTextFormat(oldText);
@@ -108,6 +115,7 @@ public class GUI implements View {
     @Override
     public void displayLoser(int playerId) {
         Platform.runLater(()->{
+        	//displays a lose notification of the player that has lost
             String notification = board.getPlayer(playerId).getPlayerName() + " lost";
             Text oldText = BoardSceneController.getNotification();
             setTextFormat(oldText);
@@ -119,6 +127,7 @@ public class GUI implements View {
     @Override
     public void displayDisconnection(int playerId) {
         Platform.runLater(()->{
+        	//displays a disconnection message
             String notification = board.getPlayer(playerId).getPlayerName() + " has disconnected";
             Text oldText = BoardSceneController.getNotification();
             setTextFormat(oldText);
@@ -129,6 +138,7 @@ public class GUI implements View {
     @Override
     public void displayError(String message) {
         Platform.runLater(()->{
+        	//displays an error message
             Text oldText = BoardSceneController.getNotification();
             setTextFormat(oldText);
             oldText.setText(message);;
@@ -145,7 +155,7 @@ public class GUI implements View {
         List<SerializableUpdateMove> updateMove = update.getUpdateMove();
         List<SerializableUpdateBuild> updateBuild = update.getUpdateBuild();
 
-
+		//if there is a building to update
         if(!updateBuild.isEmpty()){
             for (int i = 0; i < updateBuild.size(); i++){
                 Position newPosition = updateBuild.get(0).getNewPosition();
@@ -156,6 +166,7 @@ public class GUI implements View {
             }
         }
 
+        //if there is a worker position to update
         if(!updateMove.isEmpty()){
            for (int i = 0; i < updateMove.size(); i++){
                Position newPosition = updateMove.get(i).getNewPosition();
@@ -179,6 +190,7 @@ public class GUI implements View {
 
         boardSceneController = boardSceneRunnable.getBoardSceneController();
         Platform.runLater(()->{
+        	//displays the worker initial position on only enemy players
             if (playerID != board.getMyPlayerId()) {
                 for (int i = 0; i < workerPositions.size(); i++) {
                     boardSceneController.updateWorkerInitialPosition(workerPositions.get(i), update.getPlayerId());
@@ -194,6 +206,7 @@ public class GUI implements View {
         Position firstWorkerPosition = getWorkerPostions(currentPlayerID,1);
         Position secondWorkerPosition = getWorkerPostions(currentPlayerID,2);
 
+        //updates all the Sets in the BoardSceneController and the Workers positions
         Platform.runLater(()->{
             boardSceneController.setOldFirstWorkerPosition(firstWorkerPosition);
             boardSceneController.setOldSecondWorkerPosition(secondWorkerPosition);
@@ -205,25 +218,28 @@ public class GUI implements View {
             boardSceneController.setWorker2BuildPosition(object.getWorker2Builds());
         });
 
-        //move
+        //move possible
         if (!object.areMovesEmpty()) {
             Platform.runLater(() -> {
                 boardSceneController.displayNotificationsDuringTurn("You can move \n");
                 boardSceneController.setMovePossible(true);
             });
         }
+        //move not possible
         if(object.areMovesEmpty()) {
             Platform.runLater(() -> {
                 boardSceneController.setMovePossible(false);
             });
         }
-        //build
+
+        //build possible
         if(!object.areBuildsEmpty()){
             Platform.runLater(() -> {
                 boardSceneController.displayNotificationsDuringTurn("You can build \n");
                 boardSceneController.setBuildPossible(true);
             });
         }
+        //build not possible
         if(object.areBuildsEmpty()){
             Platform.runLater(() -> {
                 boardSceneController.setBuildPossible(false);
@@ -236,7 +252,7 @@ public class GUI implements View {
                 boardSceneController.setVisibleDomeButton(true);
             });
         }
-
+		//dome building everywhere not possible
         if(!object.isCanForceDome()) {
             Platform.runLater(() -> {
                 boardSceneController.setDomeAtAnyLevelPossible(false);
@@ -250,6 +266,7 @@ public class GUI implements View {
                 boardSceneController.setVisibleDeclineButton(true);
             });
         }
+        //can decline not allowed
         if(!object.canDecline()){
             Platform.runLater(() -> {
                 boardSceneController.setDeclinePossible(false);
@@ -296,7 +313,7 @@ public class GUI implements View {
 
     }
 
-
+    //sets the
     public void setTextFormat(Text notification){
         notification.setFont(Font.font("Verdana", FontWeight.BOLD, 15));
     }
