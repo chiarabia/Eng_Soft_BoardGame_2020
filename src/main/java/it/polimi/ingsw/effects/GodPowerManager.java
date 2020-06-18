@@ -1,5 +1,6 @@
 package it.polimi.ingsw.effects;
 
+import it.polimi.ingsw.JSONManager;
 import it.polimi.ingsw.effects.build.*;
 import it.polimi.ingsw.effects.consolidateBuild.StandardConsolidateBuild;
 import it.polimi.ingsw.effects.consolidateBuild.UnderWorker;
@@ -31,10 +32,6 @@ public class GodPowerManager {
 
     /*JSON files' path*/
     private static String getRoot(){
-        String root = ClassLoader.getSystemClassLoader().getResource("configurations/Configuration.json").getPath();
-        if (root.substring(0,5).equals("file:")) root = root.substring(5, root.length());
-        if (root.substring(2,3).equals(":")) root = root.substring(3, root.length());
-        //return root.substring(0, root.length()-18) + "cards/";
         return "src/main/resources/configurations/cards/";
     }
 
@@ -67,8 +64,7 @@ public class GodPowerManager {
      */
 
     public static GodPower power (String nameOfFile, int numOfPlayer) throws IOException, ParseException {
-        FileReader fileReader = new FileReader(getRoot()+nameOfFile);
-        JSONObject jsonObject = (JSONObject) (new JSONParser()).parse(fileReader);
+        JSONObject jsonObject = JSONManager.readMyJSONAsText("configurations/cards/" + nameOfFile);
         //Effects' strings
         String move = (String) jsonObject.get("move");
         String build = (String) jsonObject.get("build");
