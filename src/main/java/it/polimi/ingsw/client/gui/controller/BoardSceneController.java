@@ -1,7 +1,6 @@
 package it.polimi.ingsw.client.gui.controller;
 
 import it.polimi.ingsw.Position;
-import it.polimi.ingsw.client.ClientBoard;
 import it.polimi.ingsw.client.GodCard;
 import it.polimi.ingsw.client.ViewObserver;
 import it.polimi.ingsw.client.gui.MainStage;
@@ -60,9 +59,12 @@ public class BoardSceneController implements Initializable {
     boolean domeButtonActive = false;
     boolean declineButtonActive = false;
 
-    boolean firstTime = true;
+    boolean firstTimeSelectedCell = true;
+    boolean firstTimeWorkerOne = true;
+    boolean firstTimeWorkerTwo = true;
     StackPane previousCell;
-    boolean isActionPossible = false;
+    boolean isMoveActionPossible = false;
+    boolean isBuildActionPossible = false;
 
     private boolean isWorkerSelected = false;
 
@@ -115,16 +117,23 @@ public class BoardSceneController implements Initializable {
         });
 
         buildButton.setOnAction(actionEvent -> {
+            List<ViewObserver> observerList = MainStage.getObserverList();
+            boolean isDome = false;
+            if(newBuildingPostion.getZ()==4) isDome = true;
+            for (int i = 0; i < observerList.size(); i++) observerList.get(i).onCompletedBuild(newBuildingPostion, workerSelected, isDome);
         });
 
         domeButton.setOnAction(actionEvent -> {
+            List<ViewObserver> observerList = MainStage.getObserverList();
+            for (int i = 0; i < observerList.size(); i++) observerList.get(i).onCompletedBuild(newBuildingPostion, workerSelected, true);
         });
 
         declineButton.setOnAction(actionEvent -> {
+            List<ViewObserver> observerList = MainStage.getObserverList();
+            for (int i = 0; i < observerList.size(); i++) observerList.get(i).onCompletedDecline();
         });
     }
 
-    public static List<Integer> getActionsCodes() {return actionsCodes;}
     public void setMovePossible (boolean isPossible) {isMovePossible = isPossible;}
     public void setBuildPossible (boolean isPossible) {isBuildPossible = isPossible;}
     public void setDomeAtAnyLevelPossible (boolean isPossible) {isDomeAtAnyLevelPossible = isPossible;}
@@ -200,30 +209,54 @@ public class BoardSceneController implements Initializable {
             StackPane secondWorkerCell = (StackPane)getNodeFromPosition(gridPane,oldSecondWorkerPosition);
 
             StackPane cell = (StackPane) getNodeFromGridPane(gridPane, column, row);
-            if (firstTime = false) addSelectedImageToCell(previousCell,2,selectedImage);
             if(cell == firstWorkerCell || cell == secondWorkerCell){
                 isWorkerSelected = true;
                 if(cell == firstWorkerCell) workerSelected=1;
                 if(cell == secondWorkerCell) workerSelected=2;
             }
-            if(isWorkerSelected && isMovePossible){
+            //if (firstTimeSelectedCell = false) addSelectedImageToCell(previousCell,2,selectedImage);
+            //addSelectedImageToCell(cell,1,selectedImage);
 
-                addSelectedImageToCell(cell,1,selectedImage);
+            if(isWorkerSelected && isMovePossible){
                 if(workerSelected == 1){
-                    displayNotificationsDuringTurn("You choose the" + workerSelected + " worker");
                     convertPositionListToStackPaneList(worker1MovesPosition,1,1);
-                    isActionPossible = isCellActionPossible(cell,worker1Moves);
-                    addZForWorkerPosition(column,row,worker1MovesPosition);
+                    if(firstTimeWorkerOne) displayNotificationsDuringTurn("You choose the " + workerSelected + " worker \n");
+                    isMoveActionPossible = isCellActionPossible(cell,worker1Moves);
+                    newWorkerPosition = addZToPosition(column,row,worker1MovesPosition);
+                    firstTimeWorkerOne = false;
+                    if(!firstTimeWorkerTwo) firstTimeWorkerTwo = true;
                 }
                 if(workerSelected == 2){
-                    displayNotificationsDuringTurn("You choose the" + workerSelected + " worker");
                     convertPositionListToStackPaneList(worker2MovesPosition,2,1);
-                    isActionPossible = isCellActionPossible(cell,worker2Moves);
-                    addZForWorkerPosition(column,row,worker2MovesPosition);
+                    if(firstTimeWorkerTwo) displayNotificationsDuringTurn("You choose the " + workerSelected + " worker \n");
+                    isMoveActionPossible = isCellActionPossible(cell,worker2Moves);
+                    newWorkerPosition = addZToPosition(column,row,worker2MovesPosition);
+                    firstTimeWorkerTwo = false;
+                    if(!firstTimeWorkerOne) firstTimeWorkerOne = true;
                 }
-                moveButton.setDisable(!isActionPossible);
+                moveButton.setDisable(!isMoveActionPossible);
                 previousCell = cell;
-                firstTime = false;
+                //firstTimeSelectedCell = false;
+            }
+
+            if(!isMovePossible)moveButton.setDisable(true);
+
+            if(isWorkerSelected && isBuildPossible){
+               if(workerSelected == 1){
+                   convertPositionListToStackPaneList(worker1BuildsPosition,1,2);
+                   isBuildActionPossible = isCellActionPossible(cell,worker1Builds);
+                   newBuildingPostion = addZToPosition(column,row,worker1BuildsPosition);
+                   if(worker1BuildsPosition.isEmpty()) displayNotificationsDuringTurn("The worker you choose cannot build \n");
+               }
+               if(workerSelected ==2){
+                   convertPositionListToStackPaneList(worker2BuildsPosition,2,2);
+                   isBuildActionPossible = isCellActionPossible(cell,worker2Builds);
+                   newBuildingPostion = addZToPosition(column,row,worker2BuildsPosition);
+                   if(worker2BuildsPosition.isEmpty()) displayNotificationsDuringTurn("The worker you choose cannot build \n");
+               }
+               buildButton.setDisable(!isBuildActionPossible);
+               previousCell = cell;
+               //firstTimeSelectedCell = false;
             }
         }
 
@@ -293,7 +326,7 @@ public class BoardSceneController implements Initializable {
     public void addBuildingImage(StackPane cell, String level){
         Image building = new Image(level);
         BackgroundSize buildingSize = new BackgroundSize(100,100, false,false, true, true);
-        BackgroundImage buildingBackground= new BackgroundImage(building, BackgroundRepeat.NO_REPEAT, BackgroundRepeat.NO_REPEAT, BackgroundPosition.CENTER, buildingSize );
+        BackgroundImage buildingBackground = new BackgroundImage(building, BackgroundRepeat.NO_REPEAT, BackgroundRepeat.NO_REPEAT, BackgroundPosition.CENTER, buildingSize );
         cell.setBackground(new Background(buildingBackground));
     }
 
@@ -319,14 +352,21 @@ public class BoardSceneController implements Initializable {
         actionsCodes.add(code);
     }
 
+    public void updateStackPaneLists(Set<Position> worker1Move, Set<Position> worker2Move, Set<Position> worker1Build,Set<Position> worker2Build){
+        convertPositionListToStackPaneList(worker1Move,1,1);
+        convertPositionListToStackPaneList(worker2Move,2,1);
+        convertPositionListToStackPaneList(worker1Build,1,2);
+        convertPositionListToStackPaneList(worker2Build,2,2);
+    }
+
     public void convertPositionListToStackPaneList(Set<Position> set, int workerID, int typeOfAction ){
         List<Position> list = set.stream().collect(Collectors.toCollection(ArrayList::new));
         for(int i=0; i<list.size();i++){
             StackPane convertedStackPane = (StackPane) getNodeFromPosition(gridPane,list.get(i));
-            if (workerID == 1 && typeOfAction ==1)
+            if(workerID == 1 && typeOfAction ==1)
                 worker1Moves.add(convertedStackPane);
             if(workerID == 2 && typeOfAction == 1)
-                worker1Moves.add(convertedStackPane);
+                worker2Moves.add(convertedStackPane);
             if(workerID == 1 && typeOfAction == 2)
                 worker1Builds.add(convertedStackPane);
             if(workerID == 2 && typeOfAction == 2)
@@ -340,13 +380,15 @@ public class BoardSceneController implements Initializable {
         return isStackPaneInList;
     }
 
-    public void addZForWorkerPosition(int x, int y, Set<Position> set){
+    public Position addZToPosition(int x, int y, Set<Position> set){
         List<Position> list = set.stream().collect(Collectors.toCollection(ArrayList::new));
+        Position newPosition = new Position(0,0,0);
         for(int i=0; i<list.size();i++) {
             Position listPosition = list.get(i);
             if(x == listPosition.getX() && y == listPosition.getY())
-                newWorkerPosition = new Position (x,y,listPosition.getZ());
+                newPosition = new Position (x,y,listPosition.getZ());
         }
+        return newPosition;
     }
 
     public void addSelectedImageToCell(StackPane cell, int code, ImageView selectedImage){

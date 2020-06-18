@@ -199,24 +199,34 @@ public class GUI implements View {
             boardSceneController.setOldSecondWorkerPosition(secondWorkerPosition);
             boardSceneController.setVisibleDeclineButton(false);
             boardSceneController.setVisibleDomeButton(false);
+            boardSceneController.setWorker1MovesPosition(object.getWorker1Moves());
+            boardSceneController.setWorker2MovesPosition(object.getWorker2Moves());
+            boardSceneController.setWorker1BuildPosition(object.getWorker1Builds());
+            boardSceneController.setWorker2BuildPosition(object.getWorker2Builds());
         });
 
         //move
         if (!object.areMovesEmpty()) {
             Platform.runLater(() -> {
-                boardSceneController.displayNotificationsDuringTurn("You can move");
+                boardSceneController.displayNotificationsDuringTurn("You can move \n");
                 boardSceneController.setMovePossible(true);
-                boardSceneController.setWorker1MovesPosition(object.getWorker1Moves());
-                boardSceneController.setWorker2MovesPosition(object.getWorker2Moves());
+            });
+        }
+        if(object.areMovesEmpty()) {
+            Platform.runLater(() -> {
+                boardSceneController.setMovePossible(false);
             });
         }
         //build
         if(!object.areBuildsEmpty()){
             Platform.runLater(() -> {
-                boardSceneController.displayNotificationsDuringTurn("You can build");
+                boardSceneController.displayNotificationsDuringTurn("You can build \n");
                 boardSceneController.setBuildPossible(true);
-                boardSceneController.setWorker1BuildPosition(object.getWorker2Builds());
-                boardSceneController.setWorker2BuildPosition(object.getWorker2Builds());
+            });
+        }
+        if(object.areBuildsEmpty()){
+            Platform.runLater(() -> {
+                boardSceneController.setBuildPossible(false);
             });
         }
         //build and dome building allowed
@@ -226,12 +236,23 @@ public class GUI implements View {
                 boardSceneController.setVisibleDomeButton(true);
             });
         }
+
+        if(!object.isCanForceDome()) {
+            Platform.runLater(() -> {
+                boardSceneController.setDomeAtAnyLevelPossible(false);
+            });
+        }
         //can decline allowed
         if(object.canDecline()){
             Platform.runLater(() -> {
-                boardSceneController.displayNotificationsDuringTurn("You can decline the action, just press can decline");
+                boardSceneController.displayNotificationsDuringTurn("You can decline the action, just press can decline \n");
                 boardSceneController.setDeclinePossible(true);
-                boardSceneController.setVisibleDomeButton(true);
+                boardSceneController.setVisibleDeclineButton(true);
+            });
+        }
+        if(!object.canDecline()){
+            Platform.runLater(() -> {
+                boardSceneController.setDeclinePossible(false);
             });
         }
     }
