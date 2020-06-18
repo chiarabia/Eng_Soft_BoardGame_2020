@@ -58,6 +58,7 @@ public class Terminal implements View {
     }
 
     public void displayLoser (int playerId) {
+        displayBoard();
         setColor(playerId);
         if (playerId == board.getMyPlayerId()) System.out.println("You" + Color.WHITE.set() + " have lost!");
         else System.out.println(board.getPlayer(playerId).getPlayerName() + Color.WHITE.set() +  " has lost");
