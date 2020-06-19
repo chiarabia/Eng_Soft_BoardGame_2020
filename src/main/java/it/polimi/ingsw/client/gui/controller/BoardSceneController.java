@@ -6,6 +6,8 @@ import it.polimi.ingsw.client.ViewObserver;
 import it.polimi.ingsw.client.gui.MainStage;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.geometry.HPos;
+import javafx.geometry.Pos;
 import javafx.scene.Node;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
@@ -28,6 +30,8 @@ import java.util.stream.Collectors;
 public class BoardSceneController implements Initializable {
 
 
+    @FXML
+    private BorderPane board;
     @FXML
     public GridPane gridPane;
     @FXML
@@ -117,6 +121,7 @@ public class BoardSceneController implements Initializable {
             //sends the position and worker id of the worker that has been moved
             List<ViewObserver> observerList = MainStage.getObserverList();
             for (int i = 0; i < observerList.size(); i++) observerList.get(i).onCompletedMove(newWorkerPosition, workerSelected);
+            //moveButton.setDisable(true);
         });
 
         //handles the click on the Build Button
@@ -126,6 +131,7 @@ public class BoardSceneController implements Initializable {
             boolean isDome = false;
             if(newBuildingPostion.getZ()==4) isDome = true;
             for (int i = 0; i < observerList.size(); i++) observerList.get(i).onCompletedBuild(newBuildingPostion, workerSelected, isDome);
+            //buildButton.setDisable(true);
         });
 
         //handles the click on the Dome Button
@@ -133,6 +139,7 @@ public class BoardSceneController implements Initializable {
             //sends the position of the new dome building and the worker id
             List<ViewObserver> observerList = MainStage.getObserverList();
             for (int i = 0; i < observerList.size(); i++) observerList.get(i).onCompletedBuild(newBuildingPostion, workerSelected, true);
+            //domeButton.setDisable(true);
         });
 
         //handles the click on the Decline Button
@@ -140,6 +147,10 @@ public class BoardSceneController implements Initializable {
             //tells the client that the player has declined the possibility of new actions
             List<ViewObserver> observerList = MainStage.getObserverList();
             for (int i = 0; i < observerList.size(); i++) observerList.get(i).onCompletedDecline();
+            moveButton.setDisable(true);
+            buildButton.setDisable(true);
+            domeButton.setDisable(true);
+            declineButton.setDisable(true);
         });
     }
 
@@ -153,6 +164,7 @@ public class BoardSceneController implements Initializable {
         //set God Description
         String text = card.getGodDescription();
         Text godDescrp = new Text(text);
+        setTextFormat(godDescrp,10);
         godDescriptionTextFlow.getChildren().add(godDescrp);
         //set God Card
         String godCode = card.getGodImage();
@@ -251,7 +263,7 @@ public class BoardSceneController implements Initializable {
                 moveButton.setDisable(!isMoveActionPossible);
                 //saves the last cell that the player clicked
                 previousCell = cell;
-                //firstTimeSelectedCell = false;
+
             }
 
             //if a movement is no longer possible, the move button is disabled
@@ -271,7 +283,6 @@ public class BoardSceneController implements Initializable {
                    newBuildingPostion = addZToPosition(column,row,worker2BuildsPosition);
                    //if the worker selected can't build we display a message
                    if(worker2BuildsPosition.isEmpty()) displayNotificationsDuringTurn("The worker you choose cannot build \n");
-
                }
                 //if a build action is possible in the cell that has been clicked by the player the buildButton is avalaible
                buildButton.setDisable(!isBuildActionPossible);
@@ -279,7 +290,7 @@ public class BoardSceneController implements Initializable {
                 //build a dome wherever, the domeButton is avalaible
                domeButton.setDisable(!isBuildActionPossible && !isDomeAtAnyLevelPossible);
                previousCell = cell;
-               //firstTimeSelectedCell = false;
+
             }
             if(isDeclinePossible)declineButton.setDisable(false);
             //if a build action is no longer possible, the build button is disabled
@@ -325,7 +336,6 @@ public class BoardSceneController implements Initializable {
         if (dome) level = "dome.png";
         StackPane newBuildingCell = (StackPane)getNodeFromPosition(gridPane,newPosition);
         int z = newPosition.getZ();
-        System.out.println(z);
         if (!dome) level = "level" + z + ".png";
         addBuildingImage(newBuildingCell,level);
     }
@@ -479,25 +489,46 @@ public class BoardSceneController implements Initializable {
      */
     public void displayNotificationsDuringTurn(String notification){
         Text notificationText = new Text(notification);
-        setTextFormat(notificationText);
+        setTextFormat(notificationText,12);
         notificationsTextFlow.getChildren().add(notificationText);
+        if(notificationsTextFlow.getChildren().size() > 5) notificationsTextFlow.getChildren().clear();
     }
 
     public void disableDeclineButton(boolean isDeclinePossible){
         declineButton.setDisable(isDeclinePossible);
     }
 
-    public void updateStackPaneLists(Set<Position> worker1Move, Set<Position> worker2Move, Set<Position> worker1Build,Set<Position> worker2Build){
-        convertPositionListToStackPaneList(worker1Move,1,1);
-        convertPositionListToStackPaneList(worker2Move,2,1);
-        convertPositionListToStackPaneList(worker1Build,1,2);
-        convertPositionListToStackPaneList(worker2Build,2,2);
+    public void displayEndGameImage(boolean isVictory){
+        gridPane.getChildren().clear();
+        Image victoryImage = new Image("/components/VICTORY.PNG");
+        Image loseImage = new Image("/components/LOSE.png");
+        if (isVictory) addImageToBoard(victoryImage);
+        else addImageToBoard(loseImage);
+        moveButton.setVisible(false);
+        buildButton.setVisible(false);
+        domeButton.setVisible(false);
+        declineButton.setVisible(false);
     }
+
+    public void addImageToBoard(Image image){
+        StackPane imageContainer = new StackPane();
+        imageContainer.setMinHeight(500);
+        imageContainer.setMinWidth(500);
+        BackgroundSize buildingSize = new BackgroundSize(500,500, false,false, true, true);
+        imageContainer.setBackground(new Background(new BackgroundImage(new Image("/Board/SantoriniBoardOnly.png"), BackgroundRepeat.NO_REPEAT, BackgroundRepeat.NO_REPEAT, BackgroundPosition.CENTER, buildingSize )));
+        board.setCenter(imageContainer);
+        ImageView endGame = new ImageView(image);
+        endGame.setFitWidth(500);
+        endGame.setFitHeight(500);
+        imageContainer.getChildren().add(endGame);
+    }
+
 
     public void setMovePossible (boolean isPossible) {isMovePossible = isPossible;}
     public void setBuildPossible (boolean isPossible) {isBuildPossible = isPossible;}
     public void setDomeAtAnyLevelPossible (boolean isPossible) {isDomeAtAnyLevelPossible = isPossible;}
     public void setDeclinePossible (boolean isPossible) {isDeclinePossible = isPossible;}
+    public void setWorkerSelected(boolean isWorker){isWorkerSelected = isWorker;}
     public void setOldFirstWorkerPosition(Position firstWorker){oldFirstWorkerPosition = firstWorker;}
     public void setOldSecondWorkerPosition(Position secondWorker){oldSecondWorkerPosition = secondWorker;}
     public void setWorker1MovesPosition(Set<Position> firstWorkerMoves){worker1MovesPosition = firstWorkerMoves;}
@@ -506,7 +537,7 @@ public class BoardSceneController implements Initializable {
     public void setWorker2BuildPosition(Set<Position> secondWorkerBuilds){worker2BuildsPosition = secondWorkerBuilds;}
     public static Text getNotification() {return notification;}
 
-    public static void setTextFormat(Text notification){notification.setFont(Font.font("Verdana", FontWeight.BOLD, 10)); }
+    public static void setTextFormat(Text notification, int font){notification.setFont(Font.font("Verdana", FontWeight.BOLD, font)); }
     public void setVisibleDomeButton(boolean visibility){ domeButton.setVisible(visibility); }
     public void setVisibleDeclineButton(boolean visibility){
         declineButton.setVisible(visibility);
