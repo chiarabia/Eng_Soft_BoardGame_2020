@@ -211,8 +211,6 @@ public class GUI implements View {
         Platform.runLater(()->{
             boardSceneController.setOldFirstWorkerPosition(firstWorkerPosition);
             boardSceneController.setOldSecondWorkerPosition(secondWorkerPosition);
-            boardSceneController.setVisibleDeclineButton(false);
-            boardSceneController.setVisibleDomeButton(false);
             boardSceneController.setWorker1MovesPosition(object.getWorker1Moves());
             boardSceneController.setWorker2MovesPosition(object.getWorker2Moves());
             boardSceneController.setWorker1BuildPosition(object.getWorker1Builds());
@@ -265,6 +263,7 @@ public class GUI implements View {
                 boardSceneController.displayNotificationsDuringTurn("You can decline the action, just press can decline \n");
                 boardSceneController.setDeclinePossible(true);
                 boardSceneController.setVisibleDeclineButton(true);
+                boardSceneController.disableDeclineButton(false);
             });
         }
         //can decline not allowed
