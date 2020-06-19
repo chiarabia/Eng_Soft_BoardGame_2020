@@ -33,8 +33,9 @@ public class RestoreOriginalGodPowerTest {
     void setUp() throws IOException, ParseException {
         board = new Board();
         currentTurn = new Turn(player1);
-        godList.add(GodPowerManager.power("AthenaCard.json", 1));
-        godList.add(GodPowerManager.power("DemeterCard.json", 2));
+
+        godList.add(GodPowerManager.power(JSONManager.readMyJSONAsText("configurations/cards/GodCard3.json"), 1));
+        godList.add(GodPowerManager.power(JSONManager.readMyJSONAsText("configurations/cards/GodCard6.json"), 2));
     }
 
     @Test

@@ -1,10 +1,7 @@
 package it.polimi.ingsw.client.gui;
 
 import it.polimi.ingsw.Position;
-import it.polimi.ingsw.client.ClientBoard;
-import it.polimi.ingsw.client.GodCard;
-import it.polimi.ingsw.client.View;
-import it.polimi.ingsw.client.ViewObserver;
+import it.polimi.ingsw.client.*;
 
 import it.polimi.ingsw.client.gui.controller.BoardSceneController;
 import it.polimi.ingsw.client.gui.runnable.*;
@@ -18,6 +15,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class GUI implements View {
+    private Textfields textfields;
     private static BoardSceneController boardSceneController;
     private ClientBoard board;
     ChoosingGodSceneRunnable choosingGodSceneRunnable = new ChoosingGodSceneRunnable();
@@ -80,10 +78,9 @@ public class GUI implements View {
 
 
     @Override
-    public void displayTurn() {
-        int currentPlayerID = board.getPlayerTurnId();
-        int myPlayerID = board.getMyPlayerId();
-        if (myPlayerID == currentPlayerID){
+    public void displayTurn(int currentPlayerId) {
+        int myPlayerId = board.getMyPlayerId();
+        if (myPlayerId == currentPlayerId){
             Platform.runLater(()->{
                 String notification = "It's your turn!";
                 Text oldText = BoardSceneController.getNotification();
@@ -93,7 +90,7 @@ public class GUI implements View {
         }
         else {
             Platform.runLater(()->{
-                String notification = "It's" + board.getPlayer(currentPlayerID).getPlayerName() + "turn!";
+                String notification = "It's" + board.getPlayer(currentPlayerId).getPlayerName() + "turn!";
                 Text oldText = BoardSceneController.getNotification();
                 setTextFormat(oldText);
                 oldText.setText(notification);
@@ -136,12 +133,19 @@ public class GUI implements View {
     }
 
     @Override
-    public void displayError(String message) {
+    public void displayError(int errorId) {
+        String message = null;
+        switch (errorId){
+            case 0: message = "Oops... something went wrong"; break;
+            case 1: message = "This name is not available"; break;
+            case 2: message = "This number of players is not correct"; break;
+        }
+        String finalMessage = message;
         Platform.runLater(()->{
         	//displays an error message
             Text oldText = BoardSceneController.getNotification();
             setTextFormat(oldText);
-            oldText.setText(message);;
+            oldText.setText(finalMessage);;
         });
     }
 
@@ -179,9 +183,6 @@ public class GUI implements View {
         }
     }
 
-    @Override
-    public void displayBoard(SerializableUpdateLoser update) {
-    }
 
     @Override
     public void displayBoard(SerializableUpdateInitializeWorkerPositions update) {
@@ -321,9 +322,9 @@ public class GUI implements View {
     public Position getWorkerPostions(int playerID, int workerID){
         int x = board.getPlayer(playerID).getWorker(workerID).getX();
         int y = board.getPlayer(playerID).getWorker(workerID).getY();
-        Position workerPosition = new Position(x,y,0);
-        return workerPosition;
+        return new Position(x,y,0);
     }
 
-    }
+    public GUI(Textfields textfields){ this.textfields = textfields; }
+}
 

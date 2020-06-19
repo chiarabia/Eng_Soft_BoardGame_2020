@@ -12,18 +12,18 @@ import java.io.InputStreamReader;
  public class JSONManager {
 
      public static JSONObject readMyJSONAsText(String fname) throws ParseException {
-        InputStream is = null;
-        is = App.class.getClassLoader().getResourceAsStream(fname);
-        BufferedReader buf = new BufferedReader(new InputStreamReader(is));
+         InputStream is = App.class.getClassLoader().getResourceAsStream(fname);
+         BufferedReader buf;
+         try {
+             buf = new BufferedReader(new InputStreamReader(is));
+         } catch (NullPointerException e){return null;}
 
         String line = null;
         try {
             line = buf.readLine();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        StringBuilder sb = new StringBuilder();
+        } catch (IOException e) {e.printStackTrace();}
 
+        StringBuilder sb = new StringBuilder();
         while (line != null) {
             sb.append(line).append("\n");
             try {
@@ -34,10 +34,6 @@ import java.io.InputStreamReader;
         }
 
         String fileAsString = sb.toString();
-        System.out.println("Contents : " + fileAsString);
-
-        JSONObject json = (JSONObject) new JSONParser().parse(fileAsString);
-
-        return json;
+        return (JSONObject) new JSONParser().parse(fileAsString);
     }
 }

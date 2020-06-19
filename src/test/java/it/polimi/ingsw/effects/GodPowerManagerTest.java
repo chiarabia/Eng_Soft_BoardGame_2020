@@ -1,5 +1,6 @@
 package it.polimi.ingsw.effects;
 
+import it.polimi.ingsw.JSONManager;
 import it.polimi.ingsw.effects.GodPower;
 import it.polimi.ingsw.effects.GodPowerManager;
 import it.polimi.ingsw.effects.build.*;
@@ -59,8 +60,7 @@ public class GodPowerManagerTest {
 
     @Test
     void ApolloShouldBeCorrectlyCreated () throws ParseException, IOException{
-        fileName = "ApolloCard.json";
-        godPowerLoadByCard = GodPowerManager.power(fileName, 1);
+        godPowerLoadByCard = GodPowerManager.power(JSONManager.readMyJSONAsText("configurations/cards/GodCard1.json"), 1);
         godPowerCorrect.setMove(new SwapMove(1));
         godPowerCorrect.setConsolidateMove(new SwapWorker());
 
@@ -76,8 +76,7 @@ public class GodPowerManagerTest {
 
     @Test
     void ArtemisShouldBeCorrectlyCreated () throws ParseException, IOException{
-        fileName = "ArtemisCard.json";
-        godPowerLoadByCard = GodPowerManager.power(fileName, 1);
+        godPowerLoadByCard = GodPowerManager.power(JSONManager.readMyJSONAsText("configurations/cards/GodCard2.json"), 1);
         godPowerCorrect.setMove(new MoveNotOnInitialPosition(2));
 
         assertAll("Athena", () -> assertEquals(godPowerLoadByCard.getMove().getClass(), godPowerCorrect.getMove().getClass()),
@@ -92,8 +91,7 @@ public class GodPowerManagerTest {
 
     @Test
     void AthenaShouldBeCorrectlyCreated () throws ParseException, IOException{
-        fileName = "AthenaCard.json";
-        godPowerLoadByCard = GodPowerManager.power(fileName, 1);
+        godPowerLoadByCard = GodPowerManager.power(JSONManager.readMyJSONAsText("configurations/cards/GodCard3.json"), 1);
         godPowerCorrect.setNewTurn(new NewNoMoveUpTurn());
 
         assertAll("Athena", () -> assertEquals(godPowerLoadByCard.getMove().getClass(), godPowerCorrect.getMove().getClass()),
@@ -108,8 +106,8 @@ public class GodPowerManagerTest {
 
     @Test
     void AtlasShouldBeCorrectlyCreated () throws ParseException, IOException{
-        fileName = "AtlasCard.json";
-        godPowerLoadByCard = GodPowerManager.power(fileName, 1);
+        godPowerLoadByCard = GodPowerManager.power(JSONManager.readMyJSONAsText("configurations/cards/GodCard4.json"), 1);
+
 
         assertAll("Athena", () -> assertEquals(godPowerLoadByCard.getMove().getClass(), godPowerCorrect.getMove().getClass()),
                 () -> assertEquals(godPowerLoadByCard.getBuild().getClass(), godPowerCorrect.getBuild().getClass()),
@@ -124,8 +122,8 @@ public class GodPowerManagerTest {
 
     @Test
     void ChronusShouldBeCorrectlyCreated () throws ParseException, IOException{
-        fileName = "ChronusCard.json";
-        godPowerLoadByCard = GodPowerManager.power(fileName, 1);
+        godPowerLoadByCard = GodPowerManager.power(JSONManager.readMyJSONAsText("configurations/cards/GodCard5.json"), 1);
+
         godPowerCorrect.addPositiveWinConditions(new FiveCompletedTowers());
 
         assertAll("Athena", () -> assertEquals(godPowerLoadByCard.getMove().getClass(), godPowerCorrect.getMove().getClass()),
@@ -140,8 +138,8 @@ public class GodPowerManagerTest {
 
     @Test
     void DemeterShouldBeCorrectlyCreated () throws ParseException, IOException{
-        fileName = "DemeterCard.json";
-        godPowerLoadByCard = GodPowerManager.power(fileName, 1);
+        godPowerLoadByCard = GodPowerManager.power(JSONManager.readMyJSONAsText("configurations/cards/GodCard6.json"), 1);
+
         godPowerCorrect.setBuild(new NotOnSamePosition(2));
 
         assertAll("Athena", () -> assertEquals(godPowerLoadByCard.getMove().getClass(), godPowerCorrect.getMove().getClass()),
@@ -156,8 +154,8 @@ public class GodPowerManagerTest {
 
     @Test
     void HephaestusShouldBeCorrectlyCreated () throws ParseException, IOException{
-        fileName = "HephaestusCard.json";
-        godPowerLoadByCard = GodPowerManager.power(fileName, 1);
+        godPowerLoadByCard = GodPowerManager.power(JSONManager.readMyJSONAsText("configurations/cards/GodCard7.json"), 1);
+
         godPowerCorrect.setBuild(new OnSamePositionBlockOnly(2));
 
         assertAll("Athena", () -> assertEquals(godPowerLoadByCard.getMove().getClass(), godPowerCorrect.getMove().getClass()),
@@ -172,8 +170,8 @@ public class GodPowerManagerTest {
 
     @Test
     void HeraShouldBeCorrectlyCreated () throws ParseException, IOException{
-        fileName = "HeraCard.json";
-        godPowerLoadByCard = GodPowerManager.power(fileName, 1);
+        godPowerLoadByCard = GodPowerManager.power(JSONManager.readMyJSONAsText("configurations/cards/GodCard8.json"), 1);
+
 
         assertAll("Athena", () -> assertEquals(godPowerLoadByCard.getMove().getClass(), godPowerCorrect.getMove().getClass()),
                 () -> assertEquals(godPowerLoadByCard.getBuild().getClass(), godPowerCorrect.getBuild().getClass()),
@@ -187,8 +185,8 @@ public class GodPowerManagerTest {
 
     @Test
     void HestiaShouldBeCorrectlyCreated () throws ParseException, IOException{
-        fileName = "HestiaCard.json";
-        godPowerLoadByCard = GodPowerManager.power(fileName, 1);
+        godPowerLoadByCard = GodPowerManager.power(JSONManager.readMyJSONAsText("configurations/cards/GodCard9.json"), 1);
+
         godPowerCorrect.setBuild( new NotOnPerimeter(2));
 
         assertAll("Athena", () -> assertEquals(godPowerLoadByCard.getMove().getClass(), godPowerCorrect.getMove().getClass()),
@@ -203,8 +201,8 @@ public class GodPowerManagerTest {
 
     @Test
     void MinotaurShouldBeCorrectlyCreated () throws ParseException, IOException{
-        fileName = "MinotaurCard.json";
-        godPowerLoadByCard = GodPowerManager.power(fileName, 1);
+        godPowerLoadByCard = GodPowerManager.power(JSONManager.readMyJSONAsText("configurations/cards/GodCard10.json"), 1);
+
         godPowerCorrect.setMove(new PushForward(1));
         godPowerCorrect.setConsolidateMove(new PushWorker());
 
@@ -220,8 +218,8 @@ public class GodPowerManagerTest {
 
     @Test
     void PanShouldBeCorrectlyCreated () throws ParseException, IOException{
-        fileName = "PanCard.json";
-        godPowerLoadByCard = GodPowerManager.power(fileName, 1);
+        godPowerLoadByCard = GodPowerManager.power(JSONManager.readMyJSONAsText("configurations/cards/GodCard11.json"), 1);
+
         godPowerCorrect.addPositiveWinConditions(new WinMovingDownTwoOrMoreLevels());
 
         assertAll("Athena", () -> assertEquals(godPowerLoadByCard.getMove().getClass(), godPowerCorrect.getMove().getClass()),
@@ -236,8 +234,8 @@ public class GodPowerManagerTest {
 
     @Test
     void PrometheusShouldBeCorrectlyCreated () throws ParseException, IOException{
-        fileName = "PrometheusCard.json";
-        godPowerLoadByCard = GodPowerManager.power(fileName, 1);
+        godPowerLoadByCard = GodPowerManager.power(JSONManager.readMyJSONAsText("configurations/cards/GodCard12.json"), 1);
+
         godPowerCorrect.setMove(new NoMoveUpAfterBuild(1));
         godPowerCorrect.setBuild(new BuildBeforeMove(1));
 
@@ -253,8 +251,8 @@ public class GodPowerManagerTest {
 
     @Test
     void TritonShouldBeCorrectlyCreated () throws ParseException, IOException{
-        fileName = "TritonCard.json";
-        godPowerLoadByCard = GodPowerManager.power(fileName, 1);
+        godPowerLoadByCard = GodPowerManager.power(JSONManager.readMyJSONAsText("configurations/cards/GodCard13.json"), 1);
+
         godPowerCorrect.setMove(new UnlimitedMoveOnPerimeter(1));
 
         assertAll("Athena", () -> assertEquals(godPowerLoadByCard.getMove().getClass(), godPowerCorrect.getMove().getClass()),
@@ -269,8 +267,8 @@ public class GodPowerManagerTest {
 
     @Test
     void ZeusShouldBeCorrectlyCreated () throws ParseException, IOException{
-        fileName = "ZeusCard.json";
-        godPowerLoadByCard = GodPowerManager.power(fileName, 1);
+        godPowerLoadByCard = GodPowerManager.power(JSONManager.readMyJSONAsText("configurations/cards/GodCard14.json"), 1);
+
         godPowerCorrect.setBuild(new UnderMyself(1));
         godPowerCorrect.setConsolidateBuild(new UnderWorker());
 
@@ -294,7 +292,7 @@ public class GodPowerManagerTest {
 
         for (int i = 0; i<godPowerList.size(); i++) {
             if (godPowerList.get(i).getBlockingWinConditions().size()!=0) {
-                assertEquals(godPowerList.get(i).getBlockingWinConditions().get(0).getClass(), new CantWinMovingOnPerimeter().getClass());
+                assertEquals(godPowerList.get(i).getBlockingWinConditions().get(0).getClass(), CantWinMovingOnPerimeter.class);
                 count++;
             }
         }
