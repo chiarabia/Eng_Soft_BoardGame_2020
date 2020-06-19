@@ -26,8 +26,8 @@ public class Client implements ViewObserver {
         try {
             this.port = port;
             this.IP = IP;
-            if (GUI) view = new GUI();
-            else view = new Terminal();
+            if (GUI) view = new GUI(new Textfields());
+            else view = new Terminal(new Textfields());
             view.addObserver(this);
             view.displayStartup(); //Questo metodo fa partire la Cli e la Gui (nella cli fa partire l'ASCII Art)
             view.askForStartupInfos();
@@ -38,7 +38,7 @@ public class Client implements ViewObserver {
     }
 
     public void onError(){
-        view.displayError("Oops... something went wrong");
+        view.displayError(0);
     }
 
     public void onUpdateInitializeWorkerPositions(SerializableUpdateInitializeWorkerPositions object){
@@ -94,13 +94,12 @@ public class Client implements ViewObserver {
             isGameStarted = true;
             view.displayGameStart();
         }
-        view.displayTurn(); //mostro a schermo che il gicoatore di turno è un altro
+        view.displayTurn(object.getPlayerId()); //mostro a schermo che il gicoatore di turno è un altro
     }
 
     public void onUpdateLoser (SerializableUpdateLoser object){
         int playerId = object.getPlayerId();
         board.getPlayer(playerId).setLost(true);
-        view.displayBoard(object); //mostro la board, senza i worker del giocatore che ha perso
         view.displayLoser(playerId);
     }
 
@@ -155,12 +154,7 @@ public class Client implements ViewObserver {
     }
 
     public void onRestart(int error) throws GameEndedException {
-        String message = null;
-        switch (error){
-            case 1: message = "This name is not available"; break;
-            case 2: message = "This number of players is not correct"; break;
-        }
-        view.displayError(message);
+        view.displayError(error);
         view.askForStartupInfos();
         throw new GameEndedException();
     }

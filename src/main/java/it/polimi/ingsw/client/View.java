@@ -20,12 +20,11 @@ public interface View {
     void displayGameStart(); // La partita ha ora inizio
     void displayRequestAction(SerializableRequestAction object); // Un'azione è stata appena richiesta al giocatore
     void displayBoard(SerializableUpdateActions update); // Sono state effettuate modifiche alla board che devono ora essere riprodotte graficamente
-    void displayBoard(SerializableUpdateLoser update);
-    void displayBoard(SerializableUpdateInitializeWorkerPositions update);
-    void displayTurn(); // Un nuovo turno è appena iniziato
+    void displayBoard(SerializableUpdateInitializeWorkerPositions update); // Sono stati aggiunti dei workers alla board
+    void displayTurn(int playerId); // Un nuovo turno è appena iniziato
     void displayWinner(int playerId); // Un giocatore ha appena vinto
     void displayLoser(int playerId); // Un giocatore ha appena perso
-    void displayError(String message); // Deve essere visualizzato un messaggio di errore
+    void displayError(int errorId); // Deve essere visualizzato un messaggio di errore
     void displayDisconnection (int playerId); // Un giocatore si è appena disconnesso
 
     // metodi di richiesta input tastiera/mouse
