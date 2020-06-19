@@ -210,7 +210,7 @@ public class BoardSceneController implements Initializable {
             //updates the workerNumber
         }
         //if we are in a normal turn
-        if(actionsCodes.get(0) == 2){
+        else if(actionsCodes.get(0) == 2){
             //gets the current position in terms of StackPane of the two workers
             StackPane firstWorkerCell = (StackPane)getNodeFromPosition(gridPane,oldFirstWorkerPosition);
             StackPane secondWorkerCell = (StackPane)getNodeFromPosition(gridPane,oldSecondWorkerPosition);
