@@ -224,8 +224,8 @@ public class BoardSceneController implements Initializable {
                 if(cell == firstWorkerCell) workerSelected=1;
                 if(cell == secondWorkerCell) workerSelected=2;
             }
-            //if (firstTimeSelectedCell = false) addSelectedImageToCell(previousCell,2,selectedImage);
-            //addSelectedImageToCell(cell,1,selectedImage);
+            if (firstTimeSelectedCell = false) addSelectedImageToCell(previousCell,2,selectedImage);
+            addSelectedImageToCell(cell,1,selectedImage);
 
             //if a worker has been selected and a move action is possible
             if(isWorkerSelected && isMovePossible){
@@ -281,7 +281,7 @@ public class BoardSceneController implements Initializable {
                previousCell = cell;
                //firstTimeSelectedCell = false;
             }
-
+            if(isDeclinePossible)declineButton.setDisable(false);
             //if a build action is no longer possible, the build button is disabled
             if(!isBuildPossible)buildButton.setDisable(true);
             //if a dome building action is no longer possible, the build button is disabled
@@ -321,11 +321,12 @@ public class BoardSceneController implements Initializable {
      * @param dome if the building has to be a dome
      */
     public void updateBuilding(Position newPosition, boolean dome){
-        String level = "level1.png";
-        if (dome == true) level = "dome.png";
+        String level = "level0.png";
+        if (dome) level = "dome.png";
         StackPane newBuildingCell = (StackPane)getNodeFromPosition(gridPane,newPosition);
         int z = newPosition.getZ();
-        if (dome == false) level = "level" + z + ".png";
+        System.out.println(z);
+        if (!dome) level = "level" + z + ".png";
         addBuildingImage(newBuildingCell,level);
     }
 
@@ -347,7 +348,7 @@ public class BoardSceneController implements Initializable {
      * @param level the building level
      */
     public void addBuildingImage(StackPane cell, String level){
-        Image building = new Image(level);
+        Image building = new Image("/Buildings/" + level);
         BackgroundSize buildingSize = new BackgroundSize(100,100, false,false, true, true);
         BackgroundImage buildingBackground = new BackgroundImage(building, BackgroundRepeat.NO_REPEAT, BackgroundRepeat.NO_REPEAT, BackgroundPosition.CENTER, buildingSize );
         cell.setBackground(new Background(buildingBackground));
@@ -466,8 +467,10 @@ public class BoardSceneController implements Initializable {
      * @param selectedImage the ImageView to add to the StackPane
      */
     public void addSelectedImageToCell(StackPane cell, int code, ImageView selectedImage){
-        if (code == 1) cell.getChildren().add(selectedImage);
-        if (code == 2) cell.getChildren().remove(selectedImage);
+        if (code == 1 && !cell.getChildren().contains(selectedImage))
+            cell.getChildren().add(selectedImage);
+        if (code == 2 && cell.getChildren().contains(selectedImage))
+            cell.getChildren().remove(selectedImage);
     }
 
     /**
@@ -478,6 +481,10 @@ public class BoardSceneController implements Initializable {
         Text notificationText = new Text(notification);
         setTextFormat(notificationText);
         notificationsTextFlow.getChildren().add(notificationText);
+    }
+
+    public void disableDeclineButton(boolean isDeclinePossible){
+        declineButton.setDisable(isDeclinePossible);
     }
 
     public void updateStackPaneLists(Set<Position> worker1Move, Set<Position> worker2Move, Set<Position> worker1Build,Set<Position> worker2Build){

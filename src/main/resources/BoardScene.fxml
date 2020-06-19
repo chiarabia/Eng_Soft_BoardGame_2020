@@ -75,7 +75,7 @@
                            <HBox.margin>
                               <Insets right="10.0" />
                            </HBox.margin></Button>
-                        <Button fx:id="declineButton" mnemonicParsing="false" prefHeight="50.0" prefWidth="95.0" text="Decline Action" textFill="WHITE" />
+                        <Button fx:id="declineButton" mnemonicParsing="false" prefHeight="50.0" prefWidth="95.0" text="End Turn" textFill="WHITE" />
                      </children>
                   </HBox>
                      <VBox fx:id="NotificationsBackground" prefHeight="200.0" prefWidth="100.0">
