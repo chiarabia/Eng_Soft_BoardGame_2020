@@ -4,23 +4,15 @@ import it.polimi.ingsw.client.Client;
 import it.polimi.ingsw.server.Server;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
+import org.json.simple.parser.ParseException;
 
-import java.io.FileReader;
-import java.io.InputStream;
+import java.io.*;
 
-public class App
-{
-    private static String getRoot(){
-        String root = ClassLoader.getSystemClassLoader().getResource("configurations/Configuration.json").getPath();
-        if (root.substring(0,5).equals("file:")) root = root.substring(5, root.length());
-        if (root.substring(2,3).equals(":")) root = root.substring(3, root.length());
-        //return root;
-        return "src/main/resources/configurations/Configuration.json";
-    }
-    public static void main( String[] args ) throws InterruptedException {
+public class App{
+        public static void main( String[] args ) throws InterruptedException {
         try {
-            FileReader fileReader = new FileReader(getRoot());
-            JSONObject jsonObject = (JSONObject) (new JSONParser()).parse(fileReader);
+            JSONObject jsonObject = JSONManager.readMyJSONAsText("configurations/Configuration.json");
+
             boolean server = (jsonObject.get("role")).equals("server");
             boolean GUI = (jsonObject.get("ui")).equals("GUI");
             String ip = (String) jsonObject.get("ip");
@@ -52,4 +44,7 @@ public class App
         }catch(Exception e){ System.out.println("An error occurred");
         e.printStackTrace();}
     }
+
+
 }
+

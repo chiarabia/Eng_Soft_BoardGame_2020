@@ -66,7 +66,7 @@ public class ClientCommunicator extends Thread {
         if (object instanceof SerializableRequestInitializeGodPower) { // chiedo quale GodPower il plauer voglia scegleire
             for(int i = 0; i<observerList.size(); i++)observerList.get(i).onRequestInitializeGodPower((SerializableRequestInitializeGodPower) object);
         }
-        if (object instanceof SerializableRequestInitializeWorkerPositions) { // chiedo quale GodPower il plauer voglia scegleire
+        if (object instanceof SerializableRequestInitializeWorkerPositions) { // chiedo quale GodPower il plauer voglia scegliere
             for(int i = 0; i<observerList.size(); i++)observerList.get(i).onRequestInitializeWorkerPositions();
         }
 

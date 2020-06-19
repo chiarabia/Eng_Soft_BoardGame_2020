@@ -38,8 +38,8 @@ public class NewNoMoveUpTurnTest  {
 
     @Test
     void theEnemyShouldHaveNoMoveUpEffectAfterAthenaTurn() throws ParseException, IOException {
-        athenaGodPower = GodPowerManager.power("AthenaCard.json", 1);
-        oppositeGodPower = GodPowerManager.power("HestiaCard.json", 2);
+        athenaGodPower = GodPowerManager.power(JSONManager.readMyJSONAsText("configurations/cards/GodCard3.json"), 1);;
+        oppositeGodPower = GodPowerManager.power(JSONManager.readMyJSONAsText("configurations/cards/GodCard9.json"), 2);;
         godList.add(athenaGodPower);
         godList.add(oppositeGodPower);
 
@@ -61,8 +61,8 @@ public class NewNoMoveUpTurnTest  {
 
     @Test
     void theEnemyShouldNotHaveNoMoveUpEffectAfterAthenaTurn() throws ParseException, IOException {
-        athenaGodPower = GodPowerManager.power("AthenaCard.json", 1);
-        oppositeGodPower = GodPowerManager.power("HestiaCard.json", 2);
+        athenaGodPower = GodPowerManager.power(JSONManager.readMyJSONAsText("configurations/cards/GodCard3.json"), 1);;
+        oppositeGodPower = GodPowerManager.power(JSONManager.readMyJSONAsText("configurations/cards/GodCard9.json"), 2);;
         godList.add(athenaGodPower);
         godList.add(oppositeGodPower);
 
@@ -76,6 +76,6 @@ public class NewNoMoveUpTurnTest  {
 
         currentTurn.updateTurnInfoAfterMove(workerPosition, destinationPosition, board);
         newNoMoveUpTurn.endTurn(currentTurn, godList, player2);
-        assertEquals(godList.get(1).getMove().getClass(), new StandardMove(1).getClass());
+        assertEquals(godList.get(1).getMove().getClass(), StandardMove.class);
     }
 }

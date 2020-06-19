@@ -1,16 +1,15 @@
 package it.polimi.ingsw.client.cli;
 
 import it.polimi.ingsw.Position;
-import it.polimi.ingsw.client.ClientBoard;
-import it.polimi.ingsw.client.GodCard;
-import it.polimi.ingsw.client.View;
-import it.polimi.ingsw.client.ViewObserver;
+import it.polimi.ingsw.client.*;
 import it.polimi.ingsw.server.serializable.*;
+import org.w3c.dom.Text;
 
 import java.util.*;
 import java.util.stream.Collectors;
 
 public class Terminal implements View {
+    private Textfields textfields;
     private final Scanner keyboard = new Scanner(System.in);
     private ClientBoard board;
     private List<ViewObserver> observerList = new ArrayList<>();
@@ -49,18 +48,17 @@ public class Terminal implements View {
         displayBoard();
     }
 
-    public void displayBoard(SerializableUpdateLoser update){displayBoard();}
-
     public void displayBoard(SerializableUpdateInitializeWorkerPositions update){displayBoard();}
 
     public void displayWinner (int playerId) {
+        displayBoard();
         setColor(playerId);
         if (playerId == board.getMyPlayerId()) System.out.println("You" + Color.WHITE.set() + " have won!");
         else System.out.println(board.getPlayer(playerId).getPlayerName() + Color.WHITE.set() +  " has won");
-
     }
 
     public void displayLoser (int playerId) {
+        displayBoard();
         setColor(playerId);
         if (playerId == board.getMyPlayerId()) System.out.println("You" + Color.WHITE.set() + " have lost!");
         else System.out.println(board.getPlayer(playerId).getPlayerName() + Color.WHITE.set() +  " has lost");
@@ -71,7 +69,13 @@ public class Terminal implements View {
         System.out.println(board.getPlayer(playerId).getPlayerName() + Color.WHITE.set() +  " disconnected");
     }
 
-    public void displayError(String message){
+    public void displayError(int errorId){
+        String message = null;
+        switch (errorId){
+            case 0: message = "Oops... something went wrong"; break;
+            case 1: message = "This name is not available"; break;
+            case 2: message = "This number of players is not correct"; break;
+        }
         displayErrorMessage(message);
     }
 
@@ -96,8 +100,7 @@ public class Terminal implements View {
         }
     }
 
-    public void displayTurn(){
-        int playerTurnId = board.getPlayerTurnId();
+    public void displayTurn(int playerTurnId){
         setColor(playerTurnId);
         if (playerTurnId == board.getMyPlayerId()) System.out.println("You" + Color.WHITE.set() + " are playing");
         else System.out.println(board.getPlayer(playerTurnId).getPlayerName() + Color.WHITE.set() +  " now playing");
@@ -271,12 +274,12 @@ public class Terminal implements View {
         String godPower = "";
         if(godNames.size()==1) {
             setColor(board.getMyPlayerId());
-            System.out.println("You"+Color.WHITE.set()+" choose: " + godNames.get(0));
+            System.out.println("You"+Color.WHITE.set()+" choose" + ": " + godNames.get(0));
             return godNames.get(0);
         }
         while (true) {
             setColor(board.getMyPlayerId());
-            System.out.print("You"+Color.WHITE.set()+" choose (");
+            System.out.print("You"+Color.WHITE.set()+" choose" + " (");
             for (int i = 0; i<godNames.size(); i++) {
                 if (i!=godNames.size()-1) System.out.print(godNames.get(i) + "/");
                 else System.out.print(godNames.get(i));
@@ -461,6 +464,8 @@ public class Terminal implements View {
                 break;
         }
     }
+
+    public Terminal(Textfields textfields){ this.textfields = textfields; }
 
     private enum Color {
         RED("\u001B[31m"),
