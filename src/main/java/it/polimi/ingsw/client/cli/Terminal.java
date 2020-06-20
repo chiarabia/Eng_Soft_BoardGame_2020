@@ -26,7 +26,7 @@ public class Terminal implements View {
     }
 
     public void displayPlayerNames(SerializableUpdateInitializeNames names){
-        System.out.print("You are playing with ");
+        System.out.print(textfields.getInitialplaying());
         boolean firstName = true;
         for (int id = 1; id <= board.numOfPlayers(); id++) {
             if (id != board.getMyPlayerId()) {
@@ -53,28 +53,28 @@ public class Terminal implements View {
     public void displayWinner (int playerId) {
         displayBoard();
         setColor(playerId);
-        if (playerId == board.getMyPlayerId()) System.out.println("You" + Color.WHITE.set() + " have won!");
-        else System.out.println(board.getPlayer(playerId).getPlayerName() + Color.WHITE.set() +  " has won");
+        if (playerId == board.getMyPlayerId()) System.out.println("You" + Color.WHITE.set() + textfields.getWon1());
+        else System.out.println(board.getPlayer(playerId).getPlayerName() + Color.WHITE.set() +  textfields.getWon2());
     }
 
     public void displayLoser (int playerId) {
         displayBoard();
         setColor(playerId);
-        if (playerId == board.getMyPlayerId()) System.out.println("You" + Color.WHITE.set() + " have lost!");
-        else System.out.println(board.getPlayer(playerId).getPlayerName() + Color.WHITE.set() +  " has lost");
+        if (playerId == board.getMyPlayerId()) System.out.println("You" + Color.WHITE.set() + textfields.getLost1());
+        else System.out.println(board.getPlayer(playerId).getPlayerName() + Color.WHITE.set() +  textfields.getLost2());
     }
 
     public void displayDisconnection (int playerId){
         setColor(playerId);
-        System.out.println(board.getPlayer(playerId).getPlayerName() + Color.WHITE.set() +  " disconnected");
+        System.out.println(board.getPlayer(playerId).getPlayerName() + Color.WHITE.set() +  textfields.getDisconnected());
     }
 
     public void displayError(int errorId){
         String message = null;
         switch (errorId){
-            case 0: message = "Oops... something went wrong"; break;
-            case 1: message = "This name is not available"; break;
-            case 2: message = "This number of players is not correct"; break;
+            case 0: message = textfields.getErr0(); break;
+            case 1: message = textfields.getErr1(); break;
+            case 2: message = textfields.getErr2(); break;
         }
         displayErrorMessage(message);
     }
@@ -96,37 +96,37 @@ public class Terminal implements View {
         if (playerId != board.getMyPlayerId()) {
             setColor(playerId);
             System.out.print(playerName + Color.WHITE.set());
-            System.out.println(" has chosen "+godPowerName);
+            System.out.println(textfields.getChosen2()+ godPowerName);
         }
     }
 
     public void displayTurn(int playerTurnId){
         setColor(playerTurnId);
-        if (playerTurnId == board.getMyPlayerId()) System.out.println("You" + Color.WHITE.set() + " are playing");
-        else System.out.println(board.getPlayer(playerTurnId).getPlayerName() + Color.WHITE.set() +  " now playing");
+        if (playerTurnId == board.getMyPlayerId()) System.out.println("You" + Color.WHITE.set() + textfields.getPlaying1());
+        else System.out.println(board.getPlayer(playerTurnId).getPlayerName() + Color.WHITE.set() +  textfields.getPlaying2());
     }
 
     public void displayRequestAction(SerializableRequestAction object){
         if (object.getWorker1Moves().size()>0) {
-            System.out.print("Worker 1 possible moves: ");
+            System.out.print(textfields.getMoves1());
             displayCells((object).getWorker1Moves());
         }
         if (object.getWorker2Moves().size()>0) {
-            System.out.print("Worker 2 possible moves: ");
+            System.out.print(textfields.getMoves2());
             displayCells((object).getWorker2Moves());
         }
         if (object.getWorker1Builds().size()>0) {
-            System.out.print("Worker 1 possible builds: ");
+            System.out.print(textfields.getBuilds1());
             displayCells((object).getWorker1Builds());
         }
         if (object.getWorker2Builds().size()>0) {
-            System.out.print("Worker 2 possible builds: ");
+            System.out.print(textfields.getBuilds2());
             displayCells((object).getWorker2Builds());
         }
         if ((object).isMoveOptional())
-            System.out.println("Moves are optional");
+            System.out.println(textfields.getMovesopt());
         if ((object).isBuildOptional())
-            System.out.println("Builds are optional");
+            System.out.println(textfields.getBuildsopt());
 
         if(!(object.canWorkerDoAction(1) && object.canWorkerDoAction(2))&&!(object.areBuildsEmpty()&&object.areMovesEmpty())) {
             int workerId = 0;
@@ -154,7 +154,7 @@ public class Terminal implements View {
 
             if (object.canDecline()) { //Se il player può terminare il turno
                 if (object.areBuildsEmpty() && object.areMovesEmpty()) {
-                    displayMessage("The turn is over");
+                    displayMessage(textfields.getTurnover());
                     for (int i = 0; i < observerList.size(); i++) observerList.get(i).onCompletedDecline(); //questo oggetto passa il turno
                     return;
                 }
@@ -215,8 +215,8 @@ public class Terminal implements View {
     }
 
     public void askForStartupInfos() {
-            String name = askForString(Terminal.Color.WHITE.set() + "What's your name? ");
-            int numOfPlayers = askForInt("How many players? ");
+            String name = askForString(Terminal.Color.WHITE.set() + textfields.getName());
+            int numOfPlayers = askForInt(textfields.getNumofplayers());
             for (int i = 0; i < observerList.size(); i++) observerList.get(i).onCompletedStartup(name, numOfPlayers);
     }
 
@@ -274,12 +274,12 @@ public class Terminal implements View {
         String godPower = "";
         if(godNames.size()==1) {
             setColor(board.getMyPlayerId());
-            System.out.println("You"+Color.WHITE.set()+" choose" + ": " + godNames.get(0));
+            System.out.println("You"+Color.WHITE.set()+textfields.getChosen1() + ": " + godNames.get(0));
             return godNames.get(0);
         }
         while (true) {
             setColor(board.getMyPlayerId());
-            System.out.print("You"+Color.WHITE.set()+" choose" + " (");
+            System.out.print("You"+Color.WHITE.set()+textfields.getChosen1() + " (");
             for (int i = 0; i<godNames.size(); i++) {
                 if (i!=godNames.size()-1) System.out.print(godNames.get(i) + "/");
                 else System.out.print(godNames.get(i));
@@ -293,9 +293,9 @@ public class Terminal implements View {
 
     private List <Position> askForWorkersInitialPositions (){
         while (true) {
-            System.out.println("Worker 1");
+            System.out.println(textfields.getWorker1());
             Position worker1Position = askForPosition();
-            System.out.println("Worker 2");
+            System.out.println(textfields.getWorker2());
             Position worker2Position = askForPosition();
             int myWorker1x = worker1Position.getX();
             int myWorker1y = worker1Position.getY();
@@ -362,13 +362,13 @@ public class Terminal implements View {
             setColor(i+1);
             System.out.print(board.getPlayer(i + 1).getPlayerName());
             if (!board.getPlayer(i + 1).hasLost() && board.getPlayer(i + 1).getWorker(1).getX() != -1) {
-                System.out.print(": Worker 1 (" + board.getPlayer(i + 1).getWorker(1).getX() + ", " + board.getPlayer(i + 1).getWorker(1).getY() + ")");
-                System.out.print(", Worker 2 (" + board.getPlayer(i + 1).getWorker(2).getX() + ", " + board.getPlayer(i + 1).getWorker(2).getY() + ")");
+                System.out.print(": " + textfields.getWorker1() + " (" + board.getPlayer(i + 1).getWorker(1).getX() + ", " + board.getPlayer(i + 1).getWorker(1).getY() + ")");
+                System.out.print(", " + textfields.getWorker2() + " (" + board.getPlayer(i + 1).getWorker(2).getX() + ", " + board.getPlayer(i + 1).getWorker(2).getY() + ")");
                 System.out.println(", " + board.getPlayer(i + 1).getGodPowerName());
             } else if (board.getPlayer(i + 1).getWorker(1).getX() == -1) {
                 System.out.println(": "+board.getPlayer(i + 1).getGodPowerName());
             }
-            else System.out.println(" has lost");
+            else System.out.println(": lost");
         }
         System.out.print(Terminal.Color.WHITE.set());
     }
@@ -479,8 +479,6 @@ public class Terminal implements View {
             this.set = set;
         }
 
-        public String set() {
-            return set;
-        }
+        public String set() {return set;}
     }
 }

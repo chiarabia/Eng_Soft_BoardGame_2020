@@ -24,6 +24,8 @@ public class Textfields {
     private final String name;
     private final String numofplayers;
     private final String turnover;
+    private final String worker1;
+    private final String worker2;
     private final String err0;
     private final String err1;
     private final String err2;
@@ -50,6 +52,8 @@ public class Textfields {
         this.name = (String) jsonObject.get("name");
         this.numofplayers = (String) jsonObject.get("numofplayers");
         this.turnover = (String) jsonObject.get("turnover");
+        this.worker1 = (String) jsonObject.get("worker1");
+        this.worker2 = (String) jsonObject.get("worker2");
         this.err0 = (String) jsonObject.get("err0");
         this.err1 = (String) jsonObject.get("err1");
         this.err2 = (String) jsonObject.get("err2");
@@ -142,4 +146,9 @@ public class Textfields {
     public String getErr2() {
         return err2;
     }
+
+    public String getWorker1() { return worker1; }
+
+    public String getWorker2() { return worker2; }
+
 }
