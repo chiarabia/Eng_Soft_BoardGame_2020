@@ -359,9 +359,15 @@ public class BoardSceneController implements Initializable {
      */
     public void addBuildingImage(StackPane cell, String level){
         Image building = new Image("/Buildings/" + level);
-        BackgroundSize buildingSize = new BackgroundSize(100,100, false,false, true, true);
-        BackgroundImage buildingBackground = new BackgroundImage(building, BackgroundRepeat.NO_REPEAT, BackgroundRepeat.NO_REPEAT, BackgroundPosition.CENTER, buildingSize );
-        cell.setBackground(new Background(buildingBackground));
+        if (level == "dome.png"){
+            ImageView dome = new ImageView(building);
+            cell.getChildren().add(dome);
+        }
+        else{
+            BackgroundSize buildingSize = new BackgroundSize(100,100, false,false, true, true);
+            BackgroundImage buildingBackground = new BackgroundImage(building, BackgroundRepeat.NO_REPEAT, BackgroundRepeat.NO_REPEAT, BackgroundPosition.CENTER, buildingSize );
+            cell.setBackground(new Background(buildingBackground));
+        }
     }
 
     //removes the image of a Worker in a StackPane
