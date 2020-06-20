@@ -10,8 +10,6 @@ public class Turn {
 
     private Position workerStartingPosition = null;
     private Position firstBuildingPosition = null;
-    //private List<Position> movecells = new ArrayList<Position>();
-    //private List<Position> buildcells = new ArrayList<Position>();
 
     private boolean moveBeforeBuild = false;
     private boolean buildAfterMove = false;

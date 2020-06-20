@@ -30,6 +30,7 @@ import java.util.stream.Collectors;
 public class BoardSceneController implements Initializable {
 
 
+
     @FXML
     private BorderPane board;
     @FXML
@@ -290,7 +291,6 @@ public class BoardSceneController implements Initializable {
                 //build a dome wherever, the domeButton is avalaible
                domeButton.setDisable(!isBuildActionPossible && !isDomeAtAnyLevelPossible);
                previousCell = cell;
-
             }
             if(isDeclinePossible)declineButton.setDisable(false);
             //if a build action is no longer possible, the build button is disabled
@@ -528,8 +528,7 @@ public class BoardSceneController implements Initializable {
         endGame.setFitHeight(500);
         imageContainer.getChildren().add(endGame);
     }
-
-
+  
     public void setMovePossible (boolean isPossible) {isMovePossible = isPossible;}
     public void setBuildPossible (boolean isPossible) {isBuildPossible = isPossible;}
     public void setDomeAtAnyLevelPossible (boolean isPossible) {isDomeAtAnyLevelPossible = isPossible;}
@@ -543,7 +542,9 @@ public class BoardSceneController implements Initializable {
     public void setWorker2BuildPosition(Set<Position> secondWorkerBuilds){worker2BuildsPosition = secondWorkerBuilds;}
     public static Text getNotification() {return notification;}
 
+
     public static void setTextFormat(Text notification, int font){notification.setFont(Font.font("Verdana", FontWeight.BOLD, font)); }
+
     public void setVisibleDomeButton(boolean visibility){ domeButton.setVisible(visibility); }
     public void setVisibleDeclineButton(boolean visibility){
         declineButton.setVisible(visibility);

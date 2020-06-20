@@ -103,6 +103,7 @@ public class GUI implements View {
     public void displayWinner(int playerId) {
         Platform.runLater(()->{
         	//displays a winner notification of the winner
+
             if (playerId == board.getMyPlayerId())boardSceneController.displayEndGameImage(true);
             else boardSceneController.displayEndGameImage(false);
             String notification = board.getPlayer(playerId).getPlayerName() + " won!!";
