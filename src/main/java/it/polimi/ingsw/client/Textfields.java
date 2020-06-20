@@ -146,9 +146,7 @@ public class Textfields {
     public String getErr2() {
         return err2;
     }
-
     public String getWorker1() { return worker1; }
 
     public String getWorker2() { return worker2; }
-
 }

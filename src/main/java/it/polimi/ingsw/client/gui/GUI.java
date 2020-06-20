@@ -80,6 +80,7 @@ public class GUI implements View {
     @Override
     public void displayTurn(int currentPlayerId) {
         int myPlayerId = board.getMyPlayerId();
+        boardSceneController.setWorkerSelected(false);
         if (myPlayerId == currentPlayerId){
             Platform.runLater(()->{
                 String notification = "It's your turn!";
@@ -102,6 +103,9 @@ public class GUI implements View {
     public void displayWinner(int playerId) {
         Platform.runLater(()->{
         	//displays a winner notification of the winner
+
+            if (playerId == board.getMyPlayerId())boardSceneController.displayEndGameImage(true);
+            else boardSceneController.displayEndGameImage(false);
             String notification = board.getPlayer(playerId).getPlayerName() + " won!!";
             Text oldText = BoardSceneController.getNotification();
             setTextFormat(oldText);
