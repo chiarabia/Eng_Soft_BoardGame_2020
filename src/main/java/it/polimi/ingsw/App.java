@@ -9,6 +9,11 @@ import org.json.simple.parser.ParseException;
 import java.io.*;
 
 public class App{
+    /**
+     * This method starts a new Server/Client session, reading preferences from
+     * arguments and configuration file about role, port, IP address and UI.
+     * @param args (--role server/client, --ui CLI/GUI, --ip localhost, --port 555)
+     */
         public static void main( String[] args ) throws InterruptedException {
         try {
             JSONObject jsonObject = JSONManager.readMyJSONAsText("configurations/Configuration.json");

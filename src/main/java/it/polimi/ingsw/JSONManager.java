@@ -10,7 +10,12 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 
  public class JSONManager {
-
+     /**
+      * This method reads a text file and converts it into JSONObject
+      * @param fname name of file
+      * @return JSONObject
+      * @throws ParseException ParseException
+      */
      public static JSONObject readMyJSONAsText(String fname) throws ParseException {
          InputStream is = App.class.getClassLoader().getResourceAsStream(fname);
          BufferedReader buf;

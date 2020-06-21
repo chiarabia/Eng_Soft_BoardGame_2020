@@ -4,6 +4,7 @@ import it.polimi.ingsw.effects.GodPower;
 import it.polimi.ingsw.server.GameObserver;
 import it.polimi.ingsw.server.serializable.*;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -28,21 +29,24 @@ public class Game {
     public GodPower getPlayerGodPower(int playerId) {
         return searchMethod(playerId, getGodPowers());
     }
-    public Worker getPlayerWorker (int playerId, int workerId) {
-        return getBoard().getWorkerCell(getPlayer(playerId), workerId).getWorker();
-    }
-    public Position getWorkerPosition (int playerId, int workerId) {
-        return getBoard().getWorkerCell(getPlayer(playerId), workerId).getPosition();
-    }
+    public Worker getPlayerWorker (int playerId, int workerId) { return getBoard().getWorkerCell(getPlayer(playerId), workerId).getWorker(); }
+    public Position getWorkerPosition (int playerId, int workerId) { return getBoard().getWorkerCell(getPlayer(playerId), workerId).getPosition(); }
 
-    //This Method reflects the private implementation of players and godPowers list.
+    /**
+     * This method reflects the private implementation of players and godPowers lists.
+     * @param playerId playerId
+     * @param list list
+     * @return T
+     */
     private <T> T searchMethod (int playerId, List<T> list) {
        return list.get(correctIndex(playerId));
     }
 
-    //Per convenzione interna i player ed i loro poteri si trovano in posizione 0,1,2 quindi per
-    //trovare il relativo player conoscendo l'id basta fare -1. Quando un player viene eliminato, il suo riferimento viene posto a null
-    //la dimensione delle liste non cambia.
+    /**
+     * This method converts a playerId into a list index
+     * @param playerId playerId
+     * @return int
+     */
     private int correctIndex (int playerId) {
         return playerId-1;
     }
@@ -51,15 +55,12 @@ public class Game {
     public void setTurn(Turn turn) {this.turn = turn;}
     public void setPlayers(List<Player> players) {this.players = players;}
     public void setGodPowers(List<GodPower> godPowers) {this.godPowers = godPowers;}
-
     public void removePlayer (int playerId) {
         getPlayers().set(correctIndex(playerId), null);
     }
-
     public void removeGodPower (int playerId) {
         getGodPowers().set(correctIndex(playerId), null);
     }
-
     public void addObserver(GameObserver observer){observerList.add(observer);}
 
     public void notifyJustUpdateAll(SerializableUpdate update) {
