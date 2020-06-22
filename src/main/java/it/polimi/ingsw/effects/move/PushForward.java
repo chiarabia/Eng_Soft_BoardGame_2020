@@ -36,7 +36,7 @@ public class PushForward extends StandardMove{
                 .filter(a -> a.isFree()
                         || (a.isWorker()
                         && a.getPlayerId() != workerCell.getPlayerId() // specifica che il lavoratore deve essere avversario
-                        && !a.isPerimetral()
+                        //&& !a.isPerimetral()
                         && board.isFreeZone
                         (behindWorker_x(workerCell.getX(), a.getX()),
                                 behindWorker_y(workerCell.getY(), a.getY()))))

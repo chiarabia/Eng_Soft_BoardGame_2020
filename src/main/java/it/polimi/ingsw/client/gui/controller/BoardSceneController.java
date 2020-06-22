@@ -217,7 +217,7 @@ public class BoardSceneController implements Initializable {
         int column = GridPane.getColumnIndex((Node) event.getSource());
         int row = GridPane.getRowIndex((Node) event.getSource());
         //if we are in the askWorkerInitialPosition phase
-        if(actionsCodes!=null && actionsCodes.get(0)!=null && actionsCodes.get(0) == 1) {
+        if(actionsCodes!=null && actionsCodes.size()>0 && actionsCodes.get(0) == 1) {
             System.out.println(String.format("Node clicked at: column=%d, row=%d", column, row));
             //adds the StackPane of the cell that we clicked in workerCells
             StackPane cell = (StackPane) getNodeFromGridPane(gridPane, column, row);
@@ -228,7 +228,7 @@ public class BoardSceneController implements Initializable {
             //updates the workerNumber
         }
         //if we are in a normal turn
-        else if(actionsCodes!=null && actionsCodes.get(0)!=null && actionsCodes.get(0) == 2){
+        else if(actionsCodes!=null && actionsCodes.size()>0 && actionsCodes.get(0) == 2){
             //gets the current position in terms of StackPane of the two workers
             StackPane firstWorkerCell = (StackPane)getNodeFromPosition(gridPane,oldFirstWorkerPosition);
             StackPane secondWorkerCell = (StackPane)getNodeFromPosition(gridPane,oldSecondWorkerPosition);
