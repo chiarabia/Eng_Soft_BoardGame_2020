@@ -4,7 +4,7 @@ import it.polimi.ingsw.Position;
 
 import java.util.List;
 
-// Metodi che CLI e GUI invocano su Client dopo che l'utente ha fornito le informazioni necessarie (dopo che ha premuto OK)
+/** This interface represents client methods callable by view when information is received by the user */
 
 public interface ViewObserver {
     void onCompletedStartup (String myName, int numOfPlayers); //Il giocatore ha appena scelto nome e numero giocatori

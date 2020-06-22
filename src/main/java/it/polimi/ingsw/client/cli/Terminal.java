@@ -8,6 +8,8 @@ import org.w3c.dom.Text;
 import java.util.*;
 import java.util.stream.Collectors;
 
+/** This class contains CLI methods */
+
 public class Terminal implements View {
     private Textfields textfields;
     private final Scanner keyboard = new Scanner(System.in);
@@ -28,7 +30,7 @@ public class Terminal implements View {
     public void displayPlayerNames(SerializableUpdateInitializeNames names){
         System.out.print(textfields.getInitialplaying());
         boolean firstName = true;
-        for (int id = 1; id <= board.numOfPlayers(); id++) {
+        for (int id = 1; id <= board.getNumOfPlayers(); id++) {
             if (id != board.getMyPlayerId()) {
                 if (firstName) {
                     setColor(id);
@@ -224,7 +226,7 @@ public class Terminal implements View {
 
 
 
-    // metodi riservati
+    /* private methods */
 
     private void displayMessage(String string){
         System.out.println(string);
@@ -305,7 +307,7 @@ public class Terminal implements View {
             myWorkerPositions.add(new Position(myWorker1x, myWorker1y, 0));
             myWorkerPositions.add(new Position(myWorker2x, myWorker2y, 0));
             boolean isValid = !(myWorker1x == myWorker2x && myWorker1y == myWorker2y);
-            for (int i = 1; i < board.numOfPlayers(); i++) {
+            for (int i = 1; i < board.getNumOfPlayers(); i++) {
                 if (board.getPlayer(i) != null) {
                     if  (
                         (board.getPlayer(i).getWorker(1).getX() == myWorker1x && board.getPlayer(i).getWorker(1).getY() == myWorker1y) ||
@@ -358,7 +360,7 @@ public class Terminal implements View {
 
     private void displayPlayersController(){
         System.out.println();
-        for (int i = 0; i < board.numOfPlayers(); i++) {
+        for (int i = 0; i < board.getNumOfPlayers(); i++) {
             setColor(i+1);
             System.out.print(board.getPlayer(i + 1).getPlayerName());
             if (!board.getPlayer(i + 1).hasLost() && board.getPlayer(i + 1).getWorker(1).getX() != -1) {
@@ -396,7 +398,7 @@ public class Terminal implements View {
             for (int i = 0; i < 5; i++) {
                 boolean isThereAWorker = false;
                 int playerId = 0;
-                for (int k = 0; k < board.numOfPlayers(); k++) {
+                for (int k = 0; k < board.getNumOfPlayers(); k++) {
                     if (!board.getPlayer(k + 1).hasLost()) {
                         int worker1x = board.getPlayer(k + 1).getWorker(1).getX();
                         int worker1y = board.getPlayer(k + 1).getWorker(1).getY();

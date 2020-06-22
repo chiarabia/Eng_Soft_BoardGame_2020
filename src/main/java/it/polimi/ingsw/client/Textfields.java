@@ -4,6 +4,8 @@ import it.polimi.ingsw.JSONManager;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.ParseException;
 
+/** This class stores and shares all the text fields to be shown inside user interfaces */
+
 public class Textfields {
     private final String initialplaying;
     private final String won1;
@@ -30,6 +32,11 @@ public class Textfields {
     private final String err1;
     private final String err2;
 
+
+    /**
+     * This method reads all text fields from Textfields.json and stores them
+     * @throws ParseException ParseException
+     * */
 
     public Textfields() throws ParseException {
         JSONObject jsonObject = JSONManager.readMyJSONAsText("configurations/Textfields.json");
@@ -135,6 +142,10 @@ public class Textfields {
         return turnover;
     }
 
+    public String getWorker1() { return worker1; }
+
+    public String getWorker2() { return worker2; }
+
     public String getErr0() {
         return err0;
     }
@@ -146,7 +157,4 @@ public class Textfields {
     public String getErr2() {
         return err2;
     }
-    public String getWorker1() { return worker1; }
-
-    public String getWorker2() { return worker2; }
 }

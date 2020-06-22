@@ -57,7 +57,7 @@ public class Client implements ViewObserver {
         int whichPlayerId = object.getPlayerId();
         board.getPlayer(whichPlayerId).setGodPowerName(godPower);
         view.displayGodPower(whichPlayerId);
-        if (whichPlayerId==board.numOfPlayers()) view.displayBoardScreen();
+        if (whichPlayerId==board.getNumOfPlayers()) view.displayBoardScreen();
     }
 
     public void onRequestInitializeGodPower(SerializableRequestInitializeGodPower object) throws IOException, ParseException {
@@ -119,7 +119,6 @@ public class Client implements ViewObserver {
         if (board.getCell(x, y) != null) oldLevel = board.getCell(x, y).getLevel(); //ricavo qual era la z prima di costruire
         else oldLevel = -1;
         board.setCell(new ClientBuilding(oldLevel + 1, isDome), x, y); // costruisco sopra l'ultima casella presente
-       // view.displayBoard(object); //mostro le modifiche a schermo
     }
 
     private void onUpdateMove(SerializableUpdateMove object){
@@ -130,12 +129,10 @@ public class Client implements ViewObserver {
         y = object.getNewPosition().getY();
         board.getPlayer(playerId).getWorker(workerId).setX(x); //apporto modifiche alla board del client
         board.getPlayer(playerId).getWorker(workerId).setY(y);
-        //view.displayBoard(object); //mostro le modifiche a schermo (credo proprio che per la GUI serva un metodo che dica quali sono le caselle di
-        //partenza e arrivo
     }
 
     public void onUpdateInitializeNames (SerializableUpdateInitializeNames names){
-        for (int id = 1; id <= board.numOfPlayers(); id++)
+        for (int id = 1; id <= board.getNumOfPlayers(); id++)
             board.setPlayer(new ClientPlayer(names.getPlayersNames().get(id - 1)), id);//aggiungo i nomi alla board
         view.displayPlayerNames(names); //mostro a schermo i nomi degli altri giocatori
     }
@@ -157,9 +154,7 @@ public class Client implements ViewObserver {
 
 
 
-
-
-    // metodi da lanciare una volta che l'utente ha fornito le informazioni necessarie (dopo che ha premuto OK)
+    /* ViewObserver methods */
 
     public void onCompletedStartup (String myName, int numOfPlayers) {
         try {

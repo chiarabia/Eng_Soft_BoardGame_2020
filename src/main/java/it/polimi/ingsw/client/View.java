@@ -4,14 +4,14 @@ import it.polimi.ingsw.server.serializable.*;
 
 import java.util.List;
 
-// Metodi che Client invoca su CLI e GUI
+/** This interface represents view methods callable by client manager */
 
 public interface View {
-    // metodi di servizio
+    /* service methods */
     void setBoard(ClientBoard board);
     void addObserver(ViewObserver observer);
 
-    // metodi di rappresentazione
+    /* representation methods */
     void displayStartup(); // Il gioco è stato appena avviato, viene mostrata la schermata iniziale
     void displayWaitingRoom(); // Le informazioni di nome e numero giocatori sono state appena immesse, inizia l'attesa di altri giocatori per l'inizio della partita
     void displayPlayerNames(SerializableUpdateInitializeNames names); // La partita sta per iniziare, sono stati appena forniti i nomi di tutti i giocatori. Qui si attiva la schermata dei GodPowers
@@ -27,7 +27,7 @@ public interface View {
     void displayError(int errorId); // Deve essere visualizzato un messaggio di errore
     void displayDisconnection (int playerId); // Un giocatore si è appena disconnesso
 
-    // metodi di richiesta input tastiera/mouse
+    /* input methods */
     void askForAction(SerializableRequestAction object);
     void askForInitialGodPower(List<GodCard> godCards);
     void askForInitialWorkerPositions();
