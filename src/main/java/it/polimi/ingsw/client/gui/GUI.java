@@ -8,11 +8,13 @@ import it.polimi.ingsw.client.gui.runnable.*;
 
 import it.polimi.ingsw.server.serializable.*;
 import javafx.application.Platform;
+import javafx.geometry.Pos;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
 import javafx.scene.text.Text;
-import java.util.ArrayList;
-import java.util.List;
+
+import java.util.*;
+import java.util.stream.Collectors;
 
 public class GUI implements View {
     private Textfields textfields;
@@ -84,9 +86,7 @@ public class GUI implements View {
         if (myPlayerId == currentPlayerId){
             Platform.runLater(()->{
                 String notification = "It's your turn!";
-                Text oldText = BoardSceneController.getNotification();
-                setTextFormat(oldText);
-                oldText.setText(notification);
+                boardSceneController.displayNotificationsDuringTurn(notification);
             });
         }
         else {
@@ -166,8 +166,8 @@ public class GUI implements View {
 		//if there is a building to update
         if(!updateBuild.isEmpty()){
             for (int i = 0; i < updateBuild.size(); i++){
-                Position newPosition = updateBuild.get(0).getNewPosition();
-                boolean dome = updateBuild.get(0).isDome();
+                Position newPosition = updateBuild.get(i).getNewPosition().mirrorYCoordinate();
+                boolean dome = updateBuild.get(i).isDome();
                 Platform.runLater(()->{
                     boardSceneController.updateBuilding(newPosition, dome);
                 });
@@ -177,8 +177,8 @@ public class GUI implements View {
         //if there is a worker position to update
         if(!updateMove.isEmpty()){
            for (int i = 0; i < updateMove.size(); i++){
-               Position newPosition = updateMove.get(i).getNewPosition();
-               Position oldPosition = updateMove.get(i).getStartingPosition();
+               Position newPosition = updateMove.get(i).getNewPosition().mirrorYCoordinate();
+               Position oldPosition = updateMove.get(i).getStartingPosition().mirrorYCoordinate();
                int playerID = updateMove.get(i).getPlayerId();
                Platform.runLater(()->{
                    boardSceneController.updateWorker(newPosition,oldPosition,playerID);
@@ -191,6 +191,12 @@ public class GUI implements View {
     @Override
     public void displayBoard(SerializableUpdateInitializeWorkerPositions update) {
         List<Position> workerPositions = update.getWorkerPositions();
+        ArrayList<Position> tempList = new ArrayList<>();
+
+        for(int i = 0; i<update.getWorkerPositions().size(); i++) {
+            tempList.add(i,  workerPositions.get(i).mirrorYCoordinate());
+        }
+
         int playerID = update.getPlayerId();
 
         boardSceneController = boardSceneRunnable.getBoardSceneController();
@@ -198,7 +204,7 @@ public class GUI implements View {
         	//displays the worker initial position on only enemy players
             if (playerID != board.getMyPlayerId()) {
                 for (int i = 0; i < workerPositions.size(); i++) {
-                    boardSceneController.updateWorkerInitialPosition(workerPositions.get(i), update.getPlayerId());
+                    boardSceneController.updateWorkerInitialPosition(tempList.get(i), update.getPlayerId());
                 }
             }
         });
@@ -206,19 +212,20 @@ public class GUI implements View {
 
     @Override
     public void askForAction(SerializableRequestAction object) {
+
         BoardSceneController.updateActionCode(2);
         int currentPlayerID = board.getPlayerTurnId();
-        Position firstWorkerPosition = getWorkerPostions(currentPlayerID,1);
-        Position secondWorkerPosition = getWorkerPostions(currentPlayerID,2);
+        Position firstWorkerPosition = getWorkerPositions(currentPlayerID,1).mirrorYCoordinate();
+        Position secondWorkerPosition = getWorkerPositions(currentPlayerID,2).mirrorYCoordinate();
 
         //updates all the Sets in the BoardSceneController and the Workers positions
         Platform.runLater(()->{
             boardSceneController.setOldFirstWorkerPosition(firstWorkerPosition);
             boardSceneController.setOldSecondWorkerPosition(secondWorkerPosition);
-            boardSceneController.setWorker1MovesPosition(object.getWorker1Moves());
-            boardSceneController.setWorker2MovesPosition(object.getWorker2Moves());
-            boardSceneController.setWorker1BuildPosition(object.getWorker1Builds());
-            boardSceneController.setWorker2BuildPosition(object.getWorker2Builds());
+            boardSceneController.setWorker1MovesPosition(mirrorPositionYCoordinate(object.getWorker1Moves()));
+            boardSceneController.setWorker2MovesPosition(mirrorPositionYCoordinate(object.getWorker2Moves()));
+            boardSceneController.setWorker1BuildPosition(mirrorPositionYCoordinate(object.getWorker1Builds()));
+            boardSceneController.setWorker2BuildPosition(mirrorPositionYCoordinate(object.getWorker2Builds()));
         });
 
         //move possible
@@ -322,10 +329,19 @@ public class GUI implements View {
         notification.setFont(Font.font("Verdana", FontWeight.BOLD, 15));
     }
 
-    public Position getWorkerPostions(int playerID, int workerID){
+    public Position getWorkerPositions(int playerID, int workerID){
         int x = board.getPlayer(playerID).getWorker(workerID).getX();
         int y = board.getPlayer(playerID).getWorker(workerID).getY();
         return new Position(x,y,0);
+    }
+
+    private Set<Position> mirrorPositionYCoordinate(Set<Position> set) {
+        Set<Position> tempSet = new HashSet<Position>();
+
+        for (Position position : set) {
+            tempSet.add(position.mirrorYCoordinate());
+        }
+         return tempSet;
     }
 
     public GUI(Textfields textfields){ this.textfields = textfields; }

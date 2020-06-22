@@ -1,6 +1,6 @@
 {
   "role": "client",
-  "ui": "CLI",
+  "ui": "GUI",
   "ip": "localhost",
   "port": 555
 }

@@ -29,6 +29,12 @@ public class Position implements java.io.Serializable {
         return z;
     }
 
+    public Position mirrorYCoordinate() {
+        return new Position(this.getX(),
+                (this.getY()-4)<0 ? -(this.getY()-4) : (this.getY()-4),
+                this.getZ());
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;

@@ -121,7 +121,7 @@ public class BoardSceneController implements Initializable {
         moveButton.setOnAction(actionEvent -> {
             //sends the position and worker id of the worker that has been moved
             List<ViewObserver> observerList = MainStage.getObserverList();
-            for (int i = 0; i < observerList.size(); i++) observerList.get(i).onCompletedMove(newWorkerPosition, workerSelected);
+            for (int i = 0; i < observerList.size(); i++) observerList.get(i).onCompletedMove(newWorkerPosition.mirrorYCoordinate(), workerSelected);
             //moveButton.setDisable(true);
         });
 
@@ -131,7 +131,7 @@ public class BoardSceneController implements Initializable {
             List<ViewObserver> observerList = MainStage.getObserverList();
             boolean isDome = false;
             if(newBuildingPostion.getZ()==4) isDome = true;
-            for (int i = 0; i < observerList.size(); i++) observerList.get(i).onCompletedBuild(newBuildingPostion, workerSelected, isDome);
+            for (int i = 0; i < observerList.size(); i++) observerList.get(i).onCompletedBuild(newBuildingPostion.mirrorYCoordinate(), workerSelected, isDome);
             //buildButton.setDisable(true);
         });
 
@@ -139,7 +139,7 @@ public class BoardSceneController implements Initializable {
         domeButton.setOnAction(actionEvent -> {
             //sends the position of the new dome building and the worker id
             List<ViewObserver> observerList = MainStage.getObserverList();
-            for (int i = 0; i < observerList.size(); i++) observerList.get(i).onCompletedBuild(newBuildingPostion, workerSelected, true);
+            for (int i = 0; i < observerList.size(); i++) observerList.get(i).onCompletedBuild(newBuildingPostion.mirrorYCoordinate(), workerSelected, true);
             //domeButton.setDisable(true);
         });
 
@@ -200,8 +200,13 @@ public class BoardSceneController implements Initializable {
         startingWorkerPositions.add(WorkerPosition);
         //when there are two Workers it gives them to the client
         if (startingWorkerPositions.size() == 2){
+            ArrayList<Position> startingWorkerPositionsWithYmirrored = new ArrayList<Position>();
+            for (int i = 0; i < startingWorkerPositions.size(); i++) {
+                startingWorkerPositionsWithYmirrored.add(i, startingWorkerPositions.get(i).mirrorYCoordinate());
+            }
+
             for (int i = 0; i < observerList.size(); i++)
-                observerList.get(i).onCompletedInitializeWorkerPositions(startingWorkerPositions);
+                observerList.get(i).onCompletedInitializeWorkerPositions(startingWorkerPositionsWithYmirrored);
             actionsCodes.clear();
             notificationsTextFlow.getChildren().clear();
         }
@@ -212,7 +217,7 @@ public class BoardSceneController implements Initializable {
         int column = GridPane.getColumnIndex((Node) event.getSource());
         int row = GridPane.getRowIndex((Node) event.getSource());
         //if we are in the askWorkerInitialPosition phase
-        if(actionsCodes.get(0) == 1) {
+        if(actionsCodes!=null && actionsCodes.get(0)!=null && actionsCodes.get(0) == 1) {
             System.out.println(String.format("Node clicked at: column=%d, row=%d", column, row));
             //adds the StackPane of the cell that we clicked in workerCells
             StackPane cell = (StackPane) getNodeFromGridPane(gridPane, column, row);
@@ -223,7 +228,7 @@ public class BoardSceneController implements Initializable {
             //updates the workerNumber
         }
         //if we are in a normal turn
-        else if(actionsCodes.get(0) == 2){
+        else if(actionsCodes!=null && actionsCodes.get(0)!=null && actionsCodes.get(0) == 2){
             //gets the current position in terms of StackPane of the two workers
             StackPane firstWorkerCell = (StackPane)getNodeFromPosition(gridPane,oldFirstWorkerPosition);
             StackPane secondWorkerCell = (StackPane)getNodeFromPosition(gridPane,oldSecondWorkerPosition);
@@ -500,6 +505,13 @@ public class BoardSceneController implements Initializable {
         if(notificationsTextFlow.getChildren().size() > 5) notificationsTextFlow.getChildren().clear();
     }
 
+    public void displayNotificationsDuringTurn(String notification, int font){
+        Text notificationText = new Text(notification);
+        setTextFormat(notificationText,font);
+        notificationsTextFlow.getChildren().add(notificationText);
+        if(notificationsTextFlow.getChildren().size() > 5) notificationsTextFlow.getChildren().clear();
+    }
+
     public void disableDeclineButton(boolean isDeclinePossible){
         declineButton.setDisable(isDeclinePossible);
     }
@@ -528,7 +540,7 @@ public class BoardSceneController implements Initializable {
         endGame.setFitHeight(500);
         imageContainer.getChildren().add(endGame);
     }
-  
+
     public void setMovePossible (boolean isPossible) {isMovePossible = isPossible;}
     public void setBuildPossible (boolean isPossible) {isBuildPossible = isPossible;}
     public void setDomeAtAnyLevelPossible (boolean isPossible) {isDomeAtAnyLevelPossible = isPossible;}
