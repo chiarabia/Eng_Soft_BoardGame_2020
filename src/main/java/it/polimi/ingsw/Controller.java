@@ -60,7 +60,7 @@ public class Controller implements ProxyObserver {
         int nextPlayerId = nextPlayerId(playerId);
         Turn newTurn = getPlayerGodPower(playerId).endTurn(getTurn(), getGodPowers(), getPlayer(nextPlayerId)); // termina il turno precedente, serve l'end turn del giocatore corrente
         game.setTurn(newTurn); // setta il turno successivo
-        SerializableUpdate update = new SerializableUpdateTurn(nextPlayerId);
+        SerializableUpdate update = new SerializableUpdateTurn(nextPlayerId, false);
         game.notifyJustUpdateAll(update); // aggiorna i players del cambio turno
         nextOperation(); // apre una nuova operazione
     }
@@ -143,7 +143,7 @@ public class Controller implements ProxyObserver {
 
         List<SerializableUpdate> tempUpdates = new ArrayList<>();
         tempUpdates.add( new SerializableUpdateLoser(playerId));
-        tempUpdates.add(new SerializableUpdateTurn(nextPlayerId));
+        tempUpdates.add(new SerializableUpdateTurn(nextPlayerId, false));
         game.notifyJustUpdateAll(tempUpdates); // aggiorna i players della sconfitta
         nextOperation(); // apre una nuova operazione
     }
@@ -261,7 +261,7 @@ public class Controller implements ProxyObserver {
 
         SerializableUpdateInitializeWorkerPositions update = new SerializableUpdateInitializeWorkerPositions(workerPositions, playerId);
         if (playerId == getPlayers().size()){ // tutti i worker sono pronti, il primo turno ha inizio
-            SerializableUpdateTurn updateTurn = new SerializableUpdateTurn(1);
+            SerializableUpdateTurn updateTurn = new SerializableUpdateTurn(1, true);
             game.setTurn(new Turn(getPlayers().get(0)));
             List <SerializableUpdate> tempUpdates = new ArrayList<>();
             tempUpdates.add(update);

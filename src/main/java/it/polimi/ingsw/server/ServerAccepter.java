@@ -15,6 +15,10 @@ import java.util.List;
 public class ServerAccepter extends Thread {
     private ServerSocket serverSocket;
     private List <ServerWaitingList> waitingLists;
+    /**
+     * This method accepts incoming connections, checking if client datas are correct
+     * If datas are correct it adds the player to a waiting list, otherwise it reports the error
+     */
     public void run() {
         try {
             while (true) {
@@ -42,6 +46,12 @@ public class ServerAccepter extends Thread {
             try { (new Server()).startServer(serverSocket.getLocalPort()); } catch (InterruptedException ex) {}
         }
     }
+    /**
+     * This method sends to a client an error message and then closes the connection
+     * @param socket socket
+     * @param message error message
+     * @throws IOException IOException
+     */
     private void sendError (Socket socket, String message) throws IOException {
         ObjectOutputStream fileObjectOut = new ObjectOutputStream(socket.getOutputStream());
         fileObjectOut.writeObject(new Message(message));

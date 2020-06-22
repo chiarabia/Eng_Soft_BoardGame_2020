@@ -20,7 +20,6 @@ public class Client implements ViewObserver {
     private ClientCommunicator communicator;
     private int port;
     private String IP;
-    private boolean isGameStarted = false;
 
     public void startClient(int port, String IP, boolean GUI) {
         try {
@@ -90,10 +89,7 @@ public class Client implements ViewObserver {
 
     public void onUpdateTurn (SerializableUpdateTurn object){
         board.setPlayerTurnId( object.getPlayerId());
-        if (!isGameStarted){
-            isGameStarted = true;
-            view.displayGameStart();
-        }
+        if (object.getIsFirstTurn()) view.displayGameStart();
         view.displayTurn(object.getPlayerId()); //mostro a schermo che il gicoatore di turno è un altro
     }
 

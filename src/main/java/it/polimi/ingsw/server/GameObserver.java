@@ -7,6 +7,10 @@ import it.polimi.ingsw.server.serializable.SerializableUpdate;
 import java.io.IOException;
 import java.util.List;
 
+/**
+ * This interface represents model observers (i.e. ServerView)
+ */
+
 public interface GameObserver {
     void justUpdateAll(SerializableUpdate update);
     void justUpdateAll(List<SerializableUpdate> updates);
