@@ -130,7 +130,7 @@ public class ChoosingGodSceneController implements Initializable {
         if (clickedNode == HBox1 || clickedNode == godDescription1 || clickedNode == godPortrait1 || clickedNode == godPower1) {
             onBoxClicked(1);
         }
-        else if(numberOfGods == 2 && (clickedNode == HBox2 || clickedNode == godDescription2 || clickedNode == godPortrait2 || clickedNode == godPower2)){
+        else if(numberOfGods > 1 && (clickedNode == HBox2 || clickedNode == godDescription2 || clickedNode == godPortrait2 || clickedNode == godPower2)){
             onBoxClicked(2);
         }
         else if(numberOfGods == 3 && (clickedNode == HBox3 || clickedNode == godDescription3 || clickedNode == godPortrait3 || clickedNode == godPower3)){

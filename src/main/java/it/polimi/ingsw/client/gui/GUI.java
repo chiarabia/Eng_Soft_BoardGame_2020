@@ -92,9 +92,7 @@ public class GUI implements View {
         else {
             Platform.runLater(()->{
                 String notification = "It's" + board.getPlayer(currentPlayerId).getPlayerName() + "turn!";
-                Text oldText = BoardSceneController.getNotification();
-                setTextFormat(oldText);
-                oldText.setText(notification);
+                boardSceneController.displayNotificationsDuringTurn(notification);
             });
         }
     }
@@ -105,10 +103,10 @@ public class GUI implements View {
         	//displays a winner notification of the winner
 
             boardSceneController.displayEndGameImage(playerId == board.getMyPlayerId());
-            String notification = board.getPlayer(playerId).getPlayerName() + " won!!";
+            /*String notification = board.getPlayer(playerId).getPlayerName() + " won!!";
             Text oldText = BoardSceneController.getNotification();
             setTextFormat(oldText);
-            oldText.setText(notification);
+            oldText.setText(notification);*/
         });
     }
 
@@ -117,9 +115,7 @@ public class GUI implements View {
         Platform.runLater(()->{
         	//displays a lose notification of the player that has lost
             String notification = board.getPlayer(playerId).getPlayerName() + " lost";
-            Text oldText = BoardSceneController.getNotification();
-            setTextFormat(oldText);
-            oldText.setText(notification);
+            boardSceneController.displayNotificationsDuringTurn(notification);
         });
 
     }
@@ -129,9 +125,7 @@ public class GUI implements View {
         Platform.runLater(()->{
         	//displays a disconnection message
             String notification = board.getPlayer(playerId).getPlayerName() + " has disconnected";
-            Text oldText = BoardSceneController.getNotification();
-            setTextFormat(oldText);
-            oldText.setText(notification);
+            boardSceneController.displayNotificationsDuringTurn(notification);
         });
     }
 
@@ -146,9 +140,10 @@ public class GUI implements View {
         String finalMessage = message;
         Platform.runLater(()->{
         	//displays an error message
-            Text oldText = BoardSceneController.getNotification();
+            boardSceneController.displayNotificationsDuringTurn(finalMessage);
+            /*Text oldText = BoardSceneController.getNotification();
             setTextFormat(oldText);
-            oldText.setText(finalMessage);
+            oldText.setText(finalMessage);*/
         });
     }
 
@@ -248,7 +243,7 @@ public class GUI implements View {
         //move possible
         if (!object.areMovesEmpty()) {
             Platform.runLater(() -> {
-                boardSceneController.displayNotificationsDuringTurn("You can move \n");
+                boardSceneController.displayNotificationsDuringTurn("You can move");
                 boardSceneController.setMovePossible(true);
             });
         }
@@ -260,7 +255,7 @@ public class GUI implements View {
         //build possible
         if(!object.areBuildsEmpty()){
             Platform.runLater(() -> {
-                boardSceneController.displayNotificationsDuringTurn("You can build \n");
+                boardSceneController.displayNotificationsDuringTurn("You can build");
                 boardSceneController.setBuildPossible(true);
             });
         }
@@ -282,7 +277,7 @@ public class GUI implements View {
         //can decline allowed
         if(object.canDecline()){
             Platform.runLater(() -> {
-                boardSceneController.displayNotificationsDuringTurn("You can decline the action, just press can decline \n");
+                boardSceneController.displayNotificationsDuringTurn("You can decline the action, just press can decline");
                 boardSceneController.setDeclinePossible(true);
                 boardSceneController.setVisibleDeclineButton(true);
                 boardSceneController.disableDeclineButton(false);
