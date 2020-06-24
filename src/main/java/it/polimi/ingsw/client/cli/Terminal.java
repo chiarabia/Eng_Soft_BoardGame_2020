@@ -108,41 +108,6 @@ public class Terminal implements View {
         else System.out.println(board.getPlayer(playerTurnId).getPlayerName() + Color.WHITE.set() +  textfields.getPlaying2());
     }
 
-    public void displayRequestAction(SerializableRequestAction object){
-        if (object.getWorker1Moves().size()>0) {
-            System.out.print(textfields.getMoves1());
-            displayCells((object).getWorker1Moves());
-        }
-        if (object.getWorker2Moves().size()>0) {
-            System.out.print(textfields.getMoves2());
-            displayCells((object).getWorker2Moves());
-        }
-        if (object.getWorker1Builds().size()>0) {
-            System.out.print(textfields.getBuilds1());
-            displayCells((object).getWorker1Builds());
-        }
-        if (object.getWorker2Builds().size()>0) {
-            System.out.print(textfields.getBuilds2());
-            displayCells((object).getWorker2Builds());
-        }
-        if ((object).isMoveOptional())
-            System.out.println(textfields.getMovesopt());
-        if ((object).isBuildOptional())
-            System.out.println(textfields.getBuildsopt());
-
-        if(!(object.canWorkerDoAction(1) && object.canWorkerDoAction(2))&&!(object.areBuildsEmpty()&&object.areMovesEmpty())) {
-            int workerId = 0;
-            int i;
-            for(i = 1; i<=2; i++) {
-                if (object.canWorkerDoAction(i)) {//in caso contrario non ho bisogno di chiedere al player
-                    workerId = i;
-                }
-            }
-            System.out.println("worker id: "+ workerId);
-        }
-    }
-
-
     public void askForAction(SerializableRequestAction object){
             boolean isDome;
             Position position;
@@ -210,7 +175,7 @@ public class Terminal implements View {
                 observerList.get(i).onCompletedInitializeGodPower(chosenGodPower);
     }
 
-    public void askForInitialWorkerPositions(){
+    public void askForInitialWorkerPositions(List <Position> possiblePositions){
             List<Position> myWorkerPositions = askForWorkersInitialPositions();
             for (int i = 0; i < observerList.size(); i++)
                 observerList.get(i).onCompletedInitializeWorkerPositions(myWorkerPositions);
@@ -270,15 +235,11 @@ public class Terminal implements View {
 
     private String askForGodPower (List<GodCard> godPowers){
         List<String> godNames = new ArrayList<>();
-        for (int i = 0 ; i < godPowers.size(); i++){
+        for (int i = 0 ; i < godPowers.size(); i++) {
             godNames.add(godPowers.get(i).getGodName());
+            System.out.println(Color.BLUE.set() + godPowers.get(i).getGodName()+Color.WHITE.set()+" "+godPowers.get(i).getGodDescription());
         }
         String godPower = "";
-        if(godNames.size()==1) {
-            setColor(board.getMyPlayerId());
-            System.out.println("You"+Color.WHITE.set()+textfields.getChosen1() + ": " + godNames.get(0));
-            return godNames.get(0);
-        }
         while (true) {
             setColor(board.getMyPlayerId());
             System.out.print("You"+Color.WHITE.set()+textfields.getChosen1() + " (");
@@ -350,6 +311,40 @@ public class Terminal implements View {
             fromKeyboard = keyboard.next();
         } while (!fromKeyboard.toLowerCase().equals("y") && !fromKeyboard.toLowerCase().equals("n"));
         return fromKeyboard.toLowerCase().equals("y");
+    }
+
+    private void displayRequestAction(SerializableRequestAction object){
+        if (object.getWorker1Moves().size()>0) {
+            System.out.print(textfields.getMoves1());
+            displayCells((object).getWorker1Moves());
+        }
+        if (object.getWorker2Moves().size()>0) {
+            System.out.print(textfields.getMoves2());
+            displayCells((object).getWorker2Moves());
+        }
+        if (object.getWorker1Builds().size()>0) {
+            System.out.print(textfields.getBuilds1());
+            displayCells((object).getWorker1Builds());
+        }
+        if (object.getWorker2Builds().size()>0) {
+            System.out.print(textfields.getBuilds2());
+            displayCells((object).getWorker2Builds());
+        }
+        if ((object).isMoveOptional())
+            System.out.println(textfields.getMovesopt());
+        if ((object).isBuildOptional())
+            System.out.println(textfields.getBuildsopt());
+
+        if(!(object.canWorkerDoAction(1) && object.canWorkerDoAction(2))&&!(object.areBuildsEmpty()&&object.areMovesEmpty())) {
+            int workerId = 0;
+            int i;
+            for(i = 1; i<=2; i++) {
+                if (object.canWorkerDoAction(i)) {//in caso contrario non ho bisogno di chiedere al player
+                    workerId = i;
+                }
+            }
+            System.out.println("worker id: "+ workerId);
+        }
     }
 
 

@@ -148,11 +148,6 @@ public class GUI implements View {
     }
 
     @Override
-    public void displayRequestAction(SerializableRequestAction object) {
-
-    }
-
-    @Override
     public void displayBoard(SerializableUpdateActions update) {
         List<SerializableUpdateMove> updateMove = update.getUpdateMove();
         List<SerializableUpdateBuild> updateBuild = update.getUpdateBuild();
@@ -302,7 +297,7 @@ public class GUI implements View {
     }
 
     @Override
-    public void askForInitialWorkerPositions() {
+    public void askForInitialWorkerPositions(List <Position> possiblePositions) {
         //adds the current notification for the player
         Platform.runLater(()->{
             String notification ="Choose your workers positions by clicking on the board";

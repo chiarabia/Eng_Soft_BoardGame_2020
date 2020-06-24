@@ -39,7 +39,7 @@ public class App{
                 }
             } catch (Exception e){}
 
-            //server = true;
+            server = true;
             if (server) (new Server()).startServer(port);
             else (new Client()).startClient(port, ip, GUI);
         }catch(Exception e){ System.out.println("An error occurred");

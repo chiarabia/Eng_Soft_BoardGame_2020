@@ -7,10 +7,25 @@ import java.util.List;
 /** This interface represents client methods callable by view when information is received by the user */
 
 public interface ViewObserver {
-    void onCompletedStartup (String myName, int numOfPlayers); //Il giocatore ha appena scelto nome e numero giocatori
-    void onCompletedInitializeGodPower(String chosenGodPower); // Il giocatore ha appena scelto la divinità
-    void onCompletedInitializeWorkerPositions(List<Position> myWorkerPositions); // Il giocatore ha appena scelto anche le posizioni iniziali
-    void onCompletedBuild(Position position, int workerId, boolean isDome); // Il giocatore ha appena scelto di costruire in una posizione
-    void onCompletedMove(Position position, int workerId); // Il giocatore ha appena scelto di muovere in una posizione
-    void onCompletedDecline(); // Il giocatore ha appena scelto di rifiutare un'azione opzionale
+    /**This method is called when player has just chosen name and number of players
+     *@param myName name
+     *@param numOfPlayers number of players*/
+    void onCompletedStartup (String myName, int numOfPlayers);
+    /**This method is called when player has just chosen a god power
+     *@param chosenGodPower god power's name*/
+    void onCompletedInitializeGodPower(String chosenGodPower);
+    /**This method is called when player has just chosen workers initial positions
+     *@param myWorkerPositions list of positions ordered by worker ID*/
+    void onCompletedInitializeWorkerPositions(List<Position> myWorkerPositions);
+    /**This method is called when player has just chosen to build
+     * @param position position
+     * @param workerId worker ID
+     * @param isDome true if the building is a dome*/
+    void onCompletedBuild(Position position, int workerId, boolean isDome);
+    /**This method is called when player has just chosen to move
+     * @param position position
+     * @param workerId worker ID*/
+    void onCompletedMove(Position position, int workerId);
+    /**This method is called when player has just chosen to end the turn*/
+    void onCompletedDecline();
 }

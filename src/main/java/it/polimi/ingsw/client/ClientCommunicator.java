@@ -89,7 +89,7 @@ public class ClientCommunicator extends Thread {
             for(int i = 0; i<observerList.size(); i++)observerList.get(i).onRequestInitializeGodPower((SerializableRequestInitializeGodPower) object);
         }
         if (object instanceof SerializableRequestInitializeWorkerPositions) {
-            for(int i = 0; i<observerList.size(); i++)observerList.get(i).onRequestInitializeWorkerPositions();
+            for(int i = 0; i<observerList.size(); i++)observerList.get(i).onRequestInitializeWorkerPositions((SerializableRequestInitializeWorkerPositions)object);
         }
         if (object instanceof SerializableUpdateActions) {
             for (Client client : observerList) client.onUpdateAction((SerializableUpdateActions) object);
