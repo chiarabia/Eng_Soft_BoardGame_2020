@@ -101,12 +101,14 @@ public class GUI implements View {
             Platform.runLater(()->{
                 String notification = "It's your turn! \n";
                 boardSceneController.displayNotificationsDuringTurn(notification);
+                boardSceneController.setMyTurn(true);
             });
         }
         else {
             Platform.runLater(()->{
                 String notification = "It's " + board.getPlayer(currentPlayerId).getPlayerName() + " turn!\n";
                 boardSceneController.displayNotificationsDuringTurn(notification);
+                boardSceneController.setMyTurn(false);
             });
         }
     }
