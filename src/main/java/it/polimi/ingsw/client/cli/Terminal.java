@@ -181,7 +181,8 @@ public class Terminal implements View {
                 observerList.get(i).onCompletedInitializeWorkerPositions(myWorkerPositions);
     }
 
-    public void askForStartupInfos() {
+    public void askForStartupInfos(int errorId) {
+            if (errorId >= 0) displayError(errorId);
             String name = askForString(Terminal.Color.WHITE.set() + textfields.getName());
             int numOfPlayers = askForInt(textfields.getNumofplayers());
             for (int i = 0; i < observerList.size(); i++) observerList.get(i).onCompletedStartup(name, numOfPlayers);

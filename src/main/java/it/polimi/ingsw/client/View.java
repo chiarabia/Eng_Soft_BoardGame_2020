@@ -61,6 +61,7 @@ public interface View {
     /**This method is called when player has to choose initial god powers
      * @param possiblePositions possible positions*/
     void askForInitialWorkerPositions(List <Position> possiblePositions);
-    /**This method is called when player has to choose name and number of players*/
-    void askForStartupInfos();
+    /**This method is called when player has to choose name and number of players
+     *@param error error ID, -1 means no error */
+    void askForStartupInfos(int error);
 }

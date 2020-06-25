@@ -32,7 +32,7 @@ public class Client implements ViewObserver {
             else view = new Terminal(new Textfields());
             view.addObserver(this);
             view.displayStartup(); //Questo metodo fa partire la Cli e la Gui (nella cli fa partire l'ASCII Art)
-            view.askForStartupInfos();
+            view.askForStartupInfos(-1);
         } catch (Exception e) {
             e.printStackTrace();
             onError();
@@ -200,8 +200,7 @@ public class Client implements ViewObserver {
      */
     public void onRestart(int error) throws GameEndedException {
         communicator.stopProcess();
-        view.displayError(error);
-        view.askForStartupInfos();
+        view.askForStartupInfos(error);
         throw new GameEndedException();
     }
 

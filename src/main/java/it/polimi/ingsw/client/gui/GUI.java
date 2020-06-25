@@ -312,8 +312,9 @@ public class GUI implements View {
     }
 
     @Override
-    public void askForStartupInfos() {
+    public void askForStartupInfos(int errorId) {
         // I can't call Platform.runLater until the JavaFX application has started.
+        // errorId: -1 <==> no error, 1 <==> name error
         try {
             MainStage.getLock().take();
         } catch (Exception ignored) {}
