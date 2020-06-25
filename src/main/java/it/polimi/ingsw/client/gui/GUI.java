@@ -221,7 +221,6 @@ public class GUI implements View {
 
         int playerID = update.getPlayerId();
 
-        boardSceneController = boardSceneRunnable.getBoardSceneController();
         Platform.runLater(()->{
         	//displays the worker initial position on only enemy players
             if (playerID != board.getMyPlayerId()) {
@@ -354,6 +353,8 @@ public class GUI implements View {
 
         //displays the LoginScene
         if(errorId == 1){
+            ArrayList<Object> playerData = MainStage.getPlayerData();
+            playerData.clear();
             Platform.runLater(loginSceneRunnable);
             Platform.runLater(()->{
                 loginSceneController = loginSceneRunnable.getLoginSceneController();
