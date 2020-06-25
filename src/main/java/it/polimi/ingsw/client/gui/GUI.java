@@ -4,6 +4,7 @@ import it.polimi.ingsw.Position;
 import it.polimi.ingsw.client.*;
 import it.polimi.ingsw.client.gui.controller.BoardSceneController;
 import it.polimi.ingsw.client.gui.controller.LoginSceneController;
+import it.polimi.ingsw.client.gui.controller.WaitingSceneController;
 import it.polimi.ingsw.client.gui.runnable.BoardSceneRunnable;
 import it.polimi.ingsw.client.gui.runnable.ChoosingGodSceneRunnable;
 import it.polimi.ingsw.client.gui.runnable.LoginSceneRunnable;
@@ -23,10 +24,12 @@ public class GUI implements View {
     private Textfields textfields;
     private BoardSceneController boardSceneController;
     private LoginSceneController loginSceneController;
+    private WaitingSceneController waitingSceneController;
     private ClientBoard board;
     ChoosingGodSceneRunnable choosingGodSceneRunnable = new ChoosingGodSceneRunnable();
     BoardSceneRunnable boardSceneRunnable;
     LoginSceneRunnable loginSceneRunnable;
+    WaitingSceneRunnable waitingSceneRunnable;
 
     public void addObserver(ViewObserver observer){
         List<ViewObserver> observerList = MainStage.getObserverList();
@@ -57,15 +60,19 @@ public class GUI implements View {
         	//displays a welcome message
             Text oldText = BoardSceneController.getNotification();
             setTextFormat(oldText);
-            oldText.setText("Welcome!");
+            oldText.setText("Welcome!\n");
         });
     }
 
     @Override
     public void displayWaitingRoom() {
         //displays the WaitingRoomScene
-        Platform.runLater(new WaitingSceneRunnable());
-
+        waitingSceneRunnable = new WaitingSceneRunnable();
+        Platform.runLater(waitingSceneRunnable);
+        Platform.runLater(()->{
+            //gets the waitingSceneController
+            waitingSceneController = waitingSceneRunnable.getWaitingSceneController();
+        });
     }
 
     public void setBoard(ClientBoard board) {
@@ -74,6 +81,9 @@ public class GUI implements View {
 
     @Override
     public void displayPlayerNames(SerializableUpdateInitializeNames names) {
+        Platform.runLater(()->{
+            waitingSceneController.updateWaitingLabel();
+        });
     }
 
     @Override
