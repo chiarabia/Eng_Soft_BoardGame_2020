@@ -374,6 +374,8 @@ public class BoardSceneController implements Initializable {
         Image building = new Image("/Buildings/" + level);
         if (level == "dome.png"){
             ImageView dome = new ImageView(building);
+            dome.setFitHeight(100);
+            dome.setFitWidth(100);
             cell.getChildren().add(dome);
         }
         else{
@@ -550,19 +552,6 @@ public class BoardSceneController implements Initializable {
         imageContainer.getChildren().add(endGame);
     }
 
-    public void addImageToBoard(Image image){
-        StackPane imageContainer = new StackPane();
-        imageContainer.setMinHeight(500);
-        imageContainer.setMinWidth(500);
-        BackgroundSize buildingSize = new BackgroundSize(500,500, false,false, true, true);
-        imageContainer.setBackground(new Background(new BackgroundImage(new Image("/Board/SantoriniBoardOnly.png"), BackgroundRepeat.NO_REPEAT, BackgroundRepeat.NO_REPEAT, BackgroundPosition.CENTER, buildingSize )));
-        board.setCenter(imageContainer);
-        ImageView endGame = new ImageView(image);
-        endGame.setFitWidth(500);
-        endGame.setFitHeight(500);
-        imageContainer.getChildren().add(endGame);
-    }
-  
     public void setMovePossible (boolean isPossible) {isMovePossible = isPossible;}
     public void setBuildPossible (boolean isPossible) {isBuildPossible = isPossible;}
     public void setDomeAtAnyLevelPossible (boolean isPossible) {isDomeAtAnyLevelPossible = isPossible;}
