@@ -11,6 +11,7 @@ import java.io.IOException;
 
 public class LoginSceneRunnable implements Runnable {
 
+	private FXMLLoader loader;
 	public LoginSceneController loginSceneController;
 	public LoginSceneController getLoginSceneController(){return loginSceneController;}
 
@@ -18,7 +19,6 @@ public class LoginSceneRunnable implements Runnable {
 	public void run() {
 		try {
 			System.out.println("Loading Login scene...");
-			FXMLLoader loader = new FXMLLoader(getClass().getClassLoader().getResource("LoginScene.fxml"));
 			Parent root = loader.load();
 			Scene LoginScene = new Scene (root);
 
@@ -31,5 +31,9 @@ public class LoginSceneRunnable implements Runnable {
 		} catch (IOException ex){
 			System.err.println(ex);
 		}
+	}
+
+	public LoginSceneRunnable(){
+		this.loader = new FXMLLoader(getClass().getClassLoader().getResource("LoginScene.fxml"));
 	}
 }

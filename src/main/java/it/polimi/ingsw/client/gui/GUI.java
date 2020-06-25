@@ -21,8 +21,8 @@ import java.util.Set;
 
 public class GUI implements View {
     private Textfields textfields;
-    private static BoardSceneController boardSceneController;
-    private static LoginSceneController loginSceneController;
+    private BoardSceneController boardSceneController;
+    private LoginSceneController loginSceneController;
     private ClientBoard board;
     ChoosingGodSceneRunnable choosingGodSceneRunnable = new ChoosingGodSceneRunnable();
     BoardSceneRunnable boardSceneRunnable;
@@ -45,8 +45,6 @@ public class GUI implements View {
     public void displayBoardScreen(){
         //displays the BoardScene
         boardSceneRunnable = new BoardSceneRunnable();
-        //gets the boardSceneController
-        boardSceneController = boardSceneRunnable.getBoardSceneController();
         //displays the boardScene
         Platform.runLater(boardSceneRunnable);
         //adds the PlayerId of the player to the playerData cache
@@ -54,6 +52,8 @@ public class GUI implements View {
         playerData.add(board.getMyPlayerId());
 
         Platform.runLater(()->{
+            //gets the boardSceneController
+            boardSceneController = boardSceneRunnable.getBoardSceneController();
         	//displays a welcome message
             Text oldText = BoardSceneController.getNotification();
             setTextFormat(oldText);
@@ -341,12 +341,12 @@ public class GUI implements View {
         } catch (Exception ignored) {}
 
         loginSceneRunnable = new LoginSceneRunnable();
-        loginSceneController = loginSceneRunnable.getLoginSceneController();
 
         //displays the LoginScene
         if(errorId == 1){
             Platform.runLater(loginSceneRunnable);
             Platform.runLater(()->{
+                loginSceneController = loginSceneRunnable.getLoginSceneController();
                 loginSceneController.updateErrorLabel();
             });
         }
