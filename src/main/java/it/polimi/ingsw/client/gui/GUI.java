@@ -125,11 +125,28 @@ public class GUI implements View {
 
     @Override
     public void displayDisconnection(int playerId) {
-        Platform.runLater(()->{
-        	//displays a disconnection message
-            String notification = board.getPlayer(playerId).getPlayerName() + " has disconnected";
-            boardSceneController.displayNotificationsDuringTurn(notification);
-        });
+        String notification;
+        notification = board.getPlayer(playerId).getPlayerName() + " has disconnected";
+
+        if (getWorkerPositions(board.getMyPlayerId(), 1) == null ||
+                getWorkerPositions(board.getMyPlayerId(), 2) == null) {
+            Platform.runLater(()->{
+                //displays a disconnection message
+                //boardSceneController.displayNotificationsDuringTurn(notification);
+                Text oldText = BoardSceneController.getNotification();
+                setTextFormat(oldText);
+                oldText.setText(notification);
+            });
+
+        }
+        else {
+            Platform.runLater(()->{
+                //displays a disconnection message
+                boardSceneController.displayNotificationsDuringTurn(notification);
+            });
+        }
+
+
     }
 
     @Override
@@ -318,6 +335,7 @@ public class GUI implements View {
     public void askForStartupInfos(int errorId) {
         // I can't call Platform.runLater until the JavaFX application has started.
         // errorId: -1 <==> no error, 1 <==> name error
+
         try {
             MainStage.getLock().take();
         } catch (Exception ignored) {}
@@ -334,6 +352,9 @@ public class GUI implements View {
         }
         else Platform.runLater(loginSceneRunnable);
 
+        try {
+            MainStage.getLock().put(MainStage.getLock());
+        } catch (Exception ignored) {}
     }
 
     //sets the
