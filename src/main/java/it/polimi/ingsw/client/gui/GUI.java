@@ -3,6 +3,7 @@ package it.polimi.ingsw.client.gui;
 import it.polimi.ingsw.Position;
 import it.polimi.ingsw.client.*;
 import it.polimi.ingsw.client.gui.controller.BoardSceneController;
+import it.polimi.ingsw.client.gui.controller.LoginSceneController;
 import it.polimi.ingsw.client.gui.runnable.BoardSceneRunnable;
 import it.polimi.ingsw.client.gui.runnable.ChoosingGodSceneRunnable;
 import it.polimi.ingsw.client.gui.runnable.LoginSceneRunnable;
@@ -21,9 +22,11 @@ import java.util.Set;
 public class GUI implements View {
     private Textfields textfields;
     private static BoardSceneController boardSceneController;
+    private static LoginSceneController loginSceneController;
     private ClientBoard board;
     ChoosingGodSceneRunnable choosingGodSceneRunnable = new ChoosingGodSceneRunnable();
     BoardSceneRunnable boardSceneRunnable;
+    LoginSceneRunnable loginSceneRunnable;
 
     public void addObserver(ViewObserver observer){
         List<ViewObserver> observerList = MainStage.getObserverList();
@@ -337,9 +340,17 @@ public class GUI implements View {
             MainStage.getLock().take();
         } catch (Exception ignored) {}
 
+        loginSceneRunnable = new LoginSceneRunnable();
+        loginSceneController = loginSceneRunnable.getLoginSceneController();
 
         //displays the LoginScene
-        Platform.runLater(new LoginSceneRunnable());
+        if(errorId == 1){
+            Platform.runLater(loginSceneRunnable);
+            Platform.runLater(()->{
+                loginSceneController.updateErrorLabel();
+            });
+        }
+        else Platform.runLater(loginSceneRunnable);
 
         try {
             MainStage.getLock().put(MainStage.getLock());
