@@ -6,6 +6,7 @@ import it.polimi.ingsw.client.gui.MainStage;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.Node;
+import javafx.scene.control.Label;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.HBox;
@@ -27,6 +28,9 @@ public class ChoosingGodSceneController implements Initializable {
     HBox HBox2;
     @FXML
     HBox HBox3;
+
+    @FXML
+    Label topLabel;
 
     int numberOfPlayers;
 
@@ -143,6 +147,7 @@ public class ChoosingGodSceneController implements Initializable {
         List<ViewObserver> observerList = MainStage.getObserverList();
         GodCard God = godPowers.get(godNumber-1);
         String chosenGodPower = God.getGodName();
+        topLabel.setText("You choose " + chosenGodPower + " !");
         godPowers.clear();
         godPowers.add(God);
         System.out.print("clicked on " + godNumber + " \n");
