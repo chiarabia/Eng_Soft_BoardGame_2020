@@ -294,7 +294,6 @@ public class BoardSceneController implements Initializable {
                    newBuildingPostion = addZToPosition(column,row,worker2BuildsPosition);
                    //if the worker selected can't build we display a message
                    if(worker2BuildsPosition.isEmpty()) displayNotificationsDuringTurn("The worker you choose cannot build \n");
-
                }
                 //if a build action is possible in the cell that has been clicked by the player the buildButton is avalaible
                buildButton.setDisable(!isBuildActionPossible);
@@ -303,7 +302,6 @@ public class BoardSceneController implements Initializable {
                domeButton.setDisable(!isBuildActionPossible && !isDomeAtAnyLevelPossible);
                clearActionsList();
                previousCell = cell;
-
             }
 
             if(isDeclinePossible)declineButton.setDisable(false);
@@ -376,6 +374,8 @@ public class BoardSceneController implements Initializable {
         Image building = new Image("/Buildings/" + level);
         if (level == "dome.png"){
             ImageView dome = new ImageView(building);
+            dome.setFitHeight(100);
+            dome.setFitWidth(100);
             cell.getChildren().add(dome);
         }
         else{
