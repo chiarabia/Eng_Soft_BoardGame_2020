@@ -98,13 +98,13 @@ public class GUI implements View {
         boardSceneController.setWorkerSelected(false);
         if (myPlayerId == currentPlayerId){
             Platform.runLater(()->{
-                String notification = "It's your turn!";
+                String notification = "It's your turn! \n";
                 boardSceneController.displayNotificationsDuringTurn(notification);
             });
         }
         else {
             Platform.runLater(()->{
-                String notification = "It's" + board.getPlayer(currentPlayerId).getPlayerName() + "turn!";
+                String notification = "It's " + board.getPlayer(currentPlayerId).getPlayerName() + " turn!\n";
                 boardSceneController.displayNotificationsDuringTurn(notification);
             });
         }
