@@ -28,8 +28,8 @@ public class Client implements ViewObserver {
         try {
             this.port = port;
             this.IP = IP;
-            if (GUI) view = new GUI(new Textfields());
-            else view = new Terminal(new Textfields());
+            if (GUI) view = new GUI();
+            else view = new Terminal();
             view.addObserver(this);
             view.displayStartup(); //Questo metodo fa partire la Cli e la Gui (nella cli fa partire l'ASCII Art)
             view.askForStartupInfos(-1);

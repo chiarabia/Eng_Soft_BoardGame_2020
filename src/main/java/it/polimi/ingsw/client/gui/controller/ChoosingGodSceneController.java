@@ -1,6 +1,7 @@
 package it.polimi.ingsw.client.gui.controller;
 
 import it.polimi.ingsw.client.GodCard;
+import it.polimi.ingsw.client.Textfields;
 import it.polimi.ingsw.client.ViewObserver;
 import it.polimi.ingsw.client.gui.MainStage;
 import javafx.fxml.FXML;
@@ -14,6 +15,7 @@ import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
 import javafx.scene.text.Text;
 import javafx.scene.text.TextFlow;
+import org.json.simple.parser.ParseException;
 
 import java.net.URL;
 import java.util.ArrayList;
@@ -21,6 +23,7 @@ import java.util.List;
 import java.util.ResourceBundle;
 
 public class ChoosingGodSceneController implements Initializable {
+    private Textfields textfields = new Textfields();
 
     @FXML
     HBox HBox1;
@@ -52,6 +55,9 @@ public class ChoosingGodSceneController implements Initializable {
     ImageView godPower2;
     @FXML
     ImageView godPower3;
+
+    public ChoosingGodSceneController() throws ParseException {
+    }
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
@@ -147,7 +153,7 @@ public class ChoosingGodSceneController implements Initializable {
         List<ViewObserver> observerList = MainStage.getObserverList();
         GodCard God = godPowers.get(godNumber-1);
         String chosenGodPower = God.getGodName();
-        topLabel.setText("You choose " + chosenGodPower + " !");
+        topLabel.setText("You"+ textfields.getChosen1() + " " + chosenGodPower);
         godPowers.clear();
         godPowers.add(God);
         System.out.print("clicked on " + godNumber + " \n");

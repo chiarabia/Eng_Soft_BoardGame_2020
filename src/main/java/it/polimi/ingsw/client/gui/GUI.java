@@ -14,6 +14,7 @@ import javafx.application.Platform;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
 import javafx.scene.text.Text;
+import org.json.simple.parser.ParseException;
 
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -21,7 +22,7 @@ import java.util.List;
 import java.util.Set;
 
 public class GUI implements View {
-    private Textfields textfields;
+    private Textfields textfields = new Textfields();
     private BoardSceneController boardSceneController;
     private LoginSceneController loginSceneController;
     private WaitingSceneController waitingSceneController;
@@ -31,6 +32,9 @@ public class GUI implements View {
     BoardSceneRunnable boardSceneRunnable;
     LoginSceneRunnable loginSceneRunnable;
     WaitingSceneRunnable waitingSceneRunnable;
+
+    public GUI() throws ParseException {
+    }
 
     public void addObserver(ViewObserver observer){
         List<ViewObserver> observerList = MainStage.getObserverList();
@@ -99,14 +103,14 @@ public class GUI implements View {
         boardSceneController.setWorkerSelected(false);
         if (myPlayerId == currentPlayerId){
             Platform.runLater(()->{
-                String notification = "It's your turn! \n";
+                String notification = "You" + textfields.getPlaying1() + "\n";
                 boardSceneController.displayNotificationsDuringTurn(notification);
                 boardSceneController.setMyTurn(true);
             });
         }
         else {
             Platform.runLater(()->{
-                String notification = "It's " + board.getPlayer(currentPlayerId).getPlayerName() + " turn!\n";
+                String notification = board.getPlayer(currentPlayerId).getPlayerName() + textfields.getPlaying2()+ "\n";
                 boardSceneController.displayNotificationsDuringTurn(notification);
                 boardSceneController.setMyTurn(false);
             });
@@ -130,7 +134,9 @@ public class GUI implements View {
     public void displayLoser(int playerId) {
         Platform.runLater(()->{
         	//displays a lose notification of the player that has lost
-            String notification = board.getPlayer(playerId).getPlayerName() + " lost";
+            String notification;
+            if (playerId==board.getMyPlayerId()) notification = "You"+ textfields.getLost1()+ "\n";
+            else notification = board.getPlayer(playerId).getPlayerName() + textfields.getLost2() +"\n";
             boardSceneController.displayNotificationsDuringTurn(notification);
         });
 
@@ -139,7 +145,7 @@ public class GUI implements View {
     @Override
     public void displayDisconnection(int playerId) {
         String notification;
-        notification = board.getPlayer(playerId).getPlayerName() + " has disconnected";
+        notification = board.getPlayer(playerId).getPlayerName() + textfields.getDisconnected() + "\n";
 
         if (getWorkerPositions(board.getMyPlayerId(), 1) == null ||
                 getWorkerPositions(board.getMyPlayerId(), 2) == null) {
@@ -166,9 +172,9 @@ public class GUI implements View {
     public void displayError(int errorId) {
         String message = null;
         switch (errorId){
-            case 0: message = "Oops... something went wrong"; break;
-            case 1: message = "This name is not available"; break;
-            case 2: message = "This number of players is not correct"; break;
+            case 0: message = textfields.getErr0(); break;
+            case 1: message = textfields.getErr1(); break;
+            case 2: message = textfields.getErr2(); break;
         }
         String finalMessage = message;
         Platform.runLater(()->{
@@ -270,7 +276,7 @@ public class GUI implements View {
         //move possible
         if (!object.areMovesEmpty()) {
             Platform.runLater(() -> {
-                boardSceneController.displayNotificationsDuringTurn("You can move");
+                boardSceneController.displayNotificationsDuringTurn(textfields.getCanmove());
                 boardSceneController.setMovePossible(true);
             });
         }
@@ -282,7 +288,7 @@ public class GUI implements View {
         //build possible
         if(!object.areBuildsEmpty()){
             Platform.runLater(() -> {
-                boardSceneController.displayNotificationsDuringTurn("You can build");
+                boardSceneController.displayNotificationsDuringTurn(textfields.getCanbuild());
                 boardSceneController.setBuildPossible(true);
             });
         }
@@ -304,7 +310,7 @@ public class GUI implements View {
         //can decline allowed
         if(object.canDecline()){
             Platform.runLater(() -> {
-                boardSceneController.displayNotificationsDuringTurn("You can decline the action, just press can decline");
+                boardSceneController.displayNotificationsDuringTurn(textfields.getCanendturn());
                 boardSceneController.setDeclinePossible(true);
                 boardSceneController.setVisibleDeclineButton(true);
                 boardSceneController.disableDeclineButton(false);
@@ -332,10 +338,10 @@ public class GUI implements View {
     public void askForInitialWorkerPositions(List <Position> possiblePositions) {
         //adds the current notification for the player
         Platform.runLater(()->{
-            String notification ="Choose your workers positions by clicking on the board";
+            /*String notification ="Choose your workers positions by clicking on the board";
             Text oldText = BoardSceneController.getNotification();
             setTextFormat(oldText);
-            oldText.setText(notification);
+            oldText.setText("Choose your workers positions by clicking on the board");*/
             //sets the actionCode to 1 for the askForInitialiWorkerPosition phase
             BoardSceneController.updateActionCode(1);
         });
@@ -390,7 +396,5 @@ public class GUI implements View {
         }
          return tempSet;
     }
-
-    public GUI(Textfields textfields){ this.textfields = textfields; }
 }
 

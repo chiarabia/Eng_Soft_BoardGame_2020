@@ -20,6 +20,12 @@
   "turnover": "The turn is over",
   "worker1": "Worker 1",
   "worker2": "Worker 2",
+  "canmove": "You can move",
+  "canbuild": "You can build",
+  "wcantmove": "This worker cannot move",
+  "wcantbuild": "This worker cannot build",
+  "canendturn": "You can end your turn",
+  "waitgodpowers": "Waiting for other players to choose their god power",
   "err0": "Oops... something went wrong",
   "err1": "This name is not available",
   "err2": "This number of players is not correct"

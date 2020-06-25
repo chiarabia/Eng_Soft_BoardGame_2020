@@ -3,6 +3,7 @@ package it.polimi.ingsw.client.cli;
 import it.polimi.ingsw.Position;
 import it.polimi.ingsw.client.*;
 import it.polimi.ingsw.server.serializable.*;
+import org.json.simple.parser.ParseException;
 import org.w3c.dom.Text;
 
 import java.util.*;
@@ -11,10 +12,14 @@ import java.util.stream.Collectors;
 /** This class contains CLI methods */
 
 public class Terminal implements View {
-    private Textfields textfields;
+    private Textfields textfields = new Textfields();
     private final Scanner keyboard = new Scanner(System.in);
     private ClientBoard board;
     private List<ViewObserver> observerList = new ArrayList<>();
+
+    public Terminal() throws ParseException {
+    }
+
     public void addObserver(ViewObserver observer){observerList.add(observer);}
     public void setBoard(ClientBoard board) {
         this.board = board;
@@ -462,8 +467,6 @@ public class Terminal implements View {
                 break;
         }
     }
-
-    public Terminal(Textfields textfields){ this.textfields = textfields; }
 
     private enum Color {
         RED("\u001B[31m"),

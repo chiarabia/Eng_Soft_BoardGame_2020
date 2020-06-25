@@ -28,6 +28,12 @@ public class Textfields {
     private final String turnover;
     private final String worker1;
     private final String worker2;
+    private final String canmove;
+    private final String canbuild;
+    private final String wcantmove;
+    private final String wcantbuild;
+    private final String canendturn;
+    private final String waitgodpowers;
     private final String err0;
     private final String err1;
     private final String err2;
@@ -64,6 +70,12 @@ public class Textfields {
         this.err0 = (String) jsonObject.get("err0");
         this.err1 = (String) jsonObject.get("err1");
         this.err2 = (String) jsonObject.get("err2");
+        this.canmove = (String) jsonObject.get("canmove");
+        this.canbuild = (String) jsonObject.get("canbuild");
+        this.wcantmove = (String) jsonObject.get("wcantmove");
+        this.wcantbuild = (String) jsonObject.get("wcantbuild");
+        this.canendturn = (String) jsonObject.get("canendturn");
+        this.waitgodpowers = (String) jsonObject.get("waitgodpowers");
     }
 
     public String getInitialplaying() {
@@ -157,4 +169,16 @@ public class Textfields {
     public String getErr2() {
         return err2;
     }
+
+    public String getCanmove() { return canmove; }
+
+    public String getCanbuild() { return canbuild; }
+
+    public String getWcantmove() { return wcantmove; }
+
+    public String getWcantbuild() { return wcantbuild; }
+
+    public String getCanendturn() { return canendturn; }
+
+    public String getWaitgodpowers() { return waitgodpowers; }
 }
