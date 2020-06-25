@@ -82,7 +82,7 @@
    </center>
       <top>
          <FlowPane prefHeight="60.0" prefWidth="200.0" BorderPane.alignment="CENTER">
-            <Label text="Choose a God Power" textAlignment="CENTER">
+            <Label fx:id="topLabel" text="Choose a God Power" textAlignment="CENTER">
                <font>
                   <Font size="36.0"/>
                </font>
