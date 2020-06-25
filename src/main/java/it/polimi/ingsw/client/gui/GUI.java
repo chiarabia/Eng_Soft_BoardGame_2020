@@ -2,17 +2,21 @@ package it.polimi.ingsw.client.gui;
 
 import it.polimi.ingsw.Position;
 import it.polimi.ingsw.client.*;
-
 import it.polimi.ingsw.client.gui.controller.BoardSceneController;
-import it.polimi.ingsw.client.gui.runnable.*;
-
+import it.polimi.ingsw.client.gui.runnable.BoardSceneRunnable;
+import it.polimi.ingsw.client.gui.runnable.ChoosingGodSceneRunnable;
+import it.polimi.ingsw.client.gui.runnable.LoginSceneRunnable;
+import it.polimi.ingsw.client.gui.runnable.WaitingSceneRunnable;
 import it.polimi.ingsw.server.serializable.*;
 import javafx.application.Platform;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
 import javafx.scene.text.Text;
+
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 public class GUI implements View {
     private Textfields textfields;
@@ -28,9 +32,7 @@ public class GUI implements View {
     @Override
     public void displayStartup() {
     	//starts the MainStage javafx application
-        new Thread(()-> {
-            MainStage.launch(MainStage.class);
-        }).start();
+        new Thread(()-> MainStage.launch(MainStage.class)).start();
     }
 
     @Override
@@ -84,17 +86,13 @@ public class GUI implements View {
         if (myPlayerId == currentPlayerId){
             Platform.runLater(()->{
                 String notification = "It's your turn!";
-                Text oldText = BoardSceneController.getNotification();
-                setTextFormat(oldText);
-                oldText.setText(notification);
+                boardSceneController.displayNotificationsDuringTurn(notification);
             });
         }
         else {
             Platform.runLater(()->{
                 String notification = "It's" + board.getPlayer(currentPlayerId).getPlayerName() + "turn!";
-                Text oldText = BoardSceneController.getNotification();
-                setTextFormat(oldText);
-                oldText.setText(notification);
+                boardSceneController.displayNotificationsDuringTurn(notification);
             });
         }
     }
@@ -104,12 +102,11 @@ public class GUI implements View {
         Platform.runLater(()->{
         	//displays a winner notification of the winner
 
-            if (playerId == board.getMyPlayerId())boardSceneController.displayEndGameImage(true);
-            else boardSceneController.displayEndGameImage(false);
-            String notification = board.getPlayer(playerId).getPlayerName() + " won!!";
+            boardSceneController.displayEndGameImage(playerId == board.getMyPlayerId());
+            /*String notification = board.getPlayer(playerId).getPlayerName() + " won!!";
             Text oldText = BoardSceneController.getNotification();
             setTextFormat(oldText);
-            oldText.setText(notification);
+            oldText.setText(notification);*/
         });
     }
 
@@ -118,9 +115,7 @@ public class GUI implements View {
         Platform.runLater(()->{
         	//displays a lose notification of the player that has lost
             String notification = board.getPlayer(playerId).getPlayerName() + " lost";
-            Text oldText = BoardSceneController.getNotification();
-            setTextFormat(oldText);
-            oldText.setText(notification);
+            boardSceneController.displayNotificationsDuringTurn(notification);
         });
 
     }
@@ -130,9 +125,7 @@ public class GUI implements View {
         Platform.runLater(()->{
         	//displays a disconnection message
             String notification = board.getPlayer(playerId).getPlayerName() + " has disconnected";
-            Text oldText = BoardSceneController.getNotification();
-            setTextFormat(oldText);
-            oldText.setText(notification);
+            boardSceneController.displayNotificationsDuringTurn(notification);
         });
     }
 
@@ -147,15 +140,11 @@ public class GUI implements View {
         String finalMessage = message;
         Platform.runLater(()->{
         	//displays an error message
-            Text oldText = BoardSceneController.getNotification();
+            boardSceneController.displayNotificationsDuringTurn(finalMessage);
+            /*Text oldText = BoardSceneController.getNotification();
             setTextFormat(oldText);
-            oldText.setText(finalMessage);;
+            oldText.setText(finalMessage);*/
         });
-    }
-
-    @Override
-    public void displayRequestAction(SerializableRequestAction object) {
-
     }
 
     @Override
@@ -166,24 +155,27 @@ public class GUI implements View {
 		//if there is a building to update
         if(!updateBuild.isEmpty()){
             for (int i = 0; i < updateBuild.size(); i++){
-                Position newPosition = updateBuild.get(0).getNewPosition();
-                boolean dome = updateBuild.get(0).isDome();
-                Platform.runLater(()->{
-                    boardSceneController.updateBuilding(newPosition, dome);
-                });
+                Position newPosition = updateBuild.get(i).getNewPosition().mirrorYCoordinate();
+                boolean dome = updateBuild.get(i).isDome();
+                Platform.runLater(()-> boardSceneController.updateBuilding(newPosition, dome));
             }
         }
 
         //if there is a worker position to update
         if(!updateMove.isEmpty()){
-           for (int i = 0; i < updateMove.size(); i++){
-               Position newPosition = updateMove.get(i).getNewPosition();
-               Position oldPosition = updateMove.get(i).getStartingPosition();
-               int playerID = updateMove.get(i).getPlayerId();
-               Platform.runLater(()->{
-                   boardSceneController.updateWorker(newPosition,oldPosition,playerID);
-               });
-           }
+            for (int i = 0; i < updateMove.size(); i++) {
+                int playerID = updateMove.get(i).getPlayerId();
+                Position newPosition = updateMove.get(i).getNewPosition().mirrorYCoordinate();
+                Position oldPosition = updateMove.get(i).getStartingPosition().mirrorYCoordinate();
+
+                if(moveIsSwap(updateMove)) {
+                    Platform.runLater(() -> boardSceneController.updateWorker(newPosition, newPosition, playerID));
+                }
+
+                else {
+                    Platform.runLater(() -> boardSceneController.updateWorker(newPosition, oldPosition, playerID));
+                }
+            }
         }
     }
 
@@ -191,6 +183,12 @@ public class GUI implements View {
     @Override
     public void displayBoard(SerializableUpdateInitializeWorkerPositions update) {
         List<Position> workerPositions = update.getWorkerPositions();
+        ArrayList<Position> tempList = new ArrayList<>();
+
+        for(int i = 0; i<update.getWorkerPositions().size(); i++) {
+            tempList.add(i,  workerPositions.get(i).mirrorYCoordinate());
+        }
+
         int playerID = update.getPlayerId();
 
         boardSceneController = boardSceneRunnable.getBoardSceneController();
@@ -198,55 +196,67 @@ public class GUI implements View {
         	//displays the worker initial position on only enemy players
             if (playerID != board.getMyPlayerId()) {
                 for (int i = 0; i < workerPositions.size(); i++) {
-                    boardSceneController.updateWorkerInitialPosition(workerPositions.get(i), update.getPlayerId());
+                    boardSceneController.updateWorkerInitialPosition(tempList.get(i), update.getPlayerId());
                 }
             }
         });
     }
 
+    //TODO: javadoc
+    private boolean moveIsSwap(List<SerializableUpdateMove> updateMoveList) {
+        if (updateMoveList.size()==2) {
+            SerializableUpdateMove firstMove = updateMoveList.get(0);
+            SerializableUpdateMove secondMove = updateMoveList.get(1);
+            return  firstMove.getNewPosition()
+                        .equals(secondMove.getStartingPosition()) &&
+                    secondMove.getNewPosition()
+                        .equals(firstMove.getStartingPosition());
+        }
+        else
+            return false;
+    }
+
+
     @Override
     public void askForAction(SerializableRequestAction object) {
+
         BoardSceneController.updateActionCode(2);
         int currentPlayerID = board.getPlayerTurnId();
-        Position firstWorkerPosition = getWorkerPostions(currentPlayerID,1);
-        Position secondWorkerPosition = getWorkerPostions(currentPlayerID,2);
+        Position firstWorkerPosition = getWorkerPositions(currentPlayerID,1).mirrorYCoordinate();
+        Position secondWorkerPosition = getWorkerPositions(currentPlayerID,2).mirrorYCoordinate();
 
         //updates all the Sets in the BoardSceneController and the Workers positions
         Platform.runLater(()->{
             boardSceneController.setOldFirstWorkerPosition(firstWorkerPosition);
             boardSceneController.setOldSecondWorkerPosition(secondWorkerPosition);
-            boardSceneController.setWorker1MovesPosition(object.getWorker1Moves());
-            boardSceneController.setWorker2MovesPosition(object.getWorker2Moves());
-            boardSceneController.setWorker1BuildPosition(object.getWorker1Builds());
-            boardSceneController.setWorker2BuildPosition(object.getWorker2Builds());
+            boardSceneController.setWorker1MovesPosition(mirrorPositionYCoordinate(object.getWorker1Moves()));
+            boardSceneController.setWorker2MovesPosition(mirrorPositionYCoordinate(object.getWorker2Moves()));
+            boardSceneController.setWorker1BuildPosition(mirrorPositionYCoordinate(object.getWorker1Builds()));
+            boardSceneController.setWorker2BuildPosition(mirrorPositionYCoordinate(object.getWorker2Builds()));
         });
 
         //move possible
         if (!object.areMovesEmpty()) {
             Platform.runLater(() -> {
-                boardSceneController.displayNotificationsDuringTurn("You can move \n");
+                boardSceneController.displayNotificationsDuringTurn("You can move");
                 boardSceneController.setMovePossible(true);
             });
         }
         //move not possible
         if(object.areMovesEmpty()) {
-            Platform.runLater(() -> {
-                boardSceneController.setMovePossible(false);
-            });
+            Platform.runLater(() -> boardSceneController.setMovePossible(false));
         }
 
         //build possible
         if(!object.areBuildsEmpty()){
             Platform.runLater(() -> {
-                boardSceneController.displayNotificationsDuringTurn("You can build \n");
+                boardSceneController.displayNotificationsDuringTurn("You can build");
                 boardSceneController.setBuildPossible(true);
             });
         }
         //build not possible
         if(object.areBuildsEmpty()){
-            Platform.runLater(() -> {
-                boardSceneController.setBuildPossible(false);
-            });
+            Platform.runLater(() -> boardSceneController.setBuildPossible(false));
         }
         //build and dome building allowed
         if(!object.areBuildsEmpty() &&  object.isCanForceDome()){
@@ -257,14 +267,12 @@ public class GUI implements View {
         }
 		//dome building everywhere not possible
         if(!object.isCanForceDome()) {
-            Platform.runLater(() -> {
-                boardSceneController.setDomeAtAnyLevelPossible(false);
-            });
+            Platform.runLater(() -> boardSceneController.setDomeAtAnyLevelPossible(false));
         }
         //can decline allowed
         if(object.canDecline()){
             Platform.runLater(() -> {
-                boardSceneController.displayNotificationsDuringTurn("You can decline the action, just press can decline \n");
+                boardSceneController.displayNotificationsDuringTurn("You can decline the action, just press can decline");
                 boardSceneController.setDeclinePossible(true);
                 boardSceneController.setVisibleDeclineButton(true);
                 boardSceneController.disableDeclineButton(false);
@@ -272,9 +280,7 @@ public class GUI implements View {
         }
         //can decline not allowed
         if(!object.canDecline()){
-            Platform.runLater(() -> {
-                boardSceneController.setDeclinePossible(false);
-            });
+            Platform.runLater(() -> boardSceneController.setDeclinePossible(false));
         }
     }
 
@@ -291,7 +297,7 @@ public class GUI implements View {
     }
 
     @Override
-    public void askForInitialWorkerPositions() {
+    public void askForInitialWorkerPositions(List <Position> possiblePositions) {
         //adds the current notification for the player
         Platform.runLater(()->{
             String notification ="Choose your workers positions by clicking on the board";
@@ -306,11 +312,12 @@ public class GUI implements View {
     }
 
     @Override
-    public void askForStartupInfos() {
+    public void askForStartupInfos(int errorId) {
         // I can't call Platform.runLater until the JavaFX application has started.
+        // errorId: -1 <==> no error, 1 <==> name error
         try {
             MainStage.getLock().take();
-        } catch (Exception ignored) {};
+        } catch (Exception ignored) {}
 
         //displays the LoginScene
         Platform.runLater(new LoginSceneRunnable());
@@ -322,10 +329,19 @@ public class GUI implements View {
         notification.setFont(Font.font("Verdana", FontWeight.BOLD, 15));
     }
 
-    public Position getWorkerPostions(int playerID, int workerID){
+    public Position getWorkerPositions(int playerID, int workerID){
         int x = board.getPlayer(playerID).getWorker(workerID).getX();
         int y = board.getPlayer(playerID).getWorker(workerID).getY();
         return new Position(x,y,0);
+    }
+
+    private Set<Position> mirrorPositionYCoordinate(Set<Position> set) {
+        Set<Position> tempSet = new HashSet<>();
+
+        for (Position position : set) {
+            tempSet.add(position.mirrorYCoordinate());
+        }
+         return tempSet;
     }
 
     public GUI(Textfields textfields){ this.textfields = textfields; }

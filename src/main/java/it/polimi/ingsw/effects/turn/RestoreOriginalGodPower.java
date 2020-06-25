@@ -21,8 +21,8 @@ public class RestoreOriginalGodPower extends NewTurn {
     public Turn endTurn(Turn oldTurn, List<GodPower> godPowers, Player nextTurnPlayer) {
 
         for(int j = 0; j < godPowers.size(); j++) {
-            if (godPowers.get(j).getPlayerId() == originalGodPower.getPlayerId()) {
-                godPowers.add(j, originalGodPower); //restore original GodPower effects
+            if (godPowers.get(j)!= null && godPowers.get(j).getPlayerId() == originalGodPower.getPlayerId()) {
+                godPowers.set(j, originalGodPower); //restore original GodPower effects
 
                return godPowers.get(j).getNewTurn().endTurn(oldTurn, godPowers, nextTurnPlayer); //calling the right NewTurn method of the player;
             }

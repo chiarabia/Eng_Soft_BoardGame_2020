@@ -25,13 +25,11 @@ public class NoMoveUp extends StandardMove {
     @Override
     public Set<Position> move (Position workerPosition, Board board, Turn turn) {
         Cell workerCell = board.getCell(workerPosition);
-        if (!checkMoveConditions(workerCell, turn)) return new HashSet<Position>();
-        else {
-            Set<Position> standardMove = decoratedMove.move(workerPosition, board, turn);
-            return standardMove.stream()
+        Set<Position> standardMove = decoratedMove.move(workerPosition, board, turn);
+        return standardMove.stream()
                     .filter(a -> a.getZ() <= workerCell.getZ())
                     .collect(Collectors.toSet());
-        }
+
     }
 
     @Override

@@ -1,5 +1,7 @@
 package it.polimi.ingsw.client;
 
+/**This class stores god cards information */
+
 public class GodCard {
     private String godName;
     private String godDescription;

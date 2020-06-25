@@ -4,6 +4,10 @@ import it.polimi.ingsw.Position;
 import java.io.IOException;
 import java.util.List;
 
+/**
+ * This interface represents proxy-view observers (i.e. Controller)
+ */
+
 public interface ProxyObserver {
     void onEndedTurn (int playerId);
     void onConsolidateMove(int playerId, int workerId, Position newPosition);

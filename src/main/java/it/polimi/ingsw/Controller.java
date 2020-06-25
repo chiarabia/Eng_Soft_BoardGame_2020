@@ -11,6 +11,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 public class Controller implements ProxyObserver {
     private Game game;
@@ -23,7 +24,7 @@ public class Controller implements ProxyObserver {
         this.serverView = serverView;
     }
 
-    // Decide quale player deve eseguire quale operazione, appoggiandosi alle informazioni di Turn e GodPower
+    /**This method decides which player should perform which action, relying on Turn and GodPower information */
     public void nextOperation(){
         int playerId = getTurn().getPlayerId();
         boolean canForceDome = getPlayerGodPower(playerId).isAskToBuildDomes();
@@ -49,8 +50,10 @@ public class Controller implements ProxyObserver {
         game.notifyAnswerOnePlayer(request);
     }
 
+    /**This method terminates current turn
+     *@param playerId player who asked to end the turn
+     */
     @Override
-    // Termina il turno corrente
     public void onEndedTurn (int playerId) {
         if (!(playerId == getTurn().getPlayerId())){ // INITIAL CHECK
             game.notifyAnswerOnePlayer(new SerializableRequestError(playerId, "REJECTED"));
@@ -60,13 +63,16 @@ public class Controller implements ProxyObserver {
         int nextPlayerId = nextPlayerId(playerId);
         Turn newTurn = getPlayerGodPower(playerId).endTurn(getTurn(), getGodPowers(), getPlayer(nextPlayerId)); // termina il turno precedente, serve l'end turn del giocatore corrente
         game.setTurn(newTurn); // setta il turno successivo
-        SerializableUpdate update = new SerializableUpdateTurn(nextPlayerId);
+        SerializableUpdate update = new SerializableUpdateTurn(nextPlayerId, false);
         game.notifyJustUpdateAll(update); // aggiorna i players del cambio turno
         nextOperation(); // apre una nuova operazione
     }
 
+    /**This method manages a ConsolidateMove object received from a client
+     *@param playerId player who sent the object
+     *@param workerId workerId to be modified
+     *@param newPosition position chosen by player*/
     @Override
-    // Gestisce una ConsolidateMove
     public void onConsolidateMove(int playerId, int workerId, Position newPosition) {
         Position worker1Position = getWorkerPosition(getTurn().getPlayerId(), 1);
         Position worker2Position = getWorkerPosition(getTurn().getPlayerId(), 2);
@@ -91,8 +97,11 @@ public class Controller implements ProxyObserver {
         nextOperation(); //...altrimenti apre una nuova operazione
     }
 
+    /**This method manages a ConsolidateBuild object received from a client
+     *@param playerId player who sent the object
+     *@param forceDome true if client asked to force a dome
+     *@param newPosition position chosen by player*/
     @Override
-    // Gestisce una ConsolidateBuild
     public void onConsolidateBuild(int playerId, Position newPosition, boolean forceDome) {
         Position worker1Position = getWorkerPosition(getTurn().getPlayerId(), 1);
         Position worker2Position = getWorkerPosition(getTurn().getPlayerId(), 2);
@@ -115,8 +124,9 @@ public class Controller implements ProxyObserver {
         nextOperation(); // apre una nuova operazione
     }
 
+    /**This method manages a client disconnection
+     *@param playerId player who disconnected*/
     @Override
-    // Notifica i player della disconnessione
     public void onPlayerDisconnection(int playerId) {
         if (getPlayer(playerId)!=null && !isDisconnected) { // Se la disconnessione di un player non è dovuta a una sconfitta e se non è ancora stato lanciato il segnale di disconnessione...
             isDisconnected = true; // dichiara la disconnessione avvenuta
@@ -126,13 +136,15 @@ public class Controller implements ProxyObserver {
         }
     }
 
-    // Notifica i players della vittoria
+    /**This method reports to players that someone has won
+     *@param playerId player who has won*/
     public void onPlayerWin (int playerId)  {
         game.notifyJustUpdateAll(new SerializableUpdateWinner(playerId)); // avvisa i players della vittoria
         serverView.stopAllEventGenerators(); // termina tutti i thread legati alla partita
     }
 
-    // Gestisce la sconfitta di un giocatore
+    /**This method reports to players that someone has lost
+     *@param playerId player who has lost*/
     public void onPlayerLoss(int playerId)  {
         int nextPlayerId = nextPlayerId(playerId);
         List<GodPower> godPowerList = getGodPowers();
@@ -143,14 +155,114 @@ public class Controller implements ProxyObserver {
 
         List<SerializableUpdate> tempUpdates = new ArrayList<>();
         tempUpdates.add( new SerializableUpdateLoser(playerId));
-        tempUpdates.add(new SerializableUpdateTurn(nextPlayerId));
+        tempUpdates.add(new SerializableUpdateTurn(nextPlayerId, false));
         game.notifyJustUpdateAll(tempUpdates); // aggiorna i players della sconfitta
         nextOperation(); // apre una nuova operazione
     }
 
+    /**First controller method thrown, it starts initialization procedures
+     * and asks the first player to choose a GodPower */
+    @Override
+    public void onInitialization(){
+        System.out.println("Game initialization started");
+        try {
+            godPowersLeft = GodPowerManager.createGodPowers(getNumOfPlayers());
+            List<String> godPowersNames = getGodPowersLeftNames();
+            List<String> playersNames = new ArrayList<>();
+            for (Player player : getPlayers()) playersNames.add(player.getName());
+            SerializableUpdateInitializeNames update = new SerializableUpdateInitializeNames(playersNames);
+            SerializableRequest request = new SerializableRequestInitializeGodPower(1, godPowersNames);
+            game.notifyUpdateAllAndAnswerOnePlayer(update, request);
+        } catch (Exception e){}
+    }
 
-    //controllo di tutte le condizioni di vittoria, globali o in seguito ad una mossa
-    //restituisce true in caso di vittoria
+    /**This method proceeds the god powers initialization, sets the god power chosen
+     * by a player and asks next player to chose a remaining one, or, if no players are left,
+     * it starts the workers positions initialization
+     *@param playerId player who has chosen god power
+     *@param godPower name of the god power chosen */
+    @Override
+    public void onGodPowerInitialization(int playerId, String godPower) {
+        if (!(playerId > 0 && playerId <= getNumOfPlayers() && // INITIAL CHECK
+                getGodPowers().size() == playerId - 1 &&
+                godPower != null &&
+                godPowersLeft.stream().map(GodPower::getGodName).anyMatch(x->x.equals(godPower)))){
+            game.notifyAnswerOnePlayer(new SerializableRequestError(playerId, "REJECTED"));
+            return;
+        }
+
+        chooseGodPower(godPower);
+
+        SerializableUpdateInitializeGodPower update = new SerializableUpdateInitializeGodPower(godPower, playerId);
+        if (playerId == getPlayers().size()){ // tutti i god powers sono stati scelti
+            game.notifyJustUpdateAll(update);
+            onWorkerPositionsInitialization();
+        } else {
+            SerializableRequest request = new SerializableRequestInitializeGodPower(playerId + 1, getGodPowersLeftNames());
+            game.notifyUpdateAllAndAnswerOnePlayer(update, request);
+        }
+    }
+
+
+    /**This method starts the workers positions initialization by asking the first player to choose*/
+    public void onWorkerPositionsInitialization(){
+        try {
+            SerializableRequest request = new SerializableRequestInitializeWorkerPositions(getBoard().getStream().filter(Cell::isFree).map(Cell::getPosition).collect(Collectors.toList()), 1);
+            game.notifyAnswerOnePlayer(request);
+        } catch (Exception e){}
+    }
+
+    /**This method proceeds the workers positions initialization, sets positions chosen
+     * by a player and asks next player to chose, or, if no players are left, first game turn starts
+     *@param playerId player who has chosen positions
+     *@param workerPositions positions chosen */
+    @Override
+    public void onWorkerPositionsInitialization(int playerId, List<Position> workerPositions) {
+        if (!(playerId > 0 && playerId <= getNumOfPlayers() && // INITIAL CHECK
+                getPlayer(playerId) !=null &&
+                workerPositions != null &&
+                workerPositions.size() == 2 &&
+                !workerPositions.get(0).equals(workerPositions.get(1)) &&
+                workerPositions.stream().allMatch(x->x.getZ()==0) &&
+                !getPlayer(playerId).areWorkersSet() &&
+                ((playerId > 1 && getPlayer(playerId-1).areWorkersSet())||playerId==1) &&
+                getBoard().isFreeZone(workerPositions.get(0).getX(), workerPositions.get(0).getY()) &&
+                getBoard().isFreeZone(workerPositions.get(1).getX(), workerPositions.get(1).getY()) )){
+            game.notifyAnswerOnePlayer(new SerializableRequestError(playerId, "REJECTED"));
+            return;
+        }
+
+        Player player = getPlayer(playerId);
+        Worker worker1 = new Worker(player, 1);
+        Worker worker2 = new Worker(player, 2);
+        player.addWorker(worker1);
+        player.addWorker(worker2);
+        Cell worker1Cell = getBoard().getCell(workerPositions.get(0));
+        Cell worker2Cell = getBoard().getCell(workerPositions.get(1));
+        worker1Cell.setWorker(worker1);
+        worker2Cell.setWorker(worker2);
+
+        SerializableUpdateInitializeWorkerPositions update = new SerializableUpdateInitializeWorkerPositions(workerPositions, playerId);
+        if (playerId == getPlayers().size()){ // tutti i worker sono pronti, il primo turno ha inizio
+            SerializableUpdateTurn updateTurn = new SerializableUpdateTurn(1, true);
+            game.setTurn(new Turn(getPlayers().get(0)));
+            List <SerializableUpdate> tempUpdates = new ArrayList<>();
+            tempUpdates.add(update);
+            tempUpdates.add(updateTurn);
+            game.notifyJustUpdateAll(tempUpdates);
+            System.out.println("Game started");
+            nextOperation();
+        } else {
+            SerializableRequest request = new SerializableRequestInitializeWorkerPositions(getBoard().getStream().filter(Cell::isFree).map(Cell::getPosition).collect(Collectors.toList()),playerId + 1);
+            game.notifyUpdateAllAndAnswerOnePlayer(update, request);
+        }
+    }
+
+
+    /**This method check if a player has won
+     *@param playerId player to be checked
+     *@param workerPosition beginning cell of a worker's move, null if no movement is happening
+     *@param destinationPosition final cell of a worker's move, null if no movement is happening*/
     private boolean checkWin (int playerId, Position workerPosition, Position destinationPosition) {
         if (getPlayers().stream().filter(Objects::nonNull).count()==1) { // controlla se è rimasto solo il giocatore corrente
             onPlayerWin(playerId);
@@ -175,6 +287,13 @@ public class Controller implements ProxyObserver {
         return false;
     }
 
+    /**This method check if a player has lost
+     *@param turn current turn
+     *@param playerId player to be checked
+     *@param worker1Moves worker 1 moves
+     *@param worker1Builds worker 1 builds
+     *@param worker2Moves worker 2 moves
+     *@param worker2Builds worker 2 builds */
     private boolean checkLose (int playerId, Set<Position> worker1Moves, Set<Position> worker1Builds, Set<Position> worker2Moves, Set<Position> worker2Builds, Turn turn) {
         StandardLoseCondition playerLoseCondition = getPlayerGodPower(playerId).getLoseCondition();
 
@@ -185,112 +304,19 @@ public class Controller implements ProxyObserver {
         return false;
     }
 
-    @Override
-    // Primo metodo lanciato del controller, avvia MVC e procedura di InitializeGame
-    public void onInitialization(){
-        System.out.println("Game initialization started");
-        try {
-            godPowersLeft = GodPowerManager.createGodPowers(getNumOfPlayers());
-            List<String> godPowersNames = getGodPowersLeftNames();
-            List<String> playersNames = new ArrayList<>();
-            for (Player player : getPlayers()) playersNames.add(player.getName());
-            SerializableUpdateInitializeNames update = new SerializableUpdateInitializeNames(playersNames);
-            SerializableRequest request = new SerializableRequestInitializeGodPower(1, godPowersNames);
-            game.notifyUpdateAllAndAnswerOnePlayer(update, request);
-        } catch (Exception e){}
-    }
-
-    @Override
-    // Prosegue nella procedura di InitializeGame avanzando di un player
-    public void onGodPowerInitialization(int playerId, String godPower) {
-        if (!(playerId > 0 && playerId <= getNumOfPlayers() && // INITIAL CHECK
-                getGodPowers().size() == playerId - 1 &&
-                godPower != null &&
-                godPowersLeft.stream().map(GodPower::getGodName).anyMatch(x->x.equals(godPower)))){
-            game.notifyAnswerOnePlayer(new SerializableRequestError(playerId, "REJECTED"));
-            return;
-        }
-
-        chooseGodPower(godPower);
-
-        SerializableUpdateInitializeGodPower update = new SerializableUpdateInitializeGodPower(godPower, playerId);
-        if (playerId == getPlayers().size()){ // tutti i god powers sono stati scelti
-            game.notifyJustUpdateAll(update);
-            onWorkerPositionsInitialization();
-        } else {
-            SerializableRequest request = new SerializableRequestInitializeGodPower(playerId + 1, getGodPowersLeftNames());
-            game.notifyUpdateAllAndAnswerOnePlayer(update, request);
-        }
-    }
-
-
-    // Primo metodo lanciato del controller, avvia MVC e procedura di InitializeGame
-    public void onWorkerPositionsInitialization(){
-        try {
-            SerializableRequest request = new SerializableRequestInitializeWorkerPositions(1);
-            game.notifyAnswerOnePlayer(request);
-        } catch (Exception e){}
-    }
-
-    @Override
-    // Prosegue nella procedura di InitializeGame avanzando di un player
-    public void onWorkerPositionsInitialization(int playerId, List<Position> workerPositions) {
-        if (!(playerId > 0 && playerId <= getNumOfPlayers() && // INITIAL CHECK
-            getPlayer(playerId) !=null &&
-            workerPositions != null &&
-            workerPositions.size() == 2 &&
-            !workerPositions.get(0).equals(workerPositions.get(1)) &&
-            workerPositions.stream().allMatch(x->x.getZ()==0) &&
-            !getPlayer(playerId).areWorkersSet() &&
-            ((playerId > 1 && getPlayer(playerId-1).areWorkersSet())||playerId==1) &&
-            getBoard().isFreeZone(workerPositions.get(0).getX(), workerPositions.get(0).getY()) &&
-            getBoard().isFreeZone(workerPositions.get(1).getX(), workerPositions.get(1).getY()) )){
-                game.notifyAnswerOnePlayer(new SerializableRequestError(playerId, "REJECTED"));
-                return;
-        }
-
-        Player player = getPlayer(playerId);
-        Worker worker1 = new Worker(player, 1);
-        Worker worker2 = new Worker(player, 2);
-        player.addWorker(worker1);
-        player.addWorker(worker2);
-        Cell worker1Cell = getBoard().getCell(workerPositions.get(0));
-        Cell worker2Cell = getBoard().getCell(workerPositions.get(1));
-        worker1Cell.setWorker(worker1);
-        worker2Cell.setWorker(worker2);
-
-        SerializableUpdateInitializeWorkerPositions update = new SerializableUpdateInitializeWorkerPositions(workerPositions, playerId);
-        if (playerId == getPlayers().size()){ // tutti i worker sono pronti, il primo turno ha inizio
-            SerializableUpdateTurn updateTurn = new SerializableUpdateTurn(1);
-            game.setTurn(new Turn(getPlayers().get(0)));
-            List <SerializableUpdate> tempUpdates = new ArrayList<>();
-            tempUpdates.add(update);
-            tempUpdates.add(updateTurn);
-            game.notifyJustUpdateAll(tempUpdates);
-            System.out.println("Game started");
-            nextOperation();
-        } else {
-            SerializableRequest request = new SerializableRequestInitializeWorkerPositions(playerId + 1);
-            game.notifyUpdateAllAndAnswerOnePlayer(update, request);
-        }
-    }
-
-    // restituisce il giocatore successivo a quello corrente
-    private int nextPlayerId(int playerId){
-        int firstPlayerId = (playerId % getNumOfPlayers()) + 1;
-        for (int i = firstPlayerId; i < firstPlayerId + getNumOfPlayers() - 1; i++)
-            if (getPlayer((i-1) %getNumOfPlayers()+1) != null) return ((i-1) % getNumOfPlayers()) +1;
-        return playerId;
-    }
-
-    // metodo riservato per onInitialization(...)
+    /**This method returns a list of names of still not chosen god powers
+     * @return List<String>
+     */
     private List<String> getGodPowersLeftNames (){
         List<String> godPowersNames = new ArrayList<>();
         for (GodPower godPower: godPowersLeft) godPowersNames.add(godPower.getGodName());
         return godPowersNames;
     }
 
-    // metodo riservato per onInitialization(...)
+    /**This method extracts a god power from the list of still not chosen ones
+     * and adds it to god powers list in game model
+     *@param godPower name of chosen god power
+     */
     private void chooseGodPower(String godPower){
         for (int i = 0; i < godPowersLeft.size(); i++){
             if (godPowersLeft.get(i).getGodName().equals(godPower)){
@@ -301,6 +327,9 @@ public class Controller implements ProxyObserver {
         }
     }
 
+    /** This method sets GodPower and Player to null and removes workers belonging to a player
+     * @param playerId player to be removed
+     */
     private void removePlayerInfos (int playerId) {
         getBoard().getCell(getWorkerPosition(playerId, 1)).setWorker(null); // rimuove i worker dalle celle
         getBoard().getCell(getWorkerPosition(playerId, 2)).setWorker(null);
@@ -308,25 +337,23 @@ public class Controller implements ProxyObserver {
         game.removePlayer(playerId); // setta il Player a null
     }
 
+    /**This method returns next player compared to the one passed by argument
+     * @param playerId player ID
+     */
+    private int nextPlayerId(int playerId){
+        int firstPlayerId = (playerId % getNumOfPlayers()) + 1;
+        for (int i = firstPlayerId; i < firstPlayerId + getNumOfPlayers() - 1; i++)
+            if (getPlayer((i-1) %getNumOfPlayers()+1) != null) return ((i-1) % getNumOfPlayers()) +1;
+        return playerId;
+    }
+
     private int getNumOfPlayers() {return game.getNumOfPlayers();}
     private Board getBoard() { return game.getBoard(); }
     private Turn getTurn() { return game.getTurn(); }
     private List<Player> getPlayers() { return game.getPlayers(); }
     private List<GodPower> getGodPowers() { return game.getGodPowers(); }
-    private Player getPlayer(int playerId) {
-        return game.getPlayer(playerId);
-    }
-    private GodPower getPlayerGodPower(int playerId) {
-        return game.getPlayerGodPower(playerId);
-    }
-    private Worker getPlayerWorker (int playerId, int workerId) {
-        return game.getPlayerWorker(playerId, workerId);
-    }
-    private Position getWorkerPosition(int playerId, int workerId) {
-        return game.getWorkerPosition(playerId, workerId);
-    }
-
-    public List<GodPower> getGodPowersLeft() {
-        return godPowersLeft;
-    }
+    private Player getPlayer(int playerId) {return game.getPlayer(playerId); }
+    private GodPower getPlayerGodPower(int playerId) { return game.getPlayerGodPower(playerId); }
+    private Position getWorkerPosition(int playerId, int workerId) { return game.getWorkerPosition(playerId, workerId); }
+    public List<GodPower> getGodPowersLeft() { return godPowersLeft; }
 }

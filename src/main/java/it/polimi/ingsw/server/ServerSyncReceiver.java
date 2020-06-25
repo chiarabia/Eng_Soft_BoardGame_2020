@@ -8,11 +8,14 @@ import java.io.ObjectInputStream;
 import java.net.Socket;
 import java.util.Scanner;
 
-// ClientStoppedWorkingException
-// non distingue fra problemi di rete e client che si scollega poiché nella nostra
-// architettura non fa differenza, in ogni caso il Server disconnette e termina.
 
 public class ServerSyncReceiver extends Thread {
+    /**
+     * This method waits for an object to be received from a client
+     * @return Object
+     * @param socket client socket
+     * @throws ClientStoppedWorkingException if client is disconnected or no answer is received within one second
+     */
     public Object receiveObject(Socket socket) throws ClientStoppedWorkingException {
         Object object = null;
         try {

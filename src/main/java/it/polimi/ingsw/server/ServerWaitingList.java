@@ -14,6 +14,14 @@ public class ServerWaitingList {
     private final int numOfPlayers;
     private List<Socket> playersList;
     private List<String> namesList;
+    /**
+     * This method checks if the player's name is valid, then adds it to the
+     * players list and eventually extracts 2/3 players in order to start a match
+     * @param socket socket
+     * @param name player's name
+     * @throws BadNameException BadNameException
+     * @throws IOException IOException
+     */
     public synchronized void addToPlayersList(Socket socket, String name) throws BadNameException, IOException {
         if (!isNameValid(name)) throw new BadNameException();
         System.out.println(name + " accepted for " + numOfPlayers + " players game");
@@ -26,12 +34,22 @@ public class ServerWaitingList {
             (new ServerThread(exportedList, numOfPlayers, tempNames)).start();
         }
     }
+    /**
+     * This method exports 2/3 players from the waiting list if available
+     * @return List<Socket> or null if there are not enough players
+     */
     private synchronized List <Socket> exportPlayersList() {
         if (playersList.size()<numOfPlayers) return null;
         List<Socket> list = new ArrayList<>();
         for (int j = 0; j < numOfPlayers; j++) list.add(playersList.remove(0));
         return list;
     }
+    /**
+     * This method sends a Message object and waits for the answer
+     * @param message message
+     * @param position position of socket inside the list
+     * @throws ClientStoppedWorkingException if client is not connected anymore or if no response is received within a second
+     */
     private synchronized String sendMessageAndWaitForReply(String message, int position) throws ClientStoppedWorkingException {
         try {
             ObjectOutputStream fileObjectOut = new ObjectOutputStream(playersList.get(position).getOutputStream());
@@ -40,6 +58,12 @@ public class ServerWaitingList {
         } catch (Exception e){}
         return ((Message)(new ServerSyncReceiver()).receiveObject(playersList.get(position))).getMessage();
     }
+    /**
+     * This method discards no more valid clients by sending an echo message, then
+     * checks if a name is already used by another player
+     * @param name player's name
+     * @throws IOException IOException
+     */
     private synchronized boolean isNameValid (String name) throws IOException {
         for (int i = 0; i < playersList.size(); i++) {
             try{

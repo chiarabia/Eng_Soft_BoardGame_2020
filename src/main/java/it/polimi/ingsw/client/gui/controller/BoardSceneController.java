@@ -121,8 +121,9 @@ public class BoardSceneController implements Initializable {
         moveButton.setOnAction(actionEvent -> {
             //sends the position and worker id of the worker that has been moved
             List<ViewObserver> observerList = MainStage.getObserverList();
-            for (int i = 0; i < observerList.size(); i++) observerList.get(i).onCompletedMove(newWorkerPosition, workerSelected);
-            //moveButton.setDisable(true);
+            for (int i = 0; i < observerList.size(); i++) observerList.get(i).onCompletedMove(newWorkerPosition.mirrorYCoordinate(), workerSelected);
+            disableAllButtons();
+            resetAllPossibleIndicators();
         });
 
         //handles the click on the Build Button
@@ -131,16 +132,18 @@ public class BoardSceneController implements Initializable {
             List<ViewObserver> observerList = MainStage.getObserverList();
             boolean isDome = false;
             if(newBuildingPostion.getZ()==4) isDome = true;
-            for (int i = 0; i < observerList.size(); i++) observerList.get(i).onCompletedBuild(newBuildingPostion, workerSelected, isDome);
-            //buildButton.setDisable(true);
+            for (int i = 0; i < observerList.size(); i++) observerList.get(i).onCompletedBuild(newBuildingPostion.mirrorYCoordinate(), workerSelected, isDome);
+            disableAllButtons();
+            resetAllPossibleIndicators();
         });
 
         //handles the click on the Dome Button
         domeButton.setOnAction(actionEvent -> {
             //sends the position of the new dome building and the worker id
             List<ViewObserver> observerList = MainStage.getObserverList();
-            for (int i = 0; i < observerList.size(); i++) observerList.get(i).onCompletedBuild(newBuildingPostion, workerSelected, true);
-            //domeButton.setDisable(true);
+            for (int i = 0; i < observerList.size(); i++) observerList.get(i).onCompletedBuild(newBuildingPostion.mirrorYCoordinate(), workerSelected, true);
+            disableAllButtons();
+            resetAllPossibleIndicators();
         });
 
         //handles the click on the Decline Button
@@ -148,10 +151,8 @@ public class BoardSceneController implements Initializable {
             //tells the client that the player has declined the possibility of new actions
             List<ViewObserver> observerList = MainStage.getObserverList();
             for (int i = 0; i < observerList.size(); i++) observerList.get(i).onCompletedDecline();
-            moveButton.setDisable(true);
-            buildButton.setDisable(true);
-            domeButton.setDisable(true);
-            declineButton.setDisable(true);
+            disableAllButtons();
+            resetAllPossibleIndicators();
         });
     }
 
@@ -200,8 +201,13 @@ public class BoardSceneController implements Initializable {
         startingWorkerPositions.add(WorkerPosition);
         //when there are two Workers it gives them to the client
         if (startingWorkerPositions.size() == 2){
+            ArrayList<Position> startingWorkerPositionsWithYmirrored = new ArrayList<Position>();
+            for (int i = 0; i < startingWorkerPositions.size(); i++) {
+                startingWorkerPositionsWithYmirrored.add(i, startingWorkerPositions.get(i).mirrorYCoordinate());
+            }
+
             for (int i = 0; i < observerList.size(); i++)
-                observerList.get(i).onCompletedInitializeWorkerPositions(startingWorkerPositions);
+                observerList.get(i).onCompletedInitializeWorkerPositions(startingWorkerPositionsWithYmirrored);
             actionsCodes.clear();
             notificationsTextFlow.getChildren().clear();
         }
@@ -211,8 +217,10 @@ public class BoardSceneController implements Initializable {
     public void onCellClicked(javafx.scene.input.MouseEvent event) {
         int column = GridPane.getColumnIndex((Node) event.getSource());
         int row = GridPane.getRowIndex((Node) event.getSource());
+
+
         //if we are in the askWorkerInitialPosition phase
-        if(actionsCodes.get(0) == 1) {
+        if(actionsCodes!=null && actionsCodes.size()>0 && actionsCodes.get(0) == 1) {
             System.out.println(String.format("Node clicked at: column=%d, row=%d", column, row));
             //adds the StackPane of the cell that we clicked in workerCells
             StackPane cell = (StackPane) getNodeFromGridPane(gridPane, column, row);
@@ -223,7 +231,7 @@ public class BoardSceneController implements Initializable {
             //updates the workerNumber
         }
         //if we are in a normal turn
-        else if(actionsCodes.get(0) == 2){
+        else if(actionsCodes!=null && actionsCodes.size()>0 && actionsCodes.get(0) == 2){
             //gets the current position in terms of StackPane of the two workers
             StackPane firstWorkerCell = (StackPane)getNodeFromPosition(gridPane,oldFirstWorkerPosition);
             StackPane secondWorkerCell = (StackPane)getNodeFromPosition(gridPane,oldSecondWorkerPosition);
@@ -262,9 +270,9 @@ public class BoardSceneController implements Initializable {
                 }
                 //if a movement action is possible in the cell that has been clicked by the player the moveButton is avalaible
                 moveButton.setDisable(!isMoveActionPossible);
+                clearActionsList();
                 //saves the last cell that the player clicked
                 previousCell = cell;
-
             }
 
             //if a movement is no longer possible, the move button is disabled
@@ -276,7 +284,9 @@ public class BoardSceneController implements Initializable {
                    isBuildActionPossible = isCellActionPossible(cell,worker1Builds);
                    newBuildingPostion = addZToPosition(column,row,worker1BuildsPosition);
                    //if the worker selected can't build we display a message
-                   if(worker1BuildsPosition.isEmpty()) displayNotificationsDuringTurn("The worker you choose cannot build \n");
+                   if(worker1BuildsPosition.isEmpty())
+                       displayNotificationsDuringTurn("The worker you choose cannot build \n");
+
                }
                if(workerSelected ==2){
                    convertPositionListToStackPaneList(worker2BuildsPosition,2,2);
@@ -290,8 +300,10 @@ public class BoardSceneController implements Initializable {
                 //if a build action is possible in the cell that has been clicked, and the player can choose to
                 //build a dome wherever, the domeButton is avalaible
                domeButton.setDisable(!isBuildActionPossible && !isDomeAtAnyLevelPossible);
+               clearActionsList();
                previousCell = cell;
             }
+
             if(isDeclinePossible)declineButton.setDisable(false);
             //if a build action is no longer possible, the build button is disabled
             if(!isBuildPossible)buildButton.setDisable(true);
@@ -299,6 +311,7 @@ public class BoardSceneController implements Initializable {
             if(!isDomeAtAnyLevelPossible)domeButton.setDisable(true);
             //if a decline action is no longer possible, the decline button is disabled
             if(!isDeclinePossible)declineButton.setDisable(true);
+
         }
 
     }
@@ -494,8 +507,16 @@ public class BoardSceneController implements Initializable {
      * @param notification the String that we want to add
      */
     public void displayNotificationsDuringTurn(String notification){
-        Text notificationText = new Text(notification);
+        if(notificationsTextFlow.getChildren().size() > 5) notificationsTextFlow.getChildren().clear();
+        Text notificationText = new Text(notification + "\n");
         setTextFormat(notificationText,12);
+        notificationsTextFlow.getChildren().add(notificationText);
+       // if(notificationsTextFlow.getChildren().size() > 5) notificationsTextFlow.getChildren().clear();
+    }
+
+    public void displayNotificationsDuringTurn(String notification, int font){
+        Text notificationText = new Text(notification);
+        setTextFormat(notificationText,font);
         notificationsTextFlow.getChildren().add(notificationText);
         if(notificationsTextFlow.getChildren().size() > 5) notificationsTextFlow.getChildren().clear();
     }
@@ -514,6 +535,19 @@ public class BoardSceneController implements Initializable {
         buildButton.setVisible(false);
         domeButton.setVisible(false);
         declineButton.setVisible(false);
+    }
+
+    public void addImageToBoard(Image image){
+        StackPane imageContainer = new StackPane();
+        imageContainer.setMinHeight(500);
+        imageContainer.setMinWidth(500);
+        BackgroundSize buildingSize = new BackgroundSize(500,500, false,false, true, true);
+        imageContainer.setBackground(new Background(new BackgroundImage(new Image("/Board/SantoriniBoardOnly.png"), BackgroundRepeat.NO_REPEAT, BackgroundRepeat.NO_REPEAT, BackgroundPosition.CENTER, buildingSize )));
+        board.setCenter(imageContainer);
+        ImageView endGame = new ImageView(image);
+        endGame.setFitWidth(500);
+        endGame.setFitHeight(500);
+        imageContainer.getChildren().add(endGame);
     }
 
     public void addImageToBoard(Image image){
@@ -548,6 +582,26 @@ public class BoardSceneController implements Initializable {
     public void setVisibleDomeButton(boolean visibility){ domeButton.setVisible(visibility); }
     public void setVisibleDeclineButton(boolean visibility){
         declineButton.setVisible(visibility);
+    }
+
+    public void disableAllButtons () {
+        moveButton.setDisable(true);
+        buildButton.setDisable(true);
+        domeButton.setDisable(true);
+        declineButton.setDisable(true);
+    }
+
+    public void resetAllPossibleIndicators () {
+        isDomeAtAnyLevelPossible = false;
+        isBuildActionPossible = false;
+        isMoveActionPossible = false;
+        isDeclinePossible = false;
+    }
+    public void clearActionsList() {
+        worker1Moves.clear();
+        worker2Moves.clear();
+        worker1Builds.clear();
+        worker2Builds.clear();
     }
 
 }
