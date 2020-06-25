@@ -65,6 +65,7 @@ public class BoardSceneController implements Initializable {
     boolean declineButtonActive = false;
 
     boolean firstTimeSelectedCell = true;
+    boolean isMyTurn = false;
     boolean firstTimeWorkerOne = true;
     boolean firstTimeWorkerTwo = true;
     StackPane previousCell;
@@ -153,6 +154,7 @@ public class BoardSceneController implements Initializable {
             for (int i = 0; i < observerList.size(); i++) observerList.get(i).onCompletedDecline();
             disableAllButtons();
             resetAllPossibleIndicators();
+            addSelectedImageToCell(previousCell,2,selectedImage);
         });
     }
 
@@ -182,7 +184,7 @@ public class BoardSceneController implements Initializable {
     }
 
     /**
-     * This class handles the positioning of the first two workers on the board
+     * This method handles the positioning of the first two workers on the board
      * and sends the Positions to the client.
      *
      * @param cell the pane that the player clicked
@@ -245,8 +247,13 @@ public class BoardSceneController implements Initializable {
                 if(cell == firstWorkerCell) workerSelected=1;
                 if(cell == secondWorkerCell) workerSelected=2;
             }
-            if (firstTimeSelectedCell = false) addSelectedImageToCell(previousCell,2,selectedImage);
-            addSelectedImageToCell(cell,1,selectedImage);
+
+            if (isMyTurn){
+                if (!firstTimeSelectedCell) addSelectedImageToCell(previousCell,2,selectedImage);
+                addSelectedImageToCell(cell,1,selectedImage);
+            }
+
+            if(!isMyTurn && !firstTimeSelectedCell) addSelectedImageToCell(previousCell,2,selectedImage);
 
             //if a worker has been selected and a move action is possible
             if(isWorkerSelected && isMovePossible){
@@ -273,6 +280,7 @@ public class BoardSceneController implements Initializable {
                 clearActionsList();
                 //saves the last cell that the player clicked
                 previousCell = cell;
+                firstTimeSelectedCell = false;
             }
 
             //if a movement is no longer possible, the move button is disabled
@@ -302,6 +310,7 @@ public class BoardSceneController implements Initializable {
                domeButton.setDisable(!isBuildActionPossible && !isDomeAtAnyLevelPossible);
                clearActionsList();
                previousCell = cell;
+               firstTimeSelectedCell = false;
             }
 
             if(isDeclinePossible)declineButton.setDisable(false);
@@ -563,6 +572,7 @@ public class BoardSceneController implements Initializable {
     public void setWorker2MovesPosition(Set<Position> secondWorkerMoves){worker2MovesPosition = secondWorkerMoves;}
     public void setWorker1BuildPosition(Set<Position> firstWorkerBuilds){worker1BuildsPosition = firstWorkerBuilds;}
     public void setWorker2BuildPosition(Set<Position> secondWorkerBuilds){worker2BuildsPosition = secondWorkerBuilds;}
+    public void setMyTurn(boolean myTurn){isMyTurn = myTurn;}
     public static Text getNotification() {return notification;}
 
 
