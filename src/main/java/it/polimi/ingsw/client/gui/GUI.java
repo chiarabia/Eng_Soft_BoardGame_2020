@@ -25,6 +25,7 @@ public class GUI implements View {
     private BoardSceneController boardSceneController;
     private LoginSceneController loginSceneController;
     private WaitingSceneController waitingSceneController;
+
     private ClientBoard board;
     ChoosingGodSceneRunnable choosingGodSceneRunnable = new ChoosingGodSceneRunnable();
     BoardSceneRunnable boardSceneRunnable;
