@@ -7,6 +7,7 @@ import javafx.fxml.Initializable;
 
 import javafx.scene.control.Button;
 import javafx.scene.control.ChoiceBox;
+import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 
 import java.net.URL;
@@ -17,6 +18,8 @@ import java.util.ResourceBundle;
 
 public class LoginSceneController implements Initializable {
 
+    @FXML
+    private Label errorLabel;
     @FXML
     private Button startMatchButton;
     @FXML
@@ -30,7 +33,7 @@ public class LoginSceneController implements Initializable {
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
-
+        errorLabel.setVisible(false);
         startMatchButton.setDisable(true);
 
         //Sets the options for the Choice Box to 2 or 3 players
@@ -61,6 +64,10 @@ public class LoginSceneController implements Initializable {
             boolean isDisabled = (name.isEmpty() || name.trim().isEmpty()) || (numberOfPlayers == 0);
             startMatchButton.setDisable(isDisabled);
         });
+    }
+
+    public void updateErrorLabel(){
+        errorLabel.setVisible(true);
     }
 }
 
