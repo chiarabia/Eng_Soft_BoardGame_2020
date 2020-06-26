@@ -280,7 +280,6 @@ public class BoardSceneController implements Initializable {
 
                 //if a worker has been selected and a move action is possible
                 if (isWorkerSelected && isMovePossible) {
-                    convertPositionListToStackPaneList(worker1MovesPosition, workerSelected, 1);
                     List<StackPane> workerMoves;
                     Set<Position> workerMovesPosition;
 
@@ -292,6 +291,7 @@ public class BoardSceneController implements Initializable {
                         workerMoves = worker2Moves;
                         workerMovesPosition = worker2MovesPosition;
                     }
+                    convertPositionListToStackPaneList(workerMovesPosition, workerSelected, 1);
                     isMoveActionPossible = isCellActionPossible(cell, workerMoves);
                     newWorkerPosition = addZToPosition(column, row, workerMovesPosition);
 
@@ -307,16 +307,23 @@ public class BoardSceneController implements Initializable {
                 if (!isMovePossible) moveButton.setDisable(true);
 
                 if (isWorkerSelected && isBuildPossible) {
+                    List<StackPane> workerBuilds;
+                    Set<Position> workerBuildsPosition;
+
                     if (workerSelected == 1) {
-                        convertPositionListToStackPaneList(worker1BuildsPosition, 1, 2);
-                        isBuildActionPossible = isCellActionPossible(cell, worker1Builds);
-                        newBuildingPostion = addZToPosition(column, row, worker1BuildsPosition);
+                        workerBuildsPosition = worker1BuildsPosition;
+                        convertPositionListToStackPaneList(workerBuildsPosition, workerSelected, 2);
+                        workerBuilds = worker1Builds;
+
                     }
-                    if (workerSelected == 2) {
-                        convertPositionListToStackPaneList(worker2BuildsPosition, 2, 2);
-                        isBuildActionPossible = isCellActionPossible(cell, worker2Builds);
-                        newBuildingPostion = addZToPosition(column, row, worker2BuildsPosition);
+                    else {
+                        workerBuildsPosition = worker2BuildsPosition;
+                        convertPositionListToStackPaneList(workerBuildsPosition, workerSelected, 2);
+                        workerBuilds = worker2Builds;
                     }
+                    isBuildActionPossible = isCellActionPossible(cell, workerBuilds);
+                    newBuildingPostion = addZToPosition(column, row, workerBuildsPosition);
+
                     //if a build action is possible in the cell that has been clicked by the player the buildButton is avalaible
                     buildButton.setDisable(!isBuildActionPossible);
                     //if a build action is possible in the cell that has been clicked, and the player can choose to
