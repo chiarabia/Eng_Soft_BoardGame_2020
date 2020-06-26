@@ -132,6 +132,12 @@ public class GUI implements View {
     @Override
     public void displayLoser(int playerId) {
         Platform.runLater(()->{
+            for(int i = 1; i<3; i++) {
+                boardSceneController
+                        .removeWorker(getWorkerPositions(playerId, i)
+                                .mirrorYCoordinate());
+            }
+
         	//displays a lose notification of the player that has lost
             String notification;
             if (playerId==board.getMyPlayerId()) notification = "You"+ textfields.getLost1()+ "\n";
@@ -275,7 +281,6 @@ public class GUI implements View {
         //move possible
         if (!object.areMovesEmpty()) {
             Platform.runLater(() -> {
-                boardSceneController.displayNotificationsDuringTurn(textfields.getCanmove());
                 boardSceneController.setMovePossible(true);
             });
         }
@@ -287,7 +292,6 @@ public class GUI implements View {
         //build possible
         if(!object.areBuildsEmpty()){
             Platform.runLater(() -> {
-                boardSceneController.displayNotificationsDuringTurn(textfields.getCanbuild());
                 boardSceneController.setBuildPossible(true);
             });
         }
@@ -309,7 +313,7 @@ public class GUI implements View {
         //can decline allowed
         if(object.canDecline()){
             Platform.runLater(() -> {
-                boardSceneController.displayNotificationsDuringTurn(textfields.getCanendturn());
+                boardSceneController.displayNotificationsDuringTurn(textfields.getCanendturn()+ "\n");
                 boardSceneController.setDeclinePossible(true);
                 boardSceneController.setVisibleDeclineButton(true);
                 boardSceneController.disableDeclineButton(false);
@@ -336,7 +340,9 @@ public class GUI implements View {
     @Override
     public void askForInitialWorkerPositions(List <Position> possiblePositions) {
         //adds the current notification for the player
+
         Platform.runLater(()->{
+            boardSceneController.setPossiblePosition(possiblePositions);
             /*String notification ="Choose your workers positions by clicking on the board";
             Text oldText = BoardSceneController.getNotification();
             setTextFormat(oldText);

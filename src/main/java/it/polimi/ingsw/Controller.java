@@ -207,7 +207,11 @@ public class Controller implements ProxyObserver {
     /**This method starts the workers positions initialization by asking the first player to choose*/
     public void onWorkerPositionsInitialization(){
         try {
-            SerializableRequest request = new SerializableRequestInitializeWorkerPositions(getBoard().getStream().filter(Cell::isFree).map(Cell::getPosition).collect(Collectors.toList()), 1);
+            SerializableRequest request = new SerializableRequestInitializeWorkerPositions(getBoard()
+                    .getStream()
+                    .filter(Cell::isFree)
+                    .map(Cell::getPosition)
+                    .collect(Collectors.toList()), 1);
             game.notifyAnswerOnePlayer(request);
         } catch (Exception e){}
     }

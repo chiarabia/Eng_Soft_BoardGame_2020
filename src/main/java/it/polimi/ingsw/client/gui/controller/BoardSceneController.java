@@ -8,6 +8,7 @@ import it.polimi.ingsw.client.gui.MainStage;
 import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.geometry.Pos;
 import javafx.scene.Node;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
@@ -61,11 +62,6 @@ public class BoardSceneController implements Initializable {
     public boolean isDomeAtAnyLevelPossible = false;
     public boolean isDeclinePossible = false;
 
-    boolean moveButtonActive = false;
-    boolean buildButtonActive = false;
-    boolean domeButtonActive = false;
-    boolean declineButtonActive = false;
-
     boolean firstTimeSelectedCell = true;
     boolean isMyTurn = false;
     boolean firstTimeWorkerOne = true;
@@ -84,6 +80,7 @@ public class BoardSceneController implements Initializable {
     List<StackPane> worker2Moves = new ArrayList<>();
     List<StackPane> worker1Builds = new ArrayList<>();
     List<StackPane> worker2Builds = new ArrayList<>();
+    List<Position> possiblePosition = new ArrayList<>();
     Set<Position> worker1MovesPosition;
     Set<Position> worker2MovesPosition;
     Set<Position> worker1BuildsPosition;
@@ -92,10 +89,8 @@ public class BoardSceneController implements Initializable {
     Position oldSecondWorkerPosition = new Position (0,0,0);
     int workerSelected;
     Position newWorkerPosition;
-    StackPane newWorkerCell;
     Position newBuildingPostion;
-    StackPane newWorkerBuild;
-    String levelOfBuilding;
+
 
     public BoardSceneController() throws ParseException {
     }
@@ -159,6 +154,8 @@ public class BoardSceneController implements Initializable {
             for (int i = 0; i < observerList.size(); i++) observerList.get(i).onCompletedDecline();
             disableAllButtons();
             resetAllPossibleIndicators();
+            resetWorkerBooleans();
+            clearActionsList();
             addSelectedImageToCell(previousCell,2,selectedImage);
         });
     }
@@ -226,17 +223,21 @@ public class BoardSceneController implements Initializable {
             int column = GridPane.getColumnIndex((Node) event.getSource());
             int row = GridPane.getRowIndex((Node) event.getSource());
 
-
             //if we are in the askWorkerInitialPosition phase
             if (actionsCodes != null && actionsCodes.size() > 0 && actionsCodes.get(0) == 1) {
-                System.out.println(String.format("Node clicked at: column=%d, row=%d", column, row));
-                //adds the StackPane of the cell that we clicked in workerCells
-                StackPane cell = (StackPane) getNodeFromGridPane(gridPane, column, row);
-                //adds the Position of the cell that we clicked in workerCells
-                Position workerPosition = new Position(column, row, 0);
-                //asks to display the worker image and store it for the observer
-                displayWorker(cell, workerPosition);
-                //updates the workerNumber
+                if(isContained(possiblePosition, column, row)&&!isContained(startingWorkerPositions, column, row)) {
+                    System.out.println(String.format("Node clicked at: column=%d, row=%d", column, row));
+                    //adds the StackPane of the cell that we clicked in workerCells
+                    StackPane cell = (StackPane) getNodeFromGridPane(gridPane, column, row);
+                    //adds the Position of the cell that we clicked in workerCells
+                    Position workerPosition = new Position(column, row, 0);
+                    //asks to display the worker image and store it for the observer
+                    displayWorker(cell, workerPosition);
+                    //updates the workerNumber
+                }
+                else{
+                    displayNotificationsDuringTurn("Cell not available\n");
+                }
             }
             //if we are in a normal turn
             else if (actionsCodes != null && actionsCodes.size() > 0 && actionsCodes.get(0) == 2) {
@@ -250,8 +251,24 @@ public class BoardSceneController implements Initializable {
                 //if the cell that has been clicked has either the first or second worker of the player
                 if (cell == firstWorkerCell || cell == secondWorkerCell) {
                     isWorkerSelected = true;
-                    if (cell == firstWorkerCell) workerSelected = 1;
-                    if (cell == secondWorkerCell) workerSelected = 2;
+                    if (cell == firstWorkerCell) {
+                        workerSelected = 1;
+                        if(firstTimeWorkerOne) {
+                            displayNotificationsDuringTurn(textfields.getWorker1() + "\n");
+                            firstTimeWorkerOne = false;
+                            firstTimeWorkerTwo = true;
+                        }
+                    }
+
+                    if (cell == secondWorkerCell) {
+                        workerSelected = 2;
+                        if(firstTimeWorkerTwo) {
+                            displayNotificationsDuringTurn(textfields.getWorker2() + "\n");
+                            firstTimeWorkerTwo = false;
+                            firstTimeWorkerOne = true;
+                        }
+                    }
+                    notifyAvailableActions();
                 }
 
                 if (isMyTurn) {
@@ -263,30 +280,21 @@ public class BoardSceneController implements Initializable {
 
                 //if a worker has been selected and a move action is possible
                 if (isWorkerSelected && isMovePossible) {
+                    convertPositionListToStackPaneList(worker1MovesPosition, workerSelected, 1);
+                    List<StackPane> workerMoves;
+                    Set<Position> workerMovesPosition;
+
                     if (workerSelected == 1) {
-                        convertPositionListToStackPaneList(worker1MovesPosition, 1, 1);
-                        //if it's the first time that the first worker has been clicked the player is notified
-                        if (firstTimeWorkerOne) {
-                            if (workerSelected == 1) displayNotificationsDuringTurn(textfields.getWorker1() + "\n");
-                            else displayNotificationsDuringTurn(textfields.getWorker2() + "\n");
-                        }
-                        isMoveActionPossible = isCellActionPossible(cell, worker1Moves);
-                        newWorkerPosition = addZToPosition(column, row, worker1MovesPosition);
-                        firstTimeWorkerOne = false;
-                        firstTimeWorkerTwo = true;
+                        workerMoves = worker1Moves;
+                        workerMovesPosition = worker1MovesPosition;
+
+                    }else {
+                        workerMoves = worker2Moves;
+                        workerMovesPosition = worker2MovesPosition;
                     }
-                    if (workerSelected == 2) {
-                        convertPositionListToStackPaneList(worker2MovesPosition, 2, 1);
-                        //if it's the first time that the first worker has been clicked the player is notified
-                        if (firstTimeWorkerTwo) {
-                            if (workerSelected == 1) displayNotificationsDuringTurn(textfields.getWorker1() + "\n");
-                            else displayNotificationsDuringTurn(textfields.getWorker2() + "\n");
-                        }
-                        isMoveActionPossible = isCellActionPossible(cell, worker2Moves);
-                        newWorkerPosition = addZToPosition(column, row, worker2MovesPosition);
-                        firstTimeWorkerTwo = false;
-                        firstTimeWorkerOne = true;
-                    }
+                    isMoveActionPossible = isCellActionPossible(cell, workerMoves);
+                    newWorkerPosition = addZToPosition(column, row, workerMovesPosition);
+
                     //if a movement action is possible in the cell that has been clicked by the player the moveButton is avalaible
                     moveButton.setDisable(!isMoveActionPossible);
                     clearActionsList();
@@ -303,17 +311,11 @@ public class BoardSceneController implements Initializable {
                         convertPositionListToStackPaneList(worker1BuildsPosition, 1, 2);
                         isBuildActionPossible = isCellActionPossible(cell, worker1Builds);
                         newBuildingPostion = addZToPosition(column, row, worker1BuildsPosition);
-                        //if the worker selected can't build we display a message
-                        if (worker1BuildsPosition.isEmpty())
-                            displayNotificationsDuringTurn(textfields.getWcantbuild() + "\n");
                     }
                     if (workerSelected == 2) {
                         convertPositionListToStackPaneList(worker2BuildsPosition, 2, 2);
                         isBuildActionPossible = isCellActionPossible(cell, worker2Builds);
                         newBuildingPostion = addZToPosition(column, row, worker2BuildsPosition);
-                        //if the worker selected can't build we display a message
-                        if (worker2BuildsPosition.isEmpty())
-                            displayNotificationsDuringTurn(textfields.getWcantbuild() + "\n");
                     }
                     //if a build action is possible in the cell that has been clicked by the player the buildButton is avalaible
                     buildButton.setDisable(!isBuildActionPossible);
@@ -337,6 +339,42 @@ public class BoardSceneController implements Initializable {
         });
     }
 
+    /**TODO:javadoc
+     *
+     */
+    private void notifyAvailableActions () {
+        Set<Position> workerMovesPosition;
+        Set<Position> workerBuildsPosition;
+
+        if(workerSelected == 1) {
+            workerMovesPosition = worker1MovesPosition;
+            workerBuildsPosition = worker1BuildsPosition;
+        }
+        else {
+            workerMovesPosition = worker2MovesPosition;
+            workerBuildsPosition = worker2BuildsPosition;
+        }
+        if(workerBuildsPosition.isEmpty()&&workerMovesPosition.isEmpty())
+            displayNotificationsDuringTurn(textfields.getWcantdoactions()+"\n");
+
+        else if(!workerMovesPosition.isEmpty() && !workerBuildsPosition.isEmpty())
+            displayNotificationsDuringTurn(textfields.getWcanboth()+"\n");
+
+        else if(isMovePossible) {
+            if(workerMovesPosition.isEmpty())
+                displayNotificationsDuringTurn(textfields.getWcantmove()+"\n");
+            else
+                displayNotificationsDuringTurn(textfields.getWcanmove() +"\n");
+        }
+        else if(isBuildPossible) {
+            if (workerBuildsPosition.isEmpty())
+                displayNotificationsDuringTurn(textfields.getWcantbuild() + "\n");
+            else
+                displayNotificationsDuringTurn(textfields.getWcanbuild() + "\n");
+        }
+    }
+
+
     /**
      * Updates the position of the worker image on the board
      * @param newPosition the new position where to put the image
@@ -348,6 +386,15 @@ public class BoardSceneController implements Initializable {
         StackPane oldCell = (StackPane)getNodeFromPosition(gridPane, oldPosition);
         removeWorkerImage(oldCell);
         addWorkerImage(newCell,playerID);
+    }
+
+    /**
+     * Removes the position of the worker image on the board
+     * @param workerPosition the old position where to delete the image
+     */
+    public void removeWorker(Position workerPosition) {
+        StackPane cell = (StackPane)getNodeFromPosition(gridPane, workerPosition);
+        removeWorkerImage(cell);
     }
 
     /**
@@ -530,11 +577,11 @@ public class BoardSceneController implements Initializable {
      * @param notification the String that we want to add
      */
     public void displayNotificationsDuringTurn(String notification){
-        if(notificationsTextFlow.getChildren().size() > 5) notificationsTextFlow.getChildren().clear();
-        Text notificationText = new Text(notification + "\n");
+        if(notificationsTextFlow.getChildren().size() >= 7) notificationsTextFlow.getChildren().clear();
+        Text notificationText = new Text(notification);
         setTextFormat(notificationText,12);
         notificationsTextFlow.getChildren().add(notificationText);
-       // if(notificationsTextFlow.getChildren().size() > 5) notificationsTextFlow.getChildren().clear();
+        //if(notificationsTextFlow.getChildren().size() > 5) notificationsTextFlow.getChildren().clear();
     }
 
     public void displayNotificationsDuringTurn(String notification, int font){
@@ -585,8 +632,28 @@ public class BoardSceneController implements Initializable {
     public void setWorker1BuildPosition(Set<Position> firstWorkerBuilds){worker1BuildsPosition = firstWorkerBuilds;}
     public void setWorker2BuildPosition(Set<Position> secondWorkerBuilds){worker2BuildsPosition = secondWorkerBuilds;}
     public void setMyTurn(boolean myTurn){isMyTurn = myTurn;}
+
+    public void setPossiblePosition(List<Position> possiblePosition) {
+        /*for(int i = 0; i<possiblePosition.size(); i++) {
+            this.possiblePosition.add(possiblePosition.get(i));
+        }
+         */
+        this.possiblePosition = possiblePosition;
+    }
+
     public static Text getNotification() {return notification;}
 
+    private boolean isContained (List<Position> list, int x, int y) {
+        if (list==null||list.size()<1) {
+        }
+        else {
+            for (Position position : list) {
+                if (position.getX() == x && position.getY() == y)
+                    return true;
+            }
+        }
+        return false;
+    }
 
     public static void setTextFormat(Text notification, int font){notification.setFont(Font.font("Verdana", FontWeight.BOLD, font)); }
 
@@ -614,5 +681,12 @@ public class BoardSceneController implements Initializable {
         worker1Builds.clear();
         worker2Builds.clear();
     }
-
+    public void resetWorkerBooleans () {
+        firstTimeWorkerOne = true;
+        firstTimeWorkerTwo = true;
+        isWorkerSelected = false;
+        isMovePossible = false;
+        isBuildActionPossible = false;
+        isBuildPossible = false;
+    }
 }
