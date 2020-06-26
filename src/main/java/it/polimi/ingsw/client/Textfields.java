@@ -8,6 +8,7 @@ import org.json.simple.parser.ParseException;
 
 public class Textfields {
     private final String initialplaying;
+    private final String chooseworkerpositions;
     private final String won1;
     private final String won2;
     private final String lost1;
@@ -49,6 +50,7 @@ public class Textfields {
     public Textfields() throws ParseException {
         JSONObject jsonObject = JSONManager.readMyJSONAsText("configurations/Textfields.json");
         this.initialplaying = (String) jsonObject.get("initialplaying");
+        this.chooseworkerpositions = (String) jsonObject.get("chooseworkerpositions");
         this.won1 = (String) jsonObject.get("won1");
         this.won2 = (String) jsonObject.get("won2");
         this.lost1 = (String) jsonObject.get("lost1");
@@ -85,6 +87,8 @@ public class Textfields {
     public String getInitialplaying() {
         return initialplaying;
     }
+
+    public String getChooseworkerpositions(){ return chooseworkerpositions; }
 
     public String getWon1() {
         return won1;

@@ -1,5 +1,6 @@
 {
   "initialplaying": "You are playing with ",
+  "chooseworkerpositions": "Choose your workers positions",
   "won1": " have won!",
   "won2": " has won",
   "lost1": " have lost!",
@@ -22,7 +23,7 @@
   "worker2": "Worker 2",
   "wcanmove": "This worker can move",
   "wcanbuild": "This worker can build",
-  "wcanmovenadbuild": "This worker can move and build",
+  "wcanmoveandbuild": "This worker can move and build",
   "wcantmove": "This worker cannot move",
   "wcantbuild": "This worker cannot build",
   "wcantdoanything": "This worker cannot do anything",

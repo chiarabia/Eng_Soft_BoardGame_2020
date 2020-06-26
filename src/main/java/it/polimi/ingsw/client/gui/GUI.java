@@ -342,11 +342,15 @@ public class GUI implements View {
         //adds the current notification for the player
 
         Platform.runLater(()->{
-            boardSceneController.setPossiblePosition(possiblePositions);
-            /*String notification ="Choose your workers positions by clicking on the board";
             Text oldText = BoardSceneController.getNotification();
             setTextFormat(oldText);
-            oldText.setText("Choose your workers positions by clicking on the board");*/
+            oldText.setText(textfields.getChooseworkerpositions());
+        });
+        Platform.runLater(()->{
+            boardSceneController.setPossiblePosition(possiblePositions);
+            /*Text oldText = BoardSceneController.getNotification();
+            setTextFormat(oldText);
+            oldText.setText(textfields.getChooseworkerpositions());*/
             //sets the actionCode to 1 for the askForInitialiWorkerPosition phase
             BoardSceneController.updateActionCode(1);
         });
