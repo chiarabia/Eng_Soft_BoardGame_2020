@@ -5,6 +5,7 @@ import it.polimi.ingsw.client.GodCard;
 import it.polimi.ingsw.client.Textfields;
 import it.polimi.ingsw.client.ViewObserver;
 import it.polimi.ingsw.client.gui.MainStage;
+import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.Node;
@@ -221,116 +222,119 @@ public class BoardSceneController implements Initializable {
 
     //handles the click event on a cell of the board
     public void onCellClicked(javafx.scene.input.MouseEvent event) {
-        int column = GridPane.getColumnIndex((Node) event.getSource());
-        int row = GridPane.getRowIndex((Node) event.getSource());
+        Platform.runLater(()-> {
+            int column = GridPane.getColumnIndex((Node) event.getSource());
+            int row = GridPane.getRowIndex((Node) event.getSource());
 
 
-        //if we are in the askWorkerInitialPosition phase
-        if(actionsCodes!=null && actionsCodes.size()>0 && actionsCodes.get(0) == 1) {
-            System.out.println(String.format("Node clicked at: column=%d, row=%d", column, row));
-            //adds the StackPane of the cell that we clicked in workerCells
-            StackPane cell = (StackPane) getNodeFromGridPane(gridPane, column, row);
-            //adds the Position of the cell that we clicked in workerCells
-            Position workerPosition = new Position(column, row, 0);
-            //asks to display the worker image and store it for the observer
-            displayWorker(cell,workerPosition);
-            //updates the workerNumber
-        }
-        //if we are in a normal turn
-        else if(actionsCodes!=null && actionsCodes.size()>0 && actionsCodes.get(0) == 2){
-            //gets the current position in terms of StackPane of the two workers
-            StackPane firstWorkerCell = (StackPane)getNodeFromPosition(gridPane,oldFirstWorkerPosition);
-            StackPane secondWorkerCell = (StackPane)getNodeFromPosition(gridPane,oldSecondWorkerPosition);
-
-            //the cell that has been clicked on
-            StackPane cell = (StackPane) getNodeFromGridPane(gridPane, column, row);
-
-            //if the cell that has been clicked has either the first or second worker of the player
-            if(cell == firstWorkerCell || cell == secondWorkerCell){
-                isWorkerSelected = true;
-                if(cell == firstWorkerCell) workerSelected=1;
-                if(cell == secondWorkerCell) workerSelected=2;
+            //if we are in the askWorkerInitialPosition phase
+            if (actionsCodes != null && actionsCodes.size() > 0 && actionsCodes.get(0) == 1) {
+                System.out.println(String.format("Node clicked at: column=%d, row=%d", column, row));
+                //adds the StackPane of the cell that we clicked in workerCells
+                StackPane cell = (StackPane) getNodeFromGridPane(gridPane, column, row);
+                //adds the Position of the cell that we clicked in workerCells
+                Position workerPosition = new Position(column, row, 0);
+                //asks to display the worker image and store it for the observer
+                displayWorker(cell, workerPosition);
+                //updates the workerNumber
             }
+            //if we are in a normal turn
+            else if (actionsCodes != null && actionsCodes.size() > 0 && actionsCodes.get(0) == 2) {
+                //gets the current position in terms of StackPane of the two workers
+                StackPane firstWorkerCell = (StackPane) getNodeFromPosition(gridPane, oldFirstWorkerPosition);
+                StackPane secondWorkerCell = (StackPane) getNodeFromPosition(gridPane, oldSecondWorkerPosition);
 
-            if (isMyTurn){
-                if (!firstTimeSelectedCell) addSelectedImageToCell(previousCell,2,selectedImage);
-                addSelectedImageToCell(cell,1,selectedImage);
-            }
+                //the cell that has been clicked on
+                StackPane cell = (StackPane) getNodeFromGridPane(gridPane, column, row);
 
-            if(!isMyTurn && !firstTimeSelectedCell) addSelectedImageToCell(previousCell,2,selectedImage);
-
-            //if a worker has been selected and a move action is possible
-            if(isWorkerSelected && isMovePossible){
-                if(workerSelected == 1){
-                    convertPositionListToStackPaneList(worker1MovesPosition,1,1);
-                    //if it's the first time that the first worker has been clicked the player is notified
-                    if(firstTimeWorkerOne) {
-                        if (workerSelected==1) displayNotificationsDuringTurn(textfields.getWorker1() + "\n");
-                        else displayNotificationsDuringTurn(textfields.getWorker2() + "\n");
-                    }
-                    isMoveActionPossible = isCellActionPossible(cell,worker1Moves);
-                    newWorkerPosition = addZToPosition(column,row,worker1MovesPosition);
-                    firstTimeWorkerOne = false;
-                    if(!firstTimeWorkerTwo) firstTimeWorkerTwo = true;
+                //if the cell that has been clicked has either the first or second worker of the player
+                if (cell == firstWorkerCell || cell == secondWorkerCell) {
+                    isWorkerSelected = true;
+                    if (cell == firstWorkerCell) workerSelected = 1;
+                    if (cell == secondWorkerCell) workerSelected = 2;
                 }
-                if(workerSelected == 2){
-                    convertPositionListToStackPaneList(worker2MovesPosition,2,1);
-                    //if it's the first time that the first worker has been clicked the player is notified
-                    if(firstTimeWorkerTwo)  {
-                        if (workerSelected==1) displayNotificationsDuringTurn(textfields.getWorker1() + "\n");
-                        else displayNotificationsDuringTurn(textfields.getWorker2() + "\n");
-                    }
-                    isMoveActionPossible = isCellActionPossible(cell,worker2Moves);
-                    newWorkerPosition = addZToPosition(column,row,worker2MovesPosition);
-                    firstTimeWorkerTwo = false;
-                    if(!firstTimeWorkerOne) firstTimeWorkerOne = true;
+
+                if (isMyTurn) {
+                    if (!firstTimeSelectedCell) addSelectedImageToCell(previousCell, 2, selectedImage);
+                    addSelectedImageToCell(cell, 1, selectedImage);
                 }
-                //if a movement action is possible in the cell that has been clicked by the player the moveButton is avalaible
-                moveButton.setDisable(!isMoveActionPossible);
-                clearActionsList();
-                //saves the last cell that the player clicked
-                previousCell = cell;
-                firstTimeSelectedCell = false;
+
+                if (!isMyTurn && !firstTimeSelectedCell) addSelectedImageToCell(previousCell, 2, selectedImage);
+
+                //if a worker has been selected and a move action is possible
+                if (isWorkerSelected && isMovePossible) {
+                    if (workerSelected == 1) {
+                        convertPositionListToStackPaneList(worker1MovesPosition, 1, 1);
+                        //if it's the first time that the first worker has been clicked the player is notified
+                        if (firstTimeWorkerOne) {
+                            if (workerSelected == 1) displayNotificationsDuringTurn(textfields.getWorker1() + "\n");
+                            else displayNotificationsDuringTurn(textfields.getWorker2() + "\n");
+                        }
+                        isMoveActionPossible = isCellActionPossible(cell, worker1Moves);
+                        newWorkerPosition = addZToPosition(column, row, worker1MovesPosition);
+                        firstTimeWorkerOne = false;
+                        firstTimeWorkerTwo = true;
+                    }
+                    if (workerSelected == 2) {
+                        convertPositionListToStackPaneList(worker2MovesPosition, 2, 1);
+                        //if it's the first time that the first worker has been clicked the player is notified
+                        if (firstTimeWorkerTwo) {
+                            if (workerSelected == 1) displayNotificationsDuringTurn(textfields.getWorker1() + "\n");
+                            else displayNotificationsDuringTurn(textfields.getWorker2() + "\n");
+                        }
+                        isMoveActionPossible = isCellActionPossible(cell, worker2Moves);
+                        newWorkerPosition = addZToPosition(column, row, worker2MovesPosition);
+                        firstTimeWorkerTwo = false;
+                        firstTimeWorkerOne = true;
+                    }
+                    //if a movement action is possible in the cell that has been clicked by the player the moveButton is avalaible
+                    moveButton.setDisable(!isMoveActionPossible);
+                    clearActionsList();
+                    //saves the last cell that the player clicked
+                    previousCell = cell;
+                    firstTimeSelectedCell = false;
+                }
+
+                //if a movement is no longer possible, the move button is disabled
+                if (!isMovePossible) moveButton.setDisable(true);
+
+                if (isWorkerSelected && isBuildPossible) {
+                    if (workerSelected == 1) {
+                        convertPositionListToStackPaneList(worker1BuildsPosition, 1, 2);
+                        isBuildActionPossible = isCellActionPossible(cell, worker1Builds);
+                        newBuildingPostion = addZToPosition(column, row, worker1BuildsPosition);
+                        //if the worker selected can't build we display a message
+                        if (worker1BuildsPosition.isEmpty())
+                            displayNotificationsDuringTurn(textfields.getWcantbuild() + "\n");
+                    }
+                    if (workerSelected == 2) {
+                        convertPositionListToStackPaneList(worker2BuildsPosition, 2, 2);
+                        isBuildActionPossible = isCellActionPossible(cell, worker2Builds);
+                        newBuildingPostion = addZToPosition(column, row, worker2BuildsPosition);
+                        //if the worker selected can't build we display a message
+                        if (worker2BuildsPosition.isEmpty())
+                            displayNotificationsDuringTurn(textfields.getWcantbuild() + "\n");
+                    }
+                    //if a build action is possible in the cell that has been clicked by the player the buildButton is avalaible
+                    buildButton.setDisable(!isBuildActionPossible);
+                    //if a build action is possible in the cell that has been clicked, and the player can choose to
+                    //build a dome wherever, the domeButton is avalaible
+                    domeButton.setDisable(!isBuildActionPossible && !isDomeAtAnyLevelPossible);
+                    clearActionsList();
+                    previousCell = cell;
+                    firstTimeSelectedCell = false;
+                }
+
+                if (isDeclinePossible) declineButton.setDisable(false);
+                //if a build action is no longer possible, the build button is disabled
+                if (!isBuildPossible) buildButton.setDisable(true);
+                //if a dome building action is no longer possible, the build button is disabled
+                if (!isDomeAtAnyLevelPossible) domeButton.setDisable(true);
+                //if a decline action is no longer possible, the decline button is disabled
+                if (!isDeclinePossible) declineButton.setDisable(true);
+
             }
-
-            //if a movement is no longer possible, the move button is disabled
-            if(!isMovePossible)moveButton.setDisable(true);
-
-            if(isWorkerSelected && isBuildPossible){
-               if(workerSelected == 1){
-                   convertPositionListToStackPaneList(worker1BuildsPosition,1,2);
-                   isBuildActionPossible = isCellActionPossible(cell,worker1Builds);
-                   newBuildingPostion = addZToPosition(column,row,worker1BuildsPosition);
-                   //if the worker selected can't build we display a message
-                   if(worker1BuildsPosition.isEmpty()) displayNotificationsDuringTurn(textfields.getWcantbuild() + "\n");
-               }
-               if(workerSelected ==2){
-                   convertPositionListToStackPaneList(worker2BuildsPosition,2,2);
-                   isBuildActionPossible = isCellActionPossible(cell,worker2Builds);
-                   newBuildingPostion = addZToPosition(column,row,worker2BuildsPosition);
-                   //if the worker selected can't build we display a message
-                   if(worker2BuildsPosition.isEmpty()) displayNotificationsDuringTurn(textfields.getWcantbuild() + "\n");
-               }
-                //if a build action is possible in the cell that has been clicked by the player the buildButton is avalaible
-               buildButton.setDisable(!isBuildActionPossible);
-                //if a build action is possible in the cell that has been clicked, and the player can choose to
-                //build a dome wherever, the domeButton is avalaible
-               domeButton.setDisable(!isBuildActionPossible && !isDomeAtAnyLevelPossible);
-               clearActionsList();
-               previousCell = cell;
-               firstTimeSelectedCell = false;
-            }
-
-            if(isDeclinePossible)declineButton.setDisable(false);
-            //if a build action is no longer possible, the build button is disabled
-            if(!isBuildPossible)buildButton.setDisable(true);
-            //if a dome building action is no longer possible, the build button is disabled
-            if(!isDomeAtAnyLevelPossible)domeButton.setDisable(true);
-            //if a decline action is no longer possible, the decline button is disabled
-            if(!isDeclinePossible)declineButton.setDisable(true);
-
-        }
-
+        });
     }
 
     /**
