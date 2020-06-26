@@ -62,10 +62,6 @@ public class GUI implements View {
         Platform.runLater(()->{
             //gets the boardSceneController
             boardSceneController = boardSceneRunnable.getBoardSceneController();
-        	//displays a welcome message
-            Text oldText = BoardSceneController.getNotification();
-            setTextFormat(oldText);
-            oldText.setText("Welcome!\n");
         });
     }
 
