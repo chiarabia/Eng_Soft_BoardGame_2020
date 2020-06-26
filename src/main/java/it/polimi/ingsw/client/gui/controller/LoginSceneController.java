@@ -61,6 +61,9 @@ public class LoginSceneController implements Initializable {
         String name = playerNameTextField.getText();
         numberOfPlayersChoiceBox.setOnAction(actionEvent -> {
             numberOfPlayers = Integer.valueOf((String) numberOfPlayersChoiceBox.getValue());
+            boolean isDisabled = (name.isEmpty() || name.trim().isEmpty()) || (numberOfPlayers == 0);
+            startMatchButton.setDisable(isDisabled);
+            return;
         });
         boolean isDisabled = (name.isEmpty() || name.trim().isEmpty()) || (numberOfPlayers == 0);
         startMatchButton.setDisable(isDisabled);
