@@ -96,7 +96,10 @@ public class GUI implements View {
     @Override
     public void displayTurn(int currentPlayerId) {
         int myPlayerId = board.getMyPlayerId();
-        boardSceneController.setWorkerSelected(false);
+        Platform.runLater(()->{
+            boardSceneController.setWorkerSelected(false);
+        });
+
         if (myPlayerId == currentPlayerId){
             Platform.runLater(()->{
                 String notification = "You" + textfields.getPlaying1() + "\n";
