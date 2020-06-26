@@ -2,12 +2,11 @@ package it.polimi.ingsw.client.gui.controller;
 
 import it.polimi.ingsw.Position;
 import it.polimi.ingsw.client.GodCard;
+import it.polimi.ingsw.client.Textfields;
 import it.polimi.ingsw.client.ViewObserver;
 import it.polimi.ingsw.client.gui.MainStage;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
-import javafx.geometry.HPos;
-import javafx.geometry.Pos;
 import javafx.scene.Node;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
@@ -18,6 +17,7 @@ import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
 import javafx.scene.text.Text;
 import javafx.scene.text.TextFlow;
+import org.json.simple.parser.ParseException;
 
 
 import java.net.URL;
@@ -29,6 +29,7 @@ import java.util.stream.Collectors;
 
 public class BoardSceneController implements Initializable {
 
+    private Textfields textfields = new Textfields();
 
 
     @FXML
@@ -53,7 +54,7 @@ public class BoardSceneController implements Initializable {
     public TextFlow notificationsTextFlow;
 
     public static List<Integer> actionsCodes = new ArrayList<>();
-    public static Text notification = new Text("Welcome!");
+    public static Text notification = new Text("");
     public boolean isMovePossible = false;
     public boolean isBuildPossible = false;
     public boolean isDomeAtAnyLevelPossible = false;
@@ -95,7 +96,10 @@ public class BoardSceneController implements Initializable {
     StackPane newWorkerBuild;
     String levelOfBuilding;
 
-     @Override
+    public BoardSceneController() throws ParseException {
+    }
+
+    @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
          //disables all button and set the Dome and Decline button as not visible
          moveButton.setDisable(true);
@@ -260,7 +264,10 @@ public class BoardSceneController implements Initializable {
                 if(workerSelected == 1){
                     convertPositionListToStackPaneList(worker1MovesPosition,1,1);
                     //if it's the first time that the first worker has been clicked the player is notified
-                    if(firstTimeWorkerOne) displayNotificationsDuringTurn("You choose the " + workerSelected + " worker \n");
+                    if(firstTimeWorkerOne) {
+                        if (workerSelected==1) displayNotificationsDuringTurn(textfields.getWorker1() + "\n");
+                        else displayNotificationsDuringTurn(textfields.getWorker2() + "\n");
+                    }
                     isMoveActionPossible = isCellActionPossible(cell,worker1Moves);
                     newWorkerPosition = addZToPosition(column,row,worker1MovesPosition);
                     firstTimeWorkerOne = false;
@@ -269,7 +276,10 @@ public class BoardSceneController implements Initializable {
                 if(workerSelected == 2){
                     convertPositionListToStackPaneList(worker2MovesPosition,2,1);
                     //if it's the first time that the first worker has been clicked the player is notified
-                    if(firstTimeWorkerTwo) displayNotificationsDuringTurn("You choose the " + workerSelected + " worker \n");
+                    if(firstTimeWorkerTwo)  {
+                        if (workerSelected==1) displayNotificationsDuringTurn(textfields.getWorker1() + "\n");
+                        else displayNotificationsDuringTurn(textfields.getWorker2() + "\n");
+                    }
                     isMoveActionPossible = isCellActionPossible(cell,worker2Moves);
                     newWorkerPosition = addZToPosition(column,row,worker2MovesPosition);
                     firstTimeWorkerTwo = false;
@@ -292,16 +302,14 @@ public class BoardSceneController implements Initializable {
                    isBuildActionPossible = isCellActionPossible(cell,worker1Builds);
                    newBuildingPostion = addZToPosition(column,row,worker1BuildsPosition);
                    //if the worker selected can't build we display a message
-                   if(worker1BuildsPosition.isEmpty())
-                       displayNotificationsDuringTurn("The worker you choose cannot build \n");
-
+                   if(worker1BuildsPosition.isEmpty()) displayNotificationsDuringTurn(textfields.getWcantbuild() + "\n");
                }
                if(workerSelected ==2){
                    convertPositionListToStackPaneList(worker2BuildsPosition,2,2);
                    isBuildActionPossible = isCellActionPossible(cell,worker2Builds);
                    newBuildingPostion = addZToPosition(column,row,worker2BuildsPosition);
                    //if the worker selected can't build we display a message
-                   if(worker2BuildsPosition.isEmpty()) displayNotificationsDuringTurn("The worker you choose cannot build \n");
+                   if(worker2BuildsPosition.isEmpty()) displayNotificationsDuringTurn(textfields.getWcantbuild() + "\n");
                }
                 //if a build action is possible in the cell that has been clicked by the player the buildButton is avalaible
                buildButton.setDisable(!isBuildActionPossible);
@@ -381,7 +389,7 @@ public class BoardSceneController implements Initializable {
      */
     public void addBuildingImage(StackPane cell, String level){
         Image building = new Image("/Buildings/" + level);
-        if (level == "dome.png"){
+        if (level.equals("dome.png")){
             ImageView dome = new ImageView(building);
             dome.setFitHeight(100);
             dome.setFitWidth(100);

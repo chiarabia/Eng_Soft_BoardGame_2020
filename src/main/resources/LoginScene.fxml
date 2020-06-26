@@ -20,7 +20,7 @@
                              <Insets left="20.0" />
                          </VBox.margin>
                      </ImageView>
-                  <Label alignment="CENTER" contentDisplay="CENTER" text="Choose your nickname:" textAlignment="CENTER">
+                  <Label alignment="CENTER" contentDisplay="CENTER" text="What's your name?" textAlignment="CENTER">
                         <VBox.margin>
                            <Insets left="123.0" top="40.0" />
                         </VBox.margin>
@@ -30,9 +30,9 @@
                            <Insets left="80.0" right="100.0" top="5.0" />
                         </VBox.margin>
                   </TextField>
-                  <Label alignment="CENTER" text="Choose the number of players:">
+                  <Label alignment="CENTER" text="How many players?">
                         <VBox.margin>
-                           <Insets left="103.0" top="5.0" />
+                           <Insets left="123.0" top="5.0" />
                         </VBox.margin>
                   </Label>
                   <ChoiceBox fx:id="numberOfPlayersChoiceBox" onKeyReleased="#keyReleasedProperty" prefWidth="150.0">
@@ -45,7 +45,7 @@
                            <Insets bottom="5.0" left="161.0" />
                         </VBox.margin>
                   </Button>
-                     <Label fx:id="errorLabel" text="The name is invalid. Choose another name">
+                     <Label fx:id="errorLabel" text="This name is not available">
                         <VBox.margin>
                            <Insets left="65.0" right="5.0" />
                         </VBox.margin>
