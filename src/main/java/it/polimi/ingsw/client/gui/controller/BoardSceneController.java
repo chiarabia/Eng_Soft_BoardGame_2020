@@ -604,7 +604,7 @@ public class BoardSceneController implements Initializable {
 
     public void displayEndGameImage(boolean isVictory){
         gridPane.getChildren().clear();
-        Image victoryImage = new Image("/components/VICTORY.PNG");
+        Image victoryImage = new Image("/components/VICTORY.png");
         Image loseImage = new Image("/components/LOSE.png");
         if (isVictory) addImageToBoard(victoryImage);
         else addImageToBoard(loseImage);

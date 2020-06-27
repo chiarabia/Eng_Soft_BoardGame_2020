@@ -139,6 +139,7 @@ public class Controller implements ProxyObserver {
     /**This method reports to players that someone has won
      *@param playerId player who has won*/
     public void onPlayerWin (int playerId)  {
+        isDisconnected = true;
         game.notifyJustUpdateAll(new SerializableUpdateWinner(playerId)); // avvisa i players della vittoria
         serverView.stopAllEventGenerators(); // termina tutti i thread legati alla partita
     }
