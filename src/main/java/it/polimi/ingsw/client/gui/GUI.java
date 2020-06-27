@@ -62,7 +62,9 @@ public class GUI implements View {
         Platform.runLater(()->{
             //gets the boardSceneController
             boardSceneController = boardSceneRunnable.getBoardSceneController();
+            boardSceneController.displayGameInfos(board);
         });
+
     }
 
     @Override
@@ -340,12 +342,6 @@ public class GUI implements View {
     @Override
     public void askForInitialWorkerPositions(List <Position> possiblePositions) {
         //adds the current notification for the player
-
-        Platform.runLater(()->{
-            Text oldText = BoardSceneController.getNotification();
-            setTextFormat(oldText);
-            oldText.setText(textfields.getChooseworkerpositions());
-        });
         Platform.runLater(()->{
             boardSceneController.setPossiblePosition(possiblePositions);
             /*Text oldText = BoardSceneController.getNotification();

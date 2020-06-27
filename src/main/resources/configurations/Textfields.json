@@ -27,6 +27,7 @@
   "wcantmove": "This worker cannot move",
   "wcantbuild": "This worker cannot build",
   "wcantdoanything": "This worker cannot do anything",
+  "nocell": "Cell not available",
   "canendturn": "You can end your turn",
   "waitgodpowers": "Waiting for other players to choose their god power",
   "err0": "Oops... something went wrong",
