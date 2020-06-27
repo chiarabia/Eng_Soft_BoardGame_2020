@@ -1,9 +1,7 @@
 package it.polimi.ingsw.client.gui.controller;
 
 import it.polimi.ingsw.Position;
-import it.polimi.ingsw.client.GodCard;
-import it.polimi.ingsw.client.Textfields;
-import it.polimi.ingsw.client.ViewObserver;
+import it.polimi.ingsw.client.*;
 import it.polimi.ingsw.client.gui.MainStage;
 import javafx.application.Platform;
 import javafx.fxml.FXML;
@@ -236,7 +234,7 @@ public class BoardSceneController implements Initializable {
                     //updates the workerNumber
                 }
                 else{
-                    displayNotificationsDuringTurn("Cell not available\n");
+                    displayNotificationsDuringTurn(textfields.getNocell() +"\n");
                 }
             }
             //if we are in a normal turn
@@ -584,18 +582,12 @@ public class BoardSceneController implements Initializable {
      * @param notification the String that we want to add
      */
     public void displayNotificationsDuringTurn(String notification){
-        if(notificationsTextFlow.getChildren().size() >= 7) notificationsTextFlow.getChildren().clear();
-        Text notificationText = new Text(notification);
-        setTextFormat(notificationText,12);
-        notificationsTextFlow.getChildren().add(notificationText);
-        //if(notificationsTextFlow.getChildren().size() > 5) notificationsTextFlow.getChildren().clear();
-    }
-
-    public void displayNotificationsDuringTurn(String notification, int font){
-        Text notificationText = new Text(notification);
-        setTextFormat(notificationText,font);
-        notificationsTextFlow.getChildren().add(notificationText);
-        if(notificationsTextFlow.getChildren().size() > 5) notificationsTextFlow.getChildren().clear();
+            if (notificationsTextFlow.getChildren().size() >= 7) {
+                notificationsTextFlow.getChildren().clear();
+            }
+            Text notificationText = new Text(notification);
+            setTextFormat(notificationText, 12);
+            notificationsTextFlow.getChildren().add(notificationText);
     }
 
     public void disableDeclineButton(boolean isDeclinePossible){
@@ -640,11 +632,26 @@ public class BoardSceneController implements Initializable {
     public void setWorker2BuildPosition(Set<Position> secondWorkerBuilds){worker2BuildsPosition = secondWorkerBuilds;}
     public void setMyTurn(boolean myTurn){isMyTurn = myTurn;}
 
+    public void displayGameInfos(ClientBoard board){
+        Platform.runLater(()-> {
+            String firstText = "";
+            for (int i = 1; i <= board.getNumOfPlayers(); i++) {
+                if (i == board.getMyPlayerId())
+                    firstText = firstText + "- You" + textfields.getChosen1() + " " + board.getPlayer(i).getGodPowerName() + "\n";
+                else
+                    firstText = firstText + "- " + board.getPlayer(i).getPlayerName() + textfields.getChosen2() + board.getPlayer(i).getGodPowerName() + "\n";
+            }
+            displayNotificationsDuringTurn(firstText);
+        });
+    }
     public void setPossiblePosition(List<Position> possiblePosition) {
         /*for(int i = 0; i<possiblePosition.size(); i++) {
             this.possiblePosition.add(possiblePosition.get(i));
         }
          */
+        Platform.runLater(()-> {
+            displayNotificationsDuringTurn(textfields.getChooseworkerpositions() + "\n");
+        });
         this.possiblePosition = possiblePosition;
     }
 

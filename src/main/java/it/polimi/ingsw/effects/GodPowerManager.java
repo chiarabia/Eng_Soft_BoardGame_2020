@@ -54,6 +54,11 @@ public class GodPowerManager {
         for (int i = numOfAvailableCards; i > numOfPlayers; i--) cards.remove(rand.nextInt(i));
         // only 'numOfPlayers' random strings are left in the card list
 
+        /*cards = new ArrayList<>();
+        cards.add(JSONManager.readMyJSONAsText("configurations/cards/GodCard1.json"));
+        cards.add(JSONManager.readMyJSONAsText("configurations/cards/GodCard2.json"));
+        cards.add(JSONManager.readMyJSONAsText("configurations/cards/GodCard4.json"));*/
+
         return cards;
     }
 

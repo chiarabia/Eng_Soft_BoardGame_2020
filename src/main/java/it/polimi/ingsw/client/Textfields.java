@@ -37,6 +37,7 @@ public class Textfields {
     private final String wcantdoactions;
     private final String canendturn;
     private final String waitgodpowers;
+    private final String nocell;
     private final String err0;
     private final String err1;
     private final String err2;
@@ -81,6 +82,7 @@ public class Textfields {
         this.wcantbuild = (String) jsonObject.get("wcantbuild");
         this.wcantdoactions = (String) jsonObject.get("wcantdoanything");
         this.canendturn = (String) jsonObject.get("canendturn");
+        this.nocell = (String) jsonObject.get("nocell");
         this.waitgodpowers = (String) jsonObject.get("waitgodpowers");
     }
 
@@ -201,4 +203,6 @@ public class Textfields {
     public String getWcantdoactions() {
         return wcantdoactions;
     }
+
+    public String getNocell() { return nocell;}
 }
