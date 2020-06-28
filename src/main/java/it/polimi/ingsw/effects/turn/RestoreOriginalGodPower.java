@@ -15,7 +15,7 @@ public class RestoreOriginalGodPower extends NewTurn {
      * @param oldTurn The current turn that is about to end
      * @param godPowers The GodPowers of all players in the game
      * @param nextTurnPlayer Player of the next turn
-     * @return
+     * @return //TODO add descrption
      */
     @Override
     public Turn endTurn(Turn oldTurn, List<GodPower> godPowers, Player nextTurnPlayer) {

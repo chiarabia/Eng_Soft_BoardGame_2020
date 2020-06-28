@@ -113,6 +113,7 @@ public class Client implements ViewObserver {
 
     /**This method saves and shows a player victory
      *@param object object received from server
+     *@throws GameEndedException //TODO add throw
      */
     public void onUpdateWinner(SerializableUpdateWinner object) throws GameEndedException {
         int playerId = object.getPlayerId();

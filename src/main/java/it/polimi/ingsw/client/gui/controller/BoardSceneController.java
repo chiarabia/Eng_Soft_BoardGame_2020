@@ -6,12 +6,12 @@ import it.polimi.ingsw.client.gui.MainStage;
 import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
-import javafx.geometry.Pos;
 import javafx.scene.Node;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.image.ImageView;
 import javafx.scene.image.Image;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.*;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
@@ -27,13 +27,35 @@ import java.util.ResourceBundle;
 import java.util.Set;
 import java.util.stream.Collectors;
 
+/**
+ * This class handles the controls for the scene with the Board and all the game phases.
+ *
+ * <p><p>The BoardSceneController is loaded from the <code>BoardScene.fxml</code> file. In the CENTER of the Scene there is the actual Board.
+ * All the game phases are handled from this class and can be divided into three different phases. When the Scene loads the player will either
+ * be waiting for the other players to fo through their first phase or be themselves in the first phase.
+ * <p><ul>
+ * <li><i>First phase</i>: in this phase the player is choosing its first workers positions and has a <code>actionCode = 1</code> value. The method that handles the click
+ * on a cell of the <>GridPane</>, {@link #onCellClicked(MouseEvent)}, automatically adds a Worker to the board and sends the to the Client all needed information. When this phase ends the player has to either wait
+ * for the other players to go through their first phase or second phase.
+ * <li><i>Second phase</i>: in this phase the game has actually started and each player play its turn. It has a <code>actionCode = 2</code> value. When its the player's turn
+ * the method that handles the click on a cell, {@link #onCellClicked(MouseEvent)}, shows the player, with a visual clue, which cell is selected and all possible actions that they can make. Buttons are disabled
+ * or not depending on the possible actions.
+ * <li><i>Third phase</i>: a player has won and the game has ended. The notification of either winning or losing is shown through an <code>Image</code>, the <code>GridPane</code>
+ * with the board is cleared and all buttons not visible.
+ * </ul><p>
+ *     
+ * All phases and possible actions are displayed as notifications in the bottom right of the screen. 
+ */
 public class BoardSceneController implements Initializable {
 
     private Textfields textfields = new Textfields();
-
-
+    
     @FXML
     private BorderPane board;
+    /**
+     * The 5x5 <code>GridPane</code> positioned in the CENTER of the <code>BorderPane board</code>.
+     * <p>All <code>GridPane</code> nodes are <code>StackPane</code>
+     */
     @FXML
     public GridPane gridPane;
     @FXML
@@ -50,14 +72,38 @@ public class BoardSceneController implements Initializable {
     private ImageView godCardImageView;
     @FXML
     private TextFlow godDescriptionTextFlow;
+    /**
+     * The <code>TextFlow</code> in the bottom right that displays all the current notifications for the Player
+     */
     @FXML
     public TextFlow notificationsTextFlow;
 
+    /**
+     * A <code>List</code> for possible game Phases.
+     * <p>When actionCode = 1 the game is in the initial phase where the player is choosing the position of its workers
+     * <p>When actionCode = 2 its the player's turn
+     * <p>When actionCode = 0 the game just started
+     */
     public static List<Integer> actionsCodes = new ArrayList<>();
+    /**
+     * A <code>Text</code> notification for the Player
+     */
     public static Text notification = new Text("");
+    /**
+     * If a move action is possible
+     */
     public boolean isMovePossible = false;
+    /**
+     * If a build action is possible
+     */
     public boolean isBuildPossible = false;
+    /**
+     * If the player has the ability to build the Dome type of building at any z coordinate
+     */
     public boolean isDomeAtAnyLevelPossible = false;
+    /**
+     * If the player has finished all its possible actions or the remaining ones are optional
+     */
     public boolean isDeclinePossible = false;
 
     boolean firstTimeSelectedCell = true;
@@ -87,12 +133,36 @@ public class BoardSceneController implements Initializable {
     Position oldSecondWorkerPosition = new Position (0,0,0);
     int workerSelected;
     Position newWorkerPosition;
-    Position newBuildingPostion;
+    Position newBuildingPosition;
 
 
     public BoardSceneController() throws ParseException {
     }
 
+    /**
+     * Sets the BoardScene and handles the button events.
+     * <p>The Board Scene start with all button disabled and the domeButton and declineButton as not visible.
+     * ActionCode is set to 0. The player godPower is retrieved from the MainStage.
+     * <p>
+     * <p><b>MoveButton Event</b>
+     * <p>When the <code>moveButton</code> is clicked the information of the new <code>Position</code> and the ID the worker moved is sent to the Client.
+     * Then all buttons and indicators are disabled and reset.
+     * <p>
+     * <p><b>BuildButton Event</b>
+     * <p>When the <code>buildButton</code> is clicked the information of the <code>Position</code> of the new building, the ID the worker and if the building is a Dome is sent to the Client.
+     * Then all buttons and indicators are disabled and reset.
+     * <p>
+     * <p><b>domeButton Event</b>
+     * <p>When the <code>domeButton</code> is clicked the information of the <code>Position</code> of the new building, the ID the worker and the fact that the building is a Dome is sent to the Client.
+     * Then all buttons and indicators are disabled and reset.
+     * <p>
+     * <p><b>declineButton Event</b>
+     * <p>When the <code>declineButton</code> is clicked the information that the turn is finished is sent to the Client.
+     * Then all buttons and indicators are disabled and reset, together with the worker's information.
+     * @param url
+     * @param resourceBundle
+     * @see #resetAllPossibleIndicators()
+     */
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
          //disables all button and set the Dome and Decline button as not visible
@@ -130,8 +200,8 @@ public class BoardSceneController implements Initializable {
             //sends the position of the new building, the worker id of the worker that made the action and if the building is a dome
             List<ViewObserver> observerList = MainStage.getObserverList();
             boolean isDome = false;
-            if(newBuildingPostion.getZ()==4) isDome = true;
-            for (int i = 0; i < observerList.size(); i++) observerList.get(i).onCompletedBuild(newBuildingPostion.mirrorYCoordinate(), workerSelected, isDome);
+            if(newBuildingPosition.getZ()==4) isDome = true;
+            for (int i = 0; i < observerList.size(); i++) observerList.get(i).onCompletedBuild(newBuildingPosition.mirrorYCoordinate(), workerSelected, isDome);
             disableAllButtons();
             resetAllPossibleIndicators();
         });
@@ -140,7 +210,7 @@ public class BoardSceneController implements Initializable {
         domeButton.setOnAction(actionEvent -> {
             //sends the position of the new dome building and the worker id
             List<ViewObserver> observerList = MainStage.getObserverList();
-            for (int i = 0; i < observerList.size(); i++) observerList.get(i).onCompletedBuild(newBuildingPostion.mirrorYCoordinate(), workerSelected, true);
+            for (int i = 0; i < observerList.size(); i++) observerList.get(i).onCompletedBuild(newBuildingPosition.mirrorYCoordinate(), workerSelected, true);
             disableAllButtons();
             resetAllPossibleIndicators();
         });
@@ -160,8 +230,8 @@ public class BoardSceneController implements Initializable {
 
 
     /**
-     * Sets the god image card and god description on the screen
-     * @param card the God Card Object with the name of the god, the description and the image
+     * Sets the <code>Image</code> and god description in a <code>TextField</code> on the screen
+     * @param card the <code>GodCard</code> with the name of the god, the description and the image
      */
     public void setGodDetails(GodCard card){
         MainStage.getLock().add(new Object());
@@ -176,7 +246,9 @@ public class BoardSceneController implements Initializable {
         godCardImageView.setImage(godCardImage);
     }
 
-    //displays the name of the player in the top left label
+    /**
+     * Displays the name of the Player in a <code>Label</code> in the top-left
+     */
     public void displayPlayerName(){
         ArrayList<Object> playerData = MainStage.getPlayerData();
         String playerName = (String)playerData.get(0);
@@ -184,11 +256,12 @@ public class BoardSceneController implements Initializable {
     }
 
     /**
-     * This method handles the positioning of the first two workers on the board
-     * and sends the Positions to the client.
+     * Handles the positioning of the first two workers on the board.
+     * It sends the <code>Position</code> to the client.
      *
-     * @param cell the pane that the player clicked
-     * @param position the Position corrisponding to the StackPane
+     * @param cell the <code>StackPane</code> that the player clicked
+     * @param position the <code>Position</code> corresponding to the <code>StackPane</code>
+     * @see #addWorkerImage(StackPane, int)
      */
 
     public void displayWorker(StackPane cell, Position position){
@@ -215,7 +288,24 @@ public class BoardSceneController implements Initializable {
         }
     }
 
-    //handles the click event on a cell of the board
+    /**
+     * Handles the click event on a cell of the board.
+     *
+     * <p>The method behaves differently based on the <code>actionCode</code>.
+     * <p>
+     * <p><b>When ActionCode = 1</b>
+     * <p>The game is in the initial phase where the player needs to choose its workers first <code>Position</code>. When the player clicks
+     * on the board they position a worker immediately on the board. A check for possible already positioned workers is made.
+     * <p>
+     * <p><b>When ActionCode = 2</b>
+     * <p>It's the player's turn. To help the player better visualize what cell of the board they have clicked on, an <code>Image</code> will appear on the
+     * selected <code>StackPane</code>. Firstly the player needs to select the worker they want to make an action with. The worker selected is saved and a notification
+     * of which worker has been selected is shown. When a worker is selected the Player will be notified of the types of action they can make. When the player clicks on
+     * a Cell with a possible action the actions respective Button will be visible and the player will be able to click it.
+     * @param event the <code>MouseEvent</code>
+     * @see #displayWorker(StackPane, Position)
+     * @see #addSelectedImageToCell(StackPane, int, ImageView) 
+     */
     public void onCellClicked(javafx.scene.input.MouseEvent event) {
         Platform.runLater(()-> {
             int column = GridPane.getColumnIndex((Node) event.getSource());
@@ -234,6 +324,7 @@ public class BoardSceneController implements Initializable {
                     //updates the workerNumber
                 }
                 else{
+                    //if the cell is not available it prints a message
                     displayNotificationsDuringTurn(textfields.getNocell() +"\n");
                 }
             }
@@ -269,11 +360,12 @@ public class BoardSceneController implements Initializable {
                     notifyAvailableActions();
                 }
 
+                //handles the image that gives the player the visual clue of which Cell they clicked on
+                //if it's not the player turn the image will not appear
                 if (isMyTurn) {
                     if (!firstTimeSelectedCell) addSelectedImageToCell(previousCell, 2, selectedImage);
                     addSelectedImageToCell(cell, 1, selectedImage);
                 }
-
                 if (!isMyTurn && !firstTimeSelectedCell) addSelectedImageToCell(previousCell, 2, selectedImage);
 
                 //if a worker has been selected and a move action is possible
@@ -281,6 +373,7 @@ public class BoardSceneController implements Initializable {
                     List<StackPane> workerMoves;
                     Set<Position> workerMovesPosition;
 
+                    //sets the information for the right worker
                     if (workerSelected == 1) {
                         workerMoves = worker1Moves;
                         workerMovesPosition = worker1MovesPosition;
@@ -289,11 +382,13 @@ public class BoardSceneController implements Initializable {
                         workerMoves = worker2Moves;
                         workerMovesPosition = worker2MovesPosition;
                     }
+                    //converts the information into StackPane
                     convertPositionListToStackPaneList(workerMovesPosition, workerSelected, 1);
+                    //checks if the action is possible for the clicked cell
                     isMoveActionPossible = isCellActionPossible(cell, workerMoves);
                     newWorkerPosition = addZToPosition(column, row, workerMovesPosition);
 
-                    //if a movement action is possible in the cell that has been clicked by the player the moveButton is avalaible
+                    //if a movement action is possible in the cell that has been clicked by the player the moveButton is available
                     moveButton.setDisable(!isMoveActionPossible);
                     clearActionsList();
                     //saves the last cell that the player clicked
@@ -308,19 +403,22 @@ public class BoardSceneController implements Initializable {
                     List<StackPane> workerBuilds;
                     Set<Position> workerBuildsPosition;
 
+                    //sets the information for the right worker
                     if (workerSelected == 1) {
                         workerBuildsPosition = worker1BuildsPosition;
+                        //converts the information into StackPane
                         convertPositionListToStackPaneList(workerBuildsPosition, workerSelected, 2);
                         workerBuilds = worker1Builds;
 
                     }
                     else {
                         workerBuildsPosition = worker2BuildsPosition;
+                        //converts the information into StackPane
                         convertPositionListToStackPaneList(workerBuildsPosition, workerSelected, 2);
                         workerBuilds = worker2Builds;
                     }
                     isBuildActionPossible = isCellActionPossible(cell, workerBuilds);
-                    newBuildingPostion = addZToPosition(column, row, workerBuildsPosition);
+                    newBuildingPosition = addZToPosition(column, row, workerBuildsPosition);
 
                     //if a build action is possible in the cell that has been clicked by the player the buildButton is avalaible
                     buildButton.setDisable(!isBuildActionPossible);
@@ -381,31 +479,37 @@ public class BoardSceneController implements Initializable {
 
 
     /**
-     * Updates the position of the worker image on the board
-     * @param newPosition the new position where to put the image
-     * @param oldPosition the old position where to delete the image
-     * @param playerID the playerID, for the color of the worker
+     * Updates the <code>Position</code> of the worker image on the board.
+     * It removes the <code>Image</code> of the worker from its old <code>Position</code> and adds the new one in the new <code>Position</code>.
+     * The color of the worker is decided based on the playerID
+     * @param newPosition the new Position where to put the image
+     * @param oldPosition the old Position where to delete the image
+     * @param playerID the player number that we need for the color of the worker
+     * @see #addWorkerImage(StackPane, int)
      */
     public void updateWorker(Position newPosition, Position oldPosition, int playerID){
         StackPane newCell = (StackPane)getNodeFromPosition(gridPane, newPosition);
         StackPane oldCell = (StackPane)getNodeFromPosition(gridPane, oldPosition);
-        removeWorkerImage(oldCell);
+        removeImage(oldCell);
         addWorkerImage(newCell,playerID);
     }
 
     /**
-     * Removes the position of the worker image on the board
-     * @param workerPosition the old position where to delete the image
+     * Removes the worker <code>Image</code> from the Board.
+     * @param workerPosition the old <code>Position</code> where to delete the <code>Image</code>.
      */
     public void removeWorker(Position workerPosition) {
         StackPane cell = (StackPane)getNodeFromPosition(gridPane, workerPosition);
-        removeWorkerImage(cell);
+        removeImage(cell);
     }
 
     /**
-     * Updates the image of the worker initial position
-     * @param newPosition the new position where to put the image
-     * @param playerID the playerID, for the color of the worker
+     * Adds the <code>Image</code> of the worker at the start of the game.
+     * This method is exclusively used in the ActionCode=1 phase, when the Player has chosen
+     * its workers initial <code>Position</code>.
+     * @param newPosition the new <code>Position</code> where to put the image
+     * @param playerID the player number that we need for the color of the worker
+     * @see #addWorkerImage(StackPane, int)
      */
     public void updateWorkerInitialPosition (Position newPosition, int playerID){
         StackPane newCell = (StackPane)getNodeFromPosition(gridPane, newPosition);
@@ -413,9 +517,10 @@ public class BoardSceneController implements Initializable {
     }
 
     /**
-     * Updates the image of the buildings
-     * @param newPosition position on the board where to put the image
-     * @param dome if the building has to be a dome
+     * Updates the <code>Image</code> of the buildings.
+     * @param newPosition <code>Position</code> on the board where to put the image
+     * @param dome true if the building that needs to be added is a dome, false otherwise.
+     * @see #addBuildingImage(StackPane, String) 
      */
     public void updateBuilding(Position newPosition, boolean dome){
         String level = "level0.png";
@@ -427,9 +532,10 @@ public class BoardSceneController implements Initializable {
     }
 
     /**
-     * Adds the worker ImageView to a StackPane
-     * @param cell the StackPane where to add the ImageView
-     * @param playerID playerID for the color of the worker
+     * Adds the worker <code>Image</code> to a <code>StackPane</code>.
+     * <p>The color of the worker is <i>blue</i> for playerID = 1, <i>yellow</i> for playerID = 2, <i>green</i> for PlayerID = 3.
+     * @param cell the <code>StackPane</code> where to add the <code>Image</code>.
+     * @param playerID the player number that we need for the color of the worker
      */
     public void addWorkerImage(StackPane cell, int playerID){
         ImageView worker = new ImageView(new Image("/worker/w" + playerID +".png"));
@@ -439,8 +545,10 @@ public class BoardSceneController implements Initializable {
     }
 
     /**
-     * Adds the building image to a StackPane as a BackgroundImage
-     * @param cell the StackPane where to change the background
+     * Adds the building image in a <code>StackPane</code>.
+     * <p>The <code>String</code> level is used to find the right image for the building.
+     * If the building is a dome the image is a <code>ImageView</code>, otherwise is the <code>Background</code> of the <code>StackPane</code>
+     * @param cell the <code>StackPane</code> where to add the building
      * @param level the building level
      */
     public void addBuildingImage(StackPane cell, String level){
@@ -458,17 +566,20 @@ public class BoardSceneController implements Initializable {
         }
     }
 
-    //removes the image of a Worker in a StackPane
-    public void removeWorkerImage(StackPane cell){
+    /**
+     * Clears the <code>StackPane</code> of its children
+     * @param cell the <code>StackPane</code> we want to clear
+     */
+    public void removeImage(StackPane cell){
         cell.getChildren().clear();
     }
 
     /**
-     * Gets the node in the GridPane from the coordinates x and y
-     * @param gridPane the board
-     * @param x
-     * @param y
-     * @return the pane that is positioned at (x,y)
+     * Gets the <code>Node</code> in a <code>GridPane</code> from (x,y) coordinates
+     * @param gridPane the <code>GridPane</code> used for the Board
+     * @param x the x coordinate
+     * @param y the y coordinate
+     * @return the <code>Node</code> that is positioned at (x,y)
      */
     public Node getNodeFromGridPane(GridPane gridPane, int x, int y) {
         for (Node node : gridPane.getChildren()) {
@@ -480,10 +591,10 @@ public class BoardSceneController implements Initializable {
     }
 
     /**
-     * Gets the node in the GridPane from a Position object
-     * @param gridPane the board
-     * @param position
-     * @return the pane
+     * Gets the <code>Node</code> in a <code>GridPane</code> from a <code>Position</code>
+     * @param gridPane the <code>GridPane</code> used for the Board
+     * @param position the position (x,y) of the pane we want
+     * @return the <code>Node</code> at the position
      */
     public Node getNodeFromPosition(GridPane gridPane, Position position){
         int x = position.getX();
@@ -497,10 +608,9 @@ public class BoardSceneController implements Initializable {
     }
 
     /**
-     * Updates the action code of the game.
-     * An actioncode = 1 is the WorkingStartingPosition phase
-     * An actioncode = 2 is the Turn phase
-     * @param code
+     * Updates the <code>List&lt;Integer&gt; ActionCode</code>
+     * @param code int number of the code
+     * @see #actionsCodes
      */
 
     public static void updateActionCode(int code){
@@ -509,11 +619,11 @@ public class BoardSceneController implements Initializable {
     }
 
     /**
-     * Converts a Set<Position> in a List<Position> ands saves the data in a
-     * List<StackPane>
-     * @param set the set to convert
-     * @param workerID if the set has information about the first or second worker
-     * @param typeOfAction if the set has information about a move action (1) or build action (2)
+     * Converts a <code>Set&lt;Position&gt;</code> in a <code>List&lt;Position&gt;</code> and saves the data in a
+     * <code>List&lt;StackPane&gt;</code>.
+     * @param set the <code>Set</code> to convert
+     * @param workerID if the <code>Set</code> has information about the first or second worker
+     * @param typeOfAction if the <code>Set</code> has information about a move action (1) or build action (2)
      */
 
     public void convertPositionListToStackPaneList(Set<Position> set, int workerID, int typeOfAction ){
@@ -532,9 +642,9 @@ public class BoardSceneController implements Initializable {
     }
 
     /**
-     * Checks if a cell is inside a List<StackPane>
-     * @param cell the StackPane to check
-     * @param list
+     * Checks if a <code>StackPane</code> is inside a <code>List&lt;StackPane&gt;</code>
+     * @param cell the <code>StackPane</code> to check
+     * @param list the <code>List</code> we want to check
      * @return true if the cell is inside the list, false otherwise
      */
     public boolean isCellActionPossible(StackPane cell, List<StackPane> list){
@@ -544,14 +654,14 @@ public class BoardSceneController implements Initializable {
     }
 
     /**
-     * Adds the Z coordinate to a Position. The position that is saved when
-     * a player clicks on the board lacks the z coordinate. The method checks
-     * on the avalaible moves/build list the Position object with the same x and y coordinate
-     * to get z.
-     * @param x
-     * @param y
-     * @param set the set where to check for the z coordinate
-     * @return the new Position object updated
+     * Adds the Z coordinate to a <code>Position</code>.
+     * <p>The position that is saved when a player clicks on the board lacks the z coordinate. The method checks,
+     * from the available moves/build <code>List</code>, the <code>Position</code> with the same x and y coordinate
+     * to get z coordinate.
+     * @param x the x coordinate
+     * @param y the y coordinate
+     * @param set the <code>Set</code> where to check for the z coordinate
+     * @return the <code>Position</code> object with all the coordinates
      */
     public Position addZToPosition(int x, int y, Set<Position> set){
         List<Position> list = set.stream().collect(Collectors.toCollection(ArrayList::new));
@@ -565,10 +675,10 @@ public class BoardSceneController implements Initializable {
     }
 
     /**
-     * adds or removes the ImageView that gives the effect of a Cell being clicked
-     * @param cell the StackPane where to add the image
-     * @param code if the image needs to be removed(2) or added(1)
-     * @param selectedImage the ImageView to add to the StackPane
+     * Adds or removes the <code>Image</code> that gives the effect of a Cell of the board being clicked.
+     * @param cell the <code>StackPane</code> where to add the <code>Image</code>
+     * @param code if the <code>Image</code> needs to be removed(2) or added(1)
+     * @param selectedImage the <code>ImageView</code> to add to the StackPane
      */
     public void addSelectedImageToCell(StackPane cell, int code, ImageView selectedImage){
         if (code == 1 && !cell.getChildren().contains(selectedImage))
@@ -578,8 +688,8 @@ public class BoardSceneController implements Initializable {
     }
 
     /**
-     * Displays a notification in the TextFlow notificatinsTextFlow in the bottom right
-     * @param notification the String that we want to add
+     * Displays a notification in the <code>TextFlow</code> in the bottom right
+     * @param notification the <code>String</code> that will be added
      */
     public void displayNotificationsDuringTurn(String notification){
             if (notificationsTextFlow.getChildren().size() >= 7) {
@@ -590,10 +700,13 @@ public class BoardSceneController implements Initializable {
             notificationsTextFlow.getChildren().add(notificationText);
     }
 
-    public void disableDeclineButton(boolean isDeclinePossible){
-        declineButton.setDisable(isDeclinePossible);
-    }
 
+    /**
+     * Displays the EndGame phase of the game.
+     * A Victory/Lose <code>Image</code> will be on the board and the <code>Buttons</code> won't be visible.
+     * @param isVictory if true displays the Victory <code>Image</code> otherwise the Lose <code>Image</code>
+     * @see #addImageToBoard(Image)
+     */
     public void displayEndGameImage(boolean isVictory){
         gridPane.getChildren().clear();
         Image victoryImage = new Image("/components/VICTORY.png");
@@ -606,6 +719,10 @@ public class BoardSceneController implements Initializable {
         declineButton.setVisible(false);
     }
 
+    /**
+     * This method adds an <code>Image</code> in the center of the Board
+     * @param image the <code>Image</code> we want to add
+     */
     public void addImageToBoard(Image image){
         StackPane imageContainer = new StackPane();
         imageContainer.setMinHeight(500);
@@ -632,6 +749,7 @@ public class BoardSceneController implements Initializable {
     public void setWorker2BuildPosition(Set<Position> secondWorkerBuilds){worker2BuildsPosition = secondWorkerBuilds;}
     public void setMyTurn(boolean myTurn){isMyTurn = myTurn;}
 
+    //TODO add javadoc
     public void displayGameInfos(ClientBoard board){
         Platform.runLater(()-> {
             String firstText = "";
@@ -644,6 +762,7 @@ public class BoardSceneController implements Initializable {
             displayNotificationsDuringTurn(firstText);
         });
     }
+    //TODO add javadoc
     public void setPossiblePosition(List<Position> possiblePosition) {
         /*for(int i = 0; i<possiblePosition.size(); i++) {
             this.possiblePosition.add(possiblePosition.get(i));
@@ -675,6 +794,13 @@ public class BoardSceneController implements Initializable {
     public void setVisibleDeclineButton(boolean visibility){
         declineButton.setVisible(visibility);
     }
+    public void disableDeclineButton(boolean isDeclinePossible){
+        declineButton.setDisable(isDeclinePossible);
+    }
+
+    /**
+     * Disables all <code>Buttons</code>
+     */
 
     public void disableAllButtons () {
         moveButton.setDisable(true);
@@ -683,18 +809,29 @@ public class BoardSceneController implements Initializable {
         declineButton.setDisable(true);
     }
 
+    /**
+     * Resets all the indicators needed to able the buttons.
+     */
     public void resetAllPossibleIndicators () {
         isDomeAtAnyLevelPossible = false;
         isBuildActionPossible = false;
         isMoveActionPossible = false;
         isDeclinePossible = false;
     }
+
+    /**
+     * Clears the <code>List</code> with the <code>StackPane</code> where is possible to build and move
+     */
     public void clearActionsList() {
         worker1Moves.clear();
         worker2Moves.clear();
         worker1Builds.clear();
         worker2Builds.clear();
     }
+
+    /**
+     * Resets all indicators for the Workers
+     */
     public void resetWorkerBooleans () {
         firstTimeWorkerOne = true;
         firstTimeWorkerTwo = true;

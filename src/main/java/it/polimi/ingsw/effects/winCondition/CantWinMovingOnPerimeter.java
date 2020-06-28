@@ -12,8 +12,7 @@ public class CantWinMovingOnPerimeter extends StandardWinCondition {
      * @param workerPosition the worker's Cell before the move
      * @param destinationPosition the worker's Cell after the move
      * @param board the board of the game
-     * @return false if the condition is met, the player cannot win
-     * @return true if the player has the possibility to win
+     * @return false if the condition is met, the player cannot win, true if the player has the possibility to win
      * with the standard win conditions.
      */
 
