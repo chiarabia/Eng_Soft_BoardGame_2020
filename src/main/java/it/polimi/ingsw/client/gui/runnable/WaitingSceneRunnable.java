@@ -10,6 +10,10 @@ import javafx.stage.Stage;
 
 import java.io.IOException;
 
+/**
+ * This class loads the FXML file needed for the <code>WaitingSceneController</code>
+ */
+
 public class WaitingSceneRunnable implements Runnable{
 
 	public WaitingSceneController waitingSceneController;

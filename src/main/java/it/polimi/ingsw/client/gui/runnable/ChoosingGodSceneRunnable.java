@@ -11,6 +11,9 @@ import javafx.stage.Stage;
 import java.io.IOException;
 import java.util.EventObject;
 
+/**
+ * This class loads the FXML file needed for the <code>ChoosingGodSceneController</code>
+ */
 public class ChoosingGodSceneRunnable implements Runnable {
 
 
