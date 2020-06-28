@@ -62,7 +62,7 @@ public class OnSamePositionBlockOnlyTest {
         new StandardConsolidateMove().moveInto(board, workerCell.getPosition(), destinationCell.getPosition());
         turn.updateTurnInfoAfterMove(workerCell.getPosition(), destinationCell.getPosition(), board);
         new StandardConsolidateBuild().buildUp(new Position(4,4,0), board, false);
-        turn.updateTurnInfoAfterBuild(new Position(4,4,0));
+        turn.updateTurnInfoAfterBuild(new Position(4,4,0), worker.getWorkerId());
 
         Set<Position> collect = new HashSet<>();
         collect.add(new Position (4,4,1));
@@ -72,7 +72,7 @@ public class OnSamePositionBlockOnlyTest {
     @Test
     void shouldReturnANewHasSetIfConditionsAreNotMet(){
         new StandardConsolidateBuild().buildUp(new Position(4,4,0), board, false);
-        turn.updateTurnInfoAfterBuild(new Position(4,4,0));
+        turn.updateTurnInfoAfterBuild(new Position(4,4,0), 1);
         workerCell = board.getCell(0,0,0);
         Set collect = new HashSet();
         assertEquals(collect, onSamePositionBlockOnly.build(workerCell.getPosition(),board,turn));

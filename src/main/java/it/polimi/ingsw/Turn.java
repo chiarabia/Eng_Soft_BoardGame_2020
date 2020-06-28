@@ -135,9 +135,12 @@ public class Turn {
      * @param buildingPosition the Cell where the worker has built
      */
 
-    public void updateTurnInfoAfterBuild ( Position buildingPosition) {
+    public void updateTurnInfoAfterBuild (Position buildingPosition, int workerId) {
         //set up the parameters after the standard build
         if(!moveBeforeBuild) {
+            if(buildTimes==0&&moveTimes==0) {
+                this.workerUsed = workerId;
+            }
             this.buildBeforeMove = true;
             this.firstBuildingPosition = buildingPosition;
         }

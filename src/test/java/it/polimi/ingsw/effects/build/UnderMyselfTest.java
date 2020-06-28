@@ -83,7 +83,7 @@ public class UnderMyselfTest {
         workerCell = board.getCell(3,3,3);
         workerCell.setWorker(worker);
         turn.updateTurnInfoAfterMove(new Position(2,2,0), workerCell.getPosition(), board);
-        turn.updateTurnInfoAfterBuild(new Position(4,4,0));
+        turn.updateTurnInfoAfterBuild(new Position(4,4,0), worker.getWorkerId());
 
         Set <Position> collect = new HashSet<>();
         assertEquals(collect, underMyself.build(workerCell.getPosition(), board, turn));

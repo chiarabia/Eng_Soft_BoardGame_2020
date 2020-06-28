@@ -55,7 +55,7 @@ public class NotOnPerimeterTest {
         workerCell.setWorker(worker);
         turn.updateTurnInfoAfterMove(new Position(2, 2, 0), workerCell.getPosition(), board);
         board.getCell(1,1,0).setBuilding(true);
-        turn.updateTurnInfoAfterBuild(new Position(1,1,0));
+        turn.updateTurnInfoAfterBuild(new Position(1,1,0), worker.getWorkerId());
 
         Set<Position> collect = new HashSet<>();
         collect.add(new Position(2, 3, 0));

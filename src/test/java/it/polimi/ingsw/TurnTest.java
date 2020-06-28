@@ -199,7 +199,7 @@ public class TurnTest {
     //positive
     @Test
     void updateTurnBuildShouldAddABuildTime(){
-        turn.updateTurnInfoAfterBuild(buildingCell.getPosition());
+        turn.updateTurnInfoAfterBuild(buildingCell.getPosition(), 1);
         assertEquals(1,turn.getBuildTimes());
     }
 
@@ -207,7 +207,7 @@ public class TurnTest {
     @Test
     void updateTurnBuildShouldSaveTheRightBuildingPosition(){
         turn.updateTurnInfoAfterMove(workerStartingCell.getPosition(),workerDestinationCell.getPosition(), board);
-        turn.updateTurnInfoAfterBuild(buildingCell.getPosition());
+        turn.updateTurnInfoAfterBuild(buildingCell.getPosition(), 1);
         assertEquals(buildingCell.getPosition(),turn.getFirstBuildingPosition());
     }
 
@@ -215,14 +215,14 @@ public class TurnTest {
     @Test
     void updateTurnBuildShouldSetBuildAfterMoveToTrue(){
         turn.updateTurnInfoAfterMove(workerStartingCell.getPosition(),workerDestinationCell.getPosition(), board);
-        turn.updateTurnInfoAfterBuild(buildingCell.getPosition());
+        turn.updateTurnInfoAfterBuild(buildingCell.getPosition(),1);
         assertTrue(turn.isBuildAfterMove());
     }
 
     //positive
     @Test
     void updateTurnBuildShouldLeaveBuildAfterMoveToFalse(){
-        turn.updateTurnInfoAfterBuild(buildingCell.getPosition());
+        turn.updateTurnInfoAfterBuild(buildingCell.getPosition(), 1);
         assertFalse(turn.isBuildAfterMove());
     }
 

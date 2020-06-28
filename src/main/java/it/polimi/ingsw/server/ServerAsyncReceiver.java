@@ -55,7 +55,7 @@ public class ServerAsyncReceiver extends EventGenerator {
         if (fromClient instanceof SerializableConsolidateBuild) {
             SerializableConsolidateBuild serializableFromClient = (SerializableConsolidateBuild) fromClient;
             for (int i = 0; i < observerList.size(); i++)
-                observerList.get(i).onConsolidateBuild(playerId, serializableFromClient.getNewPosition(), serializableFromClient.isForceDome());
+                observerList.get(i).onConsolidateBuild(playerId, serializableFromClient.getWorkerId(), serializableFromClient.getNewPosition(), serializableFromClient.isForceDome());
         }
         if (fromClient instanceof SerializableInitializeGodPower) {
             SerializableInitializeGodPower serializableFromClient = (SerializableInitializeGodPower) fromClient;

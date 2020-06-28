@@ -98,7 +98,7 @@ public class BuildBeforeMoveTest{
 
         StandardConsolidateBuild standardConsolidateBuild = new StandardConsolidateBuild();
         standardConsolidateBuild.buildUp(board.getCell(0,0,0).getPosition(),board,false);
-        turn.updateTurnInfoAfterBuild(board.getCell(0,0,0).getPosition());
+        turn.updateTurnInfoAfterBuild(board.getCell(0,0,0).getPosition(), worker.getWorkerId());
 
         StandardConsolidateMove standardConsolidateMove = new StandardConsolidateMove();
         standardConsolidateMove.moveInto(board, workerCell.getPosition(), destinationCell.getPosition());
@@ -125,7 +125,7 @@ public class BuildBeforeMoveTest{
         workerCell.setWorker(worker);
 
         new StandardConsolidateBuild().buildUp(board.getCell(1,1,0).getPosition(), board, false);
-        turn.updateTurnInfoAfterBuild(board.getCell(1,1,0).getPosition());
+        turn.updateTurnInfoAfterBuild(board.getCell(1,1,0).getPosition(), worker.getWorkerId()) ;
 
         Set <Position> col = new HashSet<>();
         /*collect.add(new Position (1,1,0));
