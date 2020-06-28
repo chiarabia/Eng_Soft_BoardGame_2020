@@ -3,12 +3,10 @@ package it.polimi.ingsw.client.gui;
 import it.polimi.ingsw.Position;
 import it.polimi.ingsw.client.*;
 import it.polimi.ingsw.client.gui.controller.BoardSceneController;
+import it.polimi.ingsw.client.gui.controller.ErrorSceneController;
 import it.polimi.ingsw.client.gui.controller.LoginSceneController;
 import it.polimi.ingsw.client.gui.controller.WaitingSceneController;
-import it.polimi.ingsw.client.gui.runnable.BoardSceneRunnable;
-import it.polimi.ingsw.client.gui.runnable.ChoosingGodSceneRunnable;
-import it.polimi.ingsw.client.gui.runnable.LoginSceneRunnable;
-import it.polimi.ingsw.client.gui.runnable.WaitingSceneRunnable;
+import it.polimi.ingsw.client.gui.runnable.*;
 import it.polimi.ingsw.server.serializable.*;
 import javafx.application.Platform;
 import javafx.scene.text.Font;
@@ -26,12 +24,13 @@ public class GUI implements View {
     private BoardSceneController boardSceneController;
     private LoginSceneController loginSceneController;
     private WaitingSceneController waitingSceneController;
-
+    private ErrorSceneController errorSceneController;
     private ClientBoard board;
     ChoosingGodSceneRunnable choosingGodSceneRunnable = new ChoosingGodSceneRunnable();
     BoardSceneRunnable boardSceneRunnable;
     LoginSceneRunnable loginSceneRunnable;
     WaitingSceneRunnable waitingSceneRunnable;
+    ErrorSceneRunnable errorSceneRunnable;
 
     public GUI() throws ParseException {
     }
@@ -152,9 +151,15 @@ public class GUI implements View {
     @Override
     public void displayDisconnection(int playerId) {
         String notification;
-        notification = board.getPlayer(playerId).getPlayerName() + textfields.getDisconnected() + "\n";
-
-        if (getWorkerPositions(board.getMyPlayerId(), 1) == null ||
+        notification = board.getPlayer(playerId).getPlayerName() + textfields.getDisconnected() + ". Game ended\n";
+        errorSceneRunnable = new ErrorSceneRunnable();
+        Platform.runLater(errorSceneRunnable);
+        Platform.runLater(()->{
+            //gets the boardSceneController
+            errorSceneController = errorSceneRunnable.getErrorSceneController();
+            errorSceneController.updateErorrLabel(notification);
+        });
+        /*if (getWorkerPositions(board.getMyPlayerId(), 1) == null ||
                 getWorkerPositions(board.getMyPlayerId(), 2) == null) {
             Platform.runLater(()->{
                 //displays a disconnection message
@@ -171,7 +176,7 @@ public class GUI implements View {
                 boardSceneController.displayNotificationsDuringTurn(notification);
             });
         }
-
+*/
 
     }
 
@@ -185,9 +190,13 @@ public class GUI implements View {
         }
         String finalMessage = message;
         if (isFatalError){
-
-            //todo:qui è quando il codice causa errore di disconnessione (o comunque irreversibile)
-
+            errorSceneRunnable = new ErrorSceneRunnable();
+            Platform.runLater(errorSceneRunnable);
+            Platform.runLater(()->{
+                //gets the boardSceneController
+                errorSceneController = errorSceneRunnable.getErrorSceneController();
+                errorSceneController.updateErorrLabel(finalMessage);
+            });
         } else {
             Platform.runLater(() -> {boardSceneController.displayNotificationsDuringTurn(finalMessage);});
         }

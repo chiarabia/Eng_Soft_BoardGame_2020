@@ -9,6 +9,9 @@ import javafx.stage.Stage;
 
 import java.io.IOException;
 
+/**
+ * This class loads the FXML file needed for the <code>BoardSceneController</code>
+ */
 public class BoardSceneRunnable implements Runnable {
 
 	private FXMLLoader loader;

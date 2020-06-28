@@ -25,7 +25,7 @@ public class StandardBuild {
      * @param workerPosition the worker's Position
      * @param board the board
      * @param turn the player's turn
-     * @return a Set<Cell> collect that only has the cells where the player can build in
+     * @return a <code>Set&lt;Cell&gt;</code> collect that only has the cells where the player can build in
      */
 
     public Set<Position> build(Position workerPosition, Board board, Turn turn) {
@@ -48,7 +48,7 @@ public class StandardBuild {
      *
      * @param workerCell the worker's Cell
      * @param turn the player's turn
-     * @return
+     * @return //TODO add description
      */
 
     protected boolean checkBuildConditions(Cell workerCell, Turn turn) {

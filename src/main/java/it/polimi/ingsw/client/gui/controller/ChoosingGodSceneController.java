@@ -23,7 +23,11 @@ import java.util.List;
 import java.util.ResourceBundle;
 
 /**
- *
+ * This class handles the phase of the match when the players need to choose their GodPower
+ * <p><p>The ChoosingGodSceneController is loaded from the <code>ChoosingGodScene.fxml</code> file.
+ * <p>The Scene shows either two or three gods depending on the number of players. The player can choose a god power by clicking on the
+ * respective <code>HBox</code>. When a god power is chosen its name is shown in the <code>Label topLabel</code>, the data sent to
+ * the client and the player waits for the other players to choose their god powers.
  */
 public class ChoosingGodSceneController implements Initializable {
     private Textfields textfields = new Textfields();
@@ -62,6 +66,13 @@ public class ChoosingGodSceneController implements Initializable {
     public ChoosingGodSceneController() throws ParseException {
     }
 
+    /**
+     * Sets the ChoosingGodScene.
+     * <p>Depending on the number possible GodPowers to choose frm the <code>HBox</code> are set
+     * to visible. The <code>HBox</code> are also set with the <code>Image</code> and description of the GodPower
+     * @param url
+     * @param resourceBundle
+     */
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
         HBox3.setVisible(false);
@@ -86,6 +97,12 @@ public class ChoosingGodSceneController implements Initializable {
         }
     }
 
+    /**
+     * Given a <code>GodCard</code> and the HBox number it sets the <code>HBox</code> are also
+     * with the <code>Image</code> and description of the <p>GodCard</p>
+     * @param God the <code>GodCard</code>
+     * @param godNumber the number of the <code>HBox</code>
+     */
     void setGod(GodCard God, int godNumber){
         TextFlow godDescription;
         ImageView godPortrait;
@@ -129,12 +146,22 @@ public class ChoosingGodSceneController implements Initializable {
         godPower.setImage(godPow);
     }
 
-    Text setGodNameProperties(String name){
+    /**
+     * Creates a <code>Text</code> from a <code>String</code> and sets its properties
+     * @param name the <code>String</code> to put in the <code>Text</code>
+     * @return the new <code>Text</code>
+     */
+    private Text setGodNameProperties(String name){
         Text godName = new Text(name);
         godName.setFont(Font.font("Verdana", FontWeight.BOLD, 15));
         return godName;
     }
 
+    /**
+     * Handles the event of clicking on a <code>HBox</code>
+     * @param event <code>MouseEvent</code>
+     * @see #onBoxClicked(int)
+     */
     public void clickHBox(javafx.scene.input.MouseEvent event) {
         Node clickedNode = event.getPickResult().getIntersectedNode();
         List<GodCard> godPowers = MainStage.getGodPowers();
@@ -151,7 +178,12 @@ public class ChoosingGodSceneController implements Initializable {
         }
     }
 
-    private void onBoxClicked(int godNumber) {
+    /**
+     * Sends the chosen GodPower from a <code>HBox</code>
+     * <p>This method also modifies the <code>Label</code> at the top to verify the player of the chosen <code>GodCard</code>
+     * @param godNumber the number of the <code>HBox</code> that was clicked
+     */
+    public void onBoxClicked(int godNumber) {
         List<GodCard> godPowers = MainStage.getGodPowers();
         List<ViewObserver> observerList = MainStage.getObserverList();
         GodCard God = godPowers.get(godNumber-1);

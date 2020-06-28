@@ -12,13 +12,17 @@ import javax.swing.text.html.ImageView;
 import java.net.URL;
 import java.util.ResourceBundle;
 
+/**
+ * This class handles the controls for the waiting scene.
+ * <p><p>The WaitingSceneController is loaded from the <code>WaitingScene.fxml</code> file.
+ * <p>The waiting scene is shown when a player is waiting for the match to start. The <code>Label waitingLabel</code>
+ * changes depending from waiting for a match or waiting for a player to choose their <code>GodCard</code>
+ */
 public class WaitingSceneController implements Initializable {
     private Textfields textfields = new Textfields();
 
     @FXML
     private Label waitingLabel;
-    @FXML
-    private ImageView waitingImage;
 
     public WaitingSceneController() throws ParseException {
     }
@@ -28,6 +32,10 @@ public class WaitingSceneController implements Initializable {
         waitingLabel.setAlignment(Pos.CENTER);
     }
 
+    /**
+     * Changes the text on the <code>waitingLabel</code> when a match has been found and
+     * the other players are choosing their <code>GodCard</code>
+     */
     public void updateWaitingLabel(){
         waitingLabel.setText(textfields.getWaitgodpowers());
 

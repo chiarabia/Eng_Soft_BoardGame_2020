@@ -60,8 +60,8 @@ public class GodPower {
     /**
      * Checks if the player has lost
      *
-     * @param collectMove a set<Cell> with the possible cells where the player can move
-     * @param collectBuild  a set<Cell> with the possible cells where the player can build
+     * @param collectMove a <code>Set&lt;Cell&gt;</code> with the possible cells where the player can move
+     * @param collectBuild  a <code>Set&lt;Cell&gt;</code> with the possible cells where the player can build
      * @return true if the player has lost, false otherwise
      */
     public boolean lose (Set<Position> collectMove, Set<Position> collectBuild){

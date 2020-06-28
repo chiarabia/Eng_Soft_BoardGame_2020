@@ -15,6 +15,15 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.ResourceBundle;
 
+/**
+ * This class handles the controls of the scene with the Login information phase.
+ *
+ * <p><p>The LoginSceneController is loaded from the <code>LoginScene.fxml</code> file.
+ * <p>The player can inserts its name and the number of players they can play with. Once, and only once, they have
+ * done both, they can send the information to the Client by pressing the <code>Button startMatchButton</code>.
+ * <p>If the players gives an invalid name they will be sent back to the LoginScene with an error message visible
+ * from the <code>Label errorLabel</code>, and they can insert a new name and number of players again.
+ */
 
 public class LoginSceneController implements Initializable {
 
@@ -31,6 +40,14 @@ public class LoginSceneController implements Initializable {
     private int numberOfPlayers = 0;
     private String playerName;
 
+    /**
+     * Sets the LoginScene and handles the button event.
+     * <p>The <code>startMatchButton</code> when clicked sends the player name and the number of players to the Client.
+     * It also saves in a cache for just the GUI in the <code>ArrayList&lt;Object&gt; playerData</code> in the <code>MainStage</code> class
+     * the same information.
+     * @param url
+     * @param resourceBundle
+     */
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
         errorLabel.setVisible(false);
@@ -56,7 +73,10 @@ public class LoginSceneController implements Initializable {
 
     }
 
-    //Enables the play button only when the player has given name and number of players
+
+    /**
+     * Enables the play button only when the player has given name and number of players.
+     */
     public void keyReleasedProperty(){
         String name = playerNameTextField.getText();
         numberOfPlayersChoiceBox.setOnAction(actionEvent -> {
@@ -69,6 +89,9 @@ public class LoginSceneController implements Initializable {
         startMatchButton.setDisable(isDisabled);
     }
 
+    /**
+     * Makes the <code>errorLabel</code> visible
+     */
     public void updateErrorLabel(){
         errorLabel.setVisible(true);
     }
