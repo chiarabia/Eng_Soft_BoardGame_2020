@@ -10,6 +10,7 @@ import it.polimi.ingsw.exceptions.GameEndedException;
 import it.polimi.ingsw.server.serializable.*;
 import org.json.simple.parser.ParseException;
 import java.util.*;
+import java.util.stream.Collectors;
 
 
 public class Client implements ViewObserver {
@@ -85,7 +86,11 @@ public class Client implements ViewObserver {
      @param object object
      */
     public void onRequestInitializeWorkerPositions(SerializableRequestInitializeWorkerPositions object){
-        view.askForInitialWorkerPositions(object.getPossiblePositions());
+        List<Position> possiblePosition = new ArrayList<>();
+        for(int i = 0; i<object.getPossiblePositions().size(); i++) {
+            possiblePosition.add(object.getPossiblePositions().get(i).mirrorYCoordinate());
+        }
+        view.askForInitialWorkerPositions(possiblePosition);
     }
 
     /**This method shows a disconnection and terminates the game session

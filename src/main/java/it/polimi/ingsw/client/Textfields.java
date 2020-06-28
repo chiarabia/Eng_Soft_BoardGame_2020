@@ -8,6 +8,7 @@ import org.json.simple.parser.ParseException;
 
 public class Textfields {
     private final String initialplaying;
+    private final String chooseworkerpositions;
     private final String won1;
     private final String won2;
     private final String lost1;
@@ -28,12 +29,15 @@ public class Textfields {
     private final String turnover;
     private final String worker1;
     private final String worker2;
-    private final String canmove;
-    private final String canbuild;
+    private final String wcanmove;
+    private final String wcanbuild;
+    private final String wcanboth;
     private final String wcantmove;
     private final String wcantbuild;
+    private final String wcantdoactions;
     private final String canendturn;
     private final String waitgodpowers;
+    private final String nocell;
     private final String err0;
     private final String err1;
     private final String err2;
@@ -47,6 +51,7 @@ public class Textfields {
     public Textfields() throws ParseException {
         JSONObject jsonObject = JSONManager.readMyJSONAsText("configurations/Textfields.json");
         this.initialplaying = (String) jsonObject.get("initialplaying");
+        this.chooseworkerpositions = (String) jsonObject.get("chooseworkerpositions");
         this.won1 = (String) jsonObject.get("won1");
         this.won2 = (String) jsonObject.get("won2");
         this.lost1 = (String) jsonObject.get("lost1");
@@ -70,17 +75,22 @@ public class Textfields {
         this.err0 = (String) jsonObject.get("err0");
         this.err1 = (String) jsonObject.get("err1");
         this.err2 = (String) jsonObject.get("err2");
-        this.canmove = (String) jsonObject.get("canmove");
-        this.canbuild = (String) jsonObject.get("canbuild");
+        this.wcanmove = (String) jsonObject.get("wcanmove");
+        this.wcanbuild = (String) jsonObject.get("wcanbuild");
+        this.wcanboth = (String) jsonObject.get("wcanmoveandbuild");
         this.wcantmove = (String) jsonObject.get("wcantmove");
         this.wcantbuild = (String) jsonObject.get("wcantbuild");
+        this.wcantdoactions = (String) jsonObject.get("wcantdoanything");
         this.canendturn = (String) jsonObject.get("canendturn");
+        this.nocell = (String) jsonObject.get("nocell");
         this.waitgodpowers = (String) jsonObject.get("waitgodpowers");
     }
 
     public String getInitialplaying() {
         return initialplaying;
     }
+
+    public String getChooseworkerpositions(){ return chooseworkerpositions; }
 
     public String getWon1() {
         return won1;
@@ -170,10 +180,6 @@ public class Textfields {
         return err2;
     }
 
-    public String getCanmove() { return canmove; }
-
-    public String getCanbuild() { return canbuild; }
-
     public String getWcantmove() { return wcantmove; }
 
     public String getWcantbuild() { return wcantbuild; }
@@ -181,4 +187,22 @@ public class Textfields {
     public String getCanendturn() { return canendturn; }
 
     public String getWaitgodpowers() { return waitgodpowers; }
+
+    public String getWcanmove() {
+        return wcanmove;
+    }
+
+    public String getWcanbuild() {
+        return wcanbuild;
+    }
+
+    public String getWcanboth() {
+        return wcanboth;
+    }
+
+    public String getWcantdoactions() {
+        return wcantdoactions;
+    }
+
+    public String getNocell() { return nocell;}
 }

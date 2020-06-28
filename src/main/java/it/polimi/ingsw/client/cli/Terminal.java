@@ -262,6 +262,7 @@ public class Terminal implements View {
 
     private List <Position> askForWorkersInitialPositions (){
         while (true) {
+            System.out.println(textfields.getChooseworkerpositions());
             System.out.println(textfields.getWorker1());
             Position worker1Position = askForPosition();
             System.out.println(textfields.getWorker2());
