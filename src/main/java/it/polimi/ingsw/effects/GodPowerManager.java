@@ -66,6 +66,7 @@ public class GodPowerManager {
      * This method creates a GodPower object corresponding to a JSONObject.
      * @param jsonObject JSONObject
      * @param playerId playerId
+     * @return //TODO add return
      */
 
     public static GodPower power (JSONObject jsonObject, int playerId) {
@@ -170,9 +171,9 @@ public class GodPowerManager {
      * Creates a list of godPowers based on the number of players: it must generate two / three different random cards,
      * then, after building them, changes the functions in case of presence of godPowers that modify the behaviors of the adversaries
      * @param numOfPlayers number of players
-     * @return List</GodPower>
-     * @throws ParseException
-     * @throws IOException
+     * @return <code>List&lt;GodPower&gt;</code>
+     * @throws ParseException //TODO add descrption
+     * @throws IOException  //TODO add description
      */
 
     public static List<GodPower> createGodPowers (int numOfPlayers) throws ParseException, IOException {

@@ -10,7 +10,7 @@ public class App{
      * arguments and configuration file about role, port, IP address and UI.
      * @param args (--role server/client, --ui CLI/GUI, --ip localhost, --port 555)
      */
-        public static void main( String[] args ) throws InterruptedException {
+        public static void main( String[] args ) {
         try {
             JSONObject jsonObject = JSONManager.readMyJSONAsText("configurations/Configuration.json");
 

@@ -9,8 +9,7 @@ import it.polimi.ingsw.Position;
 public class StandardWinCondition {
 
         /** This is the general method for the winning condition
-         * @return true if the Player has won
-         * @return false if the win condition is not met yet
+         * @return true if the Player has won, false if the win condition is not met yet
          * @param workerPosition the worker's Cell before the move
          * @param destinationPosition the worker's Cell after the move
          * @param board the board of the game

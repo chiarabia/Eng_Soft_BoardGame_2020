@@ -22,6 +22,9 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.ResourceBundle;
 
+/**
+ *
+ */
 public class ChoosingGodSceneController implements Initializable {
     private Textfields textfields = new Textfields();
 

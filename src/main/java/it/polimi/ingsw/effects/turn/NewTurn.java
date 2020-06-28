@@ -15,7 +15,7 @@ public class NewTurn {
      * @param oldTurn The current turn that is about to end
      * @param godPowers The GodPowers of all players (still) in the game
      * @param nextTurnPlayer Player of the next turn
-     * @return
+     * @return //TODO add descrption
      */
     public Turn endTurn(Turn oldTurn, List<GodPower> godPowers, Player nextTurnPlayer){
         return new Turn(nextTurnPlayer);

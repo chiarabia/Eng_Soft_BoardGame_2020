@@ -76,6 +76,7 @@ public class Turn {
      *
      * @param startingPosition the position where the worker starts the turn
      * @param destinationPosition the position where the worker ends the turn
+     * @param board the board object
      */
 
     public void updateTurnInfoAfterMove (Position startingPosition, Position destinationPosition, Board board) {
