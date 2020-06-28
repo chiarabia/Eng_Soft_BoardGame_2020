@@ -2,6 +2,7 @@ package it.polimi.ingsw.client.gui.controller;
 
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.geometry.Pos;
 import javafx.scene.control.Label;
 
 import java.net.URL;
@@ -19,7 +20,7 @@ public class ErrorSceneController implements Initializable {
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
-
+        errorLabel.setAlignment(Pos.CENTER);
     }
 
     /**

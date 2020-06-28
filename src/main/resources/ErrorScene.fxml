@@ -23,6 +23,9 @@
                      <font>
                         <Font size="18.0" />
                      </font>
+                     <VBox.margin>
+                        <Insets top="211.0" />
+                     </VBox.margin>
                   </Label>
                </children>
             </VBox>

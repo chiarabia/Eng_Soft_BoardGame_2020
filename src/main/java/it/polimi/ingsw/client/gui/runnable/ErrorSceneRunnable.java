@@ -2,6 +2,7 @@ package it.polimi.ingsw.client.gui.runnable;
 
 import it.polimi.ingsw.client.gui.MainStage;
 import it.polimi.ingsw.client.gui.controller.BoardSceneController;
+import it.polimi.ingsw.client.gui.controller.ErrorSceneController;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
@@ -12,8 +13,8 @@ import java.io.IOException;
 public class ErrorSceneRunnable implements Runnable {
 
     private FXMLLoader loader;
-    public BoardSceneController errorSceneController;
-    public BoardSceneController getErrorSceneController(){return errorSceneController;}
+    public ErrorSceneController errorSceneController;
+    public ErrorSceneController getErrorSceneController(){return errorSceneController;}
 
     @Override
     public void run() {
