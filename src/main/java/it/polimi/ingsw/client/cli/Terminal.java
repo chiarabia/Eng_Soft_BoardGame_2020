@@ -76,7 +76,7 @@ public class Terminal implements View {
         System.out.println(board.getPlayer(playerId).getPlayerName() + Color.WHITE.set() +  textfields.getDisconnected());
     }
 
-    public void displayError(int errorId){
+    public void displayError(int errorId, boolean isFatalError){
         String message = null;
         switch (errorId){
             case 0: message = textfields.getErr0(); break;
@@ -187,7 +187,7 @@ public class Terminal implements View {
     }
 
     public void askForStartupInfos(int errorId) {
-            if (errorId >= 0) displayError(errorId);
+            if (errorId >= 0) displayError(errorId, false);
             String name = askForString(Terminal.Color.WHITE.set() + textfields.getName());
             int numOfPlayers = askForInt(textfields.getNumofplayers());
             for (int i = 0; i < observerList.size(); i++) observerList.get(i).onCompletedStartup(name, numOfPlayers);

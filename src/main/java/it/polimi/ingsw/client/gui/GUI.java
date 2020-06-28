@@ -176,7 +176,7 @@ public class GUI implements View {
     }
 
     @Override
-    public void displayError(int errorId) {
+    public void displayError(int errorId, boolean isFatalError) {
         String message = null;
         switch (errorId){
             case 0: message = textfields.getErr0(); break;
@@ -184,13 +184,13 @@ public class GUI implements View {
             case 2: message = textfields.getErr2(); break;
         }
         String finalMessage = message;
-        Platform.runLater(()->{
-        	//displays an error message
-            boardSceneController.displayNotificationsDuringTurn(finalMessage);
-            /*Text oldText = BoardSceneController.getNotification();
-            setTextFormat(oldText);
-            oldText.setText(finalMessage);*/
-        });
+        if (isFatalError){
+
+            //todo:qui è quando il codice causa errore di disconnessione (o comunque irreversibile)
+
+        } else {
+            Platform.runLater(() -> {boardSceneController.displayNotificationsDuringTurn(finalMessage);});
+        }
     }
 
     @Override

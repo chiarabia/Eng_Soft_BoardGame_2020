@@ -45,8 +45,9 @@ public interface View {
      * @param playerId player ID*/
     void displayLoser(int playerId);
     /**This method is called when an error message has to be shown
-     * @param errorId error ID*/
-    void displayError(int errorId);
+     * @param errorId error ID
+     *@param isFatalError true if it's fatal error */
+    void displayError(int errorId, boolean isFatalError);
     /**This method is called when a player has just disconnected
      * @param playerId player ID*/
     void displayDisconnection (int playerId);
