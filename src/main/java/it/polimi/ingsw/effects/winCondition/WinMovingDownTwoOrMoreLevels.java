@@ -4,6 +4,9 @@ import it.polimi.ingsw.Board;
 import it.polimi.ingsw.Cell;
 import it.polimi.ingsw.Position;
 
+/**
+ * This class handles the victory with an action of moving two levels down
+ */
 
 public class WinMovingDownTwoOrMoreLevels extends StandardWinCondition {
 

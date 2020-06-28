@@ -1,6 +1,8 @@
 package it.polimi.ingsw.client;
 
-/**This class stores god cards information */
+/**This class stores god cards information.
+ * <p>The GodCard stores the godName, the godDescription and the godImage and its
+ * used by the View to show information to the player*/
 
 public class GodCard {
     private String godName;

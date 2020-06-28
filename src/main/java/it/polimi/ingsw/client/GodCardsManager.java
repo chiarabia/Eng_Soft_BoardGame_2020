@@ -4,9 +4,12 @@ import it.polimi.ingsw.JSONManager;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.ParseException;
 
+/**
+ * This class manages the JSON files with the information to create the GodCards
+ */
 public class GodCardsManager {
     /**
-     * This method reads and stores god cards information from its JSON file
+     * Reads and stores god cards information from its JSON file
      *@param  nameOfFile name of JSON file (ex. GodCard1)
      *@throws ParseException ParseException
      *@return GodCard

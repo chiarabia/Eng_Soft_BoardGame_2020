@@ -4,6 +4,9 @@ import it.polimi.ingsw.Board;
 import it.polimi.ingsw.Cell;
 import it.polimi.ingsw.Position;
 
+/**
+ * This class handles the victory when five completed towers are situated on the board
+ */
 public class FiveCompletedTowers extends StandardWinCondition {
 
     /** This method is used for the win condition that enables the worker to also win

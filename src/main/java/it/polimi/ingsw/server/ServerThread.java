@@ -17,7 +17,7 @@ public class ServerThread extends Thread {
     private List<Socket> playersList;
     private List<String> playersNames;
     /**
-     * This method sends a Message object to one player
+     * Sends a Message object to one player.
      * @param message message
      * @param position list index of the player
      */
@@ -25,7 +25,7 @@ public class ServerThread extends Thread {
         sendObject(new Message(message), position);
     }
     /**
-     * This method sends an object to one player
+     * Sends an object to one player.
      * @param object object
      * @param position list index of the player
      */
@@ -37,7 +37,7 @@ public class ServerThread extends Thread {
         } catch (Exception e){}
     }
     /**
-     * This method sends an object to all players
+     * Sends an object to all players.
      * @param object object
      */
     public void sendAllObject(Object object) {
@@ -46,8 +46,8 @@ public class ServerThread extends Thread {
         }
     }
     /**
-     * This method communicates the ID number to each player, then creates
-     * the MVC structure and starts clients listeners
+     * Communicates the ID number to each player, then creates
+     * the MVC structure and starts clients listeners.
      */
     public void run(){
             for (int i = 0; i < numOfPlayers; i++) sendMessage("PLAYER_" + (i+1), i);

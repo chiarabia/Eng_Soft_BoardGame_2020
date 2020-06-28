@@ -11,7 +11,7 @@ import java.io.InputStreamReader;
 
  public class JSONManager {
      /**
-      * This method reads a text file and converts it into JSONObject
+      * Reads a text file and converts it into JSONObject
       * @param fname name of file
       * @return JSONObject
       * @throws ParseException ParseException

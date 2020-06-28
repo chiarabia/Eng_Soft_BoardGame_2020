@@ -13,6 +13,18 @@ import java.util.Objects;
 import java.util.Set;
 import java.util.stream.Collectors;
 
+/**
+ * This class //TODO add cosa fa
+ * <p><p>... //aggiungere altre cose
+ * <p></>The initialization procedure follows this order:
+ * <p><ul>
+ * <li><code>onInitialization()</code>
+ * <li><code>onGodPowerInitialization(int playerId, String godPower)</code>: called for each player
+ * <li><code>onWorkerPositionsInitialization()</code>
+ * <li><code>onWorkerPositionsInitialization(int playerId, List<Position> workerPositions)</code>: called for each player
+ * </ul></p>
+ * After the initialization procedure <code>nextOperation()</code> is called.
+ */
 public class Controller implements ProxyObserver {
     private Game game;
     private List <GodPower> godPowersLeft;
@@ -24,7 +36,7 @@ public class Controller implements ProxyObserver {
         this.serverView = serverView;
     }
 
-    /**This method decides which player should perform which action, relying on Turn and GodPower information */
+    /**Decides which player should perform which action, relying on Turn and GodPower information */
     public void nextOperation(){
         int playerId = getTurn().getPlayerId();
         boolean canForceDome = getPlayerGodPower(playerId).isAskToBuildDomes();
@@ -50,7 +62,7 @@ public class Controller implements ProxyObserver {
         game.notifyAnswerOnePlayer(request);
     }
 
-    /**This method terminates current turn
+    /**Terminates the current turn
      *@param playerId player who asked to end the turn
      */
     @Override
@@ -68,7 +80,7 @@ public class Controller implements ProxyObserver {
         nextOperation(); // apre una nuova operazione
     }
 
-    /**This method manages a ConsolidateMove object received from a client
+    /**Handles a ConsolidateMove object received from a client
      *@param playerId player who sent the object
      *@param workerId workerId to be modified
      *@param newPosition position chosen by player*/
@@ -97,7 +109,7 @@ public class Controller implements ProxyObserver {
         nextOperation(); //...altrimenti apre una nuova operazione
     }
 
-    /**This method manages a ConsolidateBuild object received from a client
+    /**Handles a ConsolidateBuild object received from a client
      *@param playerId player who sent the object
      *@param forceDome true if client asked to force a dome
      *@param newPosition position chosen by player*/
@@ -124,7 +136,7 @@ public class Controller implements ProxyObserver {
         nextOperation(); // apre una nuova operazione
     }
 
-    /**This method manages a client disconnection
+    /**Handles a client disconnection
      *@param playerId player who disconnected*/
     @Override
     public void onPlayerDisconnection(int playerId) {
@@ -136,7 +148,7 @@ public class Controller implements ProxyObserver {
         }
     }
 
-    /**This method reports to players that someone has won
+    /**Reports to the players that someone has won
      *@param playerId player who has won*/
     public void onPlayerWin (int playerId)  {
         isDisconnected = true;
@@ -144,7 +156,7 @@ public class Controller implements ProxyObserver {
         serverView.stopAllEventGenerators(); // termina tutti i thread legati alla partita
     }
 
-    /**This method reports to players that someone has lost
+    /**Reports to the players that someone has lost
      *@param playerId player who has lost*/
     public void onPlayerLoss(int playerId)  {
         int nextPlayerId = nextPlayerId(playerId);
@@ -161,8 +173,8 @@ public class Controller implements ProxyObserver {
         nextOperation(); // apre una nuova operazione
     }
 
-    /**First controller method thrown, it starts initialization procedures
-     * and asks the first player to choose a GodPower */
+    /**Starts initialization procedures and asks the first player to choose a GodPower.
+     * <p>It's the first called controller method */
     @Override
     public void onInitialization(){
         System.out.println("Game initialization started");
@@ -177,9 +189,9 @@ public class Controller implements ProxyObserver {
         } catch (Exception e){}
     }
 
-    /**This method proceeds the god powers initialization, sets the god power chosen
-     * by a player and asks next player to chose a remaining one, or, if no players are left,
-     * it starts the workers positions initialization
+    /**Proceeds the initialization with the godPowers.
+     * Sets the god power chosen by the player and asks the next player to chose a remaining one,
+     * or, if no players are left, it starts the initialization of the workers' <code>Position</code>.
      *@param playerId player who has chosen god power
      *@param godPower name of the god power chosen */
     @Override
@@ -205,7 +217,7 @@ public class Controller implements ProxyObserver {
     }
 
 
-    /**This method starts the workers positions initialization by asking the first player to choose*/
+    /**Starts the initialization of the workers' <code>Position</code> by asking the first player to choose its workers' <code>Position</code>*/
     public void onWorkerPositionsInitialization(){
         try {
             SerializableRequest request = new SerializableRequestInitializeWorkerPositions(getBoard()
@@ -217,8 +229,8 @@ public class Controller implements ProxyObserver {
         } catch (Exception e){}
     }
 
-    /**This method proceeds the workers positions initialization, sets positions chosen
-     * by a player and asks next player to chose, or, if no players are left, first game turn starts
+    /**Proceeds with the workers <code>Position</code> initialization.
+     * Sets the <code>Position</code> chosen by a player and asks next player to chose, or, if no players are left,the first turn of the game starts.
      *@param playerId player who has chosen positions
      *@param workerPositions positions chosen */
     @Override
@@ -264,7 +276,7 @@ public class Controller implements ProxyObserver {
     }
 
 
-    /**This method check if a player has won
+    /**Checks if a player has won
      *@param playerId player to be checked
      *@param workerPosition beginning cell of a worker's move, null if no movement is happening
      *@param destinationPosition final cell of a worker's move, null if no movement is happening*/
@@ -292,7 +304,7 @@ public class Controller implements ProxyObserver {
         return false;
     }
 
-    /**This method check if a player has lost
+    /**Checks if a player has lost
      *@param turn current turn
      *@param playerId player to be checked
      *@param worker1Moves worker 1 moves
@@ -309,8 +321,8 @@ public class Controller implements ProxyObserver {
         return false;
     }
 
-    /**This method returns a list of names of still not chosen god powers
-     * @return List<String>
+    /**Returns a list of names of godPowers that haven't been chosen yet
+     * @return <code>List&lt;String&gt;</code>
      */
     private List<String> getGodPowersLeftNames (){
         List<String> godPowersNames = new ArrayList<>();
@@ -318,9 +330,9 @@ public class Controller implements ProxyObserver {
         return godPowersNames;
     }
 
-    /**This method extracts a god power from the list of still not chosen ones
-     * and adds it to god powers list in game model
-     *@param godPower name of chosen god power
+    /**Extracts a godPower from the list of the godPowers that haven't been chosen yet,
+     * and then it adds it to the godPowers list in the game model
+     *@param godPower name of the chosen god power
      */
     private void chooseGodPower(String godPower){
         for (int i = 0; i < godPowersLeft.size(); i++){
@@ -332,7 +344,7 @@ public class Controller implements ProxyObserver {
         }
     }
 
-    /** This method sets GodPower and Player to null and removes workers belonging to a player
+    /** Sets the GodPower and Player to null and removes the workers of the player
      * @param playerId player to be removed
      */
     private void removePlayerInfos (int playerId) {
@@ -342,7 +354,7 @@ public class Controller implements ProxyObserver {
         game.removePlayer(playerId); // setta il Player a null
     }
 
-    /**This method returns next player compared to the one passed by argument
+    /**Returns the player next to the one passed in the argument
      * @param playerId player ID
      */
     private int nextPlayerId(int playerId){

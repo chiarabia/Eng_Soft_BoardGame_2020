@@ -7,6 +7,10 @@ import it.polimi.ingsw.Position;
 
 import java.util.Set;
 
+/**
+ * This class handles the standard lose condition.
+ * <p>The player loses when they can no longer move and build
+ */
 public class StandardLoseCondition {
 
     /**This method determines if a player has lost.

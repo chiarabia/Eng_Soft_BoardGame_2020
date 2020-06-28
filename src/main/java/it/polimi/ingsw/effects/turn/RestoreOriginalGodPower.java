@@ -11,7 +11,7 @@ public class RestoreOriginalGodPower extends NewTurn {
 
 
     /**
-     * This method restores a player's original powers. Can be used at the end of a player's turn with an "Opponent'sTurn" power.
+     * Restores a player's original powers. Can be used at the end of a player's turn with an "Opponent'sTurn" power.
      * @param oldTurn The current turn that is about to end
      * @param godPowers The GodPowers of all players in the game
      * @param nextTurnPlayer Player of the next turn

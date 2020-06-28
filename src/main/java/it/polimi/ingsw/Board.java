@@ -66,7 +66,7 @@ public class Board {
     }
 
     /**
-     * This method tells us if a zone is free
+     * Checks if a zone is free
      *
      * @param x coordinate x of the zone
      * @param y coordinate y of the zone

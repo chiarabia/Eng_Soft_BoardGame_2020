@@ -1,8 +1,8 @@
 package it.polimi.ingsw.client;
 
 /**
- * This class represents a summary representation of the game board
- * It stores relevant players and buildings information
+ * This class implements a representation of the game board.
+ * It stores relevant information about the players and the buildings
  */
 
 public class ClientBoard {

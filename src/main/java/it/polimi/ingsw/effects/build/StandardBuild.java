@@ -44,7 +44,7 @@ public class StandardBuild {
     }
 
     /**
-     * This method determines if the worker can build
+     * Determines if the worker can build
      *
      * @param workerCell the worker's Cell
      * @param turn the player's turn

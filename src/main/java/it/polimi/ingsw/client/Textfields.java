@@ -44,7 +44,7 @@ public class Textfields {
 
 
     /**
-     * This method reads all text fields from Textfields.json and stores them
+     * Reads all text fields from Textfields.json and stores them
      * @throws ParseException ParseException
      * */
 

@@ -31,10 +31,10 @@ public class GodPowerManager {
     private static int opponentsCantWinOnPerimeterPlayer;
 
     /**
-     * This method randomly extracts different 'numOfPlayers' cards in the form of List <JSONObject>,
-     * regardless of the number of cards in the Cards folder
+     * Randomly extracts different 'numOfPlayers' cards in the form of <code>List&lt;JSONObject&gt;</code>,
+     * regardless of the number of cards in the Cards folder.
      * @param numOfPlayers number of players
-     * @return List</JSONObject>
+     * @return <code>List&lt;JSONObject&gt;</code>
      * @throws ParseException ParseException
      */
 
@@ -63,7 +63,7 @@ public class GodPowerManager {
     }
 
     /**
-     * This method creates a GodPower object corresponding to a JSONObject.
+     * Creates a GodPower object corresponding to a JSONObject.
      * @param jsonObject JSONObject
      * @param playerId playerId
      * @return //TODO add return
@@ -168,7 +168,7 @@ public class GodPowerManager {
     }
 
     /**
-     * Creates a list of godPowers based on the number of players: it must generate two / three different random cards,
+     * Creates a list of godPowers based on the number of players: it must generate two or three different random cards,
      * then, after building them, changes the functions in case of presence of godPowers that modify the behaviors of the adversaries
      * @param numOfPlayers number of players
      * @return <code>List&lt;GodPower&gt;</code>

@@ -18,17 +18,17 @@ public class ServerAsyncReceiver extends EventGenerator {
     }
 
     /**
-     * This method closes the connection to client, therefore causes the process
-     * to report an error to controller and terminate
+     * Closes the connection to the client, generates an error for the Controller
+     * and closes the application
      */
     public void stopProcess(){
         try { socket.close(); } catch(Exception e){}
     }
 
     /**
-     * This method waits for received objects from client or connection errors
-     * and reports them to the controller
-     * After an error the process stops, otherwise it continues listening to client
+     * Waits for the received objects from the client or for connection errors
+     * and reports them to the Controller.
+     * After an error the process stops, otherwise it continues to listen to the client
      */
     public void run() {
             try {
@@ -43,7 +43,7 @@ public class ServerAsyncReceiver extends EventGenerator {
     }
 
     /**
-     * This method notifies the controller about an error or a received object from client
+     * Notifies the Controller about an error or a received object from the client
      * @param fromClient object from client
      */
     public void reactToClient(Object fromClient) {

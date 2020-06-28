@@ -59,7 +59,7 @@ public class StandardMove {
     }
 
     /**
-     * This method determines if the worker can move
+     * Determines if the worker can move
      *
      * @param workerCell the worker's Cell
      * @param turn the player's turn

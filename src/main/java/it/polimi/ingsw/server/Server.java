@@ -10,7 +10,7 @@ import static java.lang.Thread.sleep;
 public class Server {
     public static int serverPort;
     /**
-     * This method generates a ServerSocket and starts a new ServerAccepter thread
+     * Generates a ServerSocket and starts a new ServerAccepter thread.
      * If a connection error occurs it waits 10 seconds and then restarts
      * @throws InterruptedException //TODO add descrption
      */

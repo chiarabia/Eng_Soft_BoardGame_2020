@@ -71,7 +71,7 @@ public class Turn {
     }
 
     /**
-     * This method needs to be called after a move action to update the data
+     * Needs to be called after a move action to update the data
      * with the choices of the current player.
      *
      * @param startingPosition the position where the worker starts the turn

@@ -19,6 +19,9 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+/**
+ * This class implements the View for the GUI
+ */
 public class GUI implements View {
     private Textfields textfields = new Textfields();
     private BoardSceneController boardSceneController;
@@ -39,15 +42,24 @@ public class GUI implements View {
         List<ViewObserver> observerList = MainStage.getObserverList();
         observerList.add(observer);}
 
+    /**
+     * Launches the JavaFx app
+      */
     @Override
     public void displayStartup() {
     	//starts the MainStage javafx application
         new Thread(()-> MainStage.launch(MainStage.class)).start();
     }
 
+    /**
+     * Not implemented in GUI
+     */
     @Override
     public void displayGameStart(){}
 
+    /**
+     * Displays the BoardScene and adds the Player ID in the GUI cache
+     */
     @Override
     public void displayBoardScreen(){
         //displays the BoardScene
@@ -66,6 +78,9 @@ public class GUI implements View {
 
     }
 
+    /**
+     * Displays the WaitingScene
+     */
     @Override
     public void displayWaitingRoom() {
         //displays the WaitingRoomScene
@@ -77,10 +92,20 @@ public class GUI implements View {
         });
     }
 
+    /**
+     * Sets the board
+     * @param board the <code>ClientBoard</code> received from the Client
+     */
     public void setBoard(ClientBoard board) {
         this.board = board;
     }
 
+    /**
+     * Changes the <code>Label</code> in WaitingScene to notify the players
+     * that the match has started but they need to wait for other players
+     * to choose their GodCard
+     * @param names object it contains a <code>List</code> with the Players names. Not used for the GUI
+     */
     @Override
     public void displayPlayerNames(SerializableUpdateInitializeNames names) {
         Platform.runLater(()->{
@@ -88,12 +113,20 @@ public class GUI implements View {
         });
     }
 
+    /**
+     * Not implemented in GUI
+     * @param playerId player ID
+     */
     @Override
     public void displayGodPower(int playerId){
 
     }
 
-
+    /**
+     * When a new turn starts the players are notified of either that their turn has started
+     * or which player turn started.
+     * @param currentPlayerId
+     */
     @Override
     public void displayTurn(int currentPlayerId) {
         int myPlayerId = board.getMyPlayerId();
@@ -117,6 +150,10 @@ public class GUI implements View {
         }
     }
 
+    /**
+     * Displays in the BoardScene an <code>Image</code> that is either a Win or Lose image
+     * @param playerId player ID
+     */
     @Override
     public void displayWinner(int playerId) {
         Platform.runLater(()->{
@@ -130,9 +167,15 @@ public class GUI implements View {
         });
     }
 
+    /**
+     * Displays the name of the player that has lost in the BoardScene
+     * and removes its workers from the board.
+     * @param playerId player ID
+     */
     @Override
     public void displayLoser(int playerId) {
         Platform.runLater(()->{
+            //removes the player workers frm the board
             for(int i = 1; i<3; i++) {
                 boardSceneController
                         .removeWorker(getWorkerPositions(playerId, i)
@@ -148,6 +191,10 @@ public class GUI implements View {
 
     }
 
+    /**
+     * Displays the ErrorScene with a disconnection message.
+     * @param playerId player ID
+     */
     @Override
     public void displayDisconnection(int playerId) {
         String notification;
@@ -180,6 +227,13 @@ public class GUI implements View {
 
     }
 
+    /**
+     * Displays an error message.
+     * <p>If the error is a fatal error it displays the ErrorScene. Otherwise the error is visible
+     * in the BoardScene as a notification.
+     * @param errorId error ID
+     * @param isFatalError true if it's fatal error
+     */
     @Override
     public void displayError(int errorId, boolean isFatalError) {
         String message = null;
@@ -202,6 +256,11 @@ public class GUI implements View {
         }
     }
 
+    /**
+     * Displays the changes of the board.
+     * <p>Tells the BoardSceneController where to add a new building, where to add or remove workers.
+     * @param update object
+     */
     @Override
     public void displayBoard(SerializableUpdateActions update) {
         List<SerializableUpdateMove> updateMove = update.getUpdateMove();
@@ -234,7 +293,11 @@ public class GUI implements View {
         }
     }
 
-
+    /**
+     * Displays the changes to the board in the initial phase of the game.
+     * <p>It updates the board with the initial positions of the workers.
+     * @param update object
+     */
     @Override
     public void displayBoard(SerializableUpdateInitializeWorkerPositions update) {
         List<Position> workerPositions = update.getWorkerPositions();
@@ -270,6 +333,12 @@ public class GUI implements View {
             return false;
     }
 
+    /**
+     * Handles the information for the GUI about the possible action a player can make.
+     * <p>It tells the BoardSceneController if and where a worker can move/build, if they can end the turn
+     * or if they can build a dome
+     * @param object object
+     */
 
     @Override
     public void askForAction(SerializableRequestAction object) {
@@ -336,6 +405,10 @@ public class GUI implements View {
         }
     }
 
+    /**
+     * Displays the ChoosingGodPowerScene and adds the GodCards to the GUI cache
+     * @param godPowers
+     */
     @Override
     public void askForInitialGodPower(List<GodCard> godPowers) {
         //stores in GodCards the godPowers choosed by the server
@@ -344,10 +417,13 @@ public class GUI implements View {
 
         //displays the choosingGodScene
         Platform.runLater(choosingGodSceneRunnable);
-
-        //alla fine deve chiamare onCompletedInitializeGodPower(String chosenGodPower)
     }
 
+    /**
+     * Sets the BoardSceneController into the phase when the player need to choose their workers first positions
+     * <p>The actionCode of BoardSceneController is set to 1
+     * @param possiblePositions possible positions
+     */
     @Override
     public void askForInitialWorkerPositions(List <Position> possiblePositions) {
         //adds the current notification for the player
@@ -363,6 +439,12 @@ public class GUI implements View {
         //alla fine deve chiamare onCompletedInitializeWorkerPositions(List<Position> myWorkerPositions)
     }
 
+    /**
+     * Displays the LoginSceneController when the main javafx application is ready.
+     * The player can insert their name and choose the number of players of the match.
+     * If the name of the player is invalid, the LoginScene is shown again, with an error notification
+     * @param errorId
+     */
     @Override
     public void askForStartupInfos(int errorId) {
         // I can't call Platform.runLater until the JavaFX application has started.
@@ -391,17 +473,19 @@ public class GUI implements View {
         } catch (Exception ignored) {}
     }
 
-    //sets the
-    public void setTextFormat(Text notification){
-        notification.setFont(Font.font("Verdana", FontWeight.BOLD, 15));
-    }
-
+    /**
+     * Gets the <code>Position</code> of a worker
+     * @param playerID the PlayerID of the player
+     * @param workerID the workerID of the worker
+     * @return the <code>Position</code>
+     */
     public Position getWorkerPositions(int playerID, int workerID){
         int x = board.getPlayer(playerID).getWorker(workerID).getX();
         int y = board.getPlayer(playerID).getWorker(workerID).getY();
         return new Position(x,y,0);
     }
 
+    //TODO add javadoc
     private Set<Position> mirrorPositionYCoordinate(Set<Position> set) {
         Set<Position> tempSet = new HashSet<>();
 

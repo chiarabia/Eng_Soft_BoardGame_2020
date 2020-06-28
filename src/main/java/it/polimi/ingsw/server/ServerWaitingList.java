@@ -15,8 +15,8 @@ public class ServerWaitingList {
     private List<Socket> playersList;
     private List<String> namesList;
     /**
-     * This method checks if the player's name is valid, then adds it to the
-     * players list and eventually extracts 2/3 players in order to start a match
+     * Checks if the player's name is valid, then adds it to the
+     * players list and eventually extracts 2 or 3 players in order to start a match
      * @param socket socket
      * @param name player's name
      * @throws BadNameException BadNameException
@@ -35,8 +35,8 @@ public class ServerWaitingList {
         }
     }
     /**
-     * This method exports 2/3 players from the waiting list if available
-     * @return List<Socket> or null if there are not enough players
+     * Exports 2 or 3 players from the waiting list if available
+     * @return <code>List&lt;Socket&gt;</code> or null if there are not enough players
      */
     private synchronized List <Socket> exportPlayersList() {
         if (playersList.size()<numOfPlayers) return null;
@@ -45,7 +45,7 @@ public class ServerWaitingList {
         return list;
     }
     /**
-     * This method sends a Message object and waits for the answer
+     * Sends a Message object and waits for the answer
      * @param message message
      * @param position position of socket inside the list
      * @throws ClientStoppedWorkingException if client is not connected anymore or if no response is received within a second
@@ -59,8 +59,8 @@ public class ServerWaitingList {
         return ((Message)(new ServerSyncReceiver()).receiveObject(playersList.get(position))).getMessage();
     }
     /**
-     * This method discards no more valid clients by sending an echo message, then
-     * checks if a name is already used by another player
+     * Discards the no more valid clients by sending an echo message, then
+     * checks if a name is already used by another player.
      * @param name player's name
      * @throws IOException IOException
      */
