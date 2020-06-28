@@ -48,7 +48,7 @@ public class ServerView implements GameObserver{
     }
 
     /**
-     * This method adds to list and starts a new EventGenerator
+     * Adds to list and starts a new EventGenerator
      * @param eventGenerator EventGenerator
      */
     public void startNewEventGenerator(EventGenerator eventGenerator){
@@ -58,7 +58,7 @@ public class ServerView implements GameObserver{
     }
 
     /**
-     * This method creates, adds and starts one ServerAsyncReceiver event generator each player,
+     * Creates, adds and starts one ServerAsyncReceiver event generator each player,
      * then notifies all observers about initialization process
      * @param playersList players list
      */
@@ -72,7 +72,7 @@ public class ServerView implements GameObserver{
     }
 
     /**
-     * This method stops last event generator and removes it from the list
+     * Stops last event generator and removes it from the list
      */
     public void stopLastEventGenerator(){
         eventGenerators.get(eventGenerators.size()-1).stopProcess();
@@ -80,7 +80,7 @@ public class ServerView implements GameObserver{
     }
 
     /**
-     * This method stops and removes all event generators
+     * Stops and removes all event generators
      */
     public void stopAllEventGenerators(){
         while (eventGenerators.size()>0) stopLastEventGenerator();

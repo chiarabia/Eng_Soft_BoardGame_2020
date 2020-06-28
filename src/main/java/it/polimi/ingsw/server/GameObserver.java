@@ -8,7 +8,7 @@ import java.io.IOException;
 import java.util.List;
 
 /**
- * This interface represents model observers (i.e. ServerView)
+ * This interface implements the model observers (like ServerView)
  */
 
 public interface GameObserver {

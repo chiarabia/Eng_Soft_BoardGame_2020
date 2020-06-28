@@ -5,6 +5,10 @@ import it.polimi.ingsw.Board;
 import it.polimi.ingsw.Cell;
 import it.polimi.ingsw.Position;
 
+/**
+ * This class handles the standard win condition
+ * <p>A player wins when they move one of their workers from a building of level two to one of level three
+ */
 
 public class StandardWinCondition {
 

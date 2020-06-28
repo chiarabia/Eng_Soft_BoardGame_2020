@@ -30,7 +30,7 @@ public class Cell {
 
 
     /**
-     * This method checks if the Cell is occupied by a worker, a building or a dome
+     * Checks if the Cell is occupied by a worker, a building or a dome
      * @return true if the Cell is free, false otherwise
      */
 
@@ -44,7 +44,7 @@ public class Cell {
     public boolean isWorker() { return worker!=null; }
 
     /**
-     * This method checks if the Cell is on the perimeter of the board
+     * Checks if the Cell is on the perimeter of the board
      * @return true if the Cell is on the perimeter, false otherwise
      */
 

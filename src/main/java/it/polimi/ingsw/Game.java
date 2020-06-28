@@ -33,7 +33,7 @@ public class Game {
     public Position getWorkerPosition (int playerId, int workerId) { return getBoard().getWorkerCell(getPlayer(playerId), workerId).getPosition(); }
 
     /**
-     * This method reflects the private implementation of players and godPowers lists.
+     * Reflects the private implementation of players and godPowers lists.
      * @param playerId playerId
      * @param list list
      * @return T
@@ -43,7 +43,7 @@ public class Game {
     }
 
     /**
-     * This method converts a playerId into a list index
+     * Converts a playerId into a list index
      * @param playerId playerId
      * @return int
      */
@@ -81,7 +81,7 @@ public class Game {
 
 
     /**
-     * This class creates a match
+     * Creates a match
      * @param numOfPlayers number of players of the match
      * @param playersNames List of players' names
      */

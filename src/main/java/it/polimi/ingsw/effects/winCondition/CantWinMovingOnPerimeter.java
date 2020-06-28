@@ -4,6 +4,9 @@ import it.polimi.ingsw.Board;
 import it.polimi.ingsw.Cell;
 import it.polimi.ingsw.Position;
 
+/**
+ * This class handles the block of a victory on a perimeter
+ */
 
 public class CantWinMovingOnPerimeter extends StandardWinCondition {
 

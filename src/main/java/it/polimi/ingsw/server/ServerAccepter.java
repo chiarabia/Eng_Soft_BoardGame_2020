@@ -16,8 +16,8 @@ public class ServerAccepter extends Thread {
     private ServerSocket serverSocket;
     private List <ServerWaitingList> waitingLists;
     /**
-     * This method accepts incoming connections, checking if client datas are correct
-     * If datas are correct it adds the player to a waiting list, otherwise it reports the error
+     * Accepts incoming connections, checks if the client data is correct
+     * If the data is correct it adds the player to a waiting list, otherwise it generates an error
      */
     public void run() {
         try {
@@ -47,7 +47,7 @@ public class ServerAccepter extends Thread {
         }
     }
     /**
-     * This method sends to a client an error message and then closes the connection
+     * Sends to the client an error message and then closes the connection
      * @param socket socket
      * @param message error message
      * @throws IOException IOException

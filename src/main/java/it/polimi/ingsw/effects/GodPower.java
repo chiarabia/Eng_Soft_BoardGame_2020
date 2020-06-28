@@ -77,7 +77,6 @@ public class GodPower {
      * @return true if the player has won, false otherwise
      */
 
-
     public boolean win (Position workerPosition, Position destinationPosition, Board board) {
         boolean win = false;
 

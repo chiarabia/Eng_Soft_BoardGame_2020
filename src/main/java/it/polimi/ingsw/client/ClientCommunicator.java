@@ -26,7 +26,7 @@ public class ClientCommunicator extends Thread {
     }
 
     /**
-     * This method waits for an object to be received from server
+     * Waits for an object to be received from the server
      * @return Object
      * @throws IOException IOException
      * @throws ClassNotFoundException ClassNotFoundException
@@ -37,7 +37,7 @@ public class ClientCommunicator extends Thread {
     }
 
     /**
-     * This method sends an object to server
+     * Sends an object to the server
      * @param object Object
      */
     public void sendObject (Object object) {
@@ -49,19 +49,19 @@ public class ClientCommunicator extends Thread {
     }
 
     /**
-     * This method sends a message to server
+     * Sends a message to the server
      * @param message text
      */
     public void sendMessage (String message) {
         sendObject(new Message(message));
     }
 
-    /** This method closes the connection with server */
+    /** Closes the connection with the server */
     public void stopProcess(){
         try { serverSocket.close(); } catch (Exception e){}
     }
 
-    /** This method waits for objects from server or errors and reacts to them */
+    /** Waits for objects from the server or errors and handles them */
     public void run(){
         try {
             while (true) { reactToServer(waitForObject()); }
@@ -74,7 +74,7 @@ public class ClientCommunicator extends Thread {
     }
 
 /**
- * This method notifies the client about received objects or errors
+ * Notifies the client about received objects or errors
  * @param object Object
  * @throws Exception Exception
  */

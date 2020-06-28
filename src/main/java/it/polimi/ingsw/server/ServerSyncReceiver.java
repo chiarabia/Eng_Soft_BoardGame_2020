@@ -11,10 +11,10 @@ import java.util.Scanner;
 
 public class ServerSyncReceiver extends Thread {
     /**
-     * This method waits for an object to be received from a client
+     * waits for an object to be received from the client
      * @return Object
      * @param socket client socket
-     * @throws ClientStoppedWorkingException if client is disconnected or no answer is received within one second
+     * @throws ClientStoppedWorkingException if the client has disconnected or no answer is received within one second
      */
     public Object receiveObject(Socket socket) throws ClientStoppedWorkingException {
         Object object = null;

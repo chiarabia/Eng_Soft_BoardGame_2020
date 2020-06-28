@@ -10,7 +10,6 @@ import it.polimi.ingsw.exceptions.GameEndedException;
 import it.polimi.ingsw.server.serializable.*;
 import org.json.simple.parser.ParseException;
 import java.util.*;
-import java.util.stream.Collectors;
 
 
 public class Client implements ViewObserver {
@@ -20,7 +19,7 @@ public class Client implements ViewObserver {
     private int port;
     private String IP;
 
-    /**This method starts the client and asks the view for player's name and number of players
+    /**Starts the client and asks the view for the player's name and the number of players in the match
      *@param port server port
      *@param IP server IP
      *@param GUI true for GUI, false for CLI
@@ -40,19 +39,19 @@ public class Client implements ViewObserver {
         }
     }
 
-    /**This method asks the view to display fatal error message*/
+    /**Asks the view to display a fatal error message*/
     public void onError(){
         view.displayError(0, true);
     }
 
-    /**This method saves and shows new worker initial positions
-     *@param object object received from server
+    /**Saves and shows the workers' initial <code>Position</code>
+     *@param object received from the server; holds the information with workersPositions and the playerID
      */
     public void onUpdateInitializeWorkerPositions(SerializableUpdateInitializeWorkerPositions object){
         int whichPlayerId = object.getPlayerId();
         Position positionWorker1 = object.getWorkerPositions().get(0);
         Position positionWorker2 = object.getWorkerPositions().get(1);
-        //setto i worker dei vari giocatori
+        //sets the players' workers
         board.getPlayer(whichPlayerId).getWorker(1).setX(positionWorker1.getX());
         board.getPlayer(whichPlayerId).getWorker(1).setY(positionWorker1.getY());
         board.getPlayer(whichPlayerId).getWorker(2).setX(positionWorker2.getX());
@@ -60,8 +59,8 @@ public class Client implements ViewObserver {
         view.displayBoard(object);
     }
 
-    /**This method saves and shows god power choice
-     *@param object object received from server
+    /**Saves and shows the chosen godPower
+     *@param object received from the server; holds the information with the godPower and the playerID
      */
     public void onUpdateInitializeGodPower(SerializableUpdateInitializeGodPower object){
         String godPower = object.getGodPower();
@@ -71,8 +70,8 @@ public class Client implements ViewObserver {
         if (whichPlayerId==board.getNumOfPlayers()) view.displayBoardScreen();
     }
 
-    /**This method asks view for god power
-     *@param object object received from server
+    /**Asks the view for the godPower
+     *@param object received from the server; holds the information with the possible godPowers for the player to choose from and the playerID
      * @throws ParseException ParseException
      */
     public void onRequestInitializeGodPower(SerializableRequestInitializeGodPower object) throws ParseException {
@@ -82,8 +81,8 @@ public class Client implements ViewObserver {
         view.askForInitialGodPower(godCards);
     }
 
-    /**This method asks view for initial workers positions
-     @param object object
+    /**Asks the view for the initial workers' <code>Position</code>
+     @param object received from the server; holds the information with the possibles workersPositions and the playerID
      */
     public void onRequestInitializeWorkerPositions(SerializableRequestInitializeWorkerPositions object){
         List<Position> possiblePosition = new ArrayList<>();
@@ -93,8 +92,8 @@ public class Client implements ViewObserver {
         view.askForInitialWorkerPositions(possiblePosition);
     }
 
-    /**This method shows a disconnection and terminates the game session
-     *@param object object received from server
+    /**Handles a disconnection and terminates the game session
+     * @param object received from the server; holds the information with the playerID
      * @throws GameEndedException if an opponent disconnected
      * @throws Exception if server decides to throw client out of the game; this behaviour should never happen and it's symptom of unexpected error
      */
@@ -104,15 +103,15 @@ public class Client implements ViewObserver {
         throw new GameEndedException();
     }
 
-    /**This method asks client for action
-     *@param object object received from server
+    /**Asks the player to perform an action
+     *@param object received from the server; holds the information for possible moves or builds and proprieties of the workers
      */
     public void onRequestAction(SerializableRequestAction object) {
         view.askForAction(object);
     }
 
-    /**This method saves and shows a player victory
-     *@param object object received from server
+    /**Handles the victory of a player
+     *@param object received from the server; holds the information with the playerID
      *@throws GameEndedException //TODO add throw
      */
     public void onUpdateWinner(SerializableUpdateWinner object) throws GameEndedException {
@@ -121,8 +120,8 @@ public class Client implements ViewObserver {
         throw new GameEndedException();
     }
 
-    /**This method saves and shows a new turn
-     *@param object object received from server
+    /**Handles the new turn
+     *@param object object received from the server; holds the information with the playerID and if this is the first Turn
      */
     public void onUpdateTurn (SerializableUpdateTurn object){
         board.setPlayerTurnId( object.getPlayerId());
@@ -130,8 +129,8 @@ public class Client implements ViewObserver {
         view.displayTurn(object.getPlayerId()); //mostro a schermo che il gicoatore di turno è un altro
     }
 
-    /**This method saves and shows a player defeat
-     *@param object object received from server
+    /**Handles the defeat of a player
+     *@param object received from the server; holds the information with the playerID
      */
     public void onUpdateLoser (SerializableUpdateLoser object){
         int playerId = object.getPlayerId();
@@ -152,8 +151,8 @@ public class Client implements ViewObserver {
         view.displayBoard(object); //mostro le modifiche a schermo e passo alla GUI tutte le informazioni
     }
 
-    /**This method saves a new build
-     *@param object object received from server
+    /**Saves a new build action
+     *@param object received from the server; holds the information with the <code>Position</code> of the new Building and if it is a dome
      */
     private void onUpdateBuild(SerializableUpdateBuild object){
         boolean isDome;
@@ -166,8 +165,8 @@ public class Client implements ViewObserver {
         board.setCell(new ClientBuilding(oldLevel + 1, isDome), x, y); // costruisco sopra l'ultima casella presente
     }
 
-    /**This method saves a new move
-     *@param object object received from server
+    /**Saves a new move
+     *@param object received from the server; holds the information with the playerID, workerID the new and old <code>Position</code> of the worker
      */
     private void onUpdateMove(SerializableUpdateMove object){
         int playerId, workerId, x, y;
@@ -179,8 +178,8 @@ public class Client implements ViewObserver {
         board.getPlayer(playerId).getWorker(workerId).setY(y);
     }
 
-    /**This method saves and shows players' names
-     *@param names object received from server
+    /**Saves and shows the players' names
+     *@param names received from the server; holds the information with the players' names
      */
     public void onUpdateInitializeNames (SerializableUpdateInitializeNames names){
         for (int id = 1; id <= board.getNumOfPlayers(); id++)
@@ -188,19 +187,19 @@ public class Client implements ViewObserver {
         view.displayPlayerNames(names); //mostro a schermo i nomi degli altri giocatori
     }
 
-    /**This method replies to server echo message */
+    /**Replies to server echo message */
     public void onHello(){
         communicator.sendMessage("HELLO");
     }
 
-    /**This method records player ID and asks view to show it
+    /**Records the player ID and asks view to show it
      *@param message message received from server*/
     public void onPlayerIdAssigned(String message){
         int playerId = (Character.getNumericValue(message.charAt(message.length()-1))); //creo il playerID
         board.setMyPlayerId(playerId); //creo il playerID
     }
 
-    /**This method displays an error and then restarts the client
+    /**Displays an error and then restarts the client
      *@param error error ID
      *@throws GameEndedException thrown to stop current ClientCommunicator process before starting a new one
      */

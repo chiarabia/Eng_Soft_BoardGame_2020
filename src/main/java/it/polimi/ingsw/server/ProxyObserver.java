@@ -5,7 +5,7 @@ import java.io.IOException;
 import java.util.List;
 
 /**
- * This interface represents proxy-view observers (i.e. Controller)
+ * This interface implements the proxy-view observers (like Controller)
  */
 
 public interface ProxyObserver {

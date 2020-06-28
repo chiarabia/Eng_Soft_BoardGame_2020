@@ -17,16 +17,29 @@ import java.util.List;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.LinkedBlockingQueue;
 
+/**
+ * This class is the main javafx class
+ * <p>
+ * <p>It sets the <code>primaryStage</code> of the application, holds a data cache for the GUI for simple information
+ * and disconnects the player if the player closes the application.
+ */
+
 public class MainStage extends Application {
 
 	private final static BlockingQueue<Object> lock = new LinkedBlockingQueue<>();
 	private static List<ViewObserver> observerList = new ArrayList<>();
-
 	private static Stage stage;
 
-	//0 = name, 1 = number of Players, 2=PlayerID
+	/**
+	 * This <code>ArrayList&lt;Object&gt;</code> functions like a mini cache for the GUI.
+	 * <p>0 for the name of the player
+	 * <p>1 for the number of players
+	 * <p>2 for the playerID
+	 */
 	public static ArrayList<Object> playerData = new ArrayList<>();
-	//stores the godPowers of the match
+	/**
+	 * stores the godPowers of the match
+	 */
 	public static List<GodCard> godPowers = new ArrayList<>();
 
 	public static ArrayList<Object> getPlayerData(){return playerData;}
@@ -39,10 +52,19 @@ public class MainStage extends Application {
 
 	public static BlockingQueue<Object> getLock() { return lock; }
 
+	/**
+	 * Launches the javafx application
+	 */
 	public static void main() {
 		launch();
 	}
 
+	/**
+	 * Sets the <code>Stage</code>
+	 * <p>Sets the properties of the <code>Stage</code> and handles when the player closes the application
+	 * @param primaryStage the <code>PrimaryStage</code>
+	 * @throws IOException
+	 */
 	@Override
 	public void start(Stage primaryStage) throws IOException {
 		lock.add(new Object());
@@ -61,6 +83,7 @@ public class MainStage extends Application {
 		primaryStage.setScene(scene);
 		primaryStage.show();
 
+		//handles the event when the player closes the applcation
 		primaryStage.setOnCloseRequest(new EventHandler<WindowEvent>() {
 			@Override
 			public void handle(WindowEvent t) {
