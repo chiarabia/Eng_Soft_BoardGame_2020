@@ -11,7 +11,7 @@ import java.util.List;
 public interface ProxyObserver {
     void onEndedTurn (int playerId);
     void onConsolidateMove(int playerId, int workerId, Position newPosition);
-    void onConsolidateBuild(int playerId, Position newPosition, boolean forceDome);
+    void onConsolidateBuild(int playerId, int workerId, Position newPosition, boolean forceDome);
     void onInitialization();
     void onGodPowerInitialization(int playerId, String godPower);
     void onWorkerPositionsInitialization(int playerId, List<Position> workerPositions);

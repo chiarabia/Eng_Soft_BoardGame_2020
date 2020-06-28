@@ -59,7 +59,7 @@ public class NotOnSamePositionTest {
         workerCell.setWorker(worker);
         turn.updateTurnInfoAfterMove(new Position(2, 2, 0), workerCell.getPosition(), board);
         board.getCell(4,4,0).setBuilding(true);
-        turn.updateTurnInfoAfterBuild(new Position(4,4,0));
+        turn.updateTurnInfoAfterBuild(new Position(4,4,0), worker.getWorkerId());
 
         Set<Position> collect = new HashSet<>();
         collect.add(new Position (2,2,0));
@@ -79,8 +79,8 @@ public class NotOnSamePositionTest {
         workerCell = board.getCell(3,3,3);
         workerCell.setWorker(worker);
         turn.updateTurnInfoAfterMove(new Position(2,2,0), workerCell.getPosition(), board);
-        turn.updateTurnInfoAfterBuild(new Position(4,4,0));
-        turn.updateTurnInfoAfterBuild(new Position(4,4, 1));
+        turn.updateTurnInfoAfterBuild(new Position(4,4,0), worker.getWorkerId());
+        turn.updateTurnInfoAfterBuild(new Position(4,4, 1), worker.getWorkerId());
 
         Set <Position> collect = new HashSet<>();
         assertEquals(collect, notOnSamePosition.build(workerCell.getPosition(), board, turn));
@@ -110,7 +110,7 @@ public class NotOnSamePositionTest {
         turn.updateTurnInfoAfterMove(workerCell2.getPosition(), new Position(2,0,0), board);
 
         new StandardConsolidateBuild().buildUp(new Position(3,0,0), board,false);
-        turn.updateTurnInfoAfterBuild(new Position(3,0,0));
+        turn.updateTurnInfoAfterBuild(new Position(3,0,0), worker2.getWorkerId());
 
 
         Set<Position> collect = new HashSet<>();

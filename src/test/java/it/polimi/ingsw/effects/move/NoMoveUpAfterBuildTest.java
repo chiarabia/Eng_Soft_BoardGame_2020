@@ -29,7 +29,7 @@ public class NoMoveUpAfterBuildTest {
     @Test
     void playerShouldNotBeAbleToMoveUp(){
         Cell buildCell = board.getCell(1,1,0);
-        turn.updateTurnInfoAfterBuild(buildCell.getPosition());
+        turn.updateTurnInfoAfterBuild(buildCell.getPosition(), worker.getWorkerId());
         board.getCell(1,1,0).setBuilding(true);
         board.newCell(0,1,1);
         workerCell = board.getCell(0,0,0);

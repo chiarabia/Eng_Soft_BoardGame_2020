@@ -209,33 +209,33 @@ public class ControllerTest {
 
         // First Turn
         controller.onConsolidateMove(1, 1, new Position(0, 1, 1));
-        controller.onConsolidateBuild(1, new Position(0,0,0), false);
+        controller.onConsolidateBuild(1,1, new Position(0,0,0), false) ;
         controller.onEndedTurn(1);
 
         controller.onConsolidateMove(2, 1, new Position(3, 0, 0));
-        controller.onConsolidateBuild(2, new Position(4,0,0), false);
+        controller.onConsolidateBuild(2,2,  new Position(4,0,0), false);
         controller.onEndedTurn(2);
 
         controller.onConsolidateMove(3, 1, new Position(3, 2, 0));
-        controller.onConsolidateBuild(3, new Position(4,2,0), false);
+        controller.onConsolidateBuild(3,1,  new Position(4,2,0), false);
         controller.onEndedTurn(3);
 
         //Second turn
         controller.onConsolidateMove(1, 1, new Position(0, 2, 2));
-        controller.onConsolidateBuild(1, new Position(0,1,1), false);
+        controller.onConsolidateBuild(1,1, new Position(0,1,1), false);
         controller.onEndedTurn(1);
 
         controller.onConsolidateMove(2, 1, new Position(2, 0, 0));
-        controller.onConsolidateBuild(2, new Position(3,0,0), false);
+        controller.onConsolidateBuild(2,1, new Position(3,0,0), false);
         controller.onEndedTurn(2);
 
         controller.onConsolidateMove(3, 1, new Position(2, 2, 0));
-        controller.onConsolidateBuild(3, new Position(3,2,0), false);
+        controller.onConsolidateBuild(3,1, new Position(3,2,0), false);
         controller.onEndedTurn(3);
 
         //third turn
         controller.onConsolidateMove(1, 1, new Position(0, 3, 3));
-        controller.onConsolidateBuild(1, new Position(0,2,2), false);
+        controller.onConsolidateBuild(1,1, new Position(0,2,2), false);
         controller.onEndedTurn(1);
 
         verify(mockedServerView).stopAllEventGenerators();
@@ -281,7 +281,7 @@ public class ControllerTest {
         addworkers(1, 4, 1, 1, 3);
 
         controller.onConsolidateMove(1, 1, new Position(1, 0, 0));
-        controller.onConsolidateBuild(1,new Position(2,0,0), false);
+        controller.onConsolidateBuild(1,1, new Position(2,0,0), false);
         assertAll ("correctBuild", () -> assertTrue(game.getBoard().getCell(2,0,0).isBuilding()),
                 () -> assertTrue(game.getBoard().getCell(2,0,1).isFree()));
     }

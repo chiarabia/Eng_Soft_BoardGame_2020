@@ -114,7 +114,7 @@ public class Controller implements ProxyObserver {
      *@param forceDome true if client asked to force a dome
      *@param newPosition position chosen by player*/
     @Override
-    public void onConsolidateBuild(int playerId, Position newPosition, boolean forceDome) {
+    public void onConsolidateBuild(int playerId,int workerID,  Position newPosition, boolean forceDome) {
         Position worker1Position = getWorkerPosition(getTurn().getPlayerId(), 1);
         Position worker2Position = getWorkerPosition(getTurn().getPlayerId(), 2);
         Set<Position> worker1Builds =  getPlayerGodPower(getTurn().getPlayerId()).build(worker1Position, getBoard(), getTurn());
@@ -131,7 +131,7 @@ public class Controller implements ProxyObserver {
 
         Board board = getBoard();
         SerializableUpdate update = getPlayerGodPower(playerId).buildUp(newPosition, board, forceDome); // consolida la build
-        getTurn().updateTurnInfoAfterBuild(newPosition); // aggiorna Turn
+        getTurn().updateTurnInfoAfterBuild(newPosition, workerID); // aggiorna Turn
         game.notifyJustUpdateAll(update); // aggiorna i players della build
         nextOperation(); // apre una nuova operazione
     }
