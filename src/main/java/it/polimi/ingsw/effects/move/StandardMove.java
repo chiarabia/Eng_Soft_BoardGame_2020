@@ -21,8 +21,8 @@ public class StandardMove {
      * @param workerPosition the worker's Position
      * @param board the board
      * @param turn the player's turn
-     * @return a Set<Cell> collect that only has the cells where the player can move to or
-     * a HashSet<Cell> if the worker can't move
+     * @return a <code>Set&lt;Cell&gt;</code> collect that only has the cells where the player can move to or
+     * a <code>HashSet&lt;Cell&gt;</code> if the worker can't move
      *
      */
     public Set<Position> move (Position workerPosition, Board board, Turn turn) {
@@ -51,7 +51,7 @@ public class StandardMove {
      *
      * @param z_worker the position of the worker in the z axis
      * @param z_cell the position of the cell in the z axis
-     * @returnthe difference in the Z axis between the possible destination Cells and the worker
+     * @return the difference in the Z axis between the possible destination Cells and the worker
      */
     protected int heightsDifference (int z_worker, int z_cell)  {
         final int i = z_cell - z_worker;

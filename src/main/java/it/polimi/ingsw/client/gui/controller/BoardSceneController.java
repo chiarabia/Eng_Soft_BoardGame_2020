@@ -32,10 +32,10 @@ import java.util.stream.Collectors;
  *
  * <p><p>The BoardSceneController is loaded from the <code>BoardScene.fxml</code> file. In the CENTER of the Scene there is the actual Board.
  * All the game phases are handled from this class and can be divided into three different phases. When the Scene loads the player will either
- * be waiting for the other players to fo through their first phase or be themselves in the first phase.
+ * be waiting for the other players to go through their first phase or be themselves in the first phase.
  * <p><ul>
  * <li><i>First phase</i>: in this phase the player is choosing its first workers positions and has a <code>actionCode = 1</code> value. The method that handles the click
- * on a cell of the <>GridPane</>, {@link #onCellClicked(MouseEvent)}, automatically adds a Worker to the board and sends the to the Client all needed information. When this phase ends the player has to either wait
+ * on a cell of the <code>GridPane</code>, {@link #onCellClicked(MouseEvent)}, automatically adds a Worker to the board and sends the to the Client all needed information. When this phase ends the player has to either wait
  * for the other players to go through their first phase or second phase.
  * <li><i>Second phase</i>: in this phase the game has actually started and each player play its turn. It has a <code>actionCode = 2</code> value. When its the player's turn
  * the method that handles the click on a cell, {@link #onCellClicked(MouseEvent)}, shows the player, with a visual clue, which cell is selected and all possible actions that they can make. Buttons are disabled
