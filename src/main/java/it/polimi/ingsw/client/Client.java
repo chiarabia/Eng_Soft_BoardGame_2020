@@ -42,7 +42,7 @@ public class Client implements ViewObserver {
 
     /**This method asks the view to display fatal error message*/
     public void onError(){
-        view.displayError(0);
+        view.displayError(0, true);
     }
 
     /**This method saves and shows new worker initial positions
