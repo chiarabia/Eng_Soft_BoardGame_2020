@@ -299,11 +299,16 @@ public class Terminal implements View {
         return new Position(x, y, 0);
     }
 
-    private int askForInt(String request){
-        try {
-            System.out.print(request);
-            return keyboard.nextInt();
-        } catch(Exception e){return 0;}
+    private int askForInt(String request) {
+        int num = 0;
+        while (true) {
+            try{
+                System.out.print(request);
+                Integer.parseInt(keyboard.next());
+                break;
+            }catch(Exception e){}
+        }
+        return num;
     }
 
     private String askForString(String request){
