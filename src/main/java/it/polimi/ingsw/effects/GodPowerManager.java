@@ -67,7 +67,7 @@ public class GodPowerManager {
      * Creates a GodPower object corresponding to a JSONObject.
      * @param jsonObject JSONObject
      * @param playerId playerId
-     * @return //TODO add return
+     * @return GodPower just created
      */
 
     public static GodPower power (JSONObject jsonObject, int playerId) {
@@ -80,7 +80,6 @@ public class GodPowerManager {
         String blockingWinConditions = (String) jsonObject.get("negativeWinConditions");
         String loseConditions = (String) jsonObject.get("loseConditions");
         String newTurn = (String) jsonObject.get("newTurn");
-
         int numOfBuilds = Math.toIntExact((Long) jsonObject.get("numOfBuilds"));
         int numOfMoves = Math.toIntExact((Long) jsonObject.get("numOfMoves"));
 
@@ -138,7 +137,7 @@ public class GodPowerManager {
                 godPower.setConsolidateMove(new StandardConsolidateMove()); break;
         }
 
-        godPower.setPositiveWinConditions(new ArrayList());
+        godPower.setPositiveWinConditions(new ArrayList<>());
         godPower.getPositiveWinConditions().add(new StandardWinCondition());
 
         switch (positiveWinConditions) {
@@ -149,7 +148,7 @@ public class GodPowerManager {
             case "": break;
         }
 
-        godPower.setBlockingWinConditions(new ArrayList());
+        godPower.setBlockingWinConditions(new ArrayList<>());
         switch (blockingWinConditions) {
             case "opponentsCantWinOnPerimeter":
                 opponentsCantWinOnPerimeterPlayer = playerId; break;
@@ -173,8 +172,8 @@ public class GodPowerManager {
      * then, after building them, changes the functions in case of presence of godPowers that modify the behaviors of the adversaries
      * @param numOfPlayers number of players
      * @return <code>List&lt;GodPower&gt;</code>
-     * @throws ParseException //TODO add descrption
-     * @throws IOException  //TODO add description
+     * @throws ParseException ParseException
+     * @throws IOException  IOException
      */
 
     public static List<GodPower> createGodPowers (int numOfPlayers) throws ParseException, IOException {

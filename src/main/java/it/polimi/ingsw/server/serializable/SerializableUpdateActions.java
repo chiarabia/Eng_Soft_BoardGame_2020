@@ -4,15 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 
-/**
- * This object contains all the information about the action the player has made.
- * I due insiemi contengono le informazioni necessarie per mostrare alla view le modifiche avvenute nella board.
- * In seguito ad una moveinto verrà sempre restituito un oggetto SerializaleUpdateInfos con almeno 1 oggetto nella lista serializable UpdateMove.
- * Allo stesso modo, ci sarà almeno un oggetto in updateBuild dopo una buildup.
- * Se nella move sono stati spostati altri lavoratori, sarà presente un ulteriore oggetto SerializableUpdateMove con l'id del player avversario proprietario del worker
- * l'id del worker avversario e le posizioni iniziali e finali di quest'ultimo.
- * In seguito ad una buildup è possibile che sia presente un oggetto anche in update Move, come nel caso della buildUp di UnderWorker.
- */
+/** This object contains information about the actions the player has made stored in a moves list and a builds list */
 
 public class SerializableUpdateActions implements SerializableUpdate {
         List<SerializableUpdateMove> updateMove;

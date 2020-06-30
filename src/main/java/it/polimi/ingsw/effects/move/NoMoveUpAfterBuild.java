@@ -21,9 +21,8 @@ public class NoMoveUpAfterBuild extends StandardMove{
 
     @Override
     public Set<Position> move (Position workerPosition, Board board, Turn turn) {
-        Cell workerCell = board.getCell(workerPosition);
         Set<Position> temp_positions = super.move(workerPosition, board, turn);
-        if(turn.getBuildTimes()>0 & !turn.isBuildAfterMove()) //in altri termini, se ho già costruito, ma non dopo essermi mosso, allora...
+        if(turn.getBuildTimes()>0 & !turn.isBuildAfterMove()) // if the player has built before the first move...
            return temp_positions.stream()
                     .filter(a-> heightsDifference(workerPosition.getZ(),a.getZ())<=0)
                     .collect(Collectors.toSet());

@@ -7,8 +7,6 @@ import java.net.Socket;
 import java.util.ArrayList;
 import java.util.List;
 
-// Thread parallelo che si mette in ascolto di un socket e notifica il controller
-
 public class ServerAsyncReceiver extends EventGenerator {
     private final int playerId;
     private Socket socket;

@@ -82,11 +82,6 @@ public class Cell {
     public Position getPosition() {return position; }
 
 
-    /* Ridefinisco Equals guardando solo alla posizione, gli altri attributi non li
-    guardo anche perchè noi dobbiamo essere sicuri di non avere duplicati. Il set va a vedere se due
-    oggetti sono dublicati attraverso questo metodo. Se mettessi anche gli altri campi,
-     che non sono final rischierei di avere duplicati o magari più versioni della stessa cella con campi modificati.
-     */
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;

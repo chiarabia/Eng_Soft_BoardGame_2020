@@ -18,12 +18,9 @@ public class PushWorker extends StandardConsolidateMove {
             int tempX = behindWorkerX(workerCell.getX(), destinationCell.getX());
             int tempY = behindWorkerY(workerCell.getY(), destinationCell.getY());
             int tempZ = board.getZoneLevel(tempX, tempY);
-            //otteniamo la cella posta alle spalle del lavoratore nemico
             Cell behind_opposite_worker = board.getCell(tempX, tempY, tempZ);
-            //sposto il lavoro avversario nella casella posta alle sue spalle
-            serializableUpdateActions = super.moveInto(board, destinationPosition, behind_opposite_worker.getPosition());
-            //sposto il mio player
-            serializableUpdateActions.mergeInfos(super.moveInto(board, workerPosition, destinationPosition));
+            serializableUpdateActions = super.moveInto(board, destinationPosition, behind_opposite_worker.getPosition()); // it moves the opponent's workers
+            serializableUpdateActions.mergeInfos(super.moveInto(board, workerPosition, destinationPosition)); // it moves the player's worker
             return serializableUpdateActions;
         }
     }

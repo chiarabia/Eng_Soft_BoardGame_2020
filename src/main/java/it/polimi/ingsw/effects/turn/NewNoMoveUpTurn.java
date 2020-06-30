@@ -25,7 +25,7 @@ public class NewNoMoveUpTurn extends NewTurn {
      * @param oldTurn The current turn that is about to end
      * @param godPowers The GodPowers of all players in the game
      * @param nextTurnPlayer Player of the next turn
-     * @return a new Turn
+     * @return next player's Turn object
      */
 
     @Override

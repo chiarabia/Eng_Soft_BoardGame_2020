@@ -14,7 +14,7 @@ import java.util.stream.Collectors;
  */
 
 public class StandardBuild {
-    protected final int builds; //parametrizzo il metodo
+    protected final int builds;
 
     public StandardBuild(int builds) {
         this.builds = builds;

@@ -24,7 +24,7 @@ public class NotOnSamePosition extends StandardBuild{
             if(turn.getBuildTimes()>0) {
                 return board.getStream()
                         .filter(a -> a.isFree())
-                        .filter(a -> !a.getPosition().equals(turn.getFirstBuildingPosition())) //ho già costruito tolgo la casella su cui ho già costruito
+                        .filter(a -> !a.getPosition().equals(turn.getFirstBuildingPosition()))
                         .filter(a -> !(a.getX()==turn.getFirstBuildingPosition().getX()&&
                                 a.getY()==turn.getFirstBuildingPosition().getY()))
                         .filter(a -> a.getX() <= workerCell.getX() + 1)

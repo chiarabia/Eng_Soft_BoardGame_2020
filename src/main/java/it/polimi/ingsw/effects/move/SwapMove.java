@@ -17,12 +17,10 @@ public class SwapMove extends StandardMove {
     @Override
     public Set<Position> move (Position workerPosition, Board board, Turn turn) {
         Cell workerCell = board.getCell(workerPosition);
-        if (!checkMoveConditions(workerCell, turn)) return new HashSet<Position>();
-
+        if (!checkMoveConditions(workerCell, turn)) return new HashSet<>();
         else {
-            final Set<Position> collect = board.getStream()
+            return board.getStream()
                     .filter(a -> a.isFree() || (a.isWorker()&&!(a.getPlayerId() == workerCell.getPlayerId())))
-                            // toglie l'altro worker dall'insieme di caselle disponibili
                     .filter(a -> !a.equals(workerCell))
                     .filter(a -> a.getX() <= workerCell.getX() + 1)
                     .filter(a -> a.getX() >= workerCell.getX() - 1)
@@ -31,7 +29,6 @@ public class SwapMove extends StandardMove {
                     .filter(a -> heightsDifference(workerCell.getZ(), a.getZ()) <= 1)
                     .map(Cell::getPosition)
                     .collect(Collectors.toSet());
-            return collect;
         }
     }
 }

@@ -30,9 +30,9 @@ public class OnSamePositionBlockOnly extends StandardBuild {
             else
                 return board.getStream()
                         .filter(a -> a.isFree())
-                        .filter(a-> a.getX() == (first_block.getX())) //Posso costruire solo al di sopra del blocco costruito
+                        .filter(a-> a.getX() == (first_block.getX()))
                         .filter(a-> a.getY() == (first_block.getY()))
-                        .filter(a->a.getZ() <= 2) //Non può essere una cupola
+                        .filter(a->a.getZ() <= 2)
                         .map(a->a.getPosition())
                         .collect(Collectors.toSet());
         }
