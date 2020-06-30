@@ -300,11 +300,11 @@ public class Terminal implements View {
     }
 
     private int askForInt(String request) {
-        int num = 0;
+        int num;
         while (true) {
             try{
                 System.out.print(request);
-                Integer.parseInt(keyboard.next());
+                num = Integer.parseInt(keyboard.next());
                 break;
             }catch(Exception e){}
         }

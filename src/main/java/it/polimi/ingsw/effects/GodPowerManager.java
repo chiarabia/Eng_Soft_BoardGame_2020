@@ -56,9 +56,9 @@ public class GodPowerManager {
 
 
         /*cards = new ArrayList<>();
-        cards.add(JSONManager.readMyJSONAsText("configurations/cards/GodCard4.json"));
-        cards.add(JSONManager.readMyJSONAsText("configurations/cards/GodCard4.json"));
-        cards.add(JSONManager.readMyJSONAsText("configurations/cards/GodCard5.json"));*/
+        cards.add(JSONManager.readMyJSONAsText("configurations/cards/GodCard8.json"));
+        cards.add(JSONManager.readMyJSONAsText("configurations/cards/GodCard9.json"));
+        cards.add(JSONManager.readMyJSONAsText("configurations/cards/GodCard10.json"));*/
 
         return cards;
     }
