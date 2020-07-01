@@ -14,9 +14,9 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 /**
- * This class represents the server controller, it's notified by ServerView and manages the whole running
- * of the game, deciding which player has to do which action, reacting to players' actions, checking
- * if they are correct and consequently modifying the game model.
+ * This class implements the controller of the server.
+ * It's notified by ServerView and manages the match, it chooses which action every player needs to make,
+ * it reacts to the players' actions by checking if they are correct and consequently it modifies the game model.
  * <p></>The initialization procedure follows this order:
  * <p><ul>
  * <li><code>onInitialization()</code>

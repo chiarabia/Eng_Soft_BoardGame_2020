@@ -9,9 +9,6 @@ import it.polimi.ingsw.client.gui.controller.WaitingSceneController;
 import it.polimi.ingsw.client.gui.runnable.*;
 import it.polimi.ingsw.server.serializable.*;
 import javafx.application.Platform;
-import javafx.scene.text.Font;
-import javafx.scene.text.FontWeight;
-import javafx.scene.text.Text;
 import org.json.simple.parser.ParseException;
 
 import java.util.ArrayList;
@@ -123,8 +120,8 @@ public class GUI implements View {
     }
 
     /**
-     * When a new turn starts the players are notified of either that their turn has started
-     * or which player turn started.
+     * When a new turn starts the players are notified either that their turn has started
+     * or which player's turn started.
      * @param currentPlayerId
      */
     @Override
@@ -160,15 +157,11 @@ public class GUI implements View {
         	//displays a winner notification of the winner
 
             boardSceneController.displayEndGameImage(playerId == board.getMyPlayerId());
-            /*String notification = board.getPlayer(playerId).getPlayerName() + " won!!";
-            Text oldText = BoardSceneController.getNotification();
-            setTextFormat(oldText);
-            oldText.setText(notification);*/
         });
     }
 
     /**
-     * Displays the name of the player that has lost in the BoardScene
+     * Displays in the BoardScene the name of the player that has lost
      * and removes its workers from the board.
      * @param playerId player ID
      */
@@ -204,32 +197,14 @@ public class GUI implements View {
         Platform.runLater(()->{
             //gets the boardSceneController
             errorSceneController = errorSceneRunnable.getErrorSceneController();
-            errorSceneController.updateErorrLabel(notification);
+            errorSceneController.updateErrorLabel(notification);
         });
-        /*if (getWorkerPositions(board.getMyPlayerId(), 1) == null ||
-                getWorkerPositions(board.getMyPlayerId(), 2) == null) {
-            Platform.runLater(()->{
-                //displays a disconnection message
-                //boardSceneController.displayNotificationsDuringTurn(notification);
-                Text oldText = BoardSceneController.getNotification();
-                setTextFormat(oldText);
-                oldText.setText(notification);
-            });
-
-        }
-        else {
-            Platform.runLater(()->{
-                //displays a disconnection message
-                boardSceneController.displayNotificationsDuringTurn(notification);
-            });
-        }
-*/
 
     }
 
     /**
      * Displays an error message.
-     * <p>If the error is a fatal error it displays the ErrorScene. Otherwise the error is visible
+     * <p>If the error is a fatal error it is displayed in the ErrorScene. Otherwise the error is visible
      * in the BoardScene as a notification.
      * @param errorId error ID
      * @param isFatalError true if it's fatal error
@@ -249,7 +224,7 @@ public class GUI implements View {
             Platform.runLater(()->{
                 //gets the boardSceneController
                 errorSceneController = errorSceneRunnable.getErrorSceneController();
-                errorSceneController.updateErorrLabel(finalMessage);
+                errorSceneController.updateErrorLabel(finalMessage);
             });
         } else {
             Platform.runLater(() -> {boardSceneController.displayNotificationsDuringTurn(finalMessage);});
@@ -258,8 +233,8 @@ public class GUI implements View {
 
     /**
      * Displays the changes of the board.
-     * <p>Tells the BoardSceneController where to add a new building, where to add or remove workers.
-     * @param update object
+     * <p>Tells the BoardSceneController where to add a new building and where to add or remove workers.
+     * @param update holds the information for possible moves and proprieties of the workers
      */
     @Override
     public void displayBoard(SerializableUpdateActions update) {
@@ -296,7 +271,7 @@ public class GUI implements View {
     /**
      * Displays the changes to the board in the initial phase of the game.
      * <p>It updates the board with the initial positions of the workers.
-     * @param update object
+     * @param update holds the information for possible moves and proprieties of the workers
      */
     @Override
     public void displayBoard(SerializableUpdateInitializeWorkerPositions update) {
@@ -337,7 +312,7 @@ public class GUI implements View {
      * Handles the information for the GUI about the possible action a player can make.
      * <p>It tells the BoardSceneController if and where a worker can move/build, if they can end the turn
      * or if they can build a dome
-     * @param object object
+     * @param object holds the information for possible moves and proprieties of the workers
      */
 
     @Override
@@ -407,11 +382,11 @@ public class GUI implements View {
 
     /**
      * Displays the ChoosingGodPowerScene and adds the GodCards to the GUI cache
-     * @param godPowers
+     * @param godPowers the list of possible GodCards to choose from for the players
      */
     @Override
     public void askForInitialGodPower(List<GodCard> godPowers) {
-        //stores in GodCards the godPowers choosed by the server
+        //stores in GodCards the godPowers chosen by the server
         List<GodCard> godCards = MainStage.getGodPowers();
         godCards.addAll(godPowers);
 
@@ -422,21 +397,17 @@ public class GUI implements View {
     /**
      * Sets the BoardSceneController into the phase when the player need to choose their workers first positions
      * <p>The actionCode of BoardSceneController is set to 1
-     * @param possiblePositions possible positions
+     * @param possiblePositions <code>List&lt;Position&gt;</code> of the possible positions for the workers
      */
     @Override
     public void askForInitialWorkerPositions(List <Position> possiblePositions) {
         //adds the current notification for the player
         Platform.runLater(()->{
             boardSceneController.setPossiblePosition(possiblePositions);
-            /*Text oldText = BoardSceneController.getNotification();
-            setTextFormat(oldText);
-            oldText.setText(textfields.getChooseworkerpositions());*/
             //sets the actionCode to 1 for the askForInitialiWorkerPosition phase
             BoardSceneController.updateActionCode(1);
         });
 
-        //alla fine deve chiamare onCompletedInitializeWorkerPositions(List<Position> myWorkerPositions)
     }
 
     /**

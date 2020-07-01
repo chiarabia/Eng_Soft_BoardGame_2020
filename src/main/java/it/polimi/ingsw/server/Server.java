@@ -9,6 +9,7 @@ import static java.lang.Thread.sleep;
 
 public class Server {
     public static int serverPort;
+    private static int SLEEP_TIME = 10000;
     /**
      * Generates a ServerSocket and starts a new ServerAccepter thread.
      * If a connection error occurs it waits 10 seconds and then restarts
@@ -27,7 +28,7 @@ public class Server {
             } catch (IOException e) {
                 System.out.println("An error occurred, restarting in 10 seconds...");
                 e.printStackTrace();
-                sleep(10000);
+                sleep(SLEEP_TIME);
             }
         }
     }

@@ -32,10 +32,10 @@ public interface View {
     /**This method is called when the first turn is starting*/
     void displayGameStart();
     /**This method is called when changes were made to the board and need to be displayed
-     * @param update object*/
+     * @param update holds the information for possible moves or builds and proprieties of the workers*/
     void displayBoard(SerializableUpdateActions update);
     /**This method is called when workers have been added to the board in the first phase of the game
-     * @param update holds the information for possible moves or builds and proprieties of the workers */
+     * @param update holds the information for possible moves and proprieties of the workers */
     void displayBoard(SerializableUpdateInitializeWorkerPositions update);
     /**This method is called when a new turn has started
      * @param playerId the ID of the player playing the current turn*/
@@ -48,7 +48,7 @@ public interface View {
     void displayLoser(int playerId);
     /**This method is called when an error message has to be shown
      * @param errorId error ID
-     *@param isFatalError true if it's fatal error */
+     * @param isFatalError true if it's fatal error */
     void displayError(int errorId, boolean isFatalError);
     /**This method is called when a player has disconnected
      * @param playerId the ID of the player that has disconnected*/

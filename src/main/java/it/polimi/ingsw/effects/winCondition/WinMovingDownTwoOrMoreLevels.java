@@ -9,6 +9,7 @@ import it.polimi.ingsw.Position;
  */
 
 public class WinMovingDownTwoOrMoreLevels extends StandardWinCondition {
+    private static int DOWN_LEVELS = 2;
 
     /** This method is used for the win condition that enables the worker to also win
      *  by going down two levels
@@ -23,6 +24,6 @@ public class WinMovingDownTwoOrMoreLevels extends StandardWinCondition {
         if (workerPosition==null &&  destinationPosition==null) return false;
         Cell workerCell = board.getCell(workerPosition);
         Cell destinationCell = board.getCell(destinationPosition);
-        return ((workerCell.getZ() - destinationCell.getZ()) >= 2);
+        return ((workerCell.getZ() - destinationCell.getZ()) >= DOWN_LEVELS);
     }
 }

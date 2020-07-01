@@ -58,8 +58,8 @@ public class Board {
     }
 
     /**
-     * @param x coordinate x of a zone
-     * @param y coordinate y of a zone
+     * @param x coordinate x of a cell of the board
+     * @param y coordinate y of a cell of the board
      * @return z coordinate that represents the building height
      */
 

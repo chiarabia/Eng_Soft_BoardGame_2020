@@ -26,11 +26,14 @@ import java.util.ResourceBundle;
  * This class handles the phase of the match when the players need to choose their GodPower
  * <p><p>The ChoosingGodSceneController is loaded from the <code>ChoosingGodScene.fxml</code> file.
  * <p>The Scene shows either two or three gods depending on the number of players. The player can choose a god power by clicking on the
- * respective <code>HBox</code>. When a god power is chosen its name is shown in the <code>Label topLabel</code>, the data sent to
+ * respective <code>HBox</code>. When a god power is chosen its name is shown in the <code>Label topLabel</code>, the data is sent to
  * the client and the player waits for the other players to choose their god powers.
  */
 public class ChoosingGodSceneController implements Initializable {
     private Textfields textfields = new Textfields();
+    private static int FIRST_GOD = 1;
+    private static int SECOND_GOD = 2;
+    private static int THIRD_GOD = 3;
 
     @FXML
     HBox HBox1;
@@ -68,8 +71,8 @@ public class ChoosingGodSceneController implements Initializable {
 
     /**
      * Sets the ChoosingGodScene.
-     * <p>Depending on the number possible GodPowers to choose frm the <code>HBox</code> are set
-     * to visible. The <code>HBox</code> are also set with the <code>Image</code> and description of the GodPower
+     * <p>The <code>HBox</code> are set to visible depending on the number of possible GodPowers to choose from.
+     * The <code>HBox</code> are also set with the <code>Image</code> and description of the GodPower.
      * @param url
      * @param resourceBundle
      */
@@ -81,24 +84,24 @@ public class ChoosingGodSceneController implements Initializable {
         List<GodCard> godPowers = MainStage.getGodPowers();
         numberOfPlayers = (Integer)playerData.get(1);
         GodCard firstGod = godPowers.get(0);
-        setGod(firstGod, 1);
+        setGod(firstGod, FIRST_GOD);
 
         int numberOfGods = godPowers.size();
 
-        if (numberOfGods > 1) {
+        if (numberOfGods > FIRST_GOD) {
             GodCard secondGod = godPowers.get(1);
-            setGod(secondGod, 2);
+            setGod(secondGod, SECOND_GOD);
             HBox2.setVisible(true);
         }
-        if (numberOfGods == 3){
+        if (numberOfGods == THIRD_GOD){
             GodCard thirdGod = godPowers.get(2);
-            setGod(thirdGod,3);
+            setGod(thirdGod,THIRD_GOD);
             HBox3.setVisible(true);
         }
     }
 
     /**
-     * Given a <code>GodCard</code> and the HBox number it sets the <code>HBox</code> are also
+     * Given a <code>GodCard</code> and the HBox number it sets the <code>HBox</code>
      * with the <code>Image</code> and description of the <p>GodCard</p>
      * @param God the <code>GodCard</code>
      * @param godNumber the number of the <code>HBox</code>
@@ -115,12 +118,12 @@ public class ChoosingGodSceneController implements Initializable {
         //Set God Description
         String text = God.getGodDescription();
 
-        if (godNumber == 1) {
+        if (godNumber == FIRST_GOD) {
             godDescription = godDescription1;
             godPortrait = godPortrait1;
             godPower = godPower1;
         }
-        else if (godNumber ==2) {
+        else if (godNumber == SECOND_GOD) {
             godDescription = godDescription2;
             godPortrait = godPortrait2;
             godPower = godPower2;
@@ -168,19 +171,19 @@ public class ChoosingGodSceneController implements Initializable {
         int numberOfGods = godPowers.size();
 
         if (clickedNode == HBox1 || clickedNode == godDescription1 || clickedNode == godPortrait1 || clickedNode == godPower1) {
-            onBoxClicked(1);
+            onBoxClicked(FIRST_GOD);
         }
         else if(numberOfGods > 1 && (clickedNode == HBox2 || clickedNode == godDescription2 || clickedNode == godPortrait2 || clickedNode == godPower2)){
-            onBoxClicked(2);
+            onBoxClicked(SECOND_GOD);
         }
         else if(numberOfGods == 3 && (clickedNode == HBox3 || clickedNode == godDescription3 || clickedNode == godPortrait3 || clickedNode == godPower3)){
-            onBoxClicked(3);
+            onBoxClicked(THIRD_GOD);
         }
     }
 
     /**
      * Sends the chosen GodPower from a <code>HBox</code>
-     * <p>This method also modifies the <code>Label</code> at the top to verify the player of the chosen <code>GodCard</code>
+     * <p>This method modifies also the <code>Label</code> at the top, to notify the player of the chosen <code>GodCard</code>
      * @param godNumber the number of the <code>HBox</code> that was clicked
      */
     public void onBoxClicked(int godNumber) {

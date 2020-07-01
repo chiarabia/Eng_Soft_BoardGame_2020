@@ -29,6 +29,8 @@ public class MainStage extends Application {
 	private final static BlockingQueue<Object> lock = new LinkedBlockingQueue<>();
 	private static List<ViewObserver> observerList = new ArrayList<>();
 	private static Stage stage;
+	private static final int STAGE_WIDTH = 1386;
+	private static final int STAGE_HEIGHT = 774;
 
 	/**
 	 * This <code>ArrayList&lt;Object&gt;</code> functions like a mini cache for the GUI.
@@ -73,8 +75,8 @@ public class MainStage extends Application {
 		this.stage = primaryStage;
 
 		primaryStage.setTitle("Santorini");
-		primaryStage.setMinHeight(774);
-		primaryStage.setMinWidth(1386);
+		primaryStage.setMinHeight(STAGE_HEIGHT);
+		primaryStage.setMinWidth(STAGE_WIDTH);
 
 		//sets the first Scene as the Loading Scene
 		Parent root = FXMLLoader.load(getClass().getClassLoader().getResource("LoginScene.fxml"));

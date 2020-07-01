@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 
-/** This object contains information about the actions the player has made stored in a moves list and a builds list */
+/** This object contains information about the actions the player has made, stored in a moves list and a builds list */
 
 public class SerializableUpdateActions implements SerializableUpdate {
         List<SerializableUpdateMove> updateMove;

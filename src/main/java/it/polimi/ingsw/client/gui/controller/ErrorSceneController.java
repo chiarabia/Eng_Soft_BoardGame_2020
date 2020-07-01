@@ -27,7 +27,7 @@ public class ErrorSceneController implements Initializable {
      * Prints on the screen the error for the player
      * @param notification a <code>String</code> that explains the error
      */
-    public void updateErorrLabel(String notification){
+    public void updateErrorLabel(String notification){
         errorLabel.setText(notification);
     }
 }

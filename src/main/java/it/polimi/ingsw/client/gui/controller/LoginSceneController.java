@@ -19,10 +19,10 @@ import java.util.ResourceBundle;
  * This class handles the controls of the scene with the Login information phase.
  *
  * <p><p>The LoginSceneController is loaded from the <code>LoginScene.fxml</code> file.
- * <p>The player can inserts its name and the number of players they can play with. Once, and only once, they have
+ * <p>The player can insert its name and the number of players they want to play with. Once, and only once, they have
  * done both, they can send the information to the Client by pressing the <code>Button startMatchButton</code>.
  * <p>If the players gives an invalid name they will be sent back to the LoginScene with an error message visible
- * from the <code>Label errorLabel</code>, and they can insert a new name and number of players again.
+ * from the <code>Label errorLabel</code>, and they can insert a new name and the number of players, again.
  */
 
 public class LoginSceneController implements Initializable {

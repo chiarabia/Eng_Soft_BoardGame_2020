@@ -31,17 +31,17 @@ import java.util.stream.Collectors;
  * This class handles the controls for the scene with the Board and all the game phases.
  *
  * <p><p>The BoardSceneController is loaded from the <code>BoardScene.fxml</code> file. In the CENTER of the Scene there is the actual Board.
- * All the game phases are handled from this class and can be divided into three different phases. When the Scene loads the player will either
+ * All the game phases are handled from this class and can be divided into three different phases. When the Scene loads, the player will either
  * be waiting for the other players to go through their first phase or be themselves in the first phase.
  * <p><ul>
  * <li><i>First phase</i>: in this phase the player is choosing its first workers positions and has a <code>actionCode = 1</code> value. The method that handles the click
- * on a cell of the <code>GridPane</code>, {@link #onCellClicked(MouseEvent)}, automatically adds a Worker to the board and sends the to the Client all needed information. When this phase ends the player has to either wait
+ * on a cell of the <code>GridPane</code>, {@link #onCellClicked(MouseEvent)}, automatically adds a Worker to the board and sends to the Client all needed information. When this phase ends the player has to either wait
  * for the other players to go through their first phase or second phase.
- * <li><i>Second phase</i>: in this phase the game has actually started and each player play its turn. It has a <code>actionCode = 2</code> value. When its the player's turn
- * the method that handles the click on a cell, {@link #onCellClicked(MouseEvent)}, shows the player, with a visual clue, which cell is selected and all possible actions that they can make. Buttons are disabled
- * or not depending on the possible actions.
+ * <li><i>Second phase</i>: in this phase the game has actually started and each player plays its turn. It has a <code>actionCode = 2</code> value. When its the player's turn
+ * the method that handles the click on a cell, {@link #onCellClicked(MouseEvent)}, shows the player, with a visual clue, which cell is selected and all possible actions that they can make. Buttons are disabled,
+ * or not, depending on the possible actions.
  * <li><i>Third phase</i>: a player has won and the game has ended. The notification of either winning or losing is shown through an <code>Image</code>, the <code>GridPane</code>
- * with the board is cleared and all buttons not visible.
+ * with the board is cleared and all buttons are not visible.
  * </ul><p>
  *     
  * All phases and possible actions are displayed as notifications in the bottom right of the screen. 
@@ -135,30 +135,41 @@ public class BoardSceneController implements Initializable {
     Position newWorkerPosition;
     Position newBuildingPosition;
 
+    private static final int DOME_LEVEL = 4;
+    private static final int DELETE = 2;
+    private static final int ADD = 1;
+    private static final int CELL = 100;
+    private static final int BOARD = 500;
+    private static final int MOVE = 1;
+    private static final int BUILD = 2;
+    private static final int MAX_NOTIFICATIONS = 7;
+    private static final int TURN_FONT_NOTIFICATIONS = 12;
+    private static final int DESCRIPTION_FONT = 10;
+
 
     public BoardSceneController() throws ParseException {
     }
 
     /**
-     * Sets the BoardScene and handles the button events.
-     * <p>The Board Scene start with all button disabled and the domeButton and declineButton as not visible.
+     * Sets the BoardScene and handles the buttons' events.
+     * <p>The Board Scene starts with all buttons disabled and the domeButton and declineButton as not visible.
      * ActionCode is set to 0. The player godPower is retrieved from the MainStage.
      * <p>
      * <p><b>MoveButton Event</b>
-     * <p>When the <code>moveButton</code> is clicked the information of the new <code>Position</code> and the ID the worker moved is sent to the Client.
+     * <p>When the <code>moveButton</code> is clicked, the information of the new <code>Position</code> and the ID of the worker that was moved is sent to the Client.
      * Then all buttons and indicators are disabled and reset.
      * <p>
      * <p><b>BuildButton Event</b>
-     * <p>When the <code>buildButton</code> is clicked the information of the <code>Position</code> of the new building, the ID the worker and if the building is a Dome is sent to the Client.
+     * <p>When the <code>buildButton</code> is clicked, the information of the <code>Position</code> of the new building, the ID of the worker and if the building is a Dome is sent to the Client.
      * Then all buttons and indicators are disabled and reset.
      * <p>
      * <p><b>domeButton Event</b>
-     * <p>When the <code>domeButton</code> is clicked the information of the <code>Position</code> of the new building, the ID the worker and the fact that the building is a Dome is sent to the Client.
+     * <p>When the <code>domeButton</code> is clicked, the information of the <code>Position</code> of the new building, the ID of the worker and the fact that the building is a Dome is sent to the Client.
      * Then all buttons and indicators are disabled and reset.
      * <p>
      * <p><b>declineButton Event</b>
-     * <p>When the <code>declineButton</code> is clicked the information that the turn is finished is sent to the Client.
-     * Then all buttons and indicators are disabled and reset, together with the worker's information.
+     * <p>When the <code>declineButton</code> is clicked, the information that the turn ended is sent to the Client.
+     * Then all buttons and indicators are disabled and reset, together with the workers' information.
      * @param url
      * @param resourceBundle
      * @see #resetAllPossibleIndicators()
@@ -200,7 +211,7 @@ public class BoardSceneController implements Initializable {
             //sends the position of the new building, the worker id of the worker that made the action and if the building is a dome
             List<ViewObserver> observerList = MainStage.getObserverList();
             boolean isDome = false;
-            if(newBuildingPosition.getZ()==4) isDome = true;
+            if(newBuildingPosition.getZ()==DOME_LEVEL) isDome = true;
             for (int i = 0; i < observerList.size(); i++) observerList.get(i).onCompletedBuild(newBuildingPosition.mirrorYCoordinate(), workerSelected, isDome);
             disableAllButtons();
             resetAllPossibleIndicators();
@@ -224,7 +235,7 @@ public class BoardSceneController implements Initializable {
             resetAllPossibleIndicators();
             resetWorkerBooleans();
             clearActionsList();
-            addSelectedImageToCell(previousCell,2,selectedImage);
+            addSelectedImageToCell(previousCell,DELETE,selectedImage);
         });
     }
 
@@ -238,7 +249,7 @@ public class BoardSceneController implements Initializable {
         //set God Description
         String text = card.getGodDescription();
         Text godDescrp = new Text(text);
-        setTextFormat(godDescrp,10);
+        setTextFormat(godDescrp,DESCRIPTION_FONT);
         godDescriptionTextFlow.getChildren().add(godDescrp);
         //set God Card
         String godCode = card.getGodImage();
@@ -301,7 +312,7 @@ public class BoardSceneController implements Initializable {
      * <p>It's the player's turn. To help the player better visualize what cell of the board they have clicked on, an <code>Image</code> will appear on the
      * selected <code>StackPane</code>. Firstly the player needs to select the worker they want to make an action with. The worker selected is saved and a notification
      * of which worker has been selected is shown. When a worker is selected the Player will be notified of the types of action they can make. When the player clicks on
-     * a Cell with a possible action the actions respective Button will be visible and the player will be able to click it.
+     * a Cell with a possible action the Button of the respective action will be visible and the player will be able to click it.
      * @param event the <code>MouseEvent</code>
      * @see #displayWorker(StackPane, Position)
      * @see #addSelectedImageToCell(StackPane, int, ImageView) 
@@ -363,10 +374,10 @@ public class BoardSceneController implements Initializable {
                 //handles the image that gives the player the visual clue of which Cell they clicked on
                 //if it's not the player turn the image will not appear
                 if (isMyTurn) {
-                    if (!firstTimeSelectedCell) addSelectedImageToCell(previousCell, 2, selectedImage);
-                    addSelectedImageToCell(cell, 1, selectedImage);
+                    if (!firstTimeSelectedCell) addSelectedImageToCell(previousCell, DELETE, selectedImage);
+                    addSelectedImageToCell(cell, ADD, selectedImage);
                 }
-                if (!isMyTurn && !firstTimeSelectedCell) addSelectedImageToCell(previousCell, 2, selectedImage);
+                if (!isMyTurn && !firstTimeSelectedCell) addSelectedImageToCell(previousCell, ADD, selectedImage);
 
                 //if a worker has been selected and a move action is possible
                 if (isWorkerSelected && isMovePossible) {
@@ -539,15 +550,15 @@ public class BoardSceneController implements Initializable {
      */
     public void addWorkerImage(StackPane cell, int playerID){
         ImageView worker = new ImageView(new Image("/worker/w" + playerID +".png"));
-        worker.setFitHeight(100);
-        worker.setFitWidth(100);
+        worker.setFitHeight(CELL);
+        worker.setFitWidth(CELL);
         cell.getChildren().add(worker);
     }
 
     /**
      * Adds the building image in a <code>StackPane</code>.
      * <p>The <code>String</code> level is used to find the right image for the building.
-     * If the building is a dome the image is a <code>ImageView</code>, otherwise is the <code>Background</code> of the <code>StackPane</code>
+     * If the building is a dome the image is a <code>ImageView</code>, otherwise it's the <code>Background</code> of the <code>StackPane</code>.
      * @param cell the <code>StackPane</code> where to add the building
      * @param level the building level
      */
@@ -555,12 +566,12 @@ public class BoardSceneController implements Initializable {
         Image building = new Image("/Buildings/" + level);
         if (level.equals("dome.png")){
             ImageView dome = new ImageView(building);
-            dome.setFitHeight(100);
-            dome.setFitWidth(100);
+            dome.setFitHeight(CELL);
+            dome.setFitWidth(CELL);
             cell.getChildren().add(dome);
         }
         else{
-            BackgroundSize buildingSize = new BackgroundSize(100,100, false,false, true, true);
+            BackgroundSize buildingSize = new BackgroundSize(CELL,CELL, false,false, true, true);
             BackgroundImage buildingBackground = new BackgroundImage(building, BackgroundRepeat.NO_REPEAT, BackgroundRepeat.NO_REPEAT, BackgroundPosition.CENTER, buildingSize );
             cell.setBackground(new Background(buildingBackground));
         }
@@ -623,20 +634,20 @@ public class BoardSceneController implements Initializable {
      * <code>List&lt;StackPane&gt;</code>.
      * @param set the <code>Set</code> to convert
      * @param workerID if the <code>Set</code> has information about the first or second worker
-     * @param typeOfAction if the <code>Set</code> has information about a move action (1) or build action (2)
+     * @param typeOfAction if the <code>Set</code> has information about a move action (MOVE) or build action (BUILD)
      */
 
     public void convertPositionListToStackPaneList(Set<Position> set, int workerID, int typeOfAction ){
         List<Position> list = set.stream().collect(Collectors.toCollection(ArrayList::new));
         for(int i=0; i<list.size();i++){
             StackPane convertedStackPane = (StackPane) getNodeFromPosition(gridPane,list.get(i));
-            if(workerID == 1 && typeOfAction ==1)
+            if(workerID == 1 && typeOfAction == MOVE)
                 worker1Moves.add(convertedStackPane);
-            if(workerID == 2 && typeOfAction == 1)
+            if(workerID == 2 && typeOfAction == MOVE)
                 worker2Moves.add(convertedStackPane);
-            if(workerID == 1 && typeOfAction == 2)
+            if(workerID == 1 && typeOfAction == BUILD)
                 worker1Builds.add(convertedStackPane);
-            if(workerID == 2 && typeOfAction == 2)
+            if(workerID == 2 && typeOfAction == BUILD)
                 worker2Builds.add(convertedStackPane);
         }
     }
@@ -677,13 +688,13 @@ public class BoardSceneController implements Initializable {
     /**
      * Adds or removes the <code>Image</code> that gives the effect of a Cell of the board being clicked.
      * @param cell the <code>StackPane</code> where to add the <code>Image</code>
-     * @param code if the <code>Image</code> needs to be removed(2) or added(1)
+     * @param code if the <code>Image</code> needs to be removed(DELETE) or added(ADD)
      * @param selectedImage the <code>ImageView</code> to add to the StackPane
      */
     public void addSelectedImageToCell(StackPane cell, int code, ImageView selectedImage){
-        if (code == 1 && !cell.getChildren().contains(selectedImage))
+        if (code == ADD && !cell.getChildren().contains(selectedImage))
             cell.getChildren().add(selectedImage);
-        if (code == 2 && cell.getChildren().contains(selectedImage))
+        if (code == DELETE && cell.getChildren().contains(selectedImage))
             cell.getChildren().remove(selectedImage);
     }
 
@@ -692,11 +703,11 @@ public class BoardSceneController implements Initializable {
      * @param notification the <code>String</code> that will be added
      */
     public void displayNotificationsDuringTurn(String notification){
-            if (notificationsTextFlow.getChildren().size() >= 7) {
+            if (notificationsTextFlow.getChildren().size() >= MAX_NOTIFICATIONS) {
                 notificationsTextFlow.getChildren().clear();
             }
             Text notificationText = new Text(notification);
-            setTextFormat(notificationText, 12);
+            setTextFormat(notificationText, TURN_FONT_NOTIFICATIONS);
             notificationsTextFlow.getChildren().add(notificationText);
     }
 
@@ -725,14 +736,14 @@ public class BoardSceneController implements Initializable {
      */
     public void addImageToBoard(Image image){
         StackPane imageContainer = new StackPane();
-        imageContainer.setMinHeight(500);
-        imageContainer.setMinWidth(500);
-        BackgroundSize buildingSize = new BackgroundSize(500,500, false,false, true, true);
+        imageContainer.setMinHeight(BOARD);
+        imageContainer.setMinWidth(BOARD);
+        BackgroundSize buildingSize = new BackgroundSize(BOARD,BOARD, false,false, true, true);
         imageContainer.setBackground(new Background(new BackgroundImage(new Image("/Board/SantoriniBoardOnly.png"), BackgroundRepeat.NO_REPEAT, BackgroundRepeat.NO_REPEAT, BackgroundPosition.CENTER, buildingSize )));
         board.setCenter(imageContainer);
         ImageView endGame = new ImageView(image);
-        endGame.setFitWidth(500);
-        endGame.setFitHeight(500);
+        endGame.setFitWidth(BOARD);
+        endGame.setFitHeight(BOARD);
         imageContainer.getChildren().add(endGame);
     }
 
