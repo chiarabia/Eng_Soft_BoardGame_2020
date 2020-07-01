@@ -14,8 +14,9 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 /**
- * This class //TODO add cosa fa
- * <p><p>... //aggiungere altre cose
+ * This class represents the server controller, it's notified by ServerView and manages the whole running
+ * of the game, deciding which player has to do which action, reacting to players' actions, checking
+ * if they are correct and consequently modifying the game model.
  * <p></>The initialization procedure follows this order:
  * <p><ul>
  * <li><code>onInitialization()</code>
@@ -52,9 +53,9 @@ public class Controller implements ProxyObserver {
         if (checkWin (playerId, null, null)) return;
 
         SerializableRequest request = new SerializableRequestAction(playerId,
-                                            getTurn().isMoveOptional(worker1Moves, worker2Moves),                    //controllo se le mosse sono opzionali o meno controllando i valori di turno
+                                            getTurn().isMoveOptional(worker1Moves, worker2Moves),
                                             getTurn().isBuildOptional(worker1Builds, worker2Builds),
-                                            getTurn().canDecline(),                                                  //controllo se entrambi i valori sono a true
+                                            getTurn().canDecline(),
                                             worker1Moves, worker2Moves,
                                             worker1Builds, worker2Builds,
                                             canForceDome);
@@ -73,11 +74,11 @@ public class Controller implements ProxyObserver {
         }
 
         int nextPlayerId = nextPlayerId(playerId);
-        Turn newTurn = getPlayerGodPower(playerId).endTurn(getTurn(), getGodPowers(), getPlayer(nextPlayerId)); // termina il turno precedente, serve l'end turn del giocatore corrente
-        game.setTurn(newTurn); // setta il turno successivo
+        Turn newTurn = getPlayerGodPower(playerId).endTurn(getTurn(), getGodPowers(), getPlayer(nextPlayerId));
+        game.setTurn(newTurn);
         SerializableUpdate update = new SerializableUpdateTurn(nextPlayerId, false);
-        game.notifyJustUpdateAll(update); // aggiorna i players del cambio turno
-        nextOperation(); // apre una nuova operazione
+        game.notifyJustUpdateAll(update);
+        nextOperation();
     }
 
     /**Handles a ConsolidateMove object received from a client
@@ -101,12 +102,12 @@ public class Controller implements ProxyObserver {
 
         Board board = getBoard();
         Position workerPosition = getWorkerPosition(playerId, workerId);
-        SerializableUpdate update = getPlayerGodPower(playerId).moveInto(board, workerPosition, newPosition); // consolida la mossa
-        getTurn().updateTurnInfoAfterMove(workerPosition, newPosition, board); // aggiorna Turn
-        game.notifyJustUpdateAll(update); // aggiorna i players della move
+        SerializableUpdate update = getPlayerGodPower(playerId).moveInto(board, workerPosition, newPosition);
+        getTurn().updateTurnInfoAfterMove(workerPosition, newPosition, board);
+        game.notifyJustUpdateAll(update);
 
-        checkWin(playerId, workerPosition, newPosition); // se la move determina una vittoria apre la procedura di vittoria...
-        nextOperation(); //...altrimenti apre una nuova operazione
+        checkWin(playerId, workerPosition, newPosition);
+        nextOperation();
     }
 
     /**Handles a ConsolidateBuild object received from a client
@@ -130,21 +131,21 @@ public class Controller implements ProxyObserver {
 
 
         Board board = getBoard();
-        SerializableUpdate update = getPlayerGodPower(playerId).buildUp(newPosition, board, forceDome); // consolida la build
-        getTurn().updateTurnInfoAfterBuild(newPosition, workerID); // aggiorna Turn
-        game.notifyJustUpdateAll(update); // aggiorna i players della build
-        nextOperation(); // apre una nuova operazione
+        SerializableUpdate update = getPlayerGodPower(playerId).buildUp(newPosition, board, forceDome);
+        getTurn().updateTurnInfoAfterBuild(newPosition, workerID);
+        game.notifyJustUpdateAll(update);
+        nextOperation();
     }
 
     /**Handles a client disconnection
      *@param playerId player who disconnected*/
     @Override
     public void onPlayerDisconnection(int playerId) {
-        if (getPlayer(playerId)!=null && !isDisconnected) { // Se la disconnessione di un player non è dovuta a una sconfitta e se non è ancora stato lanciato il segnale di disconnessione...
-            isDisconnected = true; // dichiara la disconnessione avvenuta
+        if (getPlayer(playerId)!=null && !isDisconnected) {
+            isDisconnected = true;
             SerializableUpdate update = new SerializableUpdateDisconnection(playerId);
-            game.notifyJustUpdateAll(update); // aggiorna i players della disconnessione
-            serverView.stopAllEventGenerators(); // termina tutti i thread legati alla partita
+            game.notifyJustUpdateAll(update);
+            serverView.stopAllEventGenerators();
         }
     }
 
@@ -152,8 +153,8 @@ public class Controller implements ProxyObserver {
      *@param playerId player who has won*/
     public void onPlayerWin (int playerId)  {
         isDisconnected = true;
-        game.notifyJustUpdateAll(new SerializableUpdateWinner(playerId)); // avvisa i players della vittoria
-        serverView.stopAllEventGenerators(); // termina tutti i thread legati alla partita
+        game.notifyJustUpdateAll(new SerializableUpdateWinner(playerId));
+        serverView.stopAllEventGenerators();
     }
 
     /**Reports to the players that someone has lost
@@ -162,15 +163,15 @@ public class Controller implements ProxyObserver {
         int nextPlayerId = nextPlayerId(playerId);
         List<GodPower> godPowerList = getGodPowers();
 
-        Turn newTurn = getPlayerGodPower(playerId).endTurn(getTurn(), godPowerList, getPlayer(nextPlayerId)); // termina il turno precedente
-        game.setTurn(newTurn); // setta il turno successivo
-        removePlayerInfos(playerId); //rimuove tutte le informazioni del giocatore dalla partita
+        Turn newTurn = getPlayerGodPower(playerId).endTurn(getTurn(), godPowerList, getPlayer(nextPlayerId));
+        game.setTurn(newTurn);
+        removePlayerInfos(playerId);
 
         List<SerializableUpdate> tempUpdates = new ArrayList<>();
         tempUpdates.add( new SerializableUpdateLoser(playerId));
         tempUpdates.add(new SerializableUpdateTurn(nextPlayerId, false));
-        game.notifyJustUpdateAll(tempUpdates); // aggiorna i players della sconfitta
-        nextOperation(); // apre una nuova operazione
+        game.notifyJustUpdateAll(tempUpdates);
+        nextOperation();
     }
 
     /**Starts initialization procedures and asks the first player to choose a GodPower.
@@ -207,7 +208,7 @@ public class Controller implements ProxyObserver {
         chooseGodPower(godPower);
 
         SerializableUpdateInitializeGodPower update = new SerializableUpdateInitializeGodPower(godPower, playerId);
-        if (playerId == getPlayers().size()){ // tutti i god powers sono stati scelti
+        if (playerId == getPlayers().size()){
             game.notifyJustUpdateAll(update);
             onWorkerPositionsInitialization();
         } else {
@@ -260,7 +261,7 @@ public class Controller implements ProxyObserver {
         worker2Cell.setWorker(worker2);
 
         SerializableUpdateInitializeWorkerPositions update = new SerializableUpdateInitializeWorkerPositions(workerPositions, playerId);
-        if (playerId == getPlayers().size()){ // tutti i worker sono pronti, il primo turno ha inizio
+        if (playerId == getPlayers().size()){
             SerializableUpdateTurn updateTurn = new SerializableUpdateTurn(1, true);
             game.setTurn(new Turn(getPlayers().get(0)));
             List <SerializableUpdate> tempUpdates = new ArrayList<>();
@@ -281,12 +282,12 @@ public class Controller implements ProxyObserver {
      *@param workerPosition beginning cell of a worker's move, null if no movement is happening
      *@param destinationPosition final cell of a worker's move, null if no movement is happening*/
     private boolean checkWin (int playerId, Position workerPosition, Position destinationPosition) {
-        if (getPlayers().stream().filter(Objects::nonNull).count()==1) { // controlla se è rimasto solo il giocatore corrente
+        if (getPlayers().stream().filter(Objects::nonNull).count()==1) {
             onPlayerWin(playerId);
             return true;
         }
         if (workerPosition == null && destinationPosition == null) {
-            for (GodPower p: getGodPowers()) { // controlla le condizioni di vittoria di tutti i players
+            for (GodPower p: getGodPowers()) {
                 if (p!=null) {
                     if (p.win(null, null, getBoard())) {
                         onPlayerWin(p.getPlayerId());
@@ -348,10 +349,10 @@ public class Controller implements ProxyObserver {
      * @param playerId player to be removed
      */
     private void removePlayerInfos (int playerId) {
-        getBoard().getCell(getWorkerPosition(playerId, 1)).setWorker(null); // rimuove i worker dalle celle
+        getBoard().getCell(getWorkerPosition(playerId, 1)).setWorker(null);
         getBoard().getCell(getWorkerPosition(playerId, 2)).setWorker(null);
-        game.removeGodPower(playerId); // setta il GodPower a null
-        game.removePlayer(playerId); // setta il Player a null
+        game.removeGodPower(playerId);
+        game.removePlayer(playerId);
     }
 
     /**Returns the player next to the one passed in the argument

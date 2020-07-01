@@ -27,7 +27,7 @@ public class BuildBeforeMove extends StandardBuild {
 
     @Override
     protected boolean checkBuildConditions(Cell workerCell, Turn turn) {
-        if (!workerCell.isWorker()) //robusto, devo invocare il metodo su un worker
+        if (!workerCell.isWorker())
             return false;
 
         if (workerCell.getPlayerId() != turn.getPlayerId()) //the player must be the same

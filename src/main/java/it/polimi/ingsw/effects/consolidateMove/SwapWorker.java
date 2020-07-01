@@ -10,8 +10,6 @@ public class SwapWorker extends StandardConsolidateMove {
             Cell workerCell = board.getCell(workerPosition);
             Cell destinationCell = board.getCell(destinationPosition);
 
-
-            // se nella cella di arrivo non c'è un lavoratore, eseguo il metodo della classe padre
             if (destinationCell.isFree()) return super.moveInto(board, workerPosition, destinationPosition);
             else {
                 int myWorkerId = workerCell.getWorkerId();

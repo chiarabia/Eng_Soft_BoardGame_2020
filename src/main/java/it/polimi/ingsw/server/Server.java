@@ -12,7 +12,7 @@ public class Server {
     /**
      * Generates a ServerSocket and starts a new ServerAccepter thread.
      * If a connection error occurs it waits 10 seconds and then restarts
-     * @throws InterruptedException //TODO add descrption
+     * @throws InterruptedException InterruptedException
      */
     public void startServer() throws InterruptedException {
         ServerSocket serverSocket;

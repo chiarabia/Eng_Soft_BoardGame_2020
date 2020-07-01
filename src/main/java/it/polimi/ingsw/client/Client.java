@@ -31,7 +31,7 @@ public class Client implements ViewObserver {
             if (GUI) view = new GUI();
             else view = new Terminal();
             view.addObserver(this);
-            view.displayStartup(); //Questo metodo fa partire la Cli e la Gui (nella cli fa partire l'ASCII Art)
+            view.displayStartup();
             view.askForStartupInfos(-1);
         } catch (Exception e) {
             e.printStackTrace();
@@ -126,7 +126,7 @@ public class Client implements ViewObserver {
     public void onUpdateTurn (SerializableUpdateTurn object){
         board.setPlayerTurnId( object.getPlayerId());
         if (object.getIsFirstTurn()) view.displayGameStart();
-        view.displayTurn(object.getPlayerId()); //mostro a schermo che il gicoatore di turno è un altro
+        view.displayTurn(object.getPlayerId());
     }
 
     /**Handles the defeat of a player
@@ -148,7 +148,7 @@ public class Client implements ViewObserver {
         for(int i =0; i < object.getUpdateMove().size(); i++) {
             onUpdateMove(object.getUpdateMove().get(i));
         }
-        view.displayBoard(object); //mostro le modifiche a schermo e passo alla GUI tutte le informazioni
+        view.displayBoard(object);
     }
 
     /**Saves a new build action
@@ -157,12 +157,12 @@ public class Client implements ViewObserver {
     private void onUpdateBuild(SerializableUpdateBuild object){
         boolean isDome;
         int oldLevel, x, y;
-        x = object.getNewPosition().getX(); //estraggo informazioni
+        x = object.getNewPosition().getX();
         y = object.getNewPosition().getY();
-        isDome = object.isDome(); //controllo se il player può costruire una cupola a ogni livello
-        if (board.getCell(x, y) != null) oldLevel = board.getCell(x, y).getLevel(); //ricavo qual era la z prima di costruire
+        isDome = object.isDome();
+        if (board.getCell(x, y) != null) oldLevel = board.getCell(x, y).getLevel();
         else oldLevel = -1;
-        board.setCell(new ClientBuilding(oldLevel + 1, isDome), x, y); // costruisco sopra l'ultima casella presente
+        board.setCell(new ClientBuilding(oldLevel + 1, isDome), x, y);
     }
 
     /**Saves a new move
@@ -170,11 +170,11 @@ public class Client implements ViewObserver {
      */
     private void onUpdateMove(SerializableUpdateMove object){
         int playerId, workerId, x, y;
-        playerId = object.getPlayerId(); //estraggo le informazioni
+        playerId = object.getPlayerId();
         workerId = object.getWorkerId();
         x = object.getNewPosition().getX();
         y = object.getNewPosition().getY();
-        board.getPlayer(playerId).getWorker(workerId).setX(x); //apporto modifiche alla board del client
+        board.getPlayer(playerId).getWorker(workerId).setX(x);
         board.getPlayer(playerId).getWorker(workerId).setY(y);
     }
 
@@ -183,8 +183,8 @@ public class Client implements ViewObserver {
      */
     public void onUpdateInitializeNames (SerializableUpdateInitializeNames names){
         for (int id = 1; id <= board.getNumOfPlayers(); id++)
-            board.setPlayer(new ClientPlayer(names.getPlayersNames().get(id - 1)), id);//aggiungo i nomi alla board
-        view.displayPlayerNames(names); //mostro a schermo i nomi degli altri giocatori
+            board.setPlayer(new ClientPlayer(names.getPlayersNames().get(id - 1)), id);
+        view.displayPlayerNames(names);
     }
 
     /**Replies to server echo message */
@@ -195,8 +195,8 @@ public class Client implements ViewObserver {
     /**Records the player ID and asks view to show it
      *@param message message received from server*/
     public void onPlayerIdAssigned(String message){
-        int playerId = (Character.getNumericValue(message.charAt(message.length()-1))); //creo il playerID
-        board.setMyPlayerId(playerId); //creo il playerID
+        int playerId = (Character.getNumericValue(message.charAt(message.length()-1)));
+        board.setMyPlayerId(playerId);
     }
 
     /**Displays an error and then restarts the client
@@ -221,11 +221,11 @@ public class Client implements ViewObserver {
             return;
         }
         try{
-            board = new ClientBoard(numOfPlayers); //crea una board con 3 player, è copia di quella del model, ma si salva solo le informazioni della caselle con la Z maggiore, quindi al massimo mi pare 25 caselle
-            view.setBoard(board); //passa il riferimento alla board creata alla View
+            board = new ClientBoard(numOfPlayers);
+            view.setBoard(board);
             communicator.addObserver(this);
             communicator.start();
-            communicator.sendObject(new SerializableConnection(numOfPlayers, myName)); //invio al server le scelte del nome del plauyer
+            communicator.sendObject(new SerializableConnection(numOfPlayers, myName));
             view.displayWaitingRoom();
         }catch (Exception e){
             e.printStackTrace();

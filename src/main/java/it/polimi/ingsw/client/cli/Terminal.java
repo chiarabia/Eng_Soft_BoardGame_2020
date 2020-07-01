@@ -117,58 +117,45 @@ public class Terminal implements View {
             boolean isDome;
             Position position;
             int workerId = 0;
-            boolean move = false; //questi boolean contengono le intenzioni del player
-            //se il player decide di muoversi, move diventa true.
-            //se il payer non ha scelta, non gli viene permesso di scegliere.
-            boolean build = false;
-            //mostra al player tutte le informazioni sulle mosse che i suoi worker possono eseguire
+            boolean move = false, build = false;
             displayRequestAction(object);
 
-            if (object.canDecline()) { //Se il player può terminare il turno
+            if (object.canDecline()) {
                 if (object.areBuildsEmpty() && object.areMovesEmpty()) {
                     displayMessage(textfields.getTurnover());
-                    for (int i = 0; i < observerList.size(); i++) observerList.get(i).onCompletedDecline(); //questo oggetto passa il turno
+                    for (int i = 0; i < observerList.size(); i++) observerList.get(i).onCompletedDecline();
                     return;
                 }
-                //chiedo al player se vuole terminare il turno
                 else if (askForDecision("decline")) {
                     for (int i = 0; i < observerList.size(); i++) observerList.get(i).onCompletedDecline();
                     return;
                 }
             }
-
-            //chiedo quale lavoratore il player voglia usare solo se entrambi possono muoversi
-            if (object.canWorkerDoAction(1)&&object.canWorkerDoAction(2)) {
-                workerId = askForWorkerId(); //se entrambi i lavoratori possono fare qualche azione chiedo al player;
-            } else { //se no capisco io al posto del player qual è l'unico worker che può compiere un'azione
+            if (object.canWorkerDoAction(1)&&object.canWorkerDoAction(2)) workerId = askForWorkerId();
+            else {
                 int i;
-                for(i = 1; i<=2; i++) {
-                    if (object.canWorkerDoAction(i)) {//in caso contrario non ho bisogno di chiedere al player
-                        workerId = i;
-                    }
-                }
+                for(i = 1; i<=2; i++) if (object.canWorkerDoAction(i)) workerId = i;
             }
 
-            if (!object.areMovesEmpty()&&!object.areBuildsEmpty()) { //Se il lavoratore può sia muoversi che costruire chiedo al player
+            if (!object.areMovesEmpty()&&!object.areBuildsEmpty()) {
                 while (!move && !build) {
                     if (askForDecision("move")) move = true;
                     if (askForDecision("build")) build = true;
                 }
-            } else { //se no scelgo per lui
+            } else {
                 if (object.areMovesEmpty()) build = true;
                 else move = true;
             }
 
-            if (move) { //se posso solo muovermi  o il player ha scleto di muovermi
-                if (workerId==1) position = askForRightPosition(object.getWorker1Moves()); //chiedo al player la posizione
+            if (move) {
+                if (workerId==1) position = askForRightPosition(object.getWorker1Moves());
                 else position = askForRightPosition(object.getWorker2Moves());
                 for (int i = 0; i < observerList.size(); i++) observerList.get(i).onCompletedMove(position, workerId);
             }
             if (build) {
-                if (object.isCanForceDome()) isDome = askForDome(); //chiedo al player se vuole costruire una cupola
-                    //a qualsiasi livello, solo se può farlo con il potere della sua divinità
+                if (object.isCanForceDome()) isDome = askForDome();
                 else isDome = false;
-                if (workerId==1) position = askForRightPosition(object.getWorker1Builds()); //chiedo dove il player voglia costruire
+                if (workerId==1) position = askForRightPosition(object.getWorker1Builds());
                 else position = askForRightPosition(object.getWorker2Builds());
                 for (int i = 0; i < observerList.size(); i++) observerList.get(i).onCompletedBuild(position, workerId, isDome);
             }
@@ -299,11 +286,16 @@ public class Terminal implements View {
         return new Position(x, y, 0);
     }
 
-    private int askForInt(String request){
-        try {
-            System.out.print(request);
-            return keyboard.nextInt();
-        } catch(Exception e){return 0;}
+    private int askForInt(String request) {
+        int num;
+        while (true) {
+            try{
+                System.out.print(request);
+                num = Integer.parseInt(keyboard.next());
+                break;
+            }catch(Exception e){}
+        }
+        return num;
     }
 
     private String askForString(String request){

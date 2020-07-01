@@ -24,19 +24,14 @@ public class PushForward extends StandardMove{
             return board
                 .getStream()
                 .filter(a -> a.isFree() || a.isWorker())
-                /* in questo metodo vanno bene lavoratori e caselle libere*/
-                //Dobbiamo togliere i lavoratori del giocatore del turno in corso
                 .filter(a -> a.getX() <= workerCell.getX() + 1)
                 .filter(a -> a.getX() >= workerCell.getX() - 1)
                 .filter(a -> a.getY() <= workerCell.getY() + 1)
                 .filter(a -> a.getY() >= workerCell.getY() - 1)
                 .filter(a -> heightsDifference(workerCell.getZ(), a.getZ()) <= 1)
-                /*Filtriamo le caselle di lavoratori, ci vanno bene solo i lavoratori avversari che hanno una casella libera
-                alle loro spalle in cui possano essere spinti */
                 .filter(a -> a.isFree()
                         || (a.isWorker()
-                        && a.getPlayerId() != workerCell.getPlayerId() // specifica che il lavoratore deve essere avversario
-                        //&& !a.isPerimetral()
+                        && a.getPlayerId() != workerCell.getPlayerId()
                         && board.isFreeZone
                         (behindWorker_x(workerCell.getX(), a.getX()),
                                 behindWorker_y(workerCell.getY(), a.getY()))))
