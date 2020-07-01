@@ -33,14 +33,25 @@ public class Cell {
      * Checks if the Cell is occupied by a worker, a building or a dome
      * @return true if the Cell is free, false otherwise
      */
-
     public boolean isFree() {
         return !(worker!=null || building || dome);
     }
+    /**
+     * Checks if the Cell is occupied by a building
+     * @return true if the Cell is occupied by a building, false otherwise
+     */
     public boolean isBuilding() {
         return building;
     }
+    /**
+     * Checks if the Cell is occupied by a dome
+     * @return true if the Cell is occupied by a dome, false otherwise
+     */
     public boolean isDome() { return dome; }
+    /**
+     * Checks if the Cell is occupied by a worker
+     * @return true if the Cell is occupied by a worker, false otherwise
+     */
     public boolean isWorker() { return worker!=null; }
 
     /**

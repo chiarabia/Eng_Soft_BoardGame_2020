@@ -43,7 +43,12 @@ public class Board {
     }
 
 
-    //This method adds new Cells
+    /**
+     * Adds new Cells
+     * @param x
+     * @param y
+     * @param z
+     */
     public void newCell(int x, int y, int z) {
         //check for duplicates
         if (getCell(x, y, z) == null) {
