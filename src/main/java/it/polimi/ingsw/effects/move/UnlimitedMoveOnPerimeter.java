@@ -23,6 +23,14 @@ public class UnlimitedMoveOnPerimeter extends StandardMove {
         return super.move(workerPosition, board, turn);
     }
 
+
+    /**
+     * If the worker is in a perimeter box, he can move regardless of the number of moves already made
+     *
+     * @param workerCell the worker's Cell
+     * @param turn the player's turn
+     * @return false if the the player cannot move its workers,
+     */
     @Override
     protected boolean checkMoveConditions(Cell workerCell, Turn turn) {
         if (turn.isMoveBeforeBuild() && turn.isBuildAfterMove())

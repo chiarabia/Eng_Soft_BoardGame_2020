@@ -9,7 +9,6 @@ import java.util.List;
 public class RestoreOriginalGodPower extends NewTurn {
     GodPower originalGodPower;
 
-
     /**
      * Restores a player's original powers. Can be used at the end of a player's turn with an "Opponent'sTurn" power.
      * @param oldTurn The current turn that is about to end

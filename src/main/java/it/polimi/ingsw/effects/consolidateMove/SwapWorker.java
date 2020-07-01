@@ -4,8 +4,20 @@ import it.polimi.ingsw.*;
 import it.polimi.ingsw.server.serializable.SerializableUpdateActions;
 import it.polimi.ingsw.server.serializable.SerializableUpdateMove;
 
+/**
+ *  This class modifies the standard consolidate move to update the model after a SwapWMove
+ */
+
+
 
 public class SwapWorker extends StandardConsolidateMove {
+    /**
+     * Modifies the board to move a worker in the Position chosen by the player.
+     * @param destinationPosition position chosen by the player.
+     * @param board the board.
+     * @param workerPosition the starting position of the worker.
+     * @return a <Code>SerializableUpdateActions</Code> object which contains the move information of both workers for updating clients
+     */
         public SerializableUpdateActions moveInto (Board board, Position workerPosition, Position destinationPosition){
             Cell workerCell = board.getCell(workerPosition);
             Cell destinationCell = board.getCell(destinationPosition);

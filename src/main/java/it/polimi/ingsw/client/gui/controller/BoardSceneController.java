@@ -442,8 +442,9 @@ public class BoardSceneController implements Initializable {
         });
     }
 
-    /**TODO:javadoc
-     *
+    /** Notify the player about the all possible moves that his workers can make.
+     *  The different notifications are about: a movement, a construction, both or no action.
+     *      TODO: revise
      */
     private void notifyAvailableActions () {
         Set<Position> workerMovesPosition;

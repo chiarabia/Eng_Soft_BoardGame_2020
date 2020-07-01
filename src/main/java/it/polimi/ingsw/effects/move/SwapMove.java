@@ -9,11 +9,24 @@ import java.util.HashSet;
 import java.util.Set;
 import java.util.stream.Collectors;
 
+
+/**
+ * this class defines a movement into cells occupied by enemy worker.
+ */
 public class SwapMove extends StandardMove {
     public SwapMove(int moves) {
         super(moves);
     }
 
+
+    /**
+     *  Adds to the free cells to move in, cells with enemy workers.
+     * @param workerPosition the worker's Position
+     * @param board the board
+     * @param turn the player's turn
+     * @return a <code>Set&lt;Cell&gt;</code> collect that only has the cells where the player can move to or
+     * a <code>HashSet&lt;Cell&gt;</code> if the worker can't move
+     */
     @Override
     public Set<Position> move (Position workerPosition, Board board, Turn turn) {
         Cell workerCell = board.getCell(workerPosition);

@@ -9,6 +9,9 @@ import it.polimi.ingsw.effects.move.StandardMove;
 import java.util.List;
 import java.util.stream.Collectors;
 
+/**
+ * This class modifies the standard new turn class
+ */
 
 public class NewNoMoveUpTurn extends NewTurn {
 

@@ -5,8 +5,9 @@ import it.polimi.ingsw.Turn;
 import it.polimi.ingsw.effects.GodPower;
 import java.util.List;
 
-
-
+/**
+ * This class defines the standard method for passing the turn
+ */
 
 public class NewTurn {
 

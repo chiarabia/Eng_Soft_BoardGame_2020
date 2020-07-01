@@ -7,8 +7,19 @@ import it.polimi.ingsw.Turn;
 
 import java.util.HashSet;
 import java.util.Set;
+/**
+*This class defines the possibility to build before moving
+*/
 
 public class UnderMyself extends StandardBuild {
+    /**
+     * This method adds the cell where the worker is located to the set of possible constructions (if z <3).
+     * @param workerPosition the worker's Position
+     * @param board the board
+     * @param turn the player's turn
+     * @return a <code>Set&lt;Cell&gt;</code> collect that only has the cells where the player can build in
+     */
+
     public Set<Position> build(Position workerPosition, Board board, Turn turn) {
         Cell workerCell = board.getCell(workerPosition);
         if (!checkBuildConditions(workerCell, turn)) return new HashSet<Position>();
