@@ -8,7 +8,8 @@ import it.polimi.ingsw.server.serializable.SerializableUpdateActions;
 import it.polimi.ingsw.server.serializable.SerializableUpdateMove;
 
 /**
- * This method modifes the standardConsolidateMethod allowing the costruction of a building on the same position
+ * This class modifies the standardConsolidateMethod.
+ * It allows the construction of a building on the same position
  * of a player's worker.
  */
 public class UnderWorker extends StandardConsolidateBuild {

@@ -45,7 +45,7 @@ public class StandardBuild {
     }
 
     /**
-     * Determines whether the input worker can (or still can) build this turn.
+     * Determines whether the chosen worker can (or still can) build this turn.
      *
      * @param workerCell the worker's Cell
      * @param turn the player's turn

@@ -10,7 +10,7 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 /**
- * This class modifies the standard building rule
+ * This class modifies the standard building rule.
  * All subsequent constructions must be built above the first construction.
  */
 
@@ -21,8 +21,8 @@ public class OnSamePositionBlockOnly extends StandardBuild {
     }
 
     /**
-     * Calls the method build of father class if the worker has not yet built.
-     * Otherwise, filters all positions with the same X and Y as the first construction of the turn.
+     * Calls the method build of the father class if the worker has not yet built.
+     * Otherwise, it filters all positions with the same X and Y as the first construction of the turn.
      * @param workerPosition the worker's Position
      * @param board the board
      * @param turn the player's turn

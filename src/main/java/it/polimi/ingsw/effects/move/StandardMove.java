@@ -10,7 +10,7 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 /**
- * This class defines the general rules of movement
+ * This class implements the general rules of movement
  */
 
 public class StandardMove {

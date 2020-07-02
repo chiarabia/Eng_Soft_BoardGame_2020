@@ -69,7 +69,7 @@ public class GodPower {
     }
 
     /**
-     *  This method checks if the player has won
+     * Checks if the player has won
      *
      * @param workerPosition the worker's cell
      * @param destinationPosition the worker's destination cell after its move

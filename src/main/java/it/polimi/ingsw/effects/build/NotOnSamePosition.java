@@ -24,7 +24,7 @@ public class NotOnSamePosition extends StandardBuild{
         Cell workerCell = board.getCell(workerPosition);
 
         /**
-         * Calls the method build of father class if the worker has not yet built.
+         * Calls the method build of the father class if the worker has not yet built.
          * Otherwise, excludes all positions with the same X and Y as the first construction of the turn.
          * @param workerPosition the worker's Position
          * @param board the board

@@ -8,7 +8,7 @@ import it.polimi.ingsw.Turn;
 import java.util.Set;
 
 /**
- * This class defines a movement action that cannot end on a cell on the
+ * This class implements a movement action that cannot end on a cell on the
  * perimeter of the board
  */
 
@@ -25,7 +25,7 @@ public class UnlimitedMoveOnPerimeter extends StandardMove {
 
 
     /**
-     * If the worker is in a perimeter box, he can move regardless of the number of moves already made
+     * If the worker is in a perimetric cell, it can move regardless of the number of moves already made
      *
      * @param workerCell the worker's Cell
      * @param turn the player's turn
@@ -52,7 +52,6 @@ public class UnlimitedMoveOnPerimeter extends StandardMove {
             return false;
 
         else {
-            //the
             if (workerCell.isPerimetral())
                 return true;
             else

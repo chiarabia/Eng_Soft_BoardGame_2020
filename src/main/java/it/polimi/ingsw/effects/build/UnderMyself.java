@@ -8,12 +8,12 @@ import it.polimi.ingsw.Turn;
 import java.util.HashSet;
 import java.util.Set;
 /**
-*This class defines the possibility to build before moving
+*This class implements the possibility to build before moving
 */
 
 public class UnderMyself extends StandardBuild {
     /**
-     * This method adds the cell where the worker is located to the set of possible constructions (if z <3).
+     * Adds the cell where the worker is positioned to the set of possible constructions (if z &lt; 3).
      * @param workerPosition the worker's Position
      * @param board the board
      * @param turn the player's turn

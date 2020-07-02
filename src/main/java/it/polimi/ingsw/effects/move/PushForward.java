@@ -10,7 +10,7 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 /**
- * this class defines a movement into cells occupied by enemy worker.
+ * this class implements a movement into cells occupied by enemy worker.
  */
 
 public class PushForward extends StandardMove{
@@ -19,7 +19,7 @@ public class PushForward extends StandardMove{
     }
 
     /**
-     *  Adds to the free cells to move in, cells with workers who have free cells behind them.
+     * Adds to the possible cells to move into the cells with workers who have free cells behind them.
      * @param workerPosition the worker's Position
      * @param board the board
      * @param turn the player's turn

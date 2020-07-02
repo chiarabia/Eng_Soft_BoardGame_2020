@@ -10,8 +10,8 @@ import java.util.stream.Collectors;
 
 
 /**
- * This class modifies the standard building rule
- * All subsequent constructions cannot be built on perimeteral cells.
+ * This class modifies the standard building rule.
+ * All subsequent constructions cannot be built on perimetral cells.
  */
 
 public class NotOnPerimeter extends StandardBuild {
@@ -20,7 +20,7 @@ public class NotOnPerimeter extends StandardBuild {
         Set<Position> temp_cells = super.build(workerPosition, board, turn);
 
         /**
-         * Calls the method build of father class if the worker has not yet built.
+         * Calls the method build of the father class if the worker has not yet built.
          * Otherwise, excludes all perimetral position.
          * @param workerPosition the worker's Position
          * @param board the board

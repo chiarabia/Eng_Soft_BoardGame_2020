@@ -10,7 +10,7 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 /**
- * This class defines the possibility to build before moving.
+ * This class implements whether a player can build before moving.
  */
 
 public class BuildBeforeMove extends StandardBuild {
@@ -26,7 +26,7 @@ public class BuildBeforeMove extends StandardBuild {
 
 
     /**
-     * Determines whether the input worker can (or still can) build this turn.
+     * Determines whether the chosen worker can (or still can) build this turn.
      * Unlike the parent class, this method also considers the possibility that a build may occur before a move.
      * The number of builds refers exclusively to the number of standard builds made (ie after moving).
      * So a player with builds = 1 can build before moving and after moving.

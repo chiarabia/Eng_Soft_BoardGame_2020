@@ -11,7 +11,7 @@ import java.util.stream.Collectors;
 
 
 /**
- * this class defines a movement into cells occupied by enemy worker.
+ * this class implements a movement into cells occupied by an enemy worker.
  */
 public class SwapMove extends StandardMove {
     public SwapMove(int moves) {
@@ -20,7 +20,7 @@ public class SwapMove extends StandardMove {
 
 
     /**
-     *  Adds to the free cells to move in, cells with enemy workers.
+     *  Adds to the possible cells to move into the  cells with an enemy workers.
      * @param workerPosition the worker's Position
      * @param board the board
      * @param turn the player's turn

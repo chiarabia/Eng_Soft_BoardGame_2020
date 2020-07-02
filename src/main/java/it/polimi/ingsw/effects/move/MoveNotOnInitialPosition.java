@@ -11,7 +11,7 @@ import java.util.stream.Collectors;
 
 
 /**
- * This class defines a move where the worker can't move on the original
+ * This class implements a movement where the worker can't move on the original
  * position
  */
 

@@ -6,13 +6,13 @@ import it.polimi.ingsw.effects.GodPower;
 import java.util.List;
 
 /**
- * This class defines the standard method for passing the turn
+ * This class implements the standard method for passing the turn
  */
 
 public class NewTurn {
 
     /**
-     * This method end the current turn and starts the turn of the next player
+     * Ends the current turn and starts the turn of the next player
      * @param oldTurn The current turn that is about to end
      * @param godPowers The GodPowers of all players (still) in the game
      * @param nextTurnPlayer Player of the next turn

@@ -9,7 +9,7 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 /**
- * This class defines a movement that cannot be a move up action
+ * This class implements a movement that cannot be a move up action
  * after the worker made a build action
  */
 

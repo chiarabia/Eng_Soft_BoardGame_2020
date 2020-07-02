@@ -7,7 +7,7 @@ import it.polimi.ingsw.server.serializable.SerializableUpdateActions;
 import it.polimi.ingsw.server.serializable.SerializableUpdateMove;
 
 /**
- * This class defines the general consolidate action. Modify the model following a choice of the player.
+ * This class implements the general consolidate action. It modifies the model after a choice of the player.
  */
 
 public class StandardConsolidateMove {

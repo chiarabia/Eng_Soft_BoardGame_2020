@@ -22,7 +22,7 @@ public class NewNoMoveUpTurn extends NewTurn {
     GodPower originalGodPower;
 
     /**
-     * This method limits opponents' actions if at least one worker has leveled up during the player's turn.
+     * This method limits the opponents' actions if at least one worker has leveled up during the player's turn.
      * <p>The method first saves a copy of the opponents' godPower, move effect and newTurn. Then the newTurn and move
      * are restored.
      * @param oldTurn The current turn that is about to end
