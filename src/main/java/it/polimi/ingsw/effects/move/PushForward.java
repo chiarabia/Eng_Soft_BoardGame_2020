@@ -9,11 +9,24 @@ import java.util.HashSet;
 import java.util.Set;
 import java.util.stream.Collectors;
 
+/**
+ * this class defines a movement into cells occupied by enemy worker.
+ */
 
 public class PushForward extends StandardMove{
     public PushForward(int moves) {
         super(moves);
     }
+
+    /**
+     *  Adds to the free cells to move in, cells with workers who have free cells behind them.
+     * @param workerPosition the worker's Position
+     * @param board the board
+     * @param turn the player's turn
+     * @return a <code>Set&lt;Cell&gt;</code> collect that only has the cells where the player can move to or
+     * a <code>HashSet&lt;Cell&gt;</code> if the worker can't move
+     *
+     */
 
     @Override
     public Set<Position> move (Position workerPosition, Board board, Turn turn) {
@@ -33,35 +46,26 @@ public class PushForward extends StandardMove{
                         || (a.isWorker()
                         && a.getPlayerId() != workerCell.getPlayerId()
                         && board.isFreeZone
-                        (behindWorker_x(workerCell.getX(), a.getX()),
-                                behindWorker_y(workerCell.getY(), a.getY()))))
+                        (behindWorker(workerCell.getX(), a.getX()),
+                                behindWorker(workerCell.getY(), a.getY()))))
                     .map(Cell::getPosition)
                 .collect(Collectors.toSet());
         }
     }
 
-     protected int behindWorker_x (int myWorker_x, int opponentsWorker_x) {
-        if (myWorker_x == opponentsWorker_x) {
-            return opponentsWorker_x;
-        }
-        else if(myWorker_x>opponentsWorker_x) {
-            return opponentsWorker_x-1;
-        }
-        else
-            return opponentsWorker_x+1;
-    }
-    protected int behindWorker_y (int myWorker_y, int opponentsWorker_y) {
-        if (myWorker_y == opponentsWorker_y) {
-            return opponentsWorker_y;
-        }
-        else if(myWorker_y>opponentsWorker_y) {
-            return opponentsWorker_y-1;
-        }
-        else
-            return opponentsWorker_y+1;
-    }
+    /**
+     * Calculates the coordinates of the new Position of the worker.
+     * @param myWorkerCoordinate x or y coordinate of my worker
+     * @param opponentsWorkerCoordinate x or y coordinate of enemy worker.
+     * @return x or y coordinate of the position behind enemy worker.
+     */
 
-
-
-
+    protected int behindWorker(int myWorkerCoordinate, int opponentsWorkerCoordinate) {
+         if (myWorkerCoordinate == opponentsWorkerCoordinate) {
+             return opponentsWorkerCoordinate;
+         } else if (myWorkerCoordinate > opponentsWorkerCoordinate) {
+             return opponentsWorkerCoordinate - 1;
+         } else
+             return opponentsWorkerCoordinate + 1;
+     }
 }

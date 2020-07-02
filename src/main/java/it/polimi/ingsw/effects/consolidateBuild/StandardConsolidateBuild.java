@@ -6,7 +6,20 @@ import it.polimi.ingsw.Position;
 import it.polimi.ingsw.server.serializable.SerializableUpdateBuild;
 import it.polimi.ingsw.server.serializable.SerializableUpdateActions;
 
+/**
+ * This class defines the general consolidate action. Modify the model following a choice of the player.
+ */
+
 public class StandardConsolidateBuild {
+
+    /**
+     * Modifies the board to build a building in the Position chosen by the player.
+      * @param buildingPosition the position chosen by the player.
+     * @param board the board.
+     * @param forceDome If true it builds a dome at any level
+     * @return a <Code>SerializableUpdateActions</Code> object which contains the build information for updating clients
+     */
+
     public SerializableUpdateActions buildUp(Position buildingPosition, Board board, boolean forceDome) {
         Cell tempCell = board.getCell(buildingPosition);
 

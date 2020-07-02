@@ -20,7 +20,7 @@ public class MoveNotOnInitialPosition extends StandardMove{
         super(moves);
     }
 
-    /**
+    /**Excludes the first position from the next possible moves
      * @param workerPosition the worker's Cell
      * @param board the board
      * @param turn the player's turn

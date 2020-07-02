@@ -19,6 +19,15 @@ public class NoMoveUpAfterBuild extends StandardMove{
         super(moves);
     }
 
+
+    /**Excludes positions placed at a higher height than the worker in the workerPosition, if the worker has already
+     * built in this turn.
+     * @param workerPosition the worker's Cell
+     * @param board the board
+     * @param turn the player's turn
+     * @return a <code>Set&lt;Cell&gt;</code> collect that only has the cells where the player can move
+     * without the initialPosition
+     */
     @Override
     public Set<Position> move (Position workerPosition, Board board, Turn turn) {
         Set<Position> temp_positions = super.move(workerPosition, board, turn);

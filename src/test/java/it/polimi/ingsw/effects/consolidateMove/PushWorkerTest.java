@@ -165,37 +165,37 @@ public class PushWorkerTest {
     //positive
     @Test
     void shouldReturnTheRightXCoordinateOfTheWorkerWhenPlayerAndOpponentWorkerHaveSameX(){
-        assertEquals(1,pushWorker.behindWorkerX(1,1));
+        assertEquals(1,pushWorker.behindWorker(1,1));
     }
 
     //positive
     @Test
     void shouldReturnTheRightXCoordinateOfTheWorkerWhenPlayerHasHigherXThanOpponent(){
-        assertEquals(1,pushWorker.behindWorkerX(3,2));
+        assertEquals(1,pushWorker.behindWorker(3,2));
     }
 
     //positive
     @Test
     void shouldReturnTheRightXCoordinateOfTheWorkerWhenPlayerHasMinorXThanOpponent(){
-        assertEquals(3,pushWorker.behindWorkerX(1,2));
+        assertEquals(3,pushWorker.behindWorker(1,2));
     }
 
     //positive
     @Test
     void shouldReturnTheRightXCoordinateOfTheWorkerWhenPlayerAndOpponentWorkerHaveSameY(){
-        assertEquals(1,pushWorker.behindWorkerY(1,1));
+        assertEquals(1,pushWorker.behindWorker(1,1));
     }
 
     //positive
     @Test
     void shouldReturnTheRightXCoordinateOfTheWorkerWhenPlayerHasHigherYThanOpponent(){
-        assertEquals(1,pushWorker.behindWorkerY(3,2));
+        assertEquals(1,pushWorker.behindWorker(3,2));
     }
 
     //positive
     @Test
     void shouldReturnTheRightXCoordinateOfTheWorkerWhenPlayerHasMinorYThanOpponent(){
-        assertEquals(3,pushWorker.behindWorkerY(1,2));
+        assertEquals(3,pushWorker.behindWorker(1,2));
     }
 
     //positive

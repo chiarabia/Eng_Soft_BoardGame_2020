@@ -22,6 +22,14 @@ public class NoMoveUp extends StandardMove {
         this.decoratedMove = decoratedMove;
     }
 
+    /**Excludes positions placed at a higher height than the worker in the workerPosition.
+     * @param workerPosition the worker's Cell
+     * @param board the board
+     * @param turn the player's turn
+     * @return a <code>Set&lt;Cell&gt;</code> collect that only has the cells where the player can move
+     * without the initialPosition
+     */
+
     @Override
     public Set<Position> move (Position workerPosition, Board board, Turn turn) {
         Cell workerCell = board.getCell(workerPosition);

@@ -10,7 +10,7 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 /**
- * This class defines the possibility to build before moving
+ * This class defines the possibility to build before moving.
  */
 
 public class BuildBeforeMove extends StandardBuild {
@@ -24,6 +24,17 @@ public class BuildBeforeMove extends StandardBuild {
         return super.build(workerPosition, board, turn);
     }
 
+
+    /**
+     * Determines whether the input worker can (or still can) build this turn.
+     * Unlike the parent class, this method also considers the possibility that a build may occur before a move.
+     * The number of builds refers exclusively to the number of standard builds made (ie after moving).
+     * So a player with builds = 1 can build before moving and after moving.
+     * @param workerCell the worker's Cell
+     * @param turn the player's turn
+     * @return returns true only and only if the worker considered: is a worker of the current player,
+     * has already moved and has not already built <Code>"builds"</Code> times this turn.
+     */
 
     @Override
     protected boolean checkBuildConditions(Cell workerCell, Turn turn) {

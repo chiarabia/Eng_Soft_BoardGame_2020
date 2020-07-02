@@ -17,9 +17,7 @@ public class Terminal implements View {
     private ClientBoard board;
     private List<ViewObserver> observerList = new ArrayList<>();
 
-    public Terminal() throws ParseException {
-    }
-
+    public Terminal() throws ParseException {}
     public void addObserver(ViewObserver observer){observerList.add(observer);}
     public void setBoard(ClientBoard board) {
         this.board = board;
@@ -27,11 +25,16 @@ public class Terminal implements View {
 
     public void displayWaitingRoom(){}
 
+    /**This method displays the board scene for the first time*/
     public void displayBoardScreen(){
         System.out.println();
         displayBoard();
     }
 
+    /**
+     * This method displays players' names
+     * @param names object received from server
+     * */
     public void displayPlayerNames(SerializableUpdateInitializeNames names){
         System.out.print(textfields.getInitialplaying());
         boolean firstName = true;
@@ -50,13 +53,25 @@ public class Terminal implements View {
         }
         System.out.println(Color.WHITE.set()+".\n");
     }
-    @Override
+
+    /**
+     * This method shows the board after one or more players' actions
+     * @param update object received from server
+     * */
     public void displayBoard(SerializableUpdateActions update) {
         displayBoard();
     }
 
+    /**
+     * This method shows the board after workers positions initialization
+     * @param update object received from server
+     * */
     public void displayBoard(SerializableUpdateInitializeWorkerPositions update){displayBoard();}
 
+    /**
+     * This method reports that a player won
+     * @param playerId player ID
+     * */
     public void displayWinner (int playerId) {
         displayBoard();
         setColor(playerId);
@@ -64,6 +79,10 @@ public class Terminal implements View {
         else System.out.println(board.getPlayer(playerId).getPlayerName() + Color.WHITE.set() +  textfields.getWon2());
     }
 
+    /**
+     * This method reports that a player lost
+     * @param playerId player ID
+     * */
     public void displayLoser (int playerId) {
         displayBoard();
         setColor(playerId);
@@ -71,11 +90,20 @@ public class Terminal implements View {
         else System.out.println(board.getPlayer(playerId).getPlayerName() + Color.WHITE.set() +  textfields.getLost2());
     }
 
+    /**
+     * This method reports that a player disconnected
+     * @param playerId player ID
+     * */
     public void displayDisconnection (int playerId){
         setColor(playerId);
         System.out.println(board.getPlayer(playerId).getPlayerName() + Color.WHITE.set() +  textfields.getDisconnected());
     }
 
+    /**
+     * This method reports that an error occurred
+     * @param errorId error ID
+     * @param isFatalError true if the error causes the client to stop
+     * */
     public void displayError(int errorId, boolean isFatalError){
         String message = null;
         switch (errorId){
@@ -90,6 +118,7 @@ public class Terminal implements View {
         System.out.println();
     }
 
+    /**This method show the initial ASCII-art Santorini logo*/
     public void displayStartup () {
         System.out.println(Terminal.Color.BLUE.set());
         System.out.println("  ╔══ ╔═╗ ╖ ╓ ═╦═ ╔═╗ ╔═╗ ╥ ╖ ╓ ╥ ®");
@@ -97,6 +126,10 @@ public class Terminal implements View {
         System.out.println("  ══╝ ╜ ╙ ╜ ╙  ╨  ╚═╝ ╜ \\ ╨ ╜ ╙ ╨\n");
     }
 
+    /**
+     * This method reports that a player has just chosen a god power
+     * @param playerId player ID
+     * */
     public void displayGodPower(int playerId){
         String godPowerName = board.getPlayer(playerId).getGodPowerName();
         String playerName = board.getPlayer(playerId).getPlayerName();
@@ -107,12 +140,20 @@ public class Terminal implements View {
         }
     }
 
+    /**
+     * This method reports that a new turn started
+     * @param playerTurnId player ID
+     * */
     public void displayTurn(int playerTurnId){
         setColor(playerTurnId);
         if (playerTurnId == board.getMyPlayerId()) System.out.println("You" + Color.WHITE.set() + textfields.getPlaying1());
         else System.out.println(board.getPlayer(playerTurnId).getPlayerName() + Color.WHITE.set() +  textfields.getPlaying2());
     }
 
+    /**
+     * This method asks to perform an action, based on available actions listed in the object received
+     * @param object object received from server
+     * */
     public void askForAction(SerializableRequestAction object){
             boolean isDome;
             Position position;
@@ -161,18 +202,30 @@ public class Terminal implements View {
             }
     }
 
+    /**
+     * This method asks to choose between available god powers
+     * @param godPowers List of available god powers
+     * */
     public void askForInitialGodPower(List<GodCard> godPowers){
             String chosenGodPower = askForGodPower(godPowers);
             for (int i = 0; i < observerList.size(); i++)
                 observerList.get(i).onCompletedInitializeGodPower(chosenGodPower);
     }
 
+    /**
+     * This method asks to choose initial workers positions
+     * @param possiblePositions List of possible positions
+     * */
     public void askForInitialWorkerPositions(List <Position> possiblePositions){
             List<Position> myWorkerPositions = askForWorkersInitialPositions();
             for (int i = 0; i < observerList.size(); i++)
                 observerList.get(i).onCompletedInitializeWorkerPositions(myWorkerPositions);
     }
 
+    /**
+     * This method asks for name and number of players in the game
+     * @param errorId error ID
+     * */
     public void askForStartupInfos(int errorId) {
             if (errorId >= 0) displayError(errorId, false);
             String name = askForString(Terminal.Color.WHITE.set() + textfields.getName());
@@ -186,20 +239,33 @@ public class Terminal implements View {
 
     /* private methods */
 
+    /**This method prints a message
+     * @param string message
+     */
     private void displayMessage(String string){
         System.out.println(string);
     }
 
+    /**This method prints a red error message
+     * @param message error message
+     */
     private void displayErrorMessage(String message){
         displayMessage(Terminal.Color.RED.set() + message + Terminal.Color.WHITE.set());
     }
 
+    /**This method prints all the positions in the set
+     * @param positions set of positions
+     */
     private void displayCells (Set < Position > positions) {
         for (Position p : positions)
             System.out.print("(" + p.getX() + ", " + p.getY() + ") ");
         System.out.println();
     }
 
+    /**This method asks for a position and checks if that position is present in a set of possible positions
+     * @param positions set of possible positions
+     * @return chosen position
+     */
     private Position askForRightPosition (Set<Position> positions) {
         Position position = null;
         while (!isPositionCorrect(position, positions))
@@ -208,10 +274,16 @@ public class Terminal implements View {
         return new Position(position1.getX(), position1.getY(), positions.stream().filter(p -> p.getX() == position1.getX() && p.getY() == position1.getY()).map(Position::getZ).collect(Collectors.toList()).get(0));
     }
 
+    /**This method asks for an action
+     * @param action action to choose
+     * @return true if user decides to accept the decision, false otherwise
+     * */
     private boolean askForDecision(String action){
         return askForBoolean("Do you want to "+action+"(y/n)? ");
     }
 
+    /**This method asks for worker id
+     * @return worker Id*/
     private int askForWorkerId(){
         int workerId;
         while (true) {
@@ -221,11 +293,16 @@ public class Terminal implements View {
         return workerId;
     }
 
+    /**This method asks for a dome to be built
+     * @return if user chooses to build a dome */
     private boolean askForDome(){
         return askForBoolean("is dome (y/n): ");
     }
 
-
+    /**This method asks to choose a god power present in a list of possible god powers
+     * @param godPowers list of possible god powers
+     * @return god power's name
+     */
     private String askForGodPower (List<GodCard> godPowers){
         List<String> godNames = new ArrayList<>();
         for (int i = 0 ; i < godPowers.size(); i++) {
@@ -247,6 +324,8 @@ public class Terminal implements View {
         return godPower;
     }
 
+    /** This method asks to choose two initial positions
+     * @return List of the two chosen initial positions, respectively about worker 1 and worker 2*/
     private List <Position> askForWorkersInitialPositions (){
         while (true) {
             System.out.println(textfields.getChooseworkerpositions());
@@ -276,6 +355,8 @@ public class Terminal implements View {
         }
     }
 
+    /**This method waits for position from user
+     * @return answer*/
     private Position askForPosition(){
         int x, y;
         while (true) {
@@ -286,6 +367,9 @@ public class Terminal implements View {
         return new Position(x, y, 0);
     }
 
+    /**This method show a request and waits for an integer from user
+     * @param request request
+     * @return answer*/
     private int askForInt(String request) {
         int num;
         while (true) {
@@ -298,11 +382,17 @@ public class Terminal implements View {
         return num;
     }
 
+    /**This method show a request and waits for answer from user
+     * @param request request
+     * @return answer*/
     private String askForString(String request){
         System.out.print(request);
         return keyboard.next();
     }
 
+    /**This method shows a request and accepts as an answer only 'y' or 'n'
+     * @param request request
+     * @return true if user types 'y', false if user types 'n'*/
     private boolean askForBoolean(String request){
         String fromKeyboard;
         do {
@@ -312,6 +402,10 @@ public class Terminal implements View {
         return fromKeyboard.toLowerCase().equals("y");
     }
 
+    /**
+     * This method prints information about an action requested to the player
+     * @param object object received from server
+     * */
     private void displayRequestAction(SerializableRequestAction object){
         if (object.getWorker1Moves().size()>0) {
             System.out.print(textfields.getMoves1());
@@ -335,23 +429,23 @@ public class Terminal implements View {
             System.out.println(textfields.getBuildsopt());
 
         if(!(object.canWorkerDoAction(1) && object.canWorkerDoAction(2))&&!(object.areBuildsEmpty()&&object.areMovesEmpty())) {
-            int workerId = 0;
-            int i;
-            for(i = 1; i<=2; i++) {
-                if (object.canWorkerDoAction(i)) {//in caso contrario non ho bisogno di chiedere al player
-                    workerId = i;
-                }
-            }
+            int workerId = 0, i;
+            for(i = 1; i<=2; i++) if (object.canWorkerDoAction(i)) workerId = i;
             System.out.println("worker id: "+ workerId);
         }
     }
 
-
+    /**This method checks if a move/build position with x,y coordinates is inside a set of possible choices
+     * with x,y,z coordinates
+     * @param position chosen position
+     * @param collection set of possible choices
+     * @return true if position is inside the set, false otherwise */
     private boolean isPositionCorrect (Position position, Set < Position > collection){
         if (position == null) return false;
         return collection.stream().anyMatch(x -> x.getX() == position.getX() && x.getY() == position.getY());
     }
 
+    /** This method prints game information about players */
     private void displayPlayersController(){
         System.out.println();
         for (int i = 0; i < board.getNumOfPlayers(); i++) {
@@ -369,6 +463,11 @@ public class Terminal implements View {
         System.out.print(Terminal.Color.WHITE.set());
     }
 
+    /**
+     * This method prints the building texture if a zone contains a building with no workers on top of it
+     * @param i x coordinate
+     * @param j y coordinate
+     * */
     private void showBuilding(int i, int j){
         System.out.print(Terminal.Color.BLUE.set());
         switch (board.getCell(i, j).getLevel()) {
@@ -384,6 +483,7 @@ public class Terminal implements View {
         }
     }
 
+    /**This method prints the whole board and information about the game */
     private void displayBoard () {
         System.out.print(Terminal.Color.WHITE.set() + "   ╔═════╤═════╤═════╤═════╤═════╗\n");
         for (int j = 4; j >= 0; j--) {
@@ -426,6 +526,11 @@ public class Terminal implements View {
         displayPlayersController();
     }
 
+    /**
+     * This method prints the building texture if a zone contains a building and a worker on top of it
+     * @param i x coordinate
+     * @param j y coordinate
+     * */
     private void showBuildingUnderWorker (int i, int j){
         if (board.getCell(i, j) == null) System.out.print(" ");
         else {
@@ -444,6 +549,10 @@ public class Terminal implements View {
         }
     }
 
+    /**
+     * This method sets a color based on a player ID
+     * @param playerId player ID
+     * */
     private void setColor(int playerId){
         switch (playerId) {
             case 1:
