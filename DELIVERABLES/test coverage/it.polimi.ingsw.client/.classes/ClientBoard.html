@@ -1,0 +1,113 @@
+
+
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html id="htmlId">
+<head>
+  <title>Coverage Report :: ClientBoard</title>
+  <style type="text/css">
+    @import "../../.css/coverage.css";
+  </style>
+</head>
+
+<body>
+<div class="header"></div>
+
+<div class="content">
+<div class="breadCrumbs">
+    [ <a href="../../index.html">all classes</a> ]
+    [ <a href="../index.html">it.polimi.ingsw.client</a> ]
+</div>
+
+<h1>Coverage Summary for Class: ClientBoard (it.polimi.ingsw.client)</h1>
+
+<table class="coverageStats">
+<tr>
+  <th class="name">Class</th>
+<th class="coverageStat 
+">
+  Class, %
+</th>
+<th class="coverageStat 
+">
+  Method, %
+</th>
+<th class="coverageStat 
+">
+  Line, %
+</th>
+</tr>
+<tr>
+  <td class="name">ClientBoard</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/ 1)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/ 10)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/ 14)
+  </span>
+</td>
+</tr>
+
+</table>
+
+<br/>
+<br/>
+
+
+<div class="sourceCode"><i>1</i>&nbsp;package it.polimi.ingsw.client;
+<i>2</i>&nbsp;
+<i>3</i>&nbsp;/**
+<i>4</i>&nbsp; * This class implements a representation of the game board.
+<i>5</i>&nbsp; * It stores relevant information about the players and the buildings
+<i>6</i>&nbsp; */
+<i>7</i>&nbsp;
+<i>8</i>&nbsp;public class ClientBoard {
+<i>9</i>&nbsp;    private ClientPlayer[] players;
+<i>10</i>&nbsp;    private ClientBuilding[][] cells; /* cell[x][y]==null &lt;==&gt; no building is located in that cell */
+<i>11</i>&nbsp;    private int playerTurnId;
+<i>12</i>&nbsp;    private int myPlayerId;
+<i>13</i>&nbsp;
+<b class="nc"><i>14</i>&nbsp;    public int getMyPlayerId(){ return myPlayerId;}</b>
+<b class="nc"><i>15</i>&nbsp;    public int getPlayerTurnId() { return playerTurnId; }</b>
+<b class="nc"><i>16</i>&nbsp;    public ClientBuilding getCell (int x, int y){ return cells[x][y]; }</b>
+<b class="nc"><i>17</i>&nbsp;    public ClientPlayer getPlayer(int playerId){ return players[playerId-1]; }</b>
+<b class="nc"><i>18</i>&nbsp;    public int getNumOfPlayers(){ return players.length; }</b>
+<i>19</i>&nbsp;
+<b class="nc"><i>20</i>&nbsp;    public void setPlayerTurnId(int playerTurnId) { this.playerTurnId = playerTurnId; }</b>
+<b class="nc"><i>21</i>&nbsp;    public void setPlayer(ClientPlayer player, int playerId){ players[playerId-1] = player; }</b>
+<b class="nc"><i>22</i>&nbsp;    public void setCell (ClientBuilding cell, int x, int y){ cells[x][y] = cell; }</b>
+<b class="nc"><i>23</i>&nbsp;    public void setMyPlayerId(int playerId){ myPlayerId = playerId;}</b>
+<i>24</i>&nbsp;
+<b class="nc"><i>25</i>&nbsp;    public ClientBoard(int numOfPlayers) {</b>
+<b class="nc"><i>26</i>&nbsp;        this.myPlayerId = 0;</b>
+<b class="nc"><i>27</i>&nbsp;        this.players = new ClientPlayer[numOfPlayers];</b>
+<b class="nc"><i>28</i>&nbsp;        this.cells = new ClientBuilding[5][5];</b>
+<b class="nc"><i>29</i>&nbsp;    }</b>
+<i>30</i>&nbsp;}
+</div>
+</div>
+
+<div class="footer">
+    
+    <div style="float:right;">generated on 2020-07-02 19:57</div>
+</div>
+</body>
+</html>

@@ -1,0 +1,124 @@
+
+
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html id="htmlId">
+<head>
+  <title>Coverage Report :: StandardConsolidateBuild</title>
+  <style type="text/css">
+    @import "../../.css/coverage.css";
+  </style>
+</head>
+
+<body>
+<div class="header"></div>
+
+<div class="content">
+<div class="breadCrumbs">
+    [ <a href="../../index.html">all classes</a> ]
+    [ <a href="../index.html">it.polimi.ingsw.effects.consolidateBuild</a> ]
+</div>
+
+<h1>Coverage Summary for Class: StandardConsolidateBuild (it.polimi.ingsw.effects.consolidateBuild)</h1>
+
+<table class="coverageStats">
+<tr>
+  <th class="name">Class</th>
+<th class="coverageStat 
+">
+  Class, %
+</th>
+<th class="coverageStat 
+">
+  Method, %
+</th>
+<th class="coverageStat 
+">
+  Line, %
+</th>
+</tr>
+<tr>
+  <td class="name">StandardConsolidateBuild</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (1/ 1)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (2/ 2)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (11/ 11)
+  </span>
+</td>
+</tr>
+
+</table>
+
+<br/>
+<br/>
+
+
+<div class="sourceCode"><i>1</i>&nbsp;package it.polimi.ingsw.effects.consolidateBuild;
+<i>2</i>&nbsp;
+<i>3</i>&nbsp;import it.polimi.ingsw.Board;
+<i>4</i>&nbsp;import it.polimi.ingsw.Cell;
+<i>5</i>&nbsp;import it.polimi.ingsw.Position;
+<i>6</i>&nbsp;import it.polimi.ingsw.server.serializable.SerializableUpdateBuild;
+<i>7</i>&nbsp;import it.polimi.ingsw.server.serializable.SerializableUpdateActions;
+<i>8</i>&nbsp;
+<i>9</i>&nbsp;/**
+<i>10</i>&nbsp; * This class implements the general consolidate action. It modifies the model after a choice of the player.
+<i>11</i>&nbsp; */
+<i>12</i>&nbsp;
+<b class="fc"><i>13</i>&nbsp;public class StandardConsolidateBuild {</b>
+<i>14</i>&nbsp;
+<i>15</i>&nbsp;    /**
+<i>16</i>&nbsp;     * Modifies the board to build a building in the Position chosen by the player.
+<i>17</i>&nbsp;      * @param buildingPosition the position chosen by the player.
+<i>18</i>&nbsp;     * @param board the board.
+<i>19</i>&nbsp;     * @param forceDome If true it builds a dome at any level
+<i>20</i>&nbsp;     * @return a &lt;Code&gt;SerializableUpdateActions&lt;/Code&gt; object which contains the build information for updating clients
+<i>21</i>&nbsp;     */
+<i>22</i>&nbsp;
+<i>23</i>&nbsp;    public SerializableUpdateActions buildUp(Position buildingPosition, Board board, boolean forceDome) {
+<b class="fc"><i>24</i>&nbsp;        Cell tempCell = board.getCell(buildingPosition);</b>
+<i>25</i>&nbsp;
+<b class="fc"><i>26</i>&nbsp;        if (forceDome) tempCell.setDome(true);</b>
+<i>27</i>&nbsp;        else {
+<b class="fc"><i>28</i>&nbsp;            if (buildingPosition.getZ()&lt;3) {</b>
+<b class="fc"><i>29</i>&nbsp;                tempCell.setBuilding(true);</b>
+<b class="fc"><i>30</i>&nbsp;                board.newCell(buildingPosition.getX(), buildingPosition.getY(), buildingPosition.getZ() + 1);</b>
+<i>31</i>&nbsp;            }
+<b class="fc"><i>32</i>&nbsp;            else tempCell.setDome(true);</b>
+<i>33</i>&nbsp;        }
+<i>34</i>&nbsp;
+<b class="fc"><i>35</i>&nbsp;        SerializableUpdateBuild updateBuild = new SerializableUpdateBuild(buildingPosition, board.getCell(buildingPosition).isDome());</b>
+<b class="fc"><i>36</i>&nbsp;        SerializableUpdateActions serializableUpdateActions = new SerializableUpdateActions();</b>
+<b class="fc"><i>37</i>&nbsp;        serializableUpdateActions.addBuildAction(updateBuild);</b>
+<b class="fc"><i>38</i>&nbsp;        return serializableUpdateActions;</b>
+<i>39</i>&nbsp;    }
+<i>40</i>&nbsp;
+<i>41</i>&nbsp;}
+</div>
+</div>
+
+<div class="footer">
+    
+    <div style="float:right;">generated on 2020-07-02 19:57</div>
+</div>
+</body>
+</html>

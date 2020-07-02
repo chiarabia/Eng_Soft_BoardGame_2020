@@ -1,0 +1,339 @@
+
+
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html id="htmlId">
+<head>
+  <title>Coverage Report :: Client</title>
+  <style type="text/css">
+    @import "../../.css/coverage.css";
+  </style>
+</head>
+
+<body>
+<div class="header"></div>
+
+<div class="content">
+<div class="breadCrumbs">
+    [ <a href="../../index.html">all classes</a> ]
+    [ <a href="../index.html">it.polimi.ingsw.client</a> ]
+</div>
+
+<h1>Coverage Summary for Class: Client (it.polimi.ingsw.client)</h1>
+
+<table class="coverageStats">
+<tr>
+  <th class="name">Class</th>
+<th class="coverageStat 
+">
+  Class, %
+</th>
+<th class="coverageStat 
+">
+  Method, %
+</th>
+<th class="coverageStat 
+">
+  Line, %
+</th>
+</tr>
+<tr>
+  <td class="name">Client</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/ 1)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/ 25)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/ 115)
+  </span>
+</td>
+</tr>
+
+</table>
+
+<br/>
+<br/>
+
+
+<div class="sourceCode"><i>1</i>&nbsp;package it.polimi.ingsw.client;
+<i>2</i>&nbsp;
+<i>3</i>&nbsp;/* CLIENTBOARD -----&gt; CLIENTPLAYER [3] -----------&gt; CLIENTWORKER [2]
+<i>4</i>&nbsp;        ?-----------&gt; CLIENTBUILDING [5][5]                                 */
+<i>5</i>&nbsp;
+<i>6</i>&nbsp;import it.polimi.ingsw.Position;
+<i>7</i>&nbsp;import it.polimi.ingsw.client.cli.Terminal;
+<i>8</i>&nbsp;import it.polimi.ingsw.client.gui.GUI;
+<i>9</i>&nbsp;import it.polimi.ingsw.exceptions.GameEndedException;
+<i>10</i>&nbsp;import it.polimi.ingsw.server.serializable.*;
+<i>11</i>&nbsp;import org.json.simple.parser.ParseException;
+<i>12</i>&nbsp;import java.util.*;
+<i>13</i>&nbsp;
+<i>14</i>&nbsp;
+<b class="nc"><i>15</i>&nbsp;public class Client implements ViewObserver {</b>
+<i>16</i>&nbsp;    private ClientBoard board;
+<i>17</i>&nbsp;    private View view;
+<i>18</i>&nbsp;    private ClientCommunicator communicator;
+<i>19</i>&nbsp;    private int port;
+<i>20</i>&nbsp;    private String IP;
+<i>21</i>&nbsp;
+<i>22</i>&nbsp;    /**Starts the client and asks the view for the player&#39;s name and the number of players in the match
+<i>23</i>&nbsp;     *@param port server port
+<i>24</i>&nbsp;     *@param IP server IP
+<i>25</i>&nbsp;     *@param GUI true for GUI, false for CLI
+<i>26</i>&nbsp;     */
+<i>27</i>&nbsp;    public void startClient(int port, String IP, boolean GUI) {
+<i>28</i>&nbsp;        try {
+<b class="nc"><i>29</i>&nbsp;            this.port = port;</b>
+<b class="nc"><i>30</i>&nbsp;            this.IP = IP;</b>
+<b class="nc"><i>31</i>&nbsp;            if (GUI) view = new GUI();</b>
+<b class="nc"><i>32</i>&nbsp;            else view = new Terminal();</b>
+<b class="nc"><i>33</i>&nbsp;            view.addObserver(this);</b>
+<b class="nc"><i>34</i>&nbsp;            view.displayStartup();</b>
+<b class="nc"><i>35</i>&nbsp;            view.askForStartupInfos(-1);</b>
+<b class="nc"><i>36</i>&nbsp;        } catch (Exception e) {</b>
+<b class="nc"><i>37</i>&nbsp;            e.printStackTrace();</b>
+<b class="nc"><i>38</i>&nbsp;            onError();</b>
+<b class="nc"><i>39</i>&nbsp;        }</b>
+<b class="nc"><i>40</i>&nbsp;    }</b>
+<i>41</i>&nbsp;
+<i>42</i>&nbsp;    /**Asks the view to display a fatal error message*/
+<i>43</i>&nbsp;    public void onError(){
+<b class="nc"><i>44</i>&nbsp;        view.displayError(0, true);</b>
+<b class="nc"><i>45</i>&nbsp;    }</b>
+<i>46</i>&nbsp;
+<i>47</i>&nbsp;    /**Saves and shows the workers&#39; initial &lt;code&gt;Position&lt;/code&gt;
+<i>48</i>&nbsp;     *@param object received from the server; holds the information with workersPositions and the playerID
+<i>49</i>&nbsp;     */
+<i>50</i>&nbsp;    public void onUpdateInitializeWorkerPositions(SerializableUpdateInitializeWorkerPositions object){
+<b class="nc"><i>51</i>&nbsp;        int whichPlayerId = object.getPlayerId();</b>
+<b class="nc"><i>52</i>&nbsp;        Position positionWorker1 = object.getWorkerPositions().get(0);</b>
+<b class="nc"><i>53</i>&nbsp;        Position positionWorker2 = object.getWorkerPositions().get(1);</b>
+<i>54</i>&nbsp;        //sets the players&#39; workers
+<b class="nc"><i>55</i>&nbsp;        board.getPlayer(whichPlayerId).getWorker(1).setX(positionWorker1.getX());</b>
+<b class="nc"><i>56</i>&nbsp;        board.getPlayer(whichPlayerId).getWorker(1).setY(positionWorker1.getY());</b>
+<b class="nc"><i>57</i>&nbsp;        board.getPlayer(whichPlayerId).getWorker(2).setX(positionWorker2.getX());</b>
+<b class="nc"><i>58</i>&nbsp;        board.getPlayer(whichPlayerId).getWorker(2).setY(positionWorker2.getY());</b>
+<b class="nc"><i>59</i>&nbsp;        view.displayBoard(object);</b>
+<b class="nc"><i>60</i>&nbsp;    }</b>
+<i>61</i>&nbsp;
+<i>62</i>&nbsp;    /**Saves and shows the chosen godPower
+<i>63</i>&nbsp;     *@param object received from the server; holds the information with the godPower and the playerID
+<i>64</i>&nbsp;     */
+<i>65</i>&nbsp;    public void onUpdateInitializeGodPower(SerializableUpdateInitializeGodPower object){
+<b class="nc"><i>66</i>&nbsp;        String godPower = object.getGodPower();</b>
+<b class="nc"><i>67</i>&nbsp;        int whichPlayerId = object.getPlayerId();</b>
+<b class="nc"><i>68</i>&nbsp;        board.getPlayer(whichPlayerId).setGodPowerName(godPower);</b>
+<b class="nc"><i>69</i>&nbsp;        view.displayGodPower(whichPlayerId);</b>
+<b class="nc"><i>70</i>&nbsp;        if (whichPlayerId==board.getNumOfPlayers()) view.displayBoardScreen();</b>
+<b class="nc"><i>71</i>&nbsp;    }</b>
+<i>72</i>&nbsp;
+<i>73</i>&nbsp;    /**Asks the view for the godPower
+<i>74</i>&nbsp;     *@param object received from the server; holds the information with the possible godPowers for the player to choose from and the playerID
+<i>75</i>&nbsp;     * @throws ParseException ParseException
+<i>76</i>&nbsp;     */
+<i>77</i>&nbsp;    public void onRequestInitializeGodPower(SerializableRequestInitializeGodPower object) throws ParseException {
+<b class="nc"><i>78</i>&nbsp;        List&lt;GodCard&gt; godCards = new ArrayList&lt;&gt;();</b>
+<b class="nc"><i>79</i>&nbsp;        for(String s : object.getGodPowers())</b>
+<b class="nc"><i>80</i>&nbsp;            godCards.add(GodCardsManager.getCard(s));</b>
+<b class="nc"><i>81</i>&nbsp;        view.askForInitialGodPower(godCards);</b>
+<b class="nc"><i>82</i>&nbsp;    }</b>
+<i>83</i>&nbsp;
+<i>84</i>&nbsp;    /**Asks the view for the initial workers&#39; &lt;code&gt;Position&lt;/code&gt;
+<i>85</i>&nbsp;     @param object received from the server; holds the information with the possibles workersPositions and the playerID
+<i>86</i>&nbsp;     */
+<i>87</i>&nbsp;    public void onRequestInitializeWorkerPositions(SerializableRequestInitializeWorkerPositions object){
+<b class="nc"><i>88</i>&nbsp;        List&lt;Position&gt; possiblePosition = new ArrayList&lt;&gt;();</b>
+<b class="nc"><i>89</i>&nbsp;        for(int i = 0; i&lt;object.getPossiblePositions().size(); i++) {</b>
+<b class="nc"><i>90</i>&nbsp;            possiblePosition.add(object.getPossiblePositions().get(i).mirrorYCoordinate());</b>
+<i>91</i>&nbsp;        }
+<b class="nc"><i>92</i>&nbsp;        view.askForInitialWorkerPositions(possiblePosition);</b>
+<b class="nc"><i>93</i>&nbsp;    }</b>
+<i>94</i>&nbsp;
+<i>95</i>&nbsp;    /**Handles a disconnection and terminates the game session
+<i>96</i>&nbsp;     * @param object received from the server; holds the information with the playerID
+<i>97</i>&nbsp;     * @throws GameEndedException if an opponent disconnected
+<i>98</i>&nbsp;     * @throws Exception if server decides to throw client out of the game; this behaviour should never happen and it&#39;s symptom of unexpected error
+<i>99</i>&nbsp;     */
+<i>100</i>&nbsp;    public void onUpdateDisconnection(SerializableUpdateDisconnection object) throws Exception {
+<b class="nc"><i>101</i>&nbsp;        if ((object).getPlayerId()==board.getMyPlayerId()) throw new Exception();</b>
+<b class="nc"><i>102</i>&nbsp;        view.displayDisconnection((object.getPlayerId()));</b>
+<b class="nc"><i>103</i>&nbsp;        throw new GameEndedException();</b>
+<i>104</i>&nbsp;    }
+<i>105</i>&nbsp;
+<i>106</i>&nbsp;    /**Asks the player to perform an action
+<i>107</i>&nbsp;     *@param object received from the server; holds the information for possible moves or builds and proprieties of the workers
+<i>108</i>&nbsp;     */
+<i>109</i>&nbsp;    public void onRequestAction(SerializableRequestAction object) {
+<b class="nc"><i>110</i>&nbsp;        view.askForAction(object);</b>
+<b class="nc"><i>111</i>&nbsp;    }</b>
+<i>112</i>&nbsp;
+<i>113</i>&nbsp;    /**Handles the victory of a player
+<i>114</i>&nbsp;     *@param object received from the server; holds the information with the playerID
+<i>115</i>&nbsp;     *@throws GameEndedException //TODO add throw
+<i>116</i>&nbsp;     */
+<i>117</i>&nbsp;    public void onUpdateWinner(SerializableUpdateWinner object) throws GameEndedException {
+<b class="nc"><i>118</i>&nbsp;        int playerId = object.getPlayerId();</b>
+<b class="nc"><i>119</i>&nbsp;        view.displayWinner(playerId);</b>
+<b class="nc"><i>120</i>&nbsp;        throw new GameEndedException();</b>
+<i>121</i>&nbsp;    }
+<i>122</i>&nbsp;
+<i>123</i>&nbsp;    /**Handles the new turn
+<i>124</i>&nbsp;     *@param object object received from the server; holds the information with the playerID and if this is the first Turn
+<i>125</i>&nbsp;     */
+<i>126</i>&nbsp;    public void onUpdateTurn (SerializableUpdateTurn object){
+<b class="nc"><i>127</i>&nbsp;        board.setPlayerTurnId( object.getPlayerId());</b>
+<b class="nc"><i>128</i>&nbsp;        if (object.getIsFirstTurn()) view.displayGameStart();</b>
+<b class="nc"><i>129</i>&nbsp;        view.displayTurn(object.getPlayerId());</b>
+<b class="nc"><i>130</i>&nbsp;    }</b>
+<i>131</i>&nbsp;
+<i>132</i>&nbsp;    /**Handles the defeat of a player
+<i>133</i>&nbsp;     *@param object received from the server; holds the information with the playerID
+<i>134</i>&nbsp;     */
+<i>135</i>&nbsp;    public void onUpdateLoser (SerializableUpdateLoser object){
+<b class="nc"><i>136</i>&nbsp;        int playerId = object.getPlayerId();</b>
+<b class="nc"><i>137</i>&nbsp;        board.getPlayer(playerId).setLost(true);</b>
+<b class="nc"><i>138</i>&nbsp;        view.displayLoser(playerId);</b>
+<b class="nc"><i>139</i>&nbsp;    }</b>
+<i>140</i>&nbsp;
+<i>141</i>&nbsp;    /**This method saves and shows all the actions
+<i>142</i>&nbsp;     *@param object object received from server
+<i>143</i>&nbsp;     */
+<i>144</i>&nbsp;    public void onUpdateAction(SerializableUpdateActions object) {
+<b class="nc"><i>145</i>&nbsp;        for(int i =0; i &lt; object.getUpdateBuild().size(); i++) {</b>
+<b class="nc"><i>146</i>&nbsp;            onUpdateBuild(object.getUpdateBuild().get(i));</b>
+<i>147</i>&nbsp;        }
+<b class="nc"><i>148</i>&nbsp;        for(int i =0; i &lt; object.getUpdateMove().size(); i++) {</b>
+<b class="nc"><i>149</i>&nbsp;            onUpdateMove(object.getUpdateMove().get(i));</b>
+<i>150</i>&nbsp;        }
+<b class="nc"><i>151</i>&nbsp;        view.displayBoard(object);</b>
+<b class="nc"><i>152</i>&nbsp;    }</b>
+<i>153</i>&nbsp;
+<i>154</i>&nbsp;    /**Saves a new build action
+<i>155</i>&nbsp;     *@param object received from the server; holds the information with the &lt;code&gt;Position&lt;/code&gt; of the new Building and if it is a dome
+<i>156</i>&nbsp;     */
+<i>157</i>&nbsp;    private void onUpdateBuild(SerializableUpdateBuild object){
+<i>158</i>&nbsp;        boolean isDome;
+<i>159</i>&nbsp;        int oldLevel, x, y;
+<b class="nc"><i>160</i>&nbsp;        x = object.getNewPosition().getX();</b>
+<b class="nc"><i>161</i>&nbsp;        y = object.getNewPosition().getY();</b>
+<b class="nc"><i>162</i>&nbsp;        isDome = object.isDome();</b>
+<b class="nc"><i>163</i>&nbsp;        if (board.getCell(x, y) != null) oldLevel = board.getCell(x, y).getLevel();</b>
+<b class="nc"><i>164</i>&nbsp;        else oldLevel = -1;</b>
+<b class="nc"><i>165</i>&nbsp;        board.setCell(new ClientBuilding(oldLevel + 1, isDome), x, y);</b>
+<b class="nc"><i>166</i>&nbsp;    }</b>
+<i>167</i>&nbsp;
+<i>168</i>&nbsp;    /**Saves a new move
+<i>169</i>&nbsp;     *@param object received from the server; holds the information with the playerID, workerID the new and old &lt;code&gt;Position&lt;/code&gt; of the worker
+<i>170</i>&nbsp;     */
+<i>171</i>&nbsp;    private void onUpdateMove(SerializableUpdateMove object){
+<i>172</i>&nbsp;        int playerId, workerId, x, y;
+<b class="nc"><i>173</i>&nbsp;        playerId = object.getPlayerId();</b>
+<b class="nc"><i>174</i>&nbsp;        workerId = object.getWorkerId();</b>
+<b class="nc"><i>175</i>&nbsp;        x = object.getNewPosition().getX();</b>
+<b class="nc"><i>176</i>&nbsp;        y = object.getNewPosition().getY();</b>
+<b class="nc"><i>177</i>&nbsp;        board.getPlayer(playerId).getWorker(workerId).setX(x);</b>
+<b class="nc"><i>178</i>&nbsp;        board.getPlayer(playerId).getWorker(workerId).setY(y);</b>
+<b class="nc"><i>179</i>&nbsp;    }</b>
+<i>180</i>&nbsp;
+<i>181</i>&nbsp;    /**Saves and shows the players&#39; names
+<i>182</i>&nbsp;     *@param names received from the server; holds the information with the players&#39; names
+<i>183</i>&nbsp;     */
+<i>184</i>&nbsp;    public void onUpdateInitializeNames (SerializableUpdateInitializeNames names){
+<b class="nc"><i>185</i>&nbsp;        for (int id = 1; id &lt;= board.getNumOfPlayers(); id++)</b>
+<b class="nc"><i>186</i>&nbsp;            board.setPlayer(new ClientPlayer(names.getPlayersNames().get(id - 1)), id);</b>
+<b class="nc"><i>187</i>&nbsp;        view.displayPlayerNames(names);</b>
+<b class="nc"><i>188</i>&nbsp;    }</b>
+<i>189</i>&nbsp;
+<i>190</i>&nbsp;    /**Replies to server echo message */
+<i>191</i>&nbsp;    public void onHello(){
+<b class="nc"><i>192</i>&nbsp;        communicator.sendMessage(&quot;HELLO&quot;);</b>
+<b class="nc"><i>193</i>&nbsp;    }</b>
+<i>194</i>&nbsp;
+<i>195</i>&nbsp;    /**Records the player ID and asks view to show it
+<i>196</i>&nbsp;     *@param message message received from server*/
+<i>197</i>&nbsp;    public void onPlayerIdAssigned(String message){
+<b class="nc"><i>198</i>&nbsp;        int playerId = (Character.getNumericValue(message.charAt(message.length()-1)));</b>
+<b class="nc"><i>199</i>&nbsp;        board.setMyPlayerId(playerId);</b>
+<b class="nc"><i>200</i>&nbsp;    }</b>
+<i>201</i>&nbsp;
+<i>202</i>&nbsp;    /**Displays an error and then restarts the client
+<i>203</i>&nbsp;     *@param error error ID
+<i>204</i>&nbsp;     *@throws GameEndedException thrown to stop current ClientCommunicator process before starting a new one
+<i>205</i>&nbsp;     */
+<i>206</i>&nbsp;    public void onRestart(int error) throws GameEndedException {
+<b class="nc"><i>207</i>&nbsp;        communicator.stopProcess();</b>
+<b class="nc"><i>208</i>&nbsp;        view.askForStartupInfos(error);</b>
+<b class="nc"><i>209</i>&nbsp;        throw new GameEndedException();</b>
+<i>210</i>&nbsp;    }
+<i>211</i>&nbsp;
+<i>212</i>&nbsp;
+<i>213</i>&nbsp;
+<i>214</i>&nbsp;    /* ViewObserver methods */
+<i>215</i>&nbsp;
+<i>216</i>&nbsp;    public void onCompletedStartup (String myName, int numOfPlayers) {
+<i>217</i>&nbsp;        try {
+<b class="nc"><i>218</i>&nbsp;            communicator = new ClientCommunicator(port, IP);</b>
+<b class="nc"><i>219</i>&nbsp;        }catch (Exception e){</b>
+<b class="nc"><i>220</i>&nbsp;            onError();</b>
+<b class="nc"><i>221</i>&nbsp;            return;</b>
+<b class="nc"><i>222</i>&nbsp;        }</b>
+<i>223</i>&nbsp;        try{
+<b class="nc"><i>224</i>&nbsp;            board = new ClientBoard(numOfPlayers);</b>
+<b class="nc"><i>225</i>&nbsp;            view.setBoard(board);</b>
+<b class="nc"><i>226</i>&nbsp;            communicator.addObserver(this);</b>
+<b class="nc"><i>227</i>&nbsp;            communicator.start();</b>
+<b class="nc"><i>228</i>&nbsp;            communicator.sendObject(new SerializableConnection(numOfPlayers, myName));</b>
+<b class="nc"><i>229</i>&nbsp;            view.displayWaitingRoom();</b>
+<b class="nc"><i>230</i>&nbsp;        }catch (Exception e){</b>
+<b class="nc"><i>231</i>&nbsp;            e.printStackTrace();</b>
+<b class="nc"><i>232</i>&nbsp;            onError();</b>
+<b class="nc"><i>233</i>&nbsp;            communicator.stopProcess();</b>
+<b class="nc"><i>234</i>&nbsp;        }</b>
+<b class="nc"><i>235</i>&nbsp;    }</b>
+<i>236</i>&nbsp;
+<i>237</i>&nbsp;    public void onCompletedBuild(Position position, int workerId, boolean isDome){
+<b class="nc"><i>238</i>&nbsp;        communicator.sendObject(new SerializableConsolidateBuild(position, workerId, isDome));</b>
+<b class="nc"><i>239</i>&nbsp;    }</b>
+<i>240</i>&nbsp;
+<i>241</i>&nbsp;    public void onCompletedMove(Position position, int workerId){
+<b class="nc"><i>242</i>&nbsp;        communicator.sendObject(new SerializableConsolidateMove(position, workerId));</b>
+<b class="nc"><i>243</i>&nbsp;    }</b>
+<i>244</i>&nbsp;
+<i>245</i>&nbsp;    public void onCompletedDecline(){
+<b class="nc"><i>246</i>&nbsp;        communicator.sendObject(new SerializableDeclineLastAction());</b>
+<b class="nc"><i>247</i>&nbsp;    }</b>
+<i>248</i>&nbsp;
+<i>249</i>&nbsp;    public void onCompletedInitializeGodPower(String chosenGodPower){
+<b class="nc"><i>250</i>&nbsp;        communicator.sendObject(new SerializableInitializeGodPower(chosenGodPower));</b>
+<b class="nc"><i>251</i>&nbsp;    }</b>
+<i>252</i>&nbsp;
+<i>253</i>&nbsp;    public void onCompletedInitializeWorkerPositions(List&lt;Position&gt; myWorkerPositions){
+<b class="nc"><i>254</i>&nbsp;        communicator.sendObject(new SerializableInitializeWorkerPositions(myWorkerPositions));</b>
+<b class="nc"><i>255</i>&nbsp;    }</b>
+<i>256</i>&nbsp;}
+</div>
+</div>
+
+<div class="footer">
+    
+    <div style="float:right;">generated on 2020-07-02 19:57</div>
+</div>
+</body>
+</html>
