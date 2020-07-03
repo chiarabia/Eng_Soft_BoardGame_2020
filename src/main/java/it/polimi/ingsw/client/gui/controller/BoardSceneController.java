@@ -1,6 +1,6 @@
 package it.polimi.ingsw.client.gui.controller;
 
-import it.polimi.ingsw.Position;
+import it.polimi.ingsw.model.Position;
 import it.polimi.ingsw.client.*;
 import it.polimi.ingsw.client.gui.MainStage;
 import javafx.application.Platform;
@@ -434,7 +434,7 @@ public class BoardSceneController implements Initializable {
                     //if a build action is possible in the cell that has been clicked by the player the buildButton is avalaible
                     buildButton.setDisable(!isBuildActionPossible);
                     //if a build action is possible in the cell that has been clicked, and the player can choose to
-                    //build a dome wherever, the domeButton is avalaible
+                    //build a dome wherever, the domeButton is available
                     domeButton.setDisable(!isBuildActionPossible && !isDomeAtAnyLevelPossible);
                     clearActionsList();
                     previousCell = cell;

@@ -61,7 +61,7 @@
     0%
   </span>
   <span class="absValue">
-    (0/ 56)
+    (0/ 55)
   </span>
 </td>
 </tr>
@@ -74,140 +74,138 @@
 
 <div class="sourceCode"><i>1</i>&nbsp;package it.polimi.ingsw.client;
 <i>2</i>&nbsp;
-<i>3</i>&nbsp;import it.polimi.ingsw.exceptions.ClientStoppedWorkingException;
+<i>3</i>&nbsp;import it.polimi.ingsw.controller.server.serializable.*;
 <i>4</i>&nbsp;import it.polimi.ingsw.exceptions.GameEndedException;
-<i>5</i>&nbsp;import it.polimi.ingsw.server.serializable.*;
-<i>6</i>&nbsp;
-<i>7</i>&nbsp;import java.io.IOException;
-<i>8</i>&nbsp;import java.io.ObjectInputStream;
-<i>9</i>&nbsp;import java.io.ObjectOutputStream;
-<i>10</i>&nbsp;import java.net.Socket;
-<i>11</i>&nbsp;import java.util.ArrayList;
-<i>12</i>&nbsp;import java.util.List;
+<i>5</i>&nbsp;
+<i>6</i>&nbsp;import java.io.IOException;
+<i>7</i>&nbsp;import java.io.ObjectInputStream;
+<i>8</i>&nbsp;import java.io.ObjectOutputStream;
+<i>9</i>&nbsp;import java.net.Socket;
+<i>10</i>&nbsp;import java.util.ArrayList;
+<i>11</i>&nbsp;import java.util.List;
+<i>12</i>&nbsp;
 <i>13</i>&nbsp;
-<i>14</i>&nbsp;
-<i>15</i>&nbsp;/**
-<i>16</i>&nbsp; * This class manages the connection between client and server
-<i>17</i>&nbsp; */
-<i>18</i>&nbsp;
-<i>19</i>&nbsp;public class ClientCommunicator extends Thread {
-<i>20</i>&nbsp;    private final Socket serverSocket;
-<b class="nc"><i>21</i>&nbsp;    private List&lt;Client&gt; observerList = new ArrayList&lt;&gt;();</b>
-<b class="nc"><i>22</i>&nbsp;    public void addObserver(Client client){observerList.add(client);}</b>
-<i>23</i>&nbsp;
-<b class="nc"><i>24</i>&nbsp;    public ClientCommunicator(int port, String IP) throws IOException {</b>
-<b class="nc"><i>25</i>&nbsp;        serverSocket = new Socket(IP, port);</b>
-<b class="nc"><i>26</i>&nbsp;    }</b>
-<i>27</i>&nbsp;
-<i>28</i>&nbsp;    /**
-<i>29</i>&nbsp;     * Waits for an object to be received from the server
-<i>30</i>&nbsp;     * @return Object
-<i>31</i>&nbsp;     * @throws IOException IOException
-<i>32</i>&nbsp;     * @throws ClassNotFoundException ClassNotFoundException
-<i>33</i>&nbsp;     */
-<i>34</i>&nbsp;    public Object waitForObject () throws IOException, ClassNotFoundException {
-<b class="nc"><i>35</i>&nbsp;        ObjectInputStream fileObjectIn = new ObjectInputStream(serverSocket.getInputStream());</b>
-<b class="nc"><i>36</i>&nbsp;        return fileObjectIn.readObject();</b>
-<i>37</i>&nbsp;    }
-<i>38</i>&nbsp;
-<i>39</i>&nbsp;    /**
-<i>40</i>&nbsp;     * Sends an object to the server
-<i>41</i>&nbsp;     * @param object Object
-<i>42</i>&nbsp;     */
-<i>43</i>&nbsp;    public void sendObject (Object object) {
-<i>44</i>&nbsp;        try {
-<b class="nc"><i>45</i>&nbsp;            ObjectOutputStream fileObjectOut = new ObjectOutputStream(serverSocket.getOutputStream());</b>
-<b class="nc"><i>46</i>&nbsp;            fileObjectOut.writeObject(object);</b>
-<b class="nc"><i>47</i>&nbsp;            fileObjectOut.flush();</b>
-<b class="nc"><i>48</i>&nbsp;        } catch (Exception e){}</b>
-<b class="nc"><i>49</i>&nbsp;    }</b>
-<i>50</i>&nbsp;
-<i>51</i>&nbsp;    /**
-<i>52</i>&nbsp;     * Sends a message to the server
-<i>53</i>&nbsp;     * @param message text
-<i>54</i>&nbsp;     */
-<i>55</i>&nbsp;    public void sendMessage (String message) {
-<b class="nc"><i>56</i>&nbsp;        sendObject(new Message(message));</b>
-<b class="nc"><i>57</i>&nbsp;    }</b>
-<i>58</i>&nbsp;
-<i>59</i>&nbsp;    /** Closes the connection with the server */
-<i>60</i>&nbsp;    public void stopProcess(){
-<b class="nc"><i>61</i>&nbsp;        try { serverSocket.close(); } catch (Exception e){}</b>
-<b class="nc"><i>62</i>&nbsp;    }</b>
-<i>63</i>&nbsp;
-<i>64</i>&nbsp;    /** Waits for objects from the server or errors and handles them */
-<i>65</i>&nbsp;    public void run(){
-<i>66</i>&nbsp;        try {
-<b class="nc"><i>67</i>&nbsp;            while (true) { reactToServer(waitForObject()); }</b>
-<b class="nc"><i>68</i>&nbsp;        } catch (GameEndedException e) {stopProcess();</b>
-<b class="nc"><i>69</i>&nbsp;        } catch (Exception e) {</b>
-<b class="nc"><i>70</i>&nbsp;            for (Client client : observerList) client.onError();</b>
-<b class="nc"><i>71</i>&nbsp;            stopProcess();</b>
-<b class="nc"><i>72</i>&nbsp;            e.printStackTrace();</b>
-<b class="nc"><i>73</i>&nbsp;        }</b>
-<b class="nc"><i>74</i>&nbsp;    }</b>
-<i>75</i>&nbsp;
-<i>76</i>&nbsp;/**
-<i>77</i>&nbsp; * Notifies the client about received objects or errors
-<i>78</i>&nbsp; * @param object Object
-<i>79</i>&nbsp; * @throws Exception Exception
-<i>80</i>&nbsp; */
-<i>81</i>&nbsp;    private void reactToServer(Object object) throws Exception {
-<b class="nc"><i>82</i>&nbsp;        if (object instanceof SerializableUpdateInitializeWorkerPositions) {</b>
-<b class="nc"><i>83</i>&nbsp;            for(int i = 0; i&lt;observerList.size(); i++)observerList.get(i).onUpdateInitializeWorkerPositions((SerializableUpdateInitializeWorkerPositions) object);</b>
-<i>84</i>&nbsp;        }
-<b class="nc"><i>85</i>&nbsp;        if (object instanceof SerializableUpdateInitializeGodPower) {</b>
-<b class="nc"><i>86</i>&nbsp;            for(int i = 0; i&lt;observerList.size(); i++)observerList.get(i).onUpdateInitializeGodPower((SerializableUpdateInitializeGodPower) object);</b>
-<i>87</i>&nbsp;        }
-<b class="nc"><i>88</i>&nbsp;        if (object instanceof SerializableRequestInitializeGodPower) {</b>
-<b class="nc"><i>89</i>&nbsp;            for(int i = 0; i&lt;observerList.size(); i++)observerList.get(i).onRequestInitializeGodPower((SerializableRequestInitializeGodPower) object);</b>
-<i>90</i>&nbsp;        }
-<b class="nc"><i>91</i>&nbsp;        if (object instanceof SerializableRequestInitializeWorkerPositions) {</b>
-<b class="nc"><i>92</i>&nbsp;            for(int i = 0; i&lt;observerList.size(); i++)observerList.get(i).onRequestInitializeWorkerPositions((SerializableRequestInitializeWorkerPositions)object);</b>
-<i>93</i>&nbsp;        }
-<b class="nc"><i>94</i>&nbsp;        if (object instanceof SerializableUpdateActions) {</b>
-<b class="nc"><i>95</i>&nbsp;            for (Client client : observerList) client.onUpdateAction((SerializableUpdateActions) object);</b>
-<i>96</i>&nbsp;        }
-<b class="nc"><i>97</i>&nbsp;        if (object instanceof SerializableRequestAction) {</b>
-<b class="nc"><i>98</i>&nbsp;            for(int i = 0; i&lt;observerList.size(); i++)observerList.get(i).onRequestAction((SerializableRequestAction) object);</b>
-<i>99</i>&nbsp;        }
-<b class="nc"><i>100</i>&nbsp;        if (object instanceof SerializableUpdateTurn) {</b>
-<b class="nc"><i>101</i>&nbsp;            for(int i = 0; i&lt;observerList.size(); i++)observerList.get(i).onUpdateTurn((SerializableUpdateTurn) object);</b>
-<i>102</i>&nbsp;        }
-<b class="nc"><i>103</i>&nbsp;        if (object instanceof SerializableUpdateInitializeNames){</b>
-<b class="nc"><i>104</i>&nbsp;            for(int i = 0; i&lt;observerList.size(); i++)observerList.get(i).onUpdateInitializeNames((SerializableUpdateInitializeNames) object);</b>
-<i>105</i>&nbsp;        }
-<b class="nc"><i>106</i>&nbsp;        if (object instanceof SerializableUpdateLoser) {</b>
-<b class="nc"><i>107</i>&nbsp;            for(int i = 0; i&lt;observerList.size(); i++)observerList.get(i).onUpdateLoser ((SerializableUpdateLoser) object);</b>
-<i>108</i>&nbsp;        }
-<b class="nc"><i>109</i>&nbsp;        if (object instanceof SerializableUpdateWinner) {</b>
-<b class="nc"><i>110</i>&nbsp;            for(int i = 0; i&lt;observerList.size(); i++)observerList.get(i).onUpdateWinner((SerializableUpdateWinner) object);</b>
-<i>111</i>&nbsp;        }
-<b class="nc"><i>112</i>&nbsp;        if (object instanceof SerializableUpdateDisconnection) {</b>
-<b class="nc"><i>113</i>&nbsp;            for(int i = 0; i&lt;observerList.size(); i++)observerList.get(i).onUpdateDisconnection((SerializableUpdateDisconnection) object);</b>
-<i>114</i>&nbsp;        }
-<b class="nc"><i>115</i>&nbsp;        if (object instanceof Message){</b>
-<b class="nc"><i>116</i>&nbsp;            if (((Message) object).getMessage().equals(&quot;HELLO&quot;)) {</b>
-<b class="nc"><i>117</i>&nbsp;                for (int i = 0; i &lt; observerList.size(); i++) observerList.get(i).onHello();</b>
-<i>118</i>&nbsp;            }
-<b class="nc"><i>119</i>&nbsp;            else if (((Message) object).getMessage().equals(&quot;ERROR_NOT_VALID_NAME&quot;)) {</b>
-<b class="nc"><i>120</i>&nbsp;                for (int i = 0; i &lt; observerList.size(); i++) observerList.get(i).onRestart(1);</b>
-<i>121</i>&nbsp;            }
-<b class="nc"><i>122</i>&nbsp;            else if (((Message) object).getMessage().equals(&quot;ERROR_NOT_VALID_NUM_OF_PLAYERS&quot;)) {</b>
-<b class="nc"><i>123</i>&nbsp;                for (int i = 0; i &lt; observerList.size(); i++) observerList.get(i).onRestart(2);</b>
-<i>124</i>&nbsp;            }
-<b class="nc"><i>125</i>&nbsp;            else if (((Message) object).getMessage().substring(0, 7).equals(&quot;PLAYER_&quot;)) {</b>
-<b class="nc"><i>126</i>&nbsp;                for(int i = 0; i&lt;observerList.size(); i++)observerList.get(i).onPlayerIdAssigned(((Message) object).getMessage());</b>
-<i>127</i>&nbsp;            }
-<i>128</i>&nbsp;        }
-<b class="nc"><i>129</i>&nbsp;    }</b>
-<i>130</i>&nbsp;}
+<i>14</i>&nbsp;/**
+<i>15</i>&nbsp; * This class manages the connection between client and server
+<i>16</i>&nbsp; */
+<i>17</i>&nbsp;
+<i>18</i>&nbsp;public class ClientCommunicator extends Thread {
+<i>19</i>&nbsp;    private final Socket serverSocket;
+<b class="nc"><i>20</i>&nbsp;    private List&lt;Client&gt; observerList = new ArrayList&lt;&gt;();</b>
+<b class="nc"><i>21</i>&nbsp;    public void addObserver(Client client){observerList.add(client);}</b>
+<i>22</i>&nbsp;
+<b class="nc"><i>23</i>&nbsp;    public ClientCommunicator(int port, String IP) throws IOException {</b>
+<b class="nc"><i>24</i>&nbsp;        serverSocket = new Socket(IP, port);</b>
+<b class="nc"><i>25</i>&nbsp;    }</b>
+<i>26</i>&nbsp;
+<i>27</i>&nbsp;    /**
+<i>28</i>&nbsp;     * Waits for an object to be received from the server
+<i>29</i>&nbsp;     * @return Object
+<i>30</i>&nbsp;     * @throws IOException IOException
+<i>31</i>&nbsp;     * @throws ClassNotFoundException ClassNotFoundException
+<i>32</i>&nbsp;     */
+<i>33</i>&nbsp;    public Object waitForObject () throws IOException, ClassNotFoundException {
+<b class="nc"><i>34</i>&nbsp;        ObjectInputStream fileObjectIn = new ObjectInputStream(serverSocket.getInputStream());</b>
+<b class="nc"><i>35</i>&nbsp;        return fileObjectIn.readObject();</b>
+<i>36</i>&nbsp;    }
+<i>37</i>&nbsp;
+<i>38</i>&nbsp;    /**
+<i>39</i>&nbsp;     * Sends an object to the server
+<i>40</i>&nbsp;     * @param object Object
+<i>41</i>&nbsp;     */
+<i>42</i>&nbsp;    public void sendObject (Object object) {
+<i>43</i>&nbsp;        try {
+<b class="nc"><i>44</i>&nbsp;            ObjectOutputStream fileObjectOut = new ObjectOutputStream(serverSocket.getOutputStream());</b>
+<b class="nc"><i>45</i>&nbsp;            fileObjectOut.writeObject(object);</b>
+<b class="nc"><i>46</i>&nbsp;            fileObjectOut.flush();</b>
+<b class="nc"><i>47</i>&nbsp;        } catch (Exception e){}</b>
+<b class="nc"><i>48</i>&nbsp;    }</b>
+<i>49</i>&nbsp;
+<i>50</i>&nbsp;    /**
+<i>51</i>&nbsp;     * Sends a message to the server
+<i>52</i>&nbsp;     * @param message text
+<i>53</i>&nbsp;     */
+<i>54</i>&nbsp;    public void sendMessage (String message) {
+<b class="nc"><i>55</i>&nbsp;        sendObject(new Message(message));</b>
+<b class="nc"><i>56</i>&nbsp;    }</b>
+<i>57</i>&nbsp;
+<i>58</i>&nbsp;    /** Closes the connection with the server */
+<i>59</i>&nbsp;    public void stopProcess(){
+<b class="nc"><i>60</i>&nbsp;        try { serverSocket.close(); } catch (Exception e){}</b>
+<b class="nc"><i>61</i>&nbsp;    }</b>
+<i>62</i>&nbsp;
+<i>63</i>&nbsp;    /** Waits for objects from the server or errors and handles them */
+<i>64</i>&nbsp;    public void run(){
+<i>65</i>&nbsp;        try {
+<b class="nc"><i>66</i>&nbsp;            while (true) { reactToServer(waitForObject()); }</b>
+<b class="nc"><i>67</i>&nbsp;        } catch (GameEndedException e) {stopProcess();</b>
+<b class="nc"><i>68</i>&nbsp;        } catch (Exception e) {</b>
+<b class="nc"><i>69</i>&nbsp;            for (Client client : observerList) client.onError();</b>
+<b class="nc"><i>70</i>&nbsp;            stopProcess();</b>
+<b class="nc"><i>71</i>&nbsp;        }</b>
+<b class="nc"><i>72</i>&nbsp;    }</b>
+<i>73</i>&nbsp;
+<i>74</i>&nbsp;/**
+<i>75</i>&nbsp; * Notifies the client about received objects or errors
+<i>76</i>&nbsp; * @param object Object
+<i>77</i>&nbsp; * @throws Exception Exception
+<i>78</i>&nbsp; */
+<i>79</i>&nbsp;    private void reactToServer(Object object) throws Exception {
+<b class="nc"><i>80</i>&nbsp;        if (object instanceof SerializableUpdateInitializeWorkerPositions) {</b>
+<b class="nc"><i>81</i>&nbsp;            for(int i = 0; i&lt;observerList.size(); i++)observerList.get(i).onUpdateInitializeWorkerPositions((SerializableUpdateInitializeWorkerPositions) object);</b>
+<i>82</i>&nbsp;        }
+<b class="nc"><i>83</i>&nbsp;        if (object instanceof SerializableUpdateInitializeGodPower) {</b>
+<b class="nc"><i>84</i>&nbsp;            for(int i = 0; i&lt;observerList.size(); i++)observerList.get(i).onUpdateInitializeGodPower((SerializableUpdateInitializeGodPower) object);</b>
+<i>85</i>&nbsp;        }
+<b class="nc"><i>86</i>&nbsp;        if (object instanceof SerializableRequestInitializeGodPower) {</b>
+<b class="nc"><i>87</i>&nbsp;            for(int i = 0; i&lt;observerList.size(); i++)observerList.get(i).onRequestInitializeGodPower((SerializableRequestInitializeGodPower) object);</b>
+<i>88</i>&nbsp;        }
+<b class="nc"><i>89</i>&nbsp;        if (object instanceof SerializableRequestInitializeWorkerPositions) {</b>
+<b class="nc"><i>90</i>&nbsp;            for(int i = 0; i&lt;observerList.size(); i++)observerList.get(i).onRequestInitializeWorkerPositions((SerializableRequestInitializeWorkerPositions)object);</b>
+<i>91</i>&nbsp;        }
+<b class="nc"><i>92</i>&nbsp;        if (object instanceof SerializableUpdateActions) {</b>
+<b class="nc"><i>93</i>&nbsp;            for (Client client : observerList) client.onUpdateAction((SerializableUpdateActions) object);</b>
+<i>94</i>&nbsp;        }
+<b class="nc"><i>95</i>&nbsp;        if (object instanceof SerializableRequestAction) {</b>
+<b class="nc"><i>96</i>&nbsp;            for(int i = 0; i&lt;observerList.size(); i++)observerList.get(i).onRequestAction((SerializableRequestAction) object);</b>
+<i>97</i>&nbsp;        }
+<b class="nc"><i>98</i>&nbsp;        if (object instanceof SerializableUpdateTurn) {</b>
+<b class="nc"><i>99</i>&nbsp;            for(int i = 0; i&lt;observerList.size(); i++)observerList.get(i).onUpdateTurn((SerializableUpdateTurn) object);</b>
+<i>100</i>&nbsp;        }
+<b class="nc"><i>101</i>&nbsp;        if (object instanceof SerializableUpdateInitializeNames){</b>
+<b class="nc"><i>102</i>&nbsp;            for(int i = 0; i&lt;observerList.size(); i++)observerList.get(i).onUpdateInitializeNames((SerializableUpdateInitializeNames) object);</b>
+<i>103</i>&nbsp;        }
+<b class="nc"><i>104</i>&nbsp;        if (object instanceof SerializableUpdateLoser) {</b>
+<b class="nc"><i>105</i>&nbsp;            for(int i = 0; i&lt;observerList.size(); i++)observerList.get(i).onUpdateLoser ((SerializableUpdateLoser) object);</b>
+<i>106</i>&nbsp;        }
+<b class="nc"><i>107</i>&nbsp;        if (object instanceof SerializableUpdateWinner) {</b>
+<b class="nc"><i>108</i>&nbsp;            for(int i = 0; i&lt;observerList.size(); i++)observerList.get(i).onUpdateWinner((SerializableUpdateWinner) object);</b>
+<i>109</i>&nbsp;        }
+<b class="nc"><i>110</i>&nbsp;        if (object instanceof SerializableUpdateDisconnection) {</b>
+<b class="nc"><i>111</i>&nbsp;            for(int i = 0; i&lt;observerList.size(); i++)observerList.get(i).onUpdateDisconnection((SerializableUpdateDisconnection) object);</b>
+<i>112</i>&nbsp;        }
+<b class="nc"><i>113</i>&nbsp;        if (object instanceof Message){</b>
+<b class="nc"><i>114</i>&nbsp;            if (((Message) object).getMessage().equals(&quot;HELLO&quot;)) {</b>
+<b class="nc"><i>115</i>&nbsp;                for (int i = 0; i &lt; observerList.size(); i++) observerList.get(i).onHello();</b>
+<i>116</i>&nbsp;            }
+<b class="nc"><i>117</i>&nbsp;            else if (((Message) object).getMessage().equals(&quot;ERROR_NOT_VALID_NAME&quot;)) {</b>
+<b class="nc"><i>118</i>&nbsp;                for (int i = 0; i &lt; observerList.size(); i++) observerList.get(i).onRestart(1);</b>
+<i>119</i>&nbsp;            }
+<b class="nc"><i>120</i>&nbsp;            else if (((Message) object).getMessage().equals(&quot;ERROR_NOT_VALID_NUM_OF_PLAYERS&quot;)) {</b>
+<b class="nc"><i>121</i>&nbsp;                for (int i = 0; i &lt; observerList.size(); i++) observerList.get(i).onRestart(2);</b>
+<i>122</i>&nbsp;            }
+<b class="nc"><i>123</i>&nbsp;            else if (((Message) object).getMessage().substring(0, 7).equals(&quot;PLAYER_&quot;)) {</b>
+<b class="nc"><i>124</i>&nbsp;                for(int i = 0; i&lt;observerList.size(); i++)observerList.get(i).onPlayerIdAssigned(((Message) object).getMessage());</b>
+<i>125</i>&nbsp;            }
+<i>126</i>&nbsp;        }
+<b class="nc"><i>127</i>&nbsp;    }</b>
+<i>128</i>&nbsp;}
 </div>
 </div>
 
 <div class="footer">
     
-    <div style="float:right;">generated on 2020-07-02 19:57</div>
+    <div style="float:right;">generated on 2020-07-03 19:13</div>
 </div>
 </body>
 </html>

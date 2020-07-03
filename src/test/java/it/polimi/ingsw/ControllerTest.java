@@ -1,7 +1,9 @@
 package it.polimi.ingsw;
 
-import it.polimi.ingsw.effects.winCondition.StandardLoseCondition;
-import it.polimi.ingsw.server.ServerView;
+import it.polimi.ingsw.controller.Controller;
+import it.polimi.ingsw.model.*;
+import it.polimi.ingsw.model.effects.winCondition.StandardLoseCondition;
+import it.polimi.ingsw.controller.server.ServerView;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -79,7 +81,7 @@ public class ControllerTest {
         player2WorkerPositions.add(position22);
 
         Position position31 = new Position (3,0, 0);
-        Position position32 = new Position (0,3, 0);
+        Position position32 = new Position(0,3, 0);
         ArrayList<Position> player3WorkerPositions = new ArrayList<>();
         player3WorkerPositions.add(position31);
         player3WorkerPositions.add(position32);

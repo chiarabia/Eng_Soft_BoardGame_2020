@@ -6,6 +6,9 @@
 - ###   **Dani**            Vittorio ([@vittoriodani]( https://github.com/vittoriodani))         886818  10614148  <br>vittorio.dani@mail.polimi.it  
 - ###   **Declich**         Marcello Matteo ([@MarcelloMatteoDeclich](https://github.com/MarcelloMatteoDeclich))  887492  10579567  <br>marcellomatteodeclich@mail.polimi.it  
 
+ <b>How to best use the CLI interface </b> <p>
+ For a better experience with colours it's best to use the Linux's Shell
+
 | Functionality | State |
 |:-----------------------|:------------------------------------:|
 | Basic rules | [![GREEN](https://placehold.it/15/44bb44/44bb44)](#) |

@@ -93,7 +93,7 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 </div>
 <div class="contentContainer">
 <div class="inheritance" title="Inheritance Tree">java.lang.Object
-<div class="inheritance">it.polimi.ingsw.Controller</div>
+<div class="inheritance">it.polimi.ingsw.controller.Controller</div>
 </div>
 <section class="description">
 <dl>
@@ -135,7 +135,7 @@ implements <a href="server/ProxyObserver.html" title="interface in it.polimi.ing
 </thead>
 <tbody>
 <tr class="altColor">
-<th class="colConstructorName" scope="row"><code><span class="memberNameLink"><a href="#%3Cinit%3E(it.polimi.ingsw.Game,it.polimi.ingsw.server.ServerView)">Controller</a></span>&#8203;(<a href="Game.html" title="class in it.polimi.ingsw">Game</a>&nbsp;game,
+<th class="colConstructorName" scope="row"><code><span class="memberNameLink"><a href="#%3Cinit%3E(it.polimi.ingsw.model.Game,it.polimi.ingsw.server.ServerView)">Controller</a></span>&#8203;(<a href="Game.html" title="class in it.polimi.ingsw">Game</a>&nbsp;game,
 <a href="server/ServerView.html" title="class in it.polimi.ingsw.server">ServerView</a>&nbsp;serverView)</code></th>
 <td class="colLast">&nbsp;</td>
 </tr>
@@ -176,7 +176,7 @@ implements <a href="server/ProxyObserver.html" title="interface in it.polimi.ing
 </tr>
 <tr class="altColor" id="i2">
 <td class="colFirst"><code>void</code></td>
-<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#onConsolidateBuild(int,int,it.polimi.ingsw.Position,boolean)">onConsolidateBuild</a></span>&#8203;(int&nbsp;playerId,
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#onConsolidateBuild(int,int,it.polimi.ingsw.model.Position,boolean)">onConsolidateBuild</a></span>&#8203;(int&nbsp;playerId,
 int&nbsp;workerID,
 <a href="Position.html" title="class in it.polimi.ingsw">Position</a>&nbsp;newPosition,
 boolean&nbsp;forceDome)</code></th>
@@ -275,7 +275,7 @@ java.util.List&lt;<a href="Position.html" title="class in it.polimi.ingsw">Posit
 <ul class="blockList">
 <li class="blockList">
 <section class="detail">
-<h3><a id="&lt;init&gt;(it.polimi.ingsw.Game,it.polimi.ingsw.server.ServerView)">Controller</a></h3>
+<h3><a id="&lt;init&gt;(it.polimi.ingsw.model.Game,it.polimi.ingsw.server.ServerView)">Controller</a></h3>
 <div class="memberSignature"><span class="modifiers">public</span>&nbsp;<span class="memberName">Controller</span>&#8203;(<span class="arguments"><a href="Game.html" title="class in it.polimi.ingsw">Game</a>&nbsp;game,
 <a href="server/ServerView.html" title="class in it.polimi.ingsw.server">ServerView</a>&nbsp;serverView)</span></div>
 </section>
@@ -329,7 +329,7 @@ int&nbsp;workerId,
 </li>
 <li class="blockList">
 <section class="detail">
-<h3><a id="onConsolidateBuild(int,int,it.polimi.ingsw.Position,boolean)">onConsolidateBuild</a></h3>
+<h3><a id="onConsolidateBuild(int,int,it.polimi.ingsw.model.Position,boolean)">onConsolidateBuild</a></h3>
 <div class="memberSignature"><span class="modifiers">public</span>&nbsp;<span class="returnType">void</span>&nbsp;<span class="memberName">onConsolidateBuild</span>&#8203;(<span class="arguments">int&nbsp;playerId,
 int&nbsp;workerID,
 <a href="Position.html" title="class in it.polimi.ingsw">Position</a>&nbsp;newPosition,
@@ -337,7 +337,7 @@ boolean&nbsp;forceDome)</span></div>
 <div class="block">Handles a ConsolidateBuild object received from a client</div>
 <dl>
 <dt><span class="overrideSpecifyLabel">Specified by:</span></dt>
-<dd><code><a href="server/ProxyObserver.html#onConsolidateBuild(int,int,it.polimi.ingsw.Position,boolean)">onConsolidateBuild</a></code>&nbsp;in interface&nbsp;<code><a href="server/ProxyObserver.html" title="interface in it.polimi.ingsw.server">ProxyObserver</a></code></dd>
+<dd><code><a href="server/ProxyObserver.html#onConsolidateBuild(int,int,it.polimi.ingsw.model.Position,boolean)">onConsolidateBuild</a></code>&nbsp;in interface&nbsp;<code><a href="server/ProxyObserver.html" title="interface in it.polimi.ingsw.server">ProxyObserver</a></code></dd>
 <dt><span class="paramLabel">Parameters:</span></dt>
 <dd><code>playerId</code> - player who sent the object</dd>
 <dd><code>forceDome</code> - true if client asked to force a dome</dd>

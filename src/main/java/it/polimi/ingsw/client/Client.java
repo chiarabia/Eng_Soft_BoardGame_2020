@@ -3,11 +3,11 @@ package it.polimi.ingsw.client;
 /* CLIENTBOARD -----> CLIENTPLAYER [3] -----------> CLIENTWORKER [2]
         Ͱ-----------> CLIENTBUILDING [5][5]                                 */
 
-import it.polimi.ingsw.Position;
+import it.polimi.ingsw.controller.server.serializable.*;
+import it.polimi.ingsw.model.Position;
 import it.polimi.ingsw.client.cli.Terminal;
 import it.polimi.ingsw.client.gui.GUI;
 import it.polimi.ingsw.exceptions.GameEndedException;
-import it.polimi.ingsw.server.serializable.*;
 import org.json.simple.parser.ParseException;
 import java.util.*;
 

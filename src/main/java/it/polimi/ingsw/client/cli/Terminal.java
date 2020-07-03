@@ -1,10 +1,12 @@
 package it.polimi.ingsw.client.cli;
 
-import it.polimi.ingsw.Position;
+import it.polimi.ingsw.controller.server.serializable.SerializableRequestAction;
+import it.polimi.ingsw.controller.server.serializable.SerializableUpdateActions;
+import it.polimi.ingsw.controller.server.serializable.SerializableUpdateInitializeNames;
+import it.polimi.ingsw.controller.server.serializable.SerializableUpdateInitializeWorkerPositions;
+import it.polimi.ingsw.model.Position;
 import it.polimi.ingsw.client.*;
-import it.polimi.ingsw.server.serializable.*;
 import org.json.simple.parser.ParseException;
-import org.w3c.dom.Text;
 
 import java.util.*;
 import java.util.stream.Collectors;

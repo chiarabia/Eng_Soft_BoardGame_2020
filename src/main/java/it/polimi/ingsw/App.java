@@ -1,7 +1,7 @@
 package it.polimi.ingsw;
 
 import it.polimi.ingsw.client.Client;
-import it.polimi.ingsw.server.Server;
+import it.polimi.ingsw.controller.server.Server;
 import org.json.simple.JSONObject;
 
 public class App{

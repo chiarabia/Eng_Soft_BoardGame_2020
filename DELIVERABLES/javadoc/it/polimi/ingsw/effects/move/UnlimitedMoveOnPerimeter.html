@@ -93,8 +93,8 @@ $('.navPadding').css('padding-top', $('.fixedNav').css("height"));
 </div>
 <div class="contentContainer">
 <div class="inheritance" title="Inheritance Tree">java.lang.Object
-<div class="inheritance"><a href="StandardMove.html" title="class in it.polimi.ingsw.effects.move">it.polimi.ingsw.effects.move.StandardMove</a>
-<div class="inheritance">it.polimi.ingsw.effects.move.UnlimitedMoveOnPerimeter</div>
+<div class="inheritance"><a href="StandardMove.html" title="class in it.polimi.ingsw.effects.move">it.polimi.ingsw.model.effects.move.StandardMove</a>
+<div class="inheritance">it.polimi.ingsw.model.effects.move.UnlimitedMoveOnPerimeter</div>
 </div>
 </div>
 <section class="description">
@@ -114,7 +114,7 @@ extends <a href="StandardMove.html" title="class in it.polimi.ingsw.effects.move
 <h2>Field Summary</h2>
 <div class="inheritedList">
 <h3>Fields inherited from class&nbsp;it.polimi.ingsw.effects.move.<a href="StandardMove.html" title="class in it.polimi.ingsw.effects.move">StandardMove</a></h3>
-<a id="fields.inherited.from.class.it.polimi.ingsw.effects.move.StandardMove">
+<a id="fields.inherited.from.class.it.polimi.ingsw.model.effects.move.StandardMove">
 <!--   -->
 </a><code><a href="StandardMove.html#moves">moves</a></code></div>
 </section>
@@ -164,7 +164,7 @@ extends <a href="StandardMove.html" title="class in it.polimi.ingsw.effects.move
 <tbody>
 <tr class="altColor" id="i0">
 <td class="colFirst"><code>protected boolean</code></td>
-<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#checkMoveConditions(it.polimi.ingsw.Cell,it.polimi.ingsw.Turn)">checkMoveConditions</a></span>&#8203;(<a href="../../Cell.html" title="class in it.polimi.ingsw">Cell</a>&nbsp;workerCell,
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#checkMoveConditions(it.polimi.ingsw.model.Cell,it.polimi.ingsw.Turn)">checkMoveConditions</a></span>&#8203;(<a href="../../Cell.html" title="class in it.polimi.ingsw">Cell</a>&nbsp;workerCell,
 <a href="../../Turn.html" title="class in it.polimi.ingsw">Turn</a>&nbsp;turn)</code></th>
 <td class="colLast">
 <div class="block">If the worker is in a perimetric cell, it can move regardless of the number of moves already made</div>
@@ -172,7 +172,7 @@ extends <a href="StandardMove.html" title="class in it.polimi.ingsw.effects.move
 </tr>
 <tr class="rowColor" id="i1">
 <td class="colFirst"><code>java.util.Set&lt;<a href="../../Position.html" title="class in it.polimi.ingsw">Position</a>&gt;</code></td>
-<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#move(it.polimi.ingsw.Position,it.polimi.ingsw.Board,it.polimi.ingsw.Turn)">move</a></span>&#8203;(<a href="../../Position.html" title="class in it.polimi.ingsw">Position</a>&nbsp;workerPosition,
+<th class="colSecond" scope="row"><code><span class="memberNameLink"><a href="#move(it.polimi.ingsw.model.Position,it.polimi.ingsw.model.Board,it.polimi.ingsw.Turn)">move</a></span>&#8203;(<a href="../../Position.html" title="class in it.polimi.ingsw">Position</a>&nbsp;workerPosition,
 <a href="../../Board.html" title="class in it.polimi.ingsw">Board</a>&nbsp;board,
 <a href="../../Turn.html" title="class in it.polimi.ingsw">Turn</a>&nbsp;turn)</code></th>
 <td class="colLast">
@@ -185,7 +185,7 @@ extends <a href="StandardMove.html" title="class in it.polimi.ingsw.effects.move
 </div>
 <div class="inheritedList">
 <h3>Methods inherited from class&nbsp;it.polimi.ingsw.effects.move.<a href="StandardMove.html" title="class in it.polimi.ingsw.effects.move">StandardMove</a></h3>
-<a id="methods.inherited.from.class.it.polimi.ingsw.effects.move.StandardMove">
+<a id="methods.inherited.from.class.it.polimi.ingsw.model.effects.move.StandardMove">
 <!--   -->
 </a><code><a href="StandardMove.html#heightsDifference(int,int)">heightsDifference</a></code></div>
 <div class="inheritedList">
@@ -224,15 +224,15 @@ extends <a href="StandardMove.html" title="class in it.polimi.ingsw.effects.move
 <ul class="blockList">
 <li class="blockList">
 <section class="detail">
-<h3><a id="move(it.polimi.ingsw.Position,it.polimi.ingsw.Board,it.polimi.ingsw.Turn)">move</a></h3>
+<h3><a id="move(it.polimi.ingsw.model.Position,it.polimi.ingsw.model.Board,it.polimi.ingsw.Turn)">move</a></h3>
 <div class="memberSignature"><span class="modifiers">public</span>&nbsp;<span class="returnType">java.util.Set&lt;<a href="../../Position.html" title="class in it.polimi.ingsw">Position</a>&gt;</span>&nbsp;<span class="memberName">move</span>&#8203;(<span class="arguments"><a href="../../Position.html" title="class in it.polimi.ingsw">Position</a>&nbsp;workerPosition,
 <a href="../../Board.html" title="class in it.polimi.ingsw">Board</a>&nbsp;board,
 <a href="../../Turn.html" title="class in it.polimi.ingsw">Turn</a>&nbsp;turn)</span></div>
-<div class="block"><span class="descfrmTypeLabel">Description copied from class:&nbsp;<code><a href="StandardMove.html#move(it.polimi.ingsw.Position,it.polimi.ingsw.Board,it.polimi.ingsw.Turn)">StandardMove</a></code></span></div>
+<div class="block"><span class="descfrmTypeLabel">Description copied from class:&nbsp;<code><a href="StandardMove.html#move(it.polimi.ingsw.model.Position,it.polimi.ingsw.model.Board,it.polimi.ingsw.Turn)">StandardMove</a></code></span></div>
 <div class="block">The general move method</div>
 <dl>
 <dt><span class="overrideSpecifyLabel">Overrides:</span></dt>
-<dd><code><a href="StandardMove.html#move(it.polimi.ingsw.Position,it.polimi.ingsw.Board,it.polimi.ingsw.Turn)">move</a></code>&nbsp;in class&nbsp;<code><a href="StandardMove.html" title="class in it.polimi.ingsw.effects.move">StandardMove</a></code></dd>
+<dd><code><a href="StandardMove.html#move(it.polimi.ingsw.model.Position,it.polimi.ingsw.model.Board,it.polimi.ingsw.Turn)">move</a></code>&nbsp;in class&nbsp;<code><a href="StandardMove.html" title="class in it.polimi.ingsw.effects.move">StandardMove</a></code></dd>
 <dt><span class="paramLabel">Parameters:</span></dt>
 <dd><code>workerPosition</code> - the worker's Position</dd>
 <dd><code>board</code> - the board</dd>
@@ -245,13 +245,13 @@ extends <a href="StandardMove.html" title="class in it.polimi.ingsw.effects.move
 </li>
 <li class="blockList">
 <section class="detail">
-<h3><a id="checkMoveConditions(it.polimi.ingsw.Cell,it.polimi.ingsw.Turn)">checkMoveConditions</a></h3>
+<h3><a id="checkMoveConditions(it.polimi.ingsw.model.Cell,it.polimi.ingsw.Turn)">checkMoveConditions</a></h3>
 <div class="memberSignature"><span class="modifiers">protected</span>&nbsp;<span class="returnType">boolean</span>&nbsp;<span class="memberName">checkMoveConditions</span>&#8203;(<span class="arguments"><a href="../../Cell.html" title="class in it.polimi.ingsw">Cell</a>&nbsp;workerCell,
 <a href="../../Turn.html" title="class in it.polimi.ingsw">Turn</a>&nbsp;turn)</span></div>
 <div class="block">If the worker is in a perimetric cell, it can move regardless of the number of moves already made</div>
 <dl>
 <dt><span class="overrideSpecifyLabel">Overrides:</span></dt>
-<dd><code><a href="StandardMove.html#checkMoveConditions(it.polimi.ingsw.Cell,it.polimi.ingsw.Turn)">checkMoveConditions</a></code>&nbsp;in class&nbsp;<code><a href="StandardMove.html" title="class in it.polimi.ingsw.effects.move">StandardMove</a></code></dd>
+<dd><code><a href="StandardMove.html#checkMoveConditions(it.polimi.ingsw.model.Cell,it.polimi.ingsw.Turn)">checkMoveConditions</a></code>&nbsp;in class&nbsp;<code><a href="StandardMove.html" title="class in it.polimi.ingsw.effects.move">StandardMove</a></code></dd>
 <dt><span class="paramLabel">Parameters:</span></dt>
 <dd><code>workerCell</code> - the worker's Cell</dd>
 <dd><code>turn</code> - the player's turn</dd>

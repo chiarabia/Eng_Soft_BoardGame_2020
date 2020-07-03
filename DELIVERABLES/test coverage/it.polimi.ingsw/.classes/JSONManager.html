@@ -58,10 +58,10 @@
 </td>
 <td class="coverageStat">
   <span class="percent">
-    81.2%
+    92.9%
   </span>
   <span class="absValue">
-    (13/ 16)
+    (13/ 14)
   </span>
 </td>
 </tr>
@@ -100,28 +100,26 @@
 <b class="fc"><i>26</i>&nbsp;        String line = null;</b>
 <i>27</i>&nbsp;        try {
 <b class="fc"><i>28</i>&nbsp;            line = buf.readLine();</b>
-<b class="fc"><i>29</i>&nbsp;        } catch (IOException e) {e.printStackTrace();}</b>
+<b class="fc"><i>29</i>&nbsp;        } catch (IOException e) {}</b>
 <i>30</i>&nbsp;
 <b class="fc"><i>31</i>&nbsp;        StringBuilder sb = new StringBuilder();</b>
 <b class="fc"><i>32</i>&nbsp;        while (line != null) {</b>
 <b class="fc"><i>33</i>&nbsp;            sb.append(line).append(&quot;\n&quot;);</b>
 <i>34</i>&nbsp;            try {
 <b class="fc"><i>35</i>&nbsp;                line = buf.readLine();</b>
-<b class="nc"><i>36</i>&nbsp;            } catch (IOException e) {</b>
-<b class="nc"><i>37</i>&nbsp;                e.printStackTrace();</b>
-<b class="fc"><i>38</i>&nbsp;            }</b>
-<i>39</i>&nbsp;        }
-<i>40</i>&nbsp;
-<b class="fc"><i>41</i>&nbsp;        String fileAsString = sb.toString();</b>
-<b class="fc"><i>42</i>&nbsp;        return (JSONObject) new JSONParser().parse(fileAsString);</b>
-<i>43</i>&nbsp;    }
-<i>44</i>&nbsp;}
+<b class="fc"><i>36</i>&nbsp;            } catch (IOException e) {}</b>
+<i>37</i>&nbsp;        }
+<i>38</i>&nbsp;
+<b class="fc"><i>39</i>&nbsp;        String fileAsString = sb.toString();</b>
+<b class="fc"><i>40</i>&nbsp;        return (JSONObject) new JSONParser().parse(fileAsString);</b>
+<i>41</i>&nbsp;    }
+<i>42</i>&nbsp;}
 </div>
 </div>
 
 <div class="footer">
     
-    <div style="float:right;">generated on 2020-07-02 19:57</div>
+    <div style="float:right;">generated on 2020-07-03 19:13</div>
 </div>
 </body>
 </html>
