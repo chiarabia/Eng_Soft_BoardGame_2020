@@ -1,0 +1,117 @@
+
+
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html id="htmlId">
+<head>
+  <title>Coverage Report :: View</title>
+  <style type="text/css">
+    @import "../../.css/coverage.css";
+  </style>
+</head>
+
+<body>
+<div class="header"></div>
+
+<div class="content">
+<div class="breadCrumbs">
+    [ <a href="../../index.html">all classes</a> ]
+    [ <a href="../index.html">it.polimi.ingsw.client</a> ]
+</div>
+
+<h1>Coverage Summary for Class: View (it.polimi.ingsw.client)</h1>
+
+<table class="coverageStats">
+<tr>
+  <th class="name">Class</th>
+</tr>
+<tr>
+  <td class="name">View</td>
+</tr>
+
+</table>
+
+<br/>
+<br/>
+
+
+<div class="sourceCode"><i>1</i>&nbsp;package it.polimi.ingsw.client;
+<i>2</i>&nbsp;
+<i>3</i>&nbsp;import it.polimi.ingsw.Position;
+<i>4</i>&nbsp;import it.polimi.ingsw.server.serializable.*;
+<i>5</i>&nbsp;
+<i>6</i>&nbsp;import java.util.List;
+<i>7</i>&nbsp;
+<i>8</i>&nbsp;/**
+<i>9</i>&nbsp; * This interface implements methods used by the client to interact with the View
+<i>10</i>&nbsp; */
+<i>11</i>&nbsp;
+<i>12</i>&nbsp;public interface View {
+<i>13</i>&nbsp;    /* service methods */
+<i>14</i>&nbsp;    void setBoard(ClientBoard board);
+<i>15</i>&nbsp;    void addObserver(ViewObserver observer);
+<i>16</i>&nbsp;
+<i>17</i>&nbsp;    /* representation methods */
+<i>18</i>&nbsp;    /**This method is called when the game has started and the initial scene is shown*/
+<i>19</i>&nbsp;    void displayStartup();
+<i>20</i>&nbsp;    /**This method is called when the WaitingScene needs to be shown*/
+<i>21</i>&nbsp;    void displayWaitingRoom();
+<i>22</i>&nbsp;    /**This method is called when the match has been created and either the names of the players are shown or
+<i>23</i>&nbsp;     * a WaitingScene that notifies the player that the match has started and they need to wait for other players
+<i>24</i>&nbsp;     * to chose their godPowers
+<i>25</i>&nbsp;     * @param names holds the information with the players names*/
+<i>26</i>&nbsp;    void displayPlayerNames(SerializableUpdateInitializeNames names);
+<i>27</i>&nbsp;    /**This method is called when a player has chosen a god power
+<i>28</i>&nbsp;    * @param playerId player ID*/
+<i>29</i>&nbsp;    void displayGodPower(int playerId);
+<i>30</i>&nbsp;    /**This method is called when godPowers have been chosen and the BoardScene can be shown*/
+<i>31</i>&nbsp;    void displayBoardScreen();
+<i>32</i>&nbsp;    /**This method is called when the first turn is starting*/
+<i>33</i>&nbsp;    void displayGameStart();
+<i>34</i>&nbsp;    /**This method is called when changes were made to the board and need to be displayed
+<i>35</i>&nbsp;     * @param update holds the information for possible moves or builds and proprieties of the workers*/
+<i>36</i>&nbsp;    void displayBoard(SerializableUpdateActions update);
+<i>37</i>&nbsp;    /**This method is called when workers have been added to the board in the first phase of the game
+<i>38</i>&nbsp;     * @param update holds the information for possible moves and proprieties of the workers */
+<i>39</i>&nbsp;    void displayBoard(SerializableUpdateInitializeWorkerPositions update);
+<i>40</i>&nbsp;    /**This method is called when a new turn has started
+<i>41</i>&nbsp;     * @param playerId the ID of the player playing the current turn*/
+<i>42</i>&nbsp;    void displayTurn(int playerId);
+<i>43</i>&nbsp;    /**This method is called when a player has won
+<i>44</i>&nbsp;     * @param playerId the ID of the player that has won*/
+<i>45</i>&nbsp;    void displayWinner(int playerId);
+<i>46</i>&nbsp;    /**This method is called when a player has lost
+<i>47</i>&nbsp;     * @param playerId the ID of the player that has lost*/
+<i>48</i>&nbsp;    void displayLoser(int playerId);
+<i>49</i>&nbsp;    /**This method is called when an error message has to be shown
+<i>50</i>&nbsp;     * @param errorId error ID
+<i>51</i>&nbsp;     * @param isFatalError true if it&#39;s fatal error */
+<i>52</i>&nbsp;    void displayError(int errorId, boolean isFatalError);
+<i>53</i>&nbsp;    /**This method is called when a player has disconnected
+<i>54</i>&nbsp;     * @param playerId the ID of the player that has disconnected*/
+<i>55</i>&nbsp;    void displayDisconnection (int playerId);
+<i>56</i>&nbsp;
+<i>57</i>&nbsp;    /* input methods */
+<i>58</i>&nbsp;    /**This method is called when the player has to make an action
+<i>59</i>&nbsp;     * @param object holds the information for possible moves or builds and proprieties of the workers*/
+<i>60</i>&nbsp;    void askForAction(SerializableRequestAction object);
+<i>61</i>&nbsp;    /**This method is called when the player has to choose a god power
+<i>62</i>&nbsp;     * @param godCards the &lt;code&gt;List&amp;lt;GodCard&amp;gt;&lt;/code&gt; with all possibles godCards to choose from for the player*/
+<i>63</i>&nbsp;    void askForInitialGodPower(List&lt;GodCard&gt; godCards);
+<i>64</i>&nbsp;    /**This method is called when the player has to choose the initial workers &lt;code&gt;Positions&lt;/code&gt;
+<i>65</i>&nbsp;     * @param possiblePositions &lt;code&gt;List&amp;lt;Position&amp;gt;&lt;/code&gt; with the possible &lt;code&gt;Positions&lt;/code&gt; for the worker*/
+<i>66</i>&nbsp;    void askForInitialWorkerPositions(List &lt;Position&gt; possiblePositions);
+<i>67</i>&nbsp;    /**This method is called when the player has to choose their name and the number of players they want to play with
+<i>68</i>&nbsp;     *@param error error ID, -1 means no error */
+<i>69</i>&nbsp;    void askForStartupInfos(int error);
+<i>70</i>&nbsp;}
+</div>
+</div>
+
+<div class="footer">
+    
+    <div style="float:right;">generated on 2020-07-02 19:57</div>
+</div>
+</body>
+</html>

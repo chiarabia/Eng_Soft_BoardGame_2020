@@ -6,26 +6,33 @@ import it.polimi.ingsw.Position;
 import it.polimi.ingsw.server.serializable.SerializableUpdateBuild;
 import it.polimi.ingsw.server.serializable.SerializableUpdateActions;
 
+/**
+ * This class implements the general consolidate action. It modifies the model after a choice of the player.
+ */
+
 public class StandardConsolidateBuild {
+
+    /**
+     * Modifies the board to build a building in the Position chosen by the player.
+      * @param buildingPosition the position chosen by the player.
+     * @param board the board.
+     * @param forceDome If true it builds a dome at any level
+     * @return a <Code>SerializableUpdateActions</Code> object which contains the build information for updating clients
+     */
+
     public SerializableUpdateActions buildUp(Position buildingPosition, Board board, boolean forceDome) {
         Cell tempCell = board.getCell(buildingPosition);
 
-        if (forceDome) { //costruisco una cupola a qualsiasi livello
-            tempCell.setDome(true);
-        }
-
+        if (forceDome) tempCell.setDome(true);
         else {
-            if (buildingPosition.getZ()<3) { //Se la cella libera non è in cima, costruisco il building e la casella al di sopra diventa free
+            if (buildingPosition.getZ()<3) {
                 tempCell.setBuilding(true);
                 board.newCell(buildingPosition.getX(), buildingPosition.getY(), buildingPosition.getZ() + 1);
             }
-            else { //sono sulla sommità e quindi costruisco una cupola
-                tempCell.setDome(true);
-            }
+            else tempCell.setDome(true);
         }
-        SerializableUpdateBuild updateBuild = new SerializableUpdateBuild(buildingPosition,
-                board.getCell(buildingPosition)
-                        .isDome());
+
+        SerializableUpdateBuild updateBuild = new SerializableUpdateBuild(buildingPosition, board.getCell(buildingPosition).isDome());
         SerializableUpdateActions serializableUpdateActions = new SerializableUpdateActions();
         serializableUpdateActions.addBuildAction(updateBuild);
         return serializableUpdateActions;

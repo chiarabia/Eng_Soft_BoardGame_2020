@@ -1,5 +1,6 @@
 package it.polimi.ingsw.effects;
 
+import it.polimi.ingsw.JSONManager;
 import it.polimi.ingsw.effects.build.*;
 import it.polimi.ingsw.effects.consolidateBuild.StandardConsolidateBuild;
 import it.polimi.ingsw.effects.consolidateBuild.UnderWorker;
@@ -29,46 +30,47 @@ public class GodPowerManager {
      */
     private static int opponentsCantWinOnPerimeterPlayer;
 
-    /*JSON files' path*/
-    private static String getRoot(){
-        String root = ClassLoader.getSystemClassLoader().getResource("configurations/Configuration.json").getPath();
-        if (root.substring(0,5).equals("file:")) root = root.substring(5, root.length());
-        if (root.substring(2,3).equals(":")) root = root.substring(3, root.length());
-        //return root.substring(0, root.length()-18) + "cards/";
-        return "src/main/resources/configurations/cards/";
-    }
-
     /**
-     * This method randomly extracts different 'numOfPlayers' cards in the form of List <String>,
-     * regardless of names and/or number of cards in the Cards folder
+     * Randomly extracts different 'numOfPlayers' cards in the form of <code>List&lt;JSONObject&gt;</code>,
+     * regardless of the number of cards in the Cards folder.
      * @param numOfPlayers number of players
-     * @return List</String>
-     * @throws IOException IO Exception
+     * @return <code>List&lt;JSONObject&gt;</code>
+     * @throws ParseException ParseException
      */
 
-    private static List <String> chooseGodFiles (int numOfPlayers) throws IOException {
-        List <String> cards = new ArrayList<>();
-        Stream<Path> paths = Files.walk(Paths.get(getRoot()));
-        paths.filter(Files::isRegularFile).forEach(x->{cards.add(x.toString().substring(getRoot().length()));});
-        // the card list contains all 14 strings of JSON file names (eg "ApolloCard.json")
+    private static List <JSONObject> chooseGodFiles (int numOfPlayers) throws ParseException {
+        List <JSONObject> cards = new ArrayList<>();
+        int counter = 1;
+        while (true){
+            JSONObject card = JSONManager.readMyJSONAsText("configurations/cards/GodCard"+counter+".json");
+            if (card==null) break;
+            cards.add(card);
+            counter++;
+        }
+        // the card list contains all 14 strings of JSON file names (eg "GodCard1.json")
 
         Random rand = new Random();
         int numOfAvailableCards = cards.size();
         for (int i = numOfAvailableCards; i > numOfPlayers; i--) cards.remove(rand.nextInt(i));
         // only 'numOfPlayers' random strings are left in the card list
 
+
+        /*cards = new ArrayList<>();
+        cards.add(JSONManager.readMyJSONAsText("configurations/cards/GodCard8.json"));
+        cards.add(JSONManager.readMyJSONAsText("configurations/cards/GodCard9.json"));
+        cards.add(JSONManager.readMyJSONAsText("configurations/cards/GodCard10.json"));*/
+
         return cards;
     }
 
     /**
-     * This method creates a GodPower Object corresponding to the nameOfFile string. The appropriate effects are read from the JSON file.
-     * @param nameOfFile JSON file's name
-     * @param numOfPlayer Player ID
+     * Creates a GodPower object corresponding to a JSONObject.
+     * @param jsonObject JSONObject
+     * @param playerId playerId
+     * @return GodPower just created
      */
 
-    public static GodPower power (String nameOfFile, int numOfPlayer) throws IOException, ParseException {
-        FileReader fileReader = new FileReader(getRoot()+nameOfFile);
-        JSONObject jsonObject = (JSONObject) (new JSONParser()).parse(fileReader);
+    public static GodPower power (JSONObject jsonObject, int playerId) {
         //Effects' strings
         String move = (String) jsonObject.get("move");
         String build = (String) jsonObject.get("build");
@@ -78,11 +80,10 @@ public class GodPowerManager {
         String blockingWinConditions = (String) jsonObject.get("negativeWinConditions");
         String loseConditions = (String) jsonObject.get("loseConditions");
         String newTurn = (String) jsonObject.get("newTurn");
-
         int numOfBuilds = Math.toIntExact((Long) jsonObject.get("numOfBuilds"));
         int numOfMoves = Math.toIntExact((Long) jsonObject.get("numOfMoves"));
 
-        GodPower godPower = new GodPower(numOfPlayer, (String) jsonObject.get("name"));
+        GodPower godPower = new GodPower(playerId, (String) jsonObject.get("name"));
 
         switch (move) {
             case "unlimitedPerimetralMove":
@@ -101,7 +102,7 @@ public class GodPowerManager {
 
         switch (build) {
             case "askToBuildBeforeMoveAndNotMoveUp":
-                godPower.setBuild(new BuildBeforeMove(numOfBuilds)); break; //todo:dovrebbe essere giusto ma boh
+                godPower.setBuild(new BuildBeforeMove(numOfBuilds)); break;
             case "buildBeforeMove":
                 godPower.setBuild(new BuildBeforeMove(1)); break;
             case "askToBuildDomes":
@@ -136,7 +137,7 @@ public class GodPowerManager {
                 godPower.setConsolidateMove(new StandardConsolidateMove()); break;
         }
 
-        godPower.setPositiveWinConditions(new ArrayList());
+        godPower.setPositiveWinConditions(new ArrayList<>());
         godPower.getPositiveWinConditions().add(new StandardWinCondition());
 
         switch (positiveWinConditions) {
@@ -147,10 +148,10 @@ public class GodPowerManager {
             case "": break;
         }
 
-        godPower.setBlockingWinConditions(new ArrayList());
+        godPower.setBlockingWinConditions(new ArrayList<>());
         switch (blockingWinConditions) {
             case "opponentsCantWinOnPerimeter":
-                opponentsCantWinOnPerimeterPlayer = numOfPlayer; break;
+                opponentsCantWinOnPerimeterPlayer = playerId; break;
             case "": break;
         }
 
@@ -167,18 +168,18 @@ public class GodPowerManager {
     }
 
     /**
-     * Creates a list of godPowers based on the number of players: it must generate two / three different random cards,
+     * Creates a list of godPowers based on the number of players: it must generate two or three different random cards,
      * then, after building them, changes the functions in case of presence of godPowers that modify the behaviors of the adversaries
-     * @param numOfPlayers player ID
-     * @return List</GodPower>
-     * @throws ParseException
-     * @throws IOException
+     * @param numOfPlayers number of players
+     * @return <code>List&lt;GodPower&gt;</code>
+     * @throws ParseException ParseException
+     * @throws IOException  IOException
      */
 
     public static List<GodPower> createGodPowers (int numOfPlayers) throws ParseException, IOException {
         opponentsCantWinOnPerimeterPlayer = 0;
         List <GodPower> godPowerList = new ArrayList<>();
-        List <String> godFiles = chooseGodFiles(numOfPlayers);
+        List <JSONObject> godFiles = chooseGodFiles(numOfPlayers);
 
         for (int i = 1; i <= numOfPlayers; i++)
             godPowerList.add(power(godFiles.get(i-1), i));

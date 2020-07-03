@@ -9,6 +9,9 @@ import it.polimi.ingsw.effects.move.StandardMove;
 import java.util.List;
 import java.util.stream.Collectors;
 
+/**
+ * This class modifies the standard new turn class
+ */
 
 public class NewNoMoveUpTurn extends NewTurn {
 
@@ -19,13 +22,13 @@ public class NewNoMoveUpTurn extends NewTurn {
     GodPower originalGodPower;
 
     /**
-     * This method limits opponents' actions if at least one worker has leveled up during the player's turn.
+     * This method limits the opponents' actions if at least one worker has leveled up during the player's turn.
      * <p>The method first saves a copy of the opponents' godPower, move effect and newTurn. Then the newTurn and move
      * are restored.
      * @param oldTurn The current turn that is about to end
      * @param godPowers The GodPowers of all players in the game
      * @param nextTurnPlayer Player of the next turn
-     * @return a new Turn
+     * @return next player's Turn object
      */
 
     @Override
@@ -33,7 +36,7 @@ public class NewNoMoveUpTurn extends NewTurn {
         int oldTurnPlayerId = oldTurn.getPlayerId();
         if (oldTurn.isMoveUp()) {
             for (int i = 0; i < godPowers.size(); i++) {
-                if ((i != oldTurnPlayerId +1)&& godPowers.get(i)!=null) { //the change has effect only on the opponents' godPowers
+                if (((i +1) != oldTurnPlayerId )&& godPowers.get(i)!=null) { //the change has effect only on the opponents' godPowers
                     originalGodPower = godPowers.get(i).copyGodPower(godPowers.get(i)); //Saving the original GodPower
                     originalMove = godPowers.get(i).getMove(); //Collecting the previous Move effect
                     originalNewTurn = godPowers.get(i).getNewTurn(); //Collecting the original NewTurn effect

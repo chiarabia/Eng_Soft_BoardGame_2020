@@ -10,8 +10,6 @@ public class Turn {
 
     private Position workerStartingPosition = null;
     private Position firstBuildingPosition = null;
-    //private List<Position> movecells = new ArrayList<Position>();
-    //private List<Position> buildcells = new ArrayList<Position>();
 
     private boolean moveBeforeBuild = false;
     private boolean buildAfterMove = false;
@@ -73,11 +71,12 @@ public class Turn {
     }
 
     /**
-     * This method needs to be called after a move action to update the data
+     * Needs to be called after a move action to update the data
      * with the choices of the current player.
      *
      * @param startingPosition the position where the worker starts the turn
      * @param destinationPosition the position where the worker ends the turn
+     * @param board the board object
      */
 
     public void updateTurnInfoAfterMove (Position startingPosition, Position destinationPosition, Board board) {
@@ -136,9 +135,12 @@ public class Turn {
      * @param buildingPosition the Cell where the worker has built
      */
 
-    public void updateTurnInfoAfterBuild ( Position buildingPosition) {
+    public void updateTurnInfoAfterBuild (Position buildingPosition, int workerId) {
         //set up the parameters after the standard build
         if(!moveBeforeBuild) {
+            if(buildTimes==0&&moveTimes==0) {
+                this.workerUsed = workerId;
+            }
             this.buildBeforeMove = true;
             this.firstBuildingPosition = buildingPosition;
         }

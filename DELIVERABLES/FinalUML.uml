@@ -1,0 +1,226 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Diagram>
+  <ID>JAVA</ID>
+  <OriginalElement>it.polimi.ingsw.effects</OriginalElement>
+  <nodes>
+    <node x="544.6158618201723" y="159.701171875">it.polimi.ingsw.effects.move</node>
+    <node x="142.8" y="159.701171875">it.polimi.ingsw.effects.build</node>
+    <node x="30.0" y="7.701171875">it.polimi.ingsw.effects.consolidateBuild</node>
+    <node x="256.1397770811563" y="885.701171875">it.polimi.ingsw.effects.GodPower</node>
+    <node x="184.60009454147377" y="331.701171875">it.polimi.ingsw.effects.winCondition</node>
+    <node x="452.1549783549784" y="7.701171875">it.polimi.ingsw.effects.consolidateMove</node>
+    <node x="520.0931345474451" y="673.701171875">it.polimi.ingsw.effects.turn</node>
+    <node x="329.52866597004527" y="463.701171875">it.polimi.ingsw.effects.GodPowerManager</node>
+  </nodes>
+  <notes />
+  <edges>
+    <edge source="it.polimi.ingsw.effects.turn" target="it.polimi.ingsw.effects.turn">
+      <point x="-24.0" y="26.0" />
+      <point x="560.0931345474451" y="765.701171875" />
+      <point x="480.09313454744506" y="765.701171875" />
+      <point x="480.09313454744506" y="682.3678385416666" />
+      <point x="-64.0" y="-17.33333333333337" />
+    </edge>
+    <edge source="it.polimi.ingsw.effects.turn" target="it.polimi.ingsw.effects.GodPower">
+      <point x="40.0" y="26.0" />
+      <point x="624.0931345474451" y="815.701171875" />
+      <point x="517.2508881922674" y="815.701171875" />
+      <point x="73.11111111111114" y="-278.0" />
+    </edge>
+    <edge source="it.polimi.ingsw.effects.GodPowerManager" target="it.polimi.ingsw.effects.build">
+      <point x="-53.60000000000002" y="-70.0" />
+      <point x="409.92866597004524" y="443.701171875" />
+      <point x="421.7292319749215" y="443.701171875" />
+      <point x="421.7292319749215" y="281.701171875" />
+      <point x="256.1333333333334" y="281.701171875" />
+      <point x="45.33333333333337" y="26.0" />
+    </edge>
+    <edge source="it.polimi.ingsw.effects.build" target="it.polimi.ingsw.effects.consolidateBuild">
+      <point x="0.0" y="-26.0" />
+      <point x="210.8" y="139.701171875" />
+      <point x="212.0" y="139.701171875" />
+      <point x="70.0" y="26.0" />
+    </edge>
+    <edge source="it.polimi.ingsw.effects.GodPower" target="it.polimi.ingsw.effects.turn">
+      <point x="31.333333333333428" y="-278.0" />
+      <point x="475.4731104144897" y="795.701171875" />
+      <point x="592.0931345474451" y="795.701171875" />
+      <point x="8.0" y="26.0" />
+    </edge>
+    <edge source="it.polimi.ingsw.effects.GodPowerManager" target="it.polimi.ingsw.effects.winCondition">
+      <point x="-107.20000000000005" y="-70.0" />
+      <point x="356.3286659700452" y="443.701171875" />
+      <point x="362.88580882718804" y="443.701171875" />
+      <point x="82.28571428571428" y="26.0" />
+    </edge>
+    <edge source="it.polimi.ingsw.effects.GodPower" target="it.polimi.ingsw.effects.build">
+      <point x="-114.88888888888886" y="-278.0" />
+      <point x="329.25088819226744" y="835.701171875" />
+      <point x="116.41111111111115" y="835.701171875" />
+      <point x="116.41111111111115" y="301.701171875" />
+      <point x="210.8" y="301.701171875" />
+      <point x="0.0" y="26.0" />
+    </edge>
+    <edge source="it.polimi.ingsw.effects.winCondition" target="it.polimi.ingsw.effects.build">
+      <point x="-72.0" y="-26.0" />
+      <point x="208.60009454147377" y="311.701171875" />
+      <point x="225.9111111111111" y="311.701171875" />
+      <point x="15.111111111111086" y="26.0" />
+    </edge>
+    <edge source="it.polimi.ingsw.effects.move" target="it.polimi.ingsw.effects.move">
+      <point x="-46.54545454545456" y="26.0" />
+      <point x="562.0704072747178" y="241.701171875" />
+      <point x="514.6158618201723" y="241.701171875" />
+      <point x="514.6158618201723" y="185.701171875" />
+      <point x="-64.0" y="-0.0" />
+    </edge>
+    <edge source="it.polimi.ingsw.effects.GodPower" target="it.polimi.ingsw.effects.winCondition">
+      <point x="-93.99999999999994" y="-278.0" />
+      <point x="350.13977708115635" y="825.701171875" />
+      <point x="279.25222545653594" y="825.701171875" />
+      <point x="279.25222545653594" y="443.701171875" />
+      <point x="280.60009454147377" y="443.701171875" />
+      <point x="0.0" y="26.0" />
+    </edge>
+    <edge source="it.polimi.ingsw.effects.consolidateBuild" target="it.polimi.ingsw.effects.consolidateBuild">
+      <point x="-98.0" y="26.0" />
+      <point x="44.0" y="79.701171875" />
+      <point x="10.0" y="79.701171875" />
+      <point x="10.0" y="46.701171875" />
+      <point x="-112.0" y="13.0" />
+    </edge>
+    <edge source="it.polimi.ingsw.effects.GodPowerManager" target="it.polimi.ingsw.effects.consolidateMove">
+      <point x="53.60000000000002" y="-70.0" />
+      <point x="517.1286659700453" y="443.701171875" />
+      <point x="483.3923023336816" y="443.701171875" />
+      <point x="483.3923023336816" y="139.701171875" />
+      <point x="560.1549783549784" y="139.701171875" />
+      <point x="0.0" y="26.0" />
+    </edge>
+    <edge source="it.polimi.ingsw.effects.winCondition" target="it.polimi.ingsw.effects.winCondition">
+      <point x="-27.428571428571416" y="26.0" />
+      <point x="253.17152311290235" y="423.701171875" />
+      <point x="144.60009454147377" y="423.701171875" />
+      <point x="144.60009454147377" y="340.36783854166674" />
+      <point x="-96.0" y="-17.333333333333258" />
+    </edge>
+    <edge source="it.polimi.ingsw.effects.GodPower" target="it.polimi.ingsw.effects.consolidateMove">
+      <point x="177.5555555555556" y="-278.0" />
+      <point x="621.6953326367119" y="865.701171875" />
+      <point x="707.6719336219336" y="865.701171875" />
+      <point x="707.6719336219336" y="119.701171875" />
+      <point x="656.1549783549784" y="119.701171875" />
+      <point x="96.0" y="26.0" />
+    </edge>
+    <edge source="it.polimi.ingsw.effects.GodPowerManager" target="it.polimi.ingsw.effects.turn">
+      <point x="111.66666666666663" y="70.0" />
+      <point x="-8.0" y="-26.0" />
+    </edge>
+    <edge source="it.polimi.ingsw.effects.consolidateMove" target="it.polimi.ingsw.effects.consolidateMove">
+      <point x="-72.0" y="26.0" />
+      <point x="488.1549783549784" y="89.701171875" />
+      <point x="422.1549783549784" y="89.701171875" />
+      <point x="422.1549783549784" y="20.701171875" />
+      <point x="-108.0" y="-13.0" />
+    </edge>
+    <edge source="it.polimi.ingsw.effects.build" target="it.polimi.ingsw.effects.consolidateMove">
+      <point x="27.19999999999999" y="-26.0" />
+      <point x="238.0" y="119.701171875" />
+      <point x="512.1549783549784" y="119.701171875" />
+      <point x="-48.0" y="26.0" />
+    </edge>
+    <edge source="it.polimi.ingsw.effects.turn" target="it.polimi.ingsw.effects.move">
+      <point x="56.0" y="-26.0" />
+      <point x="640.0931345474451" y="653.701171875" />
+      <point x="649.7628427128427" y="653.701171875" />
+      <point x="649.7628427128427" y="291.701171875" />
+      <point x="643.5249527292632" y="291.701171875" />
+      <point x="34.90909090909088" y="26.0" />
+    </edge>
+    <edge source="it.polimi.ingsw.effects.turn" target="it.polimi.ingsw.effects.build">
+      <point x="8.0" y="-26.0" />
+      <point x="592.0931345474451" y="623.701171875" />
+      <point x="608.0286659700453" y="623.701171875" />
+      <point x="608.0286659700453" y="271.701171875" />
+      <point x="271.24444444444447" y="271.701171875" />
+      <point x="60.44444444444446" y="26.0" />
+    </edge>
+    <edge source="it.polimi.ingsw.effects.build" target="it.polimi.ingsw.effects.build">
+      <point x="-60.44444444444446" y="26.0" />
+      <point x="150.35555555555555" y="231.701171875" />
+      <point x="122.80000000000001" y="231.701171875" />
+      <point x="122.80000000000001" y="203.03450520833326" />
+      <point x="-68.0" y="17.333333333333258" />
+    </edge>
+    <edge source="it.polimi.ingsw.effects.move" target="it.polimi.ingsw.effects.consolidateMove">
+      <point x="32.0" y="-26.0" />
+      <point x="640.6158618201723" y="139.701171875" />
+      <point x="608.1549783549784" y="139.701171875" />
+      <point x="48.0" y="26.0" />
+    </edge>
+    <edge source="it.polimi.ingsw.effects.GodPower" target="it.polimi.ingsw.effects.consolidateBuild">
+      <point x="-156.66666666666669" y="-278.0" />
+      <point x="287.4731104144896" y="855.701171875" />
+      <point x="75.78397148828196" y="855.701171875" />
+      <point x="75.78397148828196" y="139.701171875" />
+      <point x="128.0" y="139.701171875" />
+      <point x="-14.0" y="26.0" />
+    </edge>
+    <edge source="it.polimi.ingsw.effects.GodPowerManager" target="it.polimi.ingsw.effects.move">
+      <point x="107.20000000000005" y="-70.0" />
+      <point x="570.7286659700453" y="443.701171875" />
+      <point x="575.4431345474451" y="443.701171875" />
+      <point x="575.4431345474451" y="311.701171875" />
+      <point x="608.6158618201723" y="311.701171875" />
+      <point x="0.0" y="26.0" />
+    </edge>
+    <edge source="it.polimi.ingsw.effects.winCondition" target="it.polimi.ingsw.effects.move">
+      <point x="24.0" y="-26.0" />
+      <point x="304.60009454147377" y="291.701171875" />
+      <point x="585.3431345474451" y="291.701171875" />
+      <point x="-23.272727272727252" y="26.0" />
+    </edge>
+    <edge source="it.polimi.ingsw.effects.GodPower" target="it.polimi.ingsw.effects.move">
+      <point x="114.88888888888897" y="-278.0" />
+      <point x="559.0286659700453" y="835.701171875" />
+      <point x="669.8437005523214" y="835.701171875" />
+      <point x="669.8437005523214" y="311.701171875" />
+      <point x="655.1613163656269" y="311.701171875" />
+      <point x="46.54545454545462" y="26.0" />
+    </edge>
+    <edge source="it.polimi.ingsw.effects.GodPowerManager" target="it.polimi.ingsw.effects.consolidateBuild">
+      <point x="0.0" y="-70.0" />
+      <point x="463.52866597004527" y="443.701171875" />
+      <point x="457.2292319749215" y="443.701171875" />
+      <point x="457.2292319749215" y="109.701171875" />
+      <point x="240.0" y="109.701171875" />
+      <point x="98.0" y="26.0" />
+    </edge>
+    <edge source="it.polimi.ingsw.effects.GodPowerManager" target="it.polimi.ingsw.effects.GodPower">
+      <point x="-67.0" y="70.0" />
+      <point x="396.52866597004527" y="653.701171875" />
+      <point x="367.83860028860033" y="653.701171875" />
+      <point x="367.83860028860033" y="785.701171875" />
+      <point x="433.69533263671195" y="785.701171875" />
+      <point x="-10.444444444444343" y="-278.0" />
+    </edge>
+    <edge source="it.polimi.ingsw.effects.turn" target="it.polimi.ingsw.effects.GodPowerManager">
+      <point x="-40.0" y="-26.0" />
+      <point x="544.0931345474451" y="643.701171875" />
+      <point x="485.8619993033785" y="643.701171875" />
+      <point x="22.333333333333258" y="70.0" />
+    </edge>
+  </edges>
+  <settings layout="Hierarchic Group" zoom="1.9624921334172443" x="1100.006814134045" y="1062.8083234403105" />
+  <SelectedNodes />
+  <Categories>
+    <Category>Fields</Category>
+    <Category>Constructors</Category>
+    <Category>Methods</Category>
+    <Category>Properties</Category>
+    <Category>Inner Classes</Category>
+  </Categories>
+  <SCOPE>All</SCOPE>
+  <VISIBILITY>private</VISIBILITY>
+</Diagram>
+

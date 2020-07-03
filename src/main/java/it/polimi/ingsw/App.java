@@ -3,24 +3,17 @@ package it.polimi.ingsw;
 import it.polimi.ingsw.client.Client;
 import it.polimi.ingsw.server.Server;
 import org.json.simple.JSONObject;
-import org.json.simple.parser.JSONParser;
 
-import java.io.FileReader;
-import java.io.InputStream;
-
-public class App
-{
-    private static String getRoot(){
-        String root = ClassLoader.getSystemClassLoader().getResource("configurations/Configuration.json").getPath();
-        if (root.substring(0,5).equals("file:")) root = root.substring(5, root.length());
-        if (root.substring(2,3).equals(":")) root = root.substring(3, root.length());
-        //return root;
-        return "src/main/resources/configurations/Configuration.json";
-    }
-    public static void main( String[] args ) throws InterruptedException {
+public class App{
+    /**
+     * This method starts a new Server/Client session, reading preferences from
+     * arguments and configuration file about role, port, IP address and UI.
+     * @param args (--role server/client, --ui CLI/GUI, --ip localhost, --port 555)
+     */
+        public static void main( String[] args ) {
         try {
-            FileReader fileReader = new FileReader(getRoot());
-            JSONObject jsonObject = (JSONObject) (new JSONParser()).parse(fileReader);
+            JSONObject jsonObject = JSONManager.readMyJSONAsText("configurations/Configuration.json");
+
             boolean server = (jsonObject.get("role")).equals("server");
             boolean GUI = (jsonObject.get("ui")).equals("GUI");
             String ip = (String) jsonObject.get("ip");
@@ -46,10 +39,11 @@ public class App
                 }
             } catch (Exception e){}
 
-            //server = true;
             if (server) (new Server()).startServer(port);
             else (new Client()).startClient(port, ip, GUI);
-        }catch(Exception e){ System.out.println("An error occurred");
-        e.printStackTrace();}
+        }catch(Exception e){ System.out.println("An error occurred");}
     }
+
+
 }
+

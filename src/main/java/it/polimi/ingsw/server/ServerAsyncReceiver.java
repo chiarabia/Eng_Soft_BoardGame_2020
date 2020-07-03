@@ -7,8 +7,6 @@ import java.net.Socket;
 import java.util.ArrayList;
 import java.util.List;
 
-// Thread parallelo che si mette in ascolto di un socket e notifica il controller
-
 public class ServerAsyncReceiver extends EventGenerator {
     private final int playerId;
     private Socket socket;
@@ -17,28 +15,32 @@ public class ServerAsyncReceiver extends EventGenerator {
         observerList.add(observer);
     }
 
+    /**
+     * Closes the connection to the client, generates an error for the Controller
+     * and closes the application
+     */
     public void stopProcess(){
         try { socket.close(); } catch(Exception e){}
     }
 
+    /**
+     * Waits for the received objects from the client or for connection errors
+     * and reports them to the Controller.
+     * After an error the process stops, otherwise it continues to listen to the client
+     */
     public void run() {
             try {
                 while (true) {
                     ObjectInputStream fileObjectIn = new ObjectInputStream(socket.getInputStream());
                     reactToClient(fileObjectIn.readObject());
                 }
-            } catch (Exception e) {
-                e.printStackTrace();
-                reactToClient( new Message("Error"));
-            }
+            } catch (Exception e) { reactToClient( new Message("Error"));}
     }
 
-    public ServerAsyncReceiver(Socket socket, int playerId){
-        this.socket = socket;
-        this.playerId = playerId;
-        this.observerList = new ArrayList<>();
-    }
-
+    /**
+     * Notifies the Controller about an error or a received object from the client
+     * @param fromClient object from client
+     */
     public void reactToClient(Object fromClient) {
         if (fromClient instanceof SerializableConsolidateMove) {
             SerializableConsolidateMove serializableFromClient = (SerializableConsolidateMove) fromClient;
@@ -48,7 +50,7 @@ public class ServerAsyncReceiver extends EventGenerator {
         if (fromClient instanceof SerializableConsolidateBuild) {
             SerializableConsolidateBuild serializableFromClient = (SerializableConsolidateBuild) fromClient;
             for (int i = 0; i < observerList.size(); i++)
-                observerList.get(i).onConsolidateBuild(playerId, serializableFromClient.getNewPosition(), serializableFromClient.isForceDome());
+                observerList.get(i).onConsolidateBuild(playerId, serializableFromClient.getWorkerId(), serializableFromClient.getNewPosition(), serializableFromClient.isForceDome());
         }
         if (fromClient instanceof SerializableInitializeGodPower) {
             SerializableInitializeGodPower serializableFromClient = (SerializableInitializeGodPower) fromClient;
@@ -66,5 +68,11 @@ public class ServerAsyncReceiver extends EventGenerator {
         if (fromClient instanceof Message && ((Message) fromClient).getMessage().equals("Error")) {
             for (int i = 0; i < observerList.size(); i++) observerList.get(i).onPlayerDisconnection(playerId);
         }
+    }
+
+    public ServerAsyncReceiver(Socket socket, int playerId){
+        this.socket = socket;
+        this.playerId = playerId;
+        this.observerList = new ArrayList<>();
     }
 }

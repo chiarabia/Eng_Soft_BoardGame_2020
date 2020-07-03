@@ -1,0 +1,552 @@
+
+
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html id="htmlId">
+<head>
+  <title>Coverage Report :: GUI</title>
+  <style type="text/css">
+    @import "../../.css/coverage.css";
+  </style>
+</head>
+
+<body>
+<div class="header"></div>
+
+<div class="content">
+<div class="breadCrumbs">
+    [ <a href="../../index.html">all classes</a> ]
+    [ <a href="../index.html">it.polimi.ingsw.client.gui</a> ]
+</div>
+
+<h1>Coverage Summary for Class: GUI (it.polimi.ingsw.client.gui)</h1>
+
+<table class="coverageStats">
+<tr>
+  <th class="name">Class</th>
+<th class="coverageStat 
+">
+  Class, %
+</th>
+<th class="coverageStat 
+">
+  Method, %
+</th>
+<th class="coverageStat 
+">
+  Line, %
+</th>
+</tr>
+<tr>
+  <td class="name">GUI</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/ 1)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/ 41)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/ 193)
+  </span>
+</td>
+</tr>
+
+</table>
+
+<br/>
+<br/>
+
+
+<div class="sourceCode"><i>1</i>&nbsp;package it.polimi.ingsw.client.gui;
+<i>2</i>&nbsp;
+<i>3</i>&nbsp;import it.polimi.ingsw.Position;
+<i>4</i>&nbsp;import it.polimi.ingsw.client.*;
+<i>5</i>&nbsp;import it.polimi.ingsw.client.gui.controller.BoardSceneController;
+<i>6</i>&nbsp;import it.polimi.ingsw.client.gui.controller.ErrorSceneController;
+<i>7</i>&nbsp;import it.polimi.ingsw.client.gui.controller.LoginSceneController;
+<i>8</i>&nbsp;import it.polimi.ingsw.client.gui.controller.WaitingSceneController;
+<i>9</i>&nbsp;import it.polimi.ingsw.client.gui.runnable.*;
+<i>10</i>&nbsp;import it.polimi.ingsw.server.serializable.*;
+<i>11</i>&nbsp;import javafx.application.Platform;
+<i>12</i>&nbsp;import org.json.simple.parser.ParseException;
+<i>13</i>&nbsp;
+<i>14</i>&nbsp;import java.util.ArrayList;
+<i>15</i>&nbsp;import java.util.HashSet;
+<i>16</i>&nbsp;import java.util.List;
+<i>17</i>&nbsp;import java.util.Set;
+<i>18</i>&nbsp;
+<i>19</i>&nbsp;/**
+<i>20</i>&nbsp; * This class implements the View for the GUI
+<i>21</i>&nbsp; */
+<i>22</i>&nbsp;public class GUI implements View {
+<b class="nc"><i>23</i>&nbsp;    private Textfields textfields = new Textfields();</b>
+<i>24</i>&nbsp;    private BoardSceneController boardSceneController;
+<i>25</i>&nbsp;    private LoginSceneController loginSceneController;
+<i>26</i>&nbsp;    private WaitingSceneController waitingSceneController;
+<i>27</i>&nbsp;    private ErrorSceneController errorSceneController;
+<i>28</i>&nbsp;    private ClientBoard board;
+<b class="nc"><i>29</i>&nbsp;    ChoosingGodSceneRunnable choosingGodSceneRunnable = new ChoosingGodSceneRunnable();</b>
+<i>30</i>&nbsp;    BoardSceneRunnable boardSceneRunnable;
+<i>31</i>&nbsp;    LoginSceneRunnable loginSceneRunnable;
+<i>32</i>&nbsp;    WaitingSceneRunnable waitingSceneRunnable;
+<i>33</i>&nbsp;    ErrorSceneRunnable errorSceneRunnable;
+<i>34</i>&nbsp;
+<b class="nc"><i>35</i>&nbsp;    public GUI() throws ParseException {</b>
+<b class="nc"><i>36</i>&nbsp;    }</b>
+<i>37</i>&nbsp;
+<i>38</i>&nbsp;    public void addObserver(ViewObserver observer){
+<b class="nc"><i>39</i>&nbsp;        List&lt;ViewObserver&gt; observerList = MainStage.getObserverList();</b>
+<b class="nc"><i>40</i>&nbsp;        observerList.add(observer);}</b>
+<i>41</i>&nbsp;
+<i>42</i>&nbsp;    /**
+<i>43</i>&nbsp;     * Launches the JavaFx app
+<i>44</i>&nbsp;      */
+<i>45</i>&nbsp;    @Override
+<i>46</i>&nbsp;    public void displayStartup() {
+<i>47</i>&nbsp;    	//starts the MainStage javafx application
+<b class="nc"><i>48</i>&nbsp;        new Thread(()-&gt; MainStage.launch(MainStage.class)).start();</b>
+<b class="nc"><i>49</i>&nbsp;    }</b>
+<i>50</i>&nbsp;
+<i>51</i>&nbsp;    /**
+<i>52</i>&nbsp;     * Not implemented in GUI
+<i>53</i>&nbsp;     */
+<i>54</i>&nbsp;    @Override
+<b class="nc"><i>55</i>&nbsp;    public void displayGameStart(){}</b>
+<i>56</i>&nbsp;
+<i>57</i>&nbsp;    /**
+<i>58</i>&nbsp;     * Displays the BoardScene and adds the Player ID in the GUI cache
+<i>59</i>&nbsp;     */
+<i>60</i>&nbsp;    @Override
+<i>61</i>&nbsp;    public void displayBoardScreen(){
+<i>62</i>&nbsp;        //displays the BoardScene
+<b class="nc"><i>63</i>&nbsp;        boardSceneRunnable = new BoardSceneRunnable();</b>
+<i>64</i>&nbsp;        //displays the boardScene
+<b class="nc"><i>65</i>&nbsp;        Platform.runLater(boardSceneRunnable);</b>
+<i>66</i>&nbsp;        //adds the PlayerId of the player to the playerData cache
+<b class="nc"><i>67</i>&nbsp;        ArrayList&lt;Object&gt; playerData = MainStage.getPlayerData();</b>
+<b class="nc"><i>68</i>&nbsp;        playerData.add(board.getMyPlayerId());</b>
+<i>69</i>&nbsp;
+<b class="nc"><i>70</i>&nbsp;        Platform.runLater(()-&gt;{</b>
+<i>71</i>&nbsp;            //gets the boardSceneController
+<b class="nc"><i>72</i>&nbsp;            boardSceneController = boardSceneRunnable.getBoardSceneController();</b>
+<b class="nc"><i>73</i>&nbsp;            boardSceneController.displayGameInfos(board);</b>
+<b class="nc"><i>74</i>&nbsp;        });</b>
+<i>75</i>&nbsp;
+<b class="nc"><i>76</i>&nbsp;    }</b>
+<i>77</i>&nbsp;
+<i>78</i>&nbsp;    /**
+<i>79</i>&nbsp;     * Displays the WaitingScene
+<i>80</i>&nbsp;     */
+<i>81</i>&nbsp;    @Override
+<i>82</i>&nbsp;    public void displayWaitingRoom() {
+<i>83</i>&nbsp;        //displays the WaitingRoomScene
+<b class="nc"><i>84</i>&nbsp;        waitingSceneRunnable = new WaitingSceneRunnable();</b>
+<b class="nc"><i>85</i>&nbsp;        Platform.runLater(waitingSceneRunnable);</b>
+<b class="nc"><i>86</i>&nbsp;        Platform.runLater(()-&gt;{</b>
+<i>87</i>&nbsp;            //gets the waitingSceneController
+<b class="nc"><i>88</i>&nbsp;            waitingSceneController = waitingSceneRunnable.getWaitingSceneController();</b>
+<b class="nc"><i>89</i>&nbsp;        });</b>
+<b class="nc"><i>90</i>&nbsp;    }</b>
+<i>91</i>&nbsp;
+<i>92</i>&nbsp;    /**
+<i>93</i>&nbsp;     * Sets the board
+<i>94</i>&nbsp;     * @param board the &lt;code&gt;ClientBoard&lt;/code&gt; received from the Client
+<i>95</i>&nbsp;     */
+<i>96</i>&nbsp;    public void setBoard(ClientBoard board) {
+<b class="nc"><i>97</i>&nbsp;        this.board = board;</b>
+<b class="nc"><i>98</i>&nbsp;    }</b>
+<i>99</i>&nbsp;
+<i>100</i>&nbsp;    /**
+<i>101</i>&nbsp;     * Changes the &lt;code&gt;Label&lt;/code&gt; in WaitingScene to notify the players
+<i>102</i>&nbsp;     * that the match has started but they need to wait for other players
+<i>103</i>&nbsp;     * to choose their GodCard
+<i>104</i>&nbsp;     * @param names object it contains a &lt;code&gt;List&lt;/code&gt; with the Players names. Not used for the GUI
+<i>105</i>&nbsp;     */
+<i>106</i>&nbsp;    @Override
+<i>107</i>&nbsp;    public void displayPlayerNames(SerializableUpdateInitializeNames names) {
+<b class="nc"><i>108</i>&nbsp;        Platform.runLater(()-&gt;{</b>
+<b class="nc"><i>109</i>&nbsp;            waitingSceneController.updateWaitingLabel();</b>
+<b class="nc"><i>110</i>&nbsp;        });</b>
+<b class="nc"><i>111</i>&nbsp;    }</b>
+<i>112</i>&nbsp;
+<i>113</i>&nbsp;    /**
+<i>114</i>&nbsp;     * Not implemented in GUI
+<i>115</i>&nbsp;     * @param playerId player ID
+<i>116</i>&nbsp;     */
+<i>117</i>&nbsp;    @Override
+<i>118</i>&nbsp;    public void displayGodPower(int playerId){
+<i>119</i>&nbsp;
+<b class="nc"><i>120</i>&nbsp;    }</b>
+<i>121</i>&nbsp;
+<i>122</i>&nbsp;    /**
+<i>123</i>&nbsp;     * When a new turn starts the players are notified either that their turn has started
+<i>124</i>&nbsp;     * or which player&#39;s turn started.
+<i>125</i>&nbsp;     * @param currentPlayerId
+<i>126</i>&nbsp;     */
+<i>127</i>&nbsp;    @Override
+<i>128</i>&nbsp;    public void displayTurn(int currentPlayerId) {
+<b class="nc"><i>129</i>&nbsp;        int myPlayerId = board.getMyPlayerId();</b>
+<b class="nc"><i>130</i>&nbsp;        Platform.runLater(()-&gt;{</b>
+<b class="nc"><i>131</i>&nbsp;            boardSceneController.setWorkerSelected(false);</b>
+<b class="nc"><i>132</i>&nbsp;        });</b>
+<i>133</i>&nbsp;
+<b class="nc"><i>134</i>&nbsp;        if (myPlayerId == currentPlayerId){</b>
+<b class="nc"><i>135</i>&nbsp;            Platform.runLater(()-&gt;{</b>
+<b class="nc"><i>136</i>&nbsp;                String notification = &quot;You&quot; + textfields.getPlaying1() + &quot;\n&quot;;</b>
+<b class="nc"><i>137</i>&nbsp;                boardSceneController.displayNotificationsDuringTurn(notification);</b>
+<b class="nc"><i>138</i>&nbsp;                boardSceneController.setMyTurn(true);</b>
+<b class="nc"><i>139</i>&nbsp;            });</b>
+<i>140</i>&nbsp;        }
+<i>141</i>&nbsp;        else {
+<b class="nc"><i>142</i>&nbsp;            Platform.runLater(()-&gt;{</b>
+<b class="nc"><i>143</i>&nbsp;                String notification = board.getPlayer(currentPlayerId).getPlayerName() + textfields.getPlaying2()+ &quot;\n&quot;;</b>
+<b class="nc"><i>144</i>&nbsp;                boardSceneController.displayNotificationsDuringTurn(notification);</b>
+<b class="nc"><i>145</i>&nbsp;                boardSceneController.setMyTurn(false);</b>
+<b class="nc"><i>146</i>&nbsp;            });</b>
+<i>147</i>&nbsp;        }
+<b class="nc"><i>148</i>&nbsp;    }</b>
+<i>149</i>&nbsp;
+<i>150</i>&nbsp;    /**
+<i>151</i>&nbsp;     * Displays in the BoardScene an &lt;code&gt;Image&lt;/code&gt; that is either a Win or Lose image
+<i>152</i>&nbsp;     * @param playerId player ID
+<i>153</i>&nbsp;     */
+<i>154</i>&nbsp;    @Override
+<i>155</i>&nbsp;    public void displayWinner(int playerId) {
+<b class="nc"><i>156</i>&nbsp;        Platform.runLater(()-&gt;{</b>
+<i>157</i>&nbsp;        	//displays a winner notification of the winner
+<i>158</i>&nbsp;
+<b class="nc"><i>159</i>&nbsp;            boardSceneController.displayEndGameImage(playerId == board.getMyPlayerId());</b>
+<b class="nc"><i>160</i>&nbsp;        });</b>
+<b class="nc"><i>161</i>&nbsp;    }</b>
+<i>162</i>&nbsp;
+<i>163</i>&nbsp;    /**
+<i>164</i>&nbsp;     * Displays in the BoardScene the name of the player that has lost
+<i>165</i>&nbsp;     * and removes its workers from the board.
+<i>166</i>&nbsp;     * @param playerId player ID
+<i>167</i>&nbsp;     */
+<i>168</i>&nbsp;    @Override
+<i>169</i>&nbsp;    public void displayLoser(int playerId) {
+<b class="nc"><i>170</i>&nbsp;        Platform.runLater(()-&gt;{</b>
+<i>171</i>&nbsp;            //removes the player workers frm the board
+<b class="nc"><i>172</i>&nbsp;            for(int i = 1; i&lt;3; i++) {</b>
+<b class="nc"><i>173</i>&nbsp;                boardSceneController</b>
+<b class="nc"><i>174</i>&nbsp;                        .removeWorker(getWorkerPositions(playerId, i)</b>
+<b class="nc"><i>175</i>&nbsp;                                .mirrorYCoordinate());</b>
+<i>176</i>&nbsp;            }
+<i>177</i>&nbsp;
+<i>178</i>&nbsp;        	//displays a lose notification of the player that has lost
+<i>179</i>&nbsp;            String notification;
+<b class="nc"><i>180</i>&nbsp;            if (playerId==board.getMyPlayerId()) notification = &quot;You&quot;+ textfields.getLost1()+ &quot;\n&quot;;</b>
+<b class="nc"><i>181</i>&nbsp;            else notification = board.getPlayer(playerId).getPlayerName() + textfields.getLost2() +&quot;\n&quot;;</b>
+<b class="nc"><i>182</i>&nbsp;            boardSceneController.displayNotificationsDuringTurn(notification);</b>
+<b class="nc"><i>183</i>&nbsp;        });</b>
+<i>184</i>&nbsp;
+<b class="nc"><i>185</i>&nbsp;    }</b>
+<i>186</i>&nbsp;
+<i>187</i>&nbsp;    /**
+<i>188</i>&nbsp;     * Displays the ErrorScene with a disconnection message.
+<i>189</i>&nbsp;     * @param playerId player ID
+<i>190</i>&nbsp;     */
+<i>191</i>&nbsp;    @Override
+<i>192</i>&nbsp;    public void displayDisconnection(int playerId) {
+<i>193</i>&nbsp;        String notification;
+<b class="nc"><i>194</i>&nbsp;        notification = board.getPlayer(playerId).getPlayerName() + textfields.getDisconnected() + &quot;. Game ended\n&quot;;</b>
+<b class="nc"><i>195</i>&nbsp;        errorSceneRunnable = new ErrorSceneRunnable();</b>
+<b class="nc"><i>196</i>&nbsp;        Platform.runLater(errorSceneRunnable);</b>
+<b class="nc"><i>197</i>&nbsp;        Platform.runLater(()-&gt;{</b>
+<i>198</i>&nbsp;            //gets the boardSceneController
+<b class="nc"><i>199</i>&nbsp;            errorSceneController = errorSceneRunnable.getErrorSceneController();</b>
+<b class="nc"><i>200</i>&nbsp;            errorSceneController.updateErrorLabel(notification);</b>
+<b class="nc"><i>201</i>&nbsp;        });</b>
+<i>202</i>&nbsp;
+<b class="nc"><i>203</i>&nbsp;    }</b>
+<i>204</i>&nbsp;
+<i>205</i>&nbsp;    /**
+<i>206</i>&nbsp;     * Displays an error message.
+<i>207</i>&nbsp;     * &lt;p&gt;If the error is a fatal error it is displayed in the ErrorScene. Otherwise the error is visible
+<i>208</i>&nbsp;     * in the BoardScene as a notification.
+<i>209</i>&nbsp;     * @param errorId error ID
+<i>210</i>&nbsp;     * @param isFatalError true if it&#39;s fatal error
+<i>211</i>&nbsp;     */
+<i>212</i>&nbsp;    @Override
+<i>213</i>&nbsp;    public void displayError(int errorId, boolean isFatalError) {
+<b class="nc"><i>214</i>&nbsp;        String message = null;</b>
+<b class="nc"><i>215</i>&nbsp;        switch (errorId){</b>
+<b class="nc"><i>216</i>&nbsp;            case 0: message = textfields.getErr0(); break;</b>
+<b class="nc"><i>217</i>&nbsp;            case 1: message = textfields.getErr1(); break;</b>
+<b class="nc"><i>218</i>&nbsp;            case 2: message = textfields.getErr2(); break;</b>
+<i>219</i>&nbsp;        }
+<b class="nc"><i>220</i>&nbsp;        String finalMessage = message;</b>
+<b class="nc"><i>221</i>&nbsp;        if (isFatalError){</b>
+<b class="nc"><i>222</i>&nbsp;            errorSceneRunnable = new ErrorSceneRunnable();</b>
+<b class="nc"><i>223</i>&nbsp;            Platform.runLater(errorSceneRunnable);</b>
+<b class="nc"><i>224</i>&nbsp;            Platform.runLater(()-&gt;{</b>
+<i>225</i>&nbsp;                //gets the boardSceneController
+<b class="nc"><i>226</i>&nbsp;                errorSceneController = errorSceneRunnable.getErrorSceneController();</b>
+<b class="nc"><i>227</i>&nbsp;                errorSceneController.updateErrorLabel(finalMessage);</b>
+<b class="nc"><i>228</i>&nbsp;            });</b>
+<i>229</i>&nbsp;        } else {
+<b class="nc"><i>230</i>&nbsp;            Platform.runLater(() -&gt; {boardSceneController.displayNotificationsDuringTurn(finalMessage);});</b>
+<i>231</i>&nbsp;        }
+<b class="nc"><i>232</i>&nbsp;    }</b>
+<i>233</i>&nbsp;
+<i>234</i>&nbsp;    /**
+<i>235</i>&nbsp;     * Displays the changes of the board.
+<i>236</i>&nbsp;     * &lt;p&gt;Tells the BoardSceneController where to add a new building and where to add or remove workers.
+<i>237</i>&nbsp;     * @param update holds the information for possible moves and proprieties of the workers
+<i>238</i>&nbsp;     */
+<i>239</i>&nbsp;    @Override
+<i>240</i>&nbsp;    public void displayBoard(SerializableUpdateActions update) {
+<b class="nc"><i>241</i>&nbsp;        List&lt;SerializableUpdateMove&gt; updateMove = update.getUpdateMove();</b>
+<b class="nc"><i>242</i>&nbsp;        List&lt;SerializableUpdateBuild&gt; updateBuild = update.getUpdateBuild();</b>
+<i>243</i>&nbsp;
+<i>244</i>&nbsp;		//if there is a building to update
+<b class="nc"><i>245</i>&nbsp;        if(!updateBuild.isEmpty()){</b>
+<b class="nc"><i>246</i>&nbsp;            for (int i = 0; i &lt; updateBuild.size(); i++){</b>
+<b class="nc"><i>247</i>&nbsp;                Position newPosition = updateBuild.get(i).getNewPosition().mirrorYCoordinate();</b>
+<b class="nc"><i>248</i>&nbsp;                boolean dome = updateBuild.get(i).isDome();</b>
+<b class="nc"><i>249</i>&nbsp;                Platform.runLater(()-&gt; boardSceneController.updateBuilding(newPosition, dome));</b>
+<i>250</i>&nbsp;            }
+<i>251</i>&nbsp;        }
+<i>252</i>&nbsp;
+<i>253</i>&nbsp;        //if there is a worker position to update
+<b class="nc"><i>254</i>&nbsp;        if(!updateMove.isEmpty()){</b>
+<b class="nc"><i>255</i>&nbsp;            for (int i = 0; i &lt; updateMove.size(); i++) {</b>
+<b class="nc"><i>256</i>&nbsp;                int playerID = updateMove.get(i).getPlayerId();</b>
+<b class="nc"><i>257</i>&nbsp;                Position newPosition = updateMove.get(i).getNewPosition().mirrorYCoordinate();</b>
+<b class="nc"><i>258</i>&nbsp;                Position oldPosition = updateMove.get(i).getStartingPosition().mirrorYCoordinate();</b>
+<i>259</i>&nbsp;
+<b class="nc"><i>260</i>&nbsp;                if(moveIsSwap(updateMove)) {</b>
+<b class="nc"><i>261</i>&nbsp;                    Platform.runLater(() -&gt; boardSceneController.updateWorker(newPosition, newPosition, playerID));</b>
+<i>262</i>&nbsp;                }
+<i>263</i>&nbsp;
+<i>264</i>&nbsp;                else {
+<b class="nc"><i>265</i>&nbsp;                    Platform.runLater(() -&gt; boardSceneController.updateWorker(newPosition, oldPosition, playerID));</b>
+<i>266</i>&nbsp;                }
+<i>267</i>&nbsp;            }
+<i>268</i>&nbsp;        }
+<b class="nc"><i>269</i>&nbsp;    }</b>
+<i>270</i>&nbsp;
+<i>271</i>&nbsp;    /**
+<i>272</i>&nbsp;     * Displays the changes to the board in the initial phase of the game.
+<i>273</i>&nbsp;     * &lt;p&gt;It updates the board with the initial positions of the workers.
+<i>274</i>&nbsp;     * @param update holds the information for possible moves and proprieties of the workers
+<i>275</i>&nbsp;     */
+<i>276</i>&nbsp;    @Override
+<i>277</i>&nbsp;    public void displayBoard(SerializableUpdateInitializeWorkerPositions update) {
+<b class="nc"><i>278</i>&nbsp;        List&lt;Position&gt; workerPositions = update.getWorkerPositions();</b>
+<b class="nc"><i>279</i>&nbsp;        ArrayList&lt;Position&gt; tempList = new ArrayList&lt;&gt;();</b>
+<i>280</i>&nbsp;
+<b class="nc"><i>281</i>&nbsp;        for(int i = 0; i&lt;update.getWorkerPositions().size(); i++) {</b>
+<b class="nc"><i>282</i>&nbsp;            tempList.add(i,  workerPositions.get(i).mirrorYCoordinate());</b>
+<i>283</i>&nbsp;        }
+<i>284</i>&nbsp;
+<b class="nc"><i>285</i>&nbsp;        int playerID = update.getPlayerId();</b>
+<i>286</i>&nbsp;
+<b class="nc"><i>287</i>&nbsp;        Platform.runLater(()-&gt;{</b>
+<i>288</i>&nbsp;        	//displays the worker initial position on only enemy players
+<b class="nc"><i>289</i>&nbsp;            if (playerID != board.getMyPlayerId()) {</b>
+<b class="nc"><i>290</i>&nbsp;                for (int i = 0; i &lt; workerPositions.size(); i++) {</b>
+<b class="nc"><i>291</i>&nbsp;                    boardSceneController.updateWorkerInitialPosition(tempList.get(i), update.getPlayerId());</b>
+<i>292</i>&nbsp;                }
+<i>293</i>&nbsp;            }
+<b class="nc"><i>294</i>&nbsp;        });</b>
+<b class="nc"><i>295</i>&nbsp;    }</b>
+<i>296</i>&nbsp;
+<i>297</i>&nbsp;    //TODO: javadoc
+<i>298</i>&nbsp;    private boolean moveIsSwap(List&lt;SerializableUpdateMove&gt; updateMoveList) {
+<b class="nc"><i>299</i>&nbsp;        if (updateMoveList.size()==2) {</b>
+<b class="nc"><i>300</i>&nbsp;            SerializableUpdateMove firstMove = updateMoveList.get(0);</b>
+<b class="nc"><i>301</i>&nbsp;            SerializableUpdateMove secondMove = updateMoveList.get(1);</b>
+<b class="nc"><i>302</i>&nbsp;            return  firstMove.getNewPosition()</b>
+<b class="nc"><i>303</i>&nbsp;                        .equals(secondMove.getStartingPosition()) &amp;&amp;</b>
+<b class="nc"><i>304</i>&nbsp;                    secondMove.getNewPosition()</b>
+<b class="nc"><i>305</i>&nbsp;                        .equals(firstMove.getStartingPosition());</b>
+<i>306</i>&nbsp;        }
+<i>307</i>&nbsp;        else
+<b class="nc"><i>308</i>&nbsp;            return false;</b>
+<i>309</i>&nbsp;    }
+<i>310</i>&nbsp;
+<i>311</i>&nbsp;    /**
+<i>312</i>&nbsp;     * Handles the information for the GUI about the possible action a player can make.
+<i>313</i>&nbsp;     * &lt;p&gt;It tells the BoardSceneController if and where a worker can move/build, if they can end the turn
+<i>314</i>&nbsp;     * or if they can build a dome
+<i>315</i>&nbsp;     * @param object holds the information for possible moves and proprieties of the workers
+<i>316</i>&nbsp;     */
+<i>317</i>&nbsp;
+<i>318</i>&nbsp;    @Override
+<i>319</i>&nbsp;    public void askForAction(SerializableRequestAction object) {
+<i>320</i>&nbsp;
+<b class="nc"><i>321</i>&nbsp;        BoardSceneController.updateActionCode(2);</b>
+<b class="nc"><i>322</i>&nbsp;        int currentPlayerID = board.getPlayerTurnId();</b>
+<b class="nc"><i>323</i>&nbsp;        Position firstWorkerPosition = getWorkerPositions(currentPlayerID,1).mirrorYCoordinate();</b>
+<b class="nc"><i>324</i>&nbsp;        Position secondWorkerPosition = getWorkerPositions(currentPlayerID,2).mirrorYCoordinate();</b>
+<i>325</i>&nbsp;
+<i>326</i>&nbsp;        //updates all the Sets in the BoardSceneController and the Workers positions
+<b class="nc"><i>327</i>&nbsp;        Platform.runLater(()-&gt;{</b>
+<b class="nc"><i>328</i>&nbsp;            boardSceneController.setOldFirstWorkerPosition(firstWorkerPosition);</b>
+<b class="nc"><i>329</i>&nbsp;            boardSceneController.setOldSecondWorkerPosition(secondWorkerPosition);</b>
+<b class="nc"><i>330</i>&nbsp;            boardSceneController.setWorker1MovesPosition(mirrorPositionYCoordinate(object.getWorker1Moves()));</b>
+<b class="nc"><i>331</i>&nbsp;            boardSceneController.setWorker2MovesPosition(mirrorPositionYCoordinate(object.getWorker2Moves()));</b>
+<b class="nc"><i>332</i>&nbsp;            boardSceneController.setWorker1BuildPosition(mirrorPositionYCoordinate(object.getWorker1Builds()));</b>
+<b class="nc"><i>333</i>&nbsp;            boardSceneController.setWorker2BuildPosition(mirrorPositionYCoordinate(object.getWorker2Builds()));</b>
+<b class="nc"><i>334</i>&nbsp;        });</b>
+<i>335</i>&nbsp;
+<i>336</i>&nbsp;        //move possible
+<b class="nc"><i>337</i>&nbsp;        if (!object.areMovesEmpty()) {</b>
+<b class="nc"><i>338</i>&nbsp;            Platform.runLater(() -&gt; {</b>
+<b class="nc"><i>339</i>&nbsp;                boardSceneController.setMovePossible(true);</b>
+<b class="nc"><i>340</i>&nbsp;            });</b>
+<i>341</i>&nbsp;        }
+<i>342</i>&nbsp;        //move not possible
+<b class="nc"><i>343</i>&nbsp;        if(object.areMovesEmpty()) {</b>
+<b class="nc"><i>344</i>&nbsp;            Platform.runLater(() -&gt; boardSceneController.setMovePossible(false));</b>
+<i>345</i>&nbsp;        }
+<i>346</i>&nbsp;
+<i>347</i>&nbsp;        //build possible
+<b class="nc"><i>348</i>&nbsp;        if(!object.areBuildsEmpty()){</b>
+<b class="nc"><i>349</i>&nbsp;            Platform.runLater(() -&gt; {</b>
+<b class="nc"><i>350</i>&nbsp;                boardSceneController.setBuildPossible(true);</b>
+<b class="nc"><i>351</i>&nbsp;            });</b>
+<i>352</i>&nbsp;        }
+<i>353</i>&nbsp;        //build not possible
+<b class="nc"><i>354</i>&nbsp;        if(object.areBuildsEmpty()){</b>
+<b class="nc"><i>355</i>&nbsp;            Platform.runLater(() -&gt; boardSceneController.setBuildPossible(false));</b>
+<i>356</i>&nbsp;        }
+<i>357</i>&nbsp;        //build and dome building allowed
+<b class="nc"><i>358</i>&nbsp;        if(!object.areBuildsEmpty() &amp;&amp;  object.isCanForceDome()){</b>
+<b class="nc"><i>359</i>&nbsp;            Platform.runLater(() -&gt; {</b>
+<b class="nc"><i>360</i>&nbsp;                boardSceneController.setDomeAtAnyLevelPossible(true);</b>
+<b class="nc"><i>361</i>&nbsp;                boardSceneController.setVisibleDomeButton(true);</b>
+<b class="nc"><i>362</i>&nbsp;            });</b>
+<i>363</i>&nbsp;        }
+<i>364</i>&nbsp;		//dome building everywhere not possible
+<b class="nc"><i>365</i>&nbsp;        if(!object.isCanForceDome()) {</b>
+<b class="nc"><i>366</i>&nbsp;            Platform.runLater(() -&gt; boardSceneController.setDomeAtAnyLevelPossible(false));</b>
+<i>367</i>&nbsp;        }
+<i>368</i>&nbsp;        //can decline allowed
+<b class="nc"><i>369</i>&nbsp;        if(object.canDecline()){</b>
+<b class="nc"><i>370</i>&nbsp;            Platform.runLater(() -&gt; {</b>
+<b class="nc"><i>371</i>&nbsp;                boardSceneController.displayNotificationsDuringTurn(textfields.getCanendturn()+ &quot;\n&quot;);</b>
+<b class="nc"><i>372</i>&nbsp;                boardSceneController.setDeclinePossible(true);</b>
+<b class="nc"><i>373</i>&nbsp;                boardSceneController.setVisibleDeclineButton(true);</b>
+<b class="nc"><i>374</i>&nbsp;                boardSceneController.disableDeclineButton(false);</b>
+<b class="nc"><i>375</i>&nbsp;            });</b>
+<i>376</i>&nbsp;        }
+<i>377</i>&nbsp;        //can decline not allowed
+<b class="nc"><i>378</i>&nbsp;        if(!object.canDecline()){</b>
+<b class="nc"><i>379</i>&nbsp;            Platform.runLater(() -&gt; boardSceneController.setDeclinePossible(false));</b>
+<i>380</i>&nbsp;        }
+<b class="nc"><i>381</i>&nbsp;    }</b>
+<i>382</i>&nbsp;
+<i>383</i>&nbsp;    /**
+<i>384</i>&nbsp;     * Displays the ChoosingGodPowerScene and adds the GodCards to the GUI cache
+<i>385</i>&nbsp;     * @param godPowers the list of possible GodCards to choose from for the players
+<i>386</i>&nbsp;     */
+<i>387</i>&nbsp;    @Override
+<i>388</i>&nbsp;    public void askForInitialGodPower(List&lt;GodCard&gt; godPowers) {
+<i>389</i>&nbsp;        //stores in GodCards the godPowers chosen by the server
+<b class="nc"><i>390</i>&nbsp;        List&lt;GodCard&gt; godCards = MainStage.getGodPowers();</b>
+<b class="nc"><i>391</i>&nbsp;        godCards.addAll(godPowers);</b>
+<i>392</i>&nbsp;
+<i>393</i>&nbsp;        //displays the choosingGodScene
+<b class="nc"><i>394</i>&nbsp;        Platform.runLater(choosingGodSceneRunnable);</b>
+<b class="nc"><i>395</i>&nbsp;    }</b>
+<i>396</i>&nbsp;
+<i>397</i>&nbsp;    /**
+<i>398</i>&nbsp;     * Sets the BoardSceneController into the phase when the player need to choose their workers first positions
+<i>399</i>&nbsp;     * &lt;p&gt;The actionCode of BoardSceneController is set to 1
+<i>400</i>&nbsp;     * @param possiblePositions &lt;code&gt;List&amp;lt;Position&amp;gt;&lt;/code&gt; of the possible positions for the workers
+<i>401</i>&nbsp;     */
+<i>402</i>&nbsp;    @Override
+<i>403</i>&nbsp;    public void askForInitialWorkerPositions(List &lt;Position&gt; possiblePositions) {
+<i>404</i>&nbsp;        //adds the current notification for the player
+<b class="nc"><i>405</i>&nbsp;        Platform.runLater(()-&gt;{</b>
+<b class="nc"><i>406</i>&nbsp;            boardSceneController.setPossiblePosition(possiblePositions);</b>
+<i>407</i>&nbsp;            //sets the actionCode to 1 for the askForInitialiWorkerPosition phase
+<b class="nc"><i>408</i>&nbsp;            BoardSceneController.updateActionCode(1);</b>
+<b class="nc"><i>409</i>&nbsp;        });</b>
+<i>410</i>&nbsp;
+<b class="nc"><i>411</i>&nbsp;    }</b>
+<i>412</i>&nbsp;
+<i>413</i>&nbsp;    /**
+<i>414</i>&nbsp;     * Displays the LoginSceneController when the main javafx application is ready.
+<i>415</i>&nbsp;     * The player can insert their name and choose the number of players of the match.
+<i>416</i>&nbsp;     * If the name of the player is invalid, the LoginScene is shown again, with an error notification
+<i>417</i>&nbsp;     * @param errorId
+<i>418</i>&nbsp;     */
+<i>419</i>&nbsp;    @Override
+<i>420</i>&nbsp;    public void askForStartupInfos(int errorId) {
+<i>421</i>&nbsp;        // I can&#39;t call Platform.runLater until the JavaFX application has started.
+<i>422</i>&nbsp;        // errorId: -1 &lt;==&gt; no error, 1 &lt;==&gt; name error
+<i>423</i>&nbsp;
+<i>424</i>&nbsp;        try {
+<b class="nc"><i>425</i>&nbsp;            MainStage.getLock().take();</b>
+<b class="nc"><i>426</i>&nbsp;        } catch (Exception ignored) {}</b>
+<i>427</i>&nbsp;
+<b class="nc"><i>428</i>&nbsp;        loginSceneRunnable = new LoginSceneRunnable();</b>
+<i>429</i>&nbsp;
+<i>430</i>&nbsp;        //displays the LoginScene
+<b class="nc"><i>431</i>&nbsp;        if(errorId == 1){</b>
+<b class="nc"><i>432</i>&nbsp;            ArrayList&lt;Object&gt; playerData = MainStage.getPlayerData();</b>
+<b class="nc"><i>433</i>&nbsp;            playerData.clear();</b>
+<b class="nc"><i>434</i>&nbsp;            Platform.runLater(loginSceneRunnable);</b>
+<b class="nc"><i>435</i>&nbsp;            Platform.runLater(()-&gt;{</b>
+<b class="nc"><i>436</i>&nbsp;                loginSceneController = loginSceneRunnable.getLoginSceneController();</b>
+<b class="nc"><i>437</i>&nbsp;                loginSceneController.updateErrorLabel();</b>
+<b class="nc"><i>438</i>&nbsp;            });</b>
+<b class="nc"><i>439</i>&nbsp;        }</b>
+<b class="nc"><i>440</i>&nbsp;        else Platform.runLater(loginSceneRunnable);</b>
+<i>441</i>&nbsp;
+<i>442</i>&nbsp;        try {
+<b class="nc"><i>443</i>&nbsp;            MainStage.getLock().put(MainStage.getLock());</b>
+<b class="nc"><i>444</i>&nbsp;        } catch (Exception ignored) {}</b>
+<b class="nc"><i>445</i>&nbsp;    }</b>
+<i>446</i>&nbsp;
+<i>447</i>&nbsp;    /**
+<i>448</i>&nbsp;     * Gets the &lt;code&gt;Position&lt;/code&gt; of a worker
+<i>449</i>&nbsp;     * @param playerID the PlayerID of the player
+<i>450</i>&nbsp;     * @param workerID the workerID of the worker
+<i>451</i>&nbsp;     * @return the &lt;code&gt;Position&lt;/code&gt;
+<i>452</i>&nbsp;     */
+<i>453</i>&nbsp;    public Position getWorkerPositions(int playerID, int workerID){
+<b class="nc"><i>454</i>&nbsp;        int x = board.getPlayer(playerID).getWorker(workerID).getX();</b>
+<b class="nc"><i>455</i>&nbsp;        int y = board.getPlayer(playerID).getWorker(workerID).getY();</b>
+<b class="nc"><i>456</i>&nbsp;        return new Position(x,y,0);</b>
+<i>457</i>&nbsp;    }
+<i>458</i>&nbsp;
+<i>459</i>&nbsp;    //TODO add javadoc
+<i>460</i>&nbsp;    private Set&lt;Position&gt; mirrorPositionYCoordinate(Set&lt;Position&gt; set) {
+<b class="nc"><i>461</i>&nbsp;        Set&lt;Position&gt; tempSet = new HashSet&lt;&gt;();</b>
+<i>462</i>&nbsp;
+<b class="nc"><i>463</i>&nbsp;        for (Position position : set) {</b>
+<b class="nc"><i>464</i>&nbsp;            tempSet.add(position.mirrorYCoordinate());</b>
+<b class="nc"><i>465</i>&nbsp;        }</b>
+<b class="nc"><i>466</i>&nbsp;         return tempSet;</b>
+<i>467</i>&nbsp;    }
+<i>468</i>&nbsp;}
+<i>469</i>&nbsp;
+</div>
+</div>
+
+<div class="footer">
+    
+    <div style="float:right;">generated on 2020-07-02 19:57</div>
+</div>
+</body>
+</html>

@@ -10,7 +10,8 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 /**
- * This class defines
+ * This class modifies the standard building rule.
+ * All subsequent constructions must be built above the first construction.
  */
 
 
@@ -19,6 +20,14 @@ public class OnSamePositionBlockOnly extends StandardBuild {
         super(builds);
     }
 
+    /**
+     * Calls the method build of the father class if the worker has not yet built.
+     * Otherwise, it filters all positions with the same X and Y as the first construction of the turn.
+     * @param workerPosition the worker's Position
+     * @param board the board
+     * @param turn the player's turn
+     * @return a <code>Set&lt;Cell&gt;</code> collect that only has the cells where the player can build in
+     */
     @Override
     public Set<Position> build(Position workerPosition, Board board, Turn turn) {
         Position first_block = turn.getFirstBuildingPosition();
@@ -30,9 +39,9 @@ public class OnSamePositionBlockOnly extends StandardBuild {
             else
                 return board.getStream()
                         .filter(a -> a.isFree())
-                        .filter(a-> a.getX() == (first_block.getX())) //Posso costruire solo al di sopra del blocco costruito
+                        .filter(a-> a.getX() == (first_block.getX()))
                         .filter(a-> a.getY() == (first_block.getY()))
-                        .filter(a->a.getZ() <= 2) //Non può essere una cupola
+                        .filter(a->a.getZ() <= 2)
                         .map(a->a.getPosition())
                         .collect(Collectors.toSet());
         }

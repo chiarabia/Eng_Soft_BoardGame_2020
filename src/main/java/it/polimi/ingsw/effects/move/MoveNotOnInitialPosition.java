@@ -11,7 +11,7 @@ import java.util.stream.Collectors;
 
 
 /**
- * This class defines a move where the worker can't move on the original
+ * This class implements a movement where the worker can't move on the original
  * position
  */
 
@@ -20,11 +20,11 @@ public class MoveNotOnInitialPosition extends StandardMove{
         super(moves);
     }
 
-    /**
+    /**Excludes the first position from the next possible moves
      * @param workerPosition the worker's Cell
      * @param board the board
      * @param turn the player's turn
-     * @return a Set<Cell> collect that only has the cells where the player can move
+     * @return a <code>Set&lt;Cell&gt;</code> collect that only has the cells where the player can move
      * without the initialPosition
      */
 

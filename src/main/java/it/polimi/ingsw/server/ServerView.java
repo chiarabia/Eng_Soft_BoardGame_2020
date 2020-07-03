@@ -47,12 +47,21 @@ public class ServerView implements GameObserver{
         this.eventGenerators = new ArrayList<>();
     }
 
+    /**
+     * Adds to list and starts a new EventGenerator
+     * @param eventGenerator EventGenerator
+     */
     public void startNewEventGenerator(EventGenerator eventGenerator){
         eventGenerators.add(eventGenerator);
         for (int i = 0; i< observerList.size(); i++) eventGenerator.addObserver(observerList.get(i));
         eventGenerators.get(eventGenerators.size()-1).start();
     }
 
+    /**
+     * Creates, adds and starts one ServerAsyncReceiver event generator each player,
+     * then notifies all observers about initialization process
+     * @param playersList players list
+     */
     public void startNewEventGenerators(List <Socket> playersList){
         int playerId = 1;
         for (Socket s: playersList){
@@ -62,11 +71,17 @@ public class ServerView implements GameObserver{
         for (int i = 0; i< observerList.size(); i++)  observerList.get(i).onInitialization();
     }
 
+    /**
+     * Stops last event generator and removes it from the list
+     */
     public void stopLastEventGenerator(){
         eventGenerators.get(eventGenerators.size()-1).stopProcess();
         eventGenerators.remove(eventGenerators.size()-1);
     }
 
+    /**
+     * Stops and removes all event generators
+     */
     public void stopAllEventGenerators(){
         while (eventGenerators.size()>0) stopLastEventGenerator();
         System.out.println("Game ended");

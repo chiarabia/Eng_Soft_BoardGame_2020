@@ -4,7 +4,12 @@ import it.polimi.ingsw.Board;
 import it.polimi.ingsw.Cell;
 import it.polimi.ingsw.Position;
 
+/**
+ * This class handles the victory when five completed towers are situated on the board
+ */
 public class FiveCompletedTowers extends StandardWinCondition {
+    private static int LAST_BUILDING = 3;
+    private static double NUM_VICTORY_TOWERS = 5.0;
 
     /** This method is used for the win condition that enables the worker to also win
      *  if there are at least five completed towers on the board
@@ -15,8 +20,8 @@ public class FiveCompletedTowers extends StandardWinCondition {
      * @return true if the player has won, false otherwise
      */
     public boolean win (Position workerPosition, Position destinationPosition, Board board) {
-        return board.getStream().filter(x->x.getZ()==3)
+        return board.getStream().filter(x->x.getZ()== LAST_BUILDING)
                                 .filter(x->x.isDome())
-                                .count() >= 5.0;
+                                .count() >= NUM_VICTORY_TOWERS;
     }
 }

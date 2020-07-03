@@ -66,32 +66,32 @@ public class PushForwardTest {
 
     @Test
     void shouldReturnTheRightXCoordinateOfTheWorkerWhenPlayerAndOpponentWorkerHaveSameX(){
-        assertEquals(1,pushForward.behindWorker_x(1,1));
+        assertEquals(1,pushForward.behindWorker(1,1));
     }
 
     @Test
     void shouldReturnTheRightXCoordinateOfTheWorkerWhenPlayerHasHigherXThanOpponent(){
-        assertEquals(1,pushForward.behindWorker_x(3,2));
+        assertEquals(1,pushForward.behindWorker(3,2));
     }
 
     @Test
     void shouldReturnTheRightXCoordinateOfTheWorkerWhenPlayerHasMinorXThanOpponent(){
-        assertEquals(3,pushForward.behindWorker_x(1,2));
+        assertEquals(3,pushForward.behindWorker(1,2));
     }
 
     @Test
     void shouldReturnTheRightXCoordinateOfTheWorkerWhenPlayerAndOpponentWorkerHaveSameY(){
-        assertEquals(1,pushForward.behindWorker_y(1,1));
+        assertEquals(1,pushForward.behindWorker(1,1));
     }
 
     @Test
     void shouldReturnTheRightXCoordinateOfTheWorkerWhenPlayerHasHigherYThanOpponent(){
-        assertEquals(1,pushForward.behindWorker_y(3,2));
+        assertEquals(1,pushForward.behindWorker(3,2));
     }
 
     @Test
     void shouldReturnTheRightXCoordinateOfTheWorkerWhenPlayerHasMinorYThanOpponent(){
-        assertEquals(3,pushForward.behindWorker_y(1,2));
+        assertEquals(3,pushForward.behindWorker(1,2));
     }
 
 

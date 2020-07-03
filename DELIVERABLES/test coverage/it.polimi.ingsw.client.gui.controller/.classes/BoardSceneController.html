@@ -1,0 +1,937 @@
+
+
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html id="htmlId">
+<head>
+  <title>Coverage Report :: BoardSceneController</title>
+  <style type="text/css">
+    @import "../../.css/coverage.css";
+  </style>
+</head>
+
+<body>
+<div class="header"></div>
+
+<div class="content">
+<div class="breadCrumbs">
+    [ <a href="../../index.html">all classes</a> ]
+    [ <a href="../index.html">it.polimi.ingsw.client.gui.controller</a> ]
+</div>
+
+<h1>Coverage Summary for Class: BoardSceneController (it.polimi.ingsw.client.gui.controller)</h1>
+
+<table class="coverageStats">
+<tr>
+  <th class="name">Class</th>
+<th class="coverageStat 
+">
+  Class, %
+</th>
+<th class="coverageStat 
+">
+  Method, %
+</th>
+<th class="coverageStat 
+">
+  Line, %
+</th>
+</tr>
+<tr>
+  <td class="name">BoardSceneController</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/ 1)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/ 56)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/ 348)
+  </span>
+</td>
+</tr>
+
+</table>
+
+<br/>
+<br/>
+
+
+<div class="sourceCode"><i>1</i>&nbsp;package it.polimi.ingsw.client.gui.controller;
+<i>2</i>&nbsp;
+<i>3</i>&nbsp;import it.polimi.ingsw.Position;
+<i>4</i>&nbsp;import it.polimi.ingsw.client.*;
+<i>5</i>&nbsp;import it.polimi.ingsw.client.gui.MainStage;
+<i>6</i>&nbsp;import javafx.application.Platform;
+<i>7</i>&nbsp;import javafx.fxml.FXML;
+<i>8</i>&nbsp;import javafx.fxml.Initializable;
+<i>9</i>&nbsp;import javafx.scene.Node;
+<i>10</i>&nbsp;import javafx.scene.control.Button;
+<i>11</i>&nbsp;import javafx.scene.control.Label;
+<i>12</i>&nbsp;import javafx.scene.image.ImageView;
+<i>13</i>&nbsp;import javafx.scene.image.Image;
+<i>14</i>&nbsp;import javafx.scene.input.MouseEvent;
+<i>15</i>&nbsp;import javafx.scene.layout.*;
+<i>16</i>&nbsp;import javafx.scene.text.Font;
+<i>17</i>&nbsp;import javafx.scene.text.FontWeight;
+<i>18</i>&nbsp;import javafx.scene.text.Text;
+<i>19</i>&nbsp;import javafx.scene.text.TextFlow;
+<i>20</i>&nbsp;import org.json.simple.parser.ParseException;
+<i>21</i>&nbsp;
+<i>22</i>&nbsp;
+<i>23</i>&nbsp;import java.net.URL;
+<i>24</i>&nbsp;import java.util.ArrayList;
+<i>25</i>&nbsp;import java.util.List;
+<i>26</i>&nbsp;import java.util.ResourceBundle;
+<i>27</i>&nbsp;import java.util.Set;
+<i>28</i>&nbsp;import java.util.stream.Collectors;
+<i>29</i>&nbsp;
+<i>30</i>&nbsp;/**
+<i>31</i>&nbsp; * This class handles the controls for the scene with the Board and all the game phases.
+<i>32</i>&nbsp; *
+<i>33</i>&nbsp; * &lt;p&gt;&lt;p&gt;The BoardSceneController is loaded from the &lt;code&gt;BoardScene.fxml&lt;/code&gt; file. In the CENTER of the Scene there is the actual Board.
+<i>34</i>&nbsp; * All the game phases are handled from this class and can be divided into three different phases. When the Scene loads, the player will either
+<i>35</i>&nbsp; * be waiting for the other players to go through their first phase or be themselves in the first phase.
+<i>36</i>&nbsp; * &lt;p&gt;&lt;ul&gt;
+<i>37</i>&nbsp; * &lt;li&gt;&lt;i&gt;First phase&lt;/i&gt;: in this phase the player is choosing its first workers positions and has a &lt;code&gt;actionCode = 1&lt;/code&gt; value. The method that handles the click
+<i>38</i>&nbsp; * on a cell of the &lt;code&gt;GridPane&lt;/code&gt;, {@link #onCellClicked(MouseEvent)}, automatically adds a Worker to the board and sends to the Client all needed information. When this phase ends the player has to either wait
+<i>39</i>&nbsp; * for the other players to go through their first phase or second phase.
+<i>40</i>&nbsp; * &lt;li&gt;&lt;i&gt;Second phase&lt;/i&gt;: in this phase the game has actually started and each player plays its turn. It has a &lt;code&gt;actionCode = 2&lt;/code&gt; value. When its the player&#39;s turn
+<i>41</i>&nbsp; * the method that handles the click on a cell, {@link #onCellClicked(MouseEvent)}, shows the player, with a visual clue, which cell is selected and all possible actions that they can make. Buttons are disabled,
+<i>42</i>&nbsp; * or not, depending on the possible actions.
+<i>43</i>&nbsp; * &lt;li&gt;&lt;i&gt;Third phase&lt;/i&gt;: a player has won and the game has ended. The notification of either winning or losing is shown through an &lt;code&gt;Image&lt;/code&gt;, the &lt;code&gt;GridPane&lt;/code&gt;
+<i>44</i>&nbsp; * with the board is cleared and all buttons are not visible.
+<i>45</i>&nbsp; * &lt;/ul&gt;&lt;p&gt;
+<i>46</i>&nbsp; *     
+<i>47</i>&nbsp; * All phases and possible actions are displayed as notifications in the bottom right of the screen. 
+<i>48</i>&nbsp; */
+<i>49</i>&nbsp;public class BoardSceneController implements Initializable {
+<i>50</i>&nbsp;
+<b class="nc"><i>51</i>&nbsp;    private Textfields textfields = new Textfields();</b>
+<i>52</i>&nbsp;    
+<i>53</i>&nbsp;    @FXML
+<i>54</i>&nbsp;    private BorderPane board;
+<i>55</i>&nbsp;    /**
+<i>56</i>&nbsp;     * The 5x5 &lt;code&gt;GridPane&lt;/code&gt; positioned in the CENTER of the &lt;code&gt;BorderPane board&lt;/code&gt;.
+<i>57</i>&nbsp;     * &lt;p&gt;All &lt;code&gt;GridPane&lt;/code&gt; nodes are &lt;code&gt;StackPane&lt;/code&gt;
+<i>58</i>&nbsp;     */
+<i>59</i>&nbsp;    @FXML
+<i>60</i>&nbsp;    public GridPane gridPane;
+<i>61</i>&nbsp;    @FXML
+<i>62</i>&nbsp;    private Button moveButton;
+<i>63</i>&nbsp;    @FXML
+<i>64</i>&nbsp;    private Button buildButton;
+<i>65</i>&nbsp;    @FXML
+<i>66</i>&nbsp;    private Button domeButton;
+<i>67</i>&nbsp;    @FXML
+<i>68</i>&nbsp;    private Button declineButton;
+<i>69</i>&nbsp;    @FXML
+<i>70</i>&nbsp;    private Label playerNameLabel;
+<i>71</i>&nbsp;    @FXML
+<i>72</i>&nbsp;    private ImageView godCardImageView;
+<i>73</i>&nbsp;    @FXML
+<i>74</i>&nbsp;    private TextFlow godDescriptionTextFlow;
+<i>75</i>&nbsp;    /**
+<i>76</i>&nbsp;     * The &lt;code&gt;TextFlow&lt;/code&gt; in the bottom right that displays all the current notifications for the Player
+<i>77</i>&nbsp;     */
+<i>78</i>&nbsp;    @FXML
+<i>79</i>&nbsp;    public TextFlow notificationsTextFlow;
+<i>80</i>&nbsp;
+<i>81</i>&nbsp;    /**
+<i>82</i>&nbsp;     * A &lt;code&gt;List&lt;/code&gt; for possible game Phases.
+<i>83</i>&nbsp;     * &lt;p&gt;When actionCode = 1 the game is in the initial phase where the player is choosing the position of its workers
+<i>84</i>&nbsp;     * &lt;p&gt;When actionCode = 2 its the player&#39;s turn
+<i>85</i>&nbsp;     * &lt;p&gt;When actionCode = 0 the game just started
+<i>86</i>&nbsp;     */
+<b class="nc"><i>87</i>&nbsp;    public static List&lt;Integer&gt; actionsCodes = new ArrayList&lt;&gt;();</b>
+<i>88</i>&nbsp;    /**
+<i>89</i>&nbsp;     * A &lt;code&gt;Text&lt;/code&gt; notification for the Player
+<i>90</i>&nbsp;     */
+<b class="nc"><i>91</i>&nbsp;    public static Text notification = new Text(&quot;&quot;);</b>
+<i>92</i>&nbsp;    /**
+<i>93</i>&nbsp;     * If a move action is possible
+<i>94</i>&nbsp;     */
+<b class="nc"><i>95</i>&nbsp;    public boolean isMovePossible = false;</b>
+<i>96</i>&nbsp;    /**
+<i>97</i>&nbsp;     * If a build action is possible
+<i>98</i>&nbsp;     */
+<b class="nc"><i>99</i>&nbsp;    public boolean isBuildPossible = false;</b>
+<i>100</i>&nbsp;    /**
+<i>101</i>&nbsp;     * If the player has the ability to build the Dome type of building at any z coordinate
+<i>102</i>&nbsp;     */
+<b class="nc"><i>103</i>&nbsp;    public boolean isDomeAtAnyLevelPossible = false;</b>
+<i>104</i>&nbsp;    /**
+<i>105</i>&nbsp;     * If the player has finished all its possible actions or the remaining ones are optional
+<i>106</i>&nbsp;     */
+<b class="nc"><i>107</i>&nbsp;    public boolean isDeclinePossible = false;</b>
+<i>108</i>&nbsp;
+<b class="nc"><i>109</i>&nbsp;    boolean firstTimeSelectedCell = true;</b>
+<b class="nc"><i>110</i>&nbsp;    boolean isMyTurn = false;</b>
+<b class="nc"><i>111</i>&nbsp;    boolean firstTimeWorkerOne = true;</b>
+<b class="nc"><i>112</i>&nbsp;    boolean firstTimeWorkerTwo = true;</b>
+<i>113</i>&nbsp;    StackPane previousCell;
+<b class="nc"><i>114</i>&nbsp;    boolean isMoveActionPossible = false;</b>
+<b class="nc"><i>115</i>&nbsp;    boolean isBuildActionPossible = false;</b>
+<i>116</i>&nbsp;
+<b class="nc"><i>117</i>&nbsp;    private boolean isWorkerSelected = false;</b>
+<i>118</i>&nbsp;
+<b class="nc"><i>119</i>&nbsp;    ImageView selectedImage = new ImageView(new Image(&quot;/components/selectedCell.png&quot;));</b>
+<i>120</i>&nbsp;
+<i>121</i>&nbsp;    GodCard chosenGodCard;
+<b class="nc"><i>122</i>&nbsp;    List&lt;Position&gt; startingWorkerPositions = new ArrayList&lt;&gt;();</b>
+<b class="nc"><i>123</i>&nbsp;    List&lt;StackPane&gt; worker1Moves = new ArrayList&lt;&gt;();</b>
+<b class="nc"><i>124</i>&nbsp;    List&lt;StackPane&gt; worker2Moves = new ArrayList&lt;&gt;();</b>
+<b class="nc"><i>125</i>&nbsp;    List&lt;StackPane&gt; worker1Builds = new ArrayList&lt;&gt;();</b>
+<b class="nc"><i>126</i>&nbsp;    List&lt;StackPane&gt; worker2Builds = new ArrayList&lt;&gt;();</b>
+<b class="nc"><i>127</i>&nbsp;    List&lt;Position&gt; possiblePosition = new ArrayList&lt;&gt;();</b>
+<i>128</i>&nbsp;    Set&lt;Position&gt; worker1MovesPosition;
+<i>129</i>&nbsp;    Set&lt;Position&gt; worker2MovesPosition;
+<i>130</i>&nbsp;    Set&lt;Position&gt; worker1BuildsPosition;
+<i>131</i>&nbsp;    Set&lt;Position&gt; worker2BuildsPosition;
+<b class="nc"><i>132</i>&nbsp;    Position oldFirstWorkerPosition = new Position(0,0,0);</b>
+<b class="nc"><i>133</i>&nbsp;    Position oldSecondWorkerPosition = new Position (0,0,0);</b>
+<i>134</i>&nbsp;    int workerSelected;
+<i>135</i>&nbsp;    Position newWorkerPosition;
+<i>136</i>&nbsp;    Position newBuildingPosition;
+<i>137</i>&nbsp;
+<i>138</i>&nbsp;    private static final int DOME_LEVEL = 4;
+<i>139</i>&nbsp;    private static final int DELETE = 2;
+<i>140</i>&nbsp;    private static final int ADD = 1;
+<i>141</i>&nbsp;    private static final int CELL = 100;
+<i>142</i>&nbsp;    private static final int BOARD = 500;
+<i>143</i>&nbsp;    private static final int MOVE = 1;
+<i>144</i>&nbsp;    private static final int BUILD = 2;
+<i>145</i>&nbsp;    private static final int MAX_NOTIFICATIONS = 7;
+<i>146</i>&nbsp;    private static final int TURN_FONT_NOTIFICATIONS = 12;
+<i>147</i>&nbsp;    private static final int DESCRIPTION_FONT = 10;
+<i>148</i>&nbsp;
+<i>149</i>&nbsp;
+<b class="nc"><i>150</i>&nbsp;    public BoardSceneController() throws ParseException {</b>
+<b class="nc"><i>151</i>&nbsp;    }</b>
+<i>152</i>&nbsp;
+<i>153</i>&nbsp;    /**
+<i>154</i>&nbsp;     * Sets the BoardScene and handles the buttons&#39; events.
+<i>155</i>&nbsp;     * &lt;p&gt;The Board Scene starts with all buttons disabled and the domeButton and declineButton as not visible.
+<i>156</i>&nbsp;     * ActionCode is set to 0. The player godPower is retrieved from the MainStage.
+<i>157</i>&nbsp;     * &lt;p&gt;
+<i>158</i>&nbsp;     * &lt;p&gt;&lt;b&gt;MoveButton Event&lt;/b&gt;
+<i>159</i>&nbsp;     * &lt;p&gt;When the &lt;code&gt;moveButton&lt;/code&gt; is clicked, the information of the new &lt;code&gt;Position&lt;/code&gt; and the ID of the worker that was moved is sent to the Client.
+<i>160</i>&nbsp;     * Then all buttons and indicators are disabled and reset.
+<i>161</i>&nbsp;     * &lt;p&gt;
+<i>162</i>&nbsp;     * &lt;p&gt;&lt;b&gt;BuildButton Event&lt;/b&gt;
+<i>163</i>&nbsp;     * &lt;p&gt;When the &lt;code&gt;buildButton&lt;/code&gt; is clicked, the information of the &lt;code&gt;Position&lt;/code&gt; of the new building, the ID of the worker and if the building is a Dome is sent to the Client.
+<i>164</i>&nbsp;     * Then all buttons and indicators are disabled and reset.
+<i>165</i>&nbsp;     * &lt;p&gt;
+<i>166</i>&nbsp;     * &lt;p&gt;&lt;b&gt;domeButton Event&lt;/b&gt;
+<i>167</i>&nbsp;     * &lt;p&gt;When the &lt;code&gt;domeButton&lt;/code&gt; is clicked, the information of the &lt;code&gt;Position&lt;/code&gt; of the new building, the ID of the worker and the fact that the building is a Dome is sent to the Client.
+<i>168</i>&nbsp;     * Then all buttons and indicators are disabled and reset.
+<i>169</i>&nbsp;     * &lt;p&gt;
+<i>170</i>&nbsp;     * &lt;p&gt;&lt;b&gt;declineButton Event&lt;/b&gt;
+<i>171</i>&nbsp;     * &lt;p&gt;When the &lt;code&gt;declineButton&lt;/code&gt; is clicked, the information that the turn ended is sent to the Client.
+<i>172</i>&nbsp;     * Then all buttons and indicators are disabled and reset, together with the workers&#39; information.
+<i>173</i>&nbsp;     * @param url
+<i>174</i>&nbsp;     * @param resourceBundle
+<i>175</i>&nbsp;     * @see #resetAllPossibleIndicators()
+<i>176</i>&nbsp;     */
+<i>177</i>&nbsp;    @Override
+<i>178</i>&nbsp;    public void initialize(URL url, ResourceBundle resourceBundle) {
+<i>179</i>&nbsp;         //disables all button and set the Dome and Decline button as not visible
+<b class="nc"><i>180</i>&nbsp;         moveButton.setDisable(true);</b>
+<b class="nc"><i>181</i>&nbsp;         buildButton.setDisable(true);</b>
+<b class="nc"><i>182</i>&nbsp;         declineButton.setDisable(true);</b>
+<b class="nc"><i>183</i>&nbsp;         domeButton.setDisable(true);</b>
+<b class="nc"><i>184</i>&nbsp;         domeButton.setVisible(false);</b>
+<b class="nc"><i>185</i>&nbsp;         declineButton.setVisible(false);</b>
+<i>186</i>&nbsp;        //sets default actioncode
+<b class="nc"><i>187</i>&nbsp;        actionsCodes.add(0);</b>
+<i>188</i>&nbsp;        //get the godPower
+<b class="nc"><i>189</i>&nbsp;        List&lt;GodCard&gt; godPowers = MainStage.getGodPowers();</b>
+<b class="nc"><i>190</i>&nbsp;        chosenGodCard = godPowers.get(0);</b>
+<i>191</i>&nbsp;        //set the god card image and description
+<b class="nc"><i>192</i>&nbsp;        setGodDetails(chosenGodCard);</b>
+<i>193</i>&nbsp;        //displays the name of the player in the label on the top left
+<b class="nc"><i>194</i>&nbsp;        displayPlayerName();</b>
+<i>195</i>&nbsp;
+<i>196</i>&nbsp;        //adds the notification Text to the TextFlow in the bottom right
+<i>197</i>&nbsp;        //setTextFormat(notification);
+<b class="nc"><i>198</i>&nbsp;        notificationsTextFlow.getChildren().add(notification);</b>
+<i>199</i>&nbsp;
+<i>200</i>&nbsp;        //handles the click on the Move Button
+<b class="nc"><i>201</i>&nbsp;        moveButton.setOnAction(actionEvent -&gt; {</b>
+<i>202</i>&nbsp;            //sends the position and worker id of the worker that has been moved
+<b class="nc"><i>203</i>&nbsp;            List&lt;ViewObserver&gt; observerList = MainStage.getObserverList();</b>
+<b class="nc"><i>204</i>&nbsp;            for (int i = 0; i &lt; observerList.size(); i++) observerList.get(i).onCompletedMove(newWorkerPosition.mirrorYCoordinate(), workerSelected);</b>
+<b class="nc"><i>205</i>&nbsp;            disableAllButtons();</b>
+<b class="nc"><i>206</i>&nbsp;            resetAllPossibleIndicators();</b>
+<b class="nc"><i>207</i>&nbsp;        });</b>
+<i>208</i>&nbsp;
+<i>209</i>&nbsp;        //handles the click on the Build Button
+<b class="nc"><i>210</i>&nbsp;        buildButton.setOnAction(actionEvent -&gt; {</b>
+<i>211</i>&nbsp;            //sends the position of the new building, the worker id of the worker that made the action and if the building is a dome
+<b class="nc"><i>212</i>&nbsp;            List&lt;ViewObserver&gt; observerList = MainStage.getObserverList();</b>
+<b class="nc"><i>213</i>&nbsp;            boolean isDome = false;</b>
+<b class="nc"><i>214</i>&nbsp;            if(newBuildingPosition.getZ()==DOME_LEVEL) isDome = true;</b>
+<b class="nc"><i>215</i>&nbsp;            for (int i = 0; i &lt; observerList.size(); i++) observerList.get(i).onCompletedBuild(newBuildingPosition.mirrorYCoordinate(), workerSelected, isDome);</b>
+<b class="nc"><i>216</i>&nbsp;            disableAllButtons();</b>
+<b class="nc"><i>217</i>&nbsp;            resetAllPossibleIndicators();</b>
+<b class="nc"><i>218</i>&nbsp;        });</b>
+<i>219</i>&nbsp;
+<i>220</i>&nbsp;        //handles the click on the Dome Button
+<b class="nc"><i>221</i>&nbsp;        domeButton.setOnAction(actionEvent -&gt; {</b>
+<i>222</i>&nbsp;            //sends the position of the new dome building and the worker id
+<b class="nc"><i>223</i>&nbsp;            List&lt;ViewObserver&gt; observerList = MainStage.getObserverList();</b>
+<b class="nc"><i>224</i>&nbsp;            for (int i = 0; i &lt; observerList.size(); i++) observerList.get(i).onCompletedBuild(newBuildingPosition.mirrorYCoordinate(), workerSelected, true);</b>
+<b class="nc"><i>225</i>&nbsp;            disableAllButtons();</b>
+<b class="nc"><i>226</i>&nbsp;            resetAllPossibleIndicators();</b>
+<b class="nc"><i>227</i>&nbsp;        });</b>
+<i>228</i>&nbsp;
+<i>229</i>&nbsp;        //handles the click on the Decline Button
+<b class="nc"><i>230</i>&nbsp;        declineButton.setOnAction(actionEvent -&gt; {</b>
+<i>231</i>&nbsp;            //tells the client that the player has declined the possibility of new actions
+<b class="nc"><i>232</i>&nbsp;            List&lt;ViewObserver&gt; observerList = MainStage.getObserverList();</b>
+<b class="nc"><i>233</i>&nbsp;            for (int i = 0; i &lt; observerList.size(); i++) observerList.get(i).onCompletedDecline();</b>
+<b class="nc"><i>234</i>&nbsp;            disableAllButtons();</b>
+<b class="nc"><i>235</i>&nbsp;            resetAllPossibleIndicators();</b>
+<b class="nc"><i>236</i>&nbsp;            resetWorkerBooleans();</b>
+<b class="nc"><i>237</i>&nbsp;            clearActionsList();</b>
+<b class="nc"><i>238</i>&nbsp;            addSelectedImageToCell(previousCell,DELETE,selectedImage);</b>
+<b class="nc"><i>239</i>&nbsp;        });</b>
+<b class="nc"><i>240</i>&nbsp;    }</b>
+<i>241</i>&nbsp;
+<i>242</i>&nbsp;
+<i>243</i>&nbsp;    /**
+<i>244</i>&nbsp;     * Sets the &lt;code&gt;Image&lt;/code&gt; and god description in a &lt;code&gt;TextField&lt;/code&gt; on the screen
+<i>245</i>&nbsp;     * @param card the &lt;code&gt;GodCard&lt;/code&gt; with the name of the god, the description and the image
+<i>246</i>&nbsp;     */
+<i>247</i>&nbsp;    public void setGodDetails(GodCard card){
+<b class="nc"><i>248</i>&nbsp;        MainStage.getLock().add(new Object());</b>
+<i>249</i>&nbsp;        //set God Description
+<b class="nc"><i>250</i>&nbsp;        String text = card.getGodDescription();</b>
+<b class="nc"><i>251</i>&nbsp;        Text godDescrp = new Text(text);</b>
+<b class="nc"><i>252</i>&nbsp;        setTextFormat(godDescrp,DESCRIPTION_FONT);</b>
+<b class="nc"><i>253</i>&nbsp;        godDescriptionTextFlow.getChildren().add(godDescrp);</b>
+<i>254</i>&nbsp;        //set God Card
+<b class="nc"><i>255</i>&nbsp;        String godCode = card.getGodImage();</b>
+<b class="nc"><i>256</i>&nbsp;        Image godCardImage = new Image(&quot;godCards/&quot; + godCode);</b>
+<b class="nc"><i>257</i>&nbsp;        godCardImageView.setImage(godCardImage);</b>
+<b class="nc"><i>258</i>&nbsp;    }</b>
+<i>259</i>&nbsp;
+<i>260</i>&nbsp;    /**
+<i>261</i>&nbsp;     * Displays the name of the Player in a &lt;code&gt;Label&lt;/code&gt; in the top-left
+<i>262</i>&nbsp;     */
+<i>263</i>&nbsp;    public void displayPlayerName(){
+<b class="nc"><i>264</i>&nbsp;        ArrayList&lt;Object&gt; playerData = MainStage.getPlayerData();</b>
+<b class="nc"><i>265</i>&nbsp;        String playerName = (String)playerData.get(0);</b>
+<b class="nc"><i>266</i>&nbsp;        playerNameLabel.setText(playerName);</b>
+<b class="nc"><i>267</i>&nbsp;    }</b>
+<i>268</i>&nbsp;
+<i>269</i>&nbsp;    /**
+<i>270</i>&nbsp;     * Handles the positioning of the first two workers on the board.
+<i>271</i>&nbsp;     * It sends the &lt;code&gt;Position&lt;/code&gt; to the client.
+<i>272</i>&nbsp;     *
+<i>273</i>&nbsp;     * @param cell the &lt;code&gt;StackPane&lt;/code&gt; that the player clicked
+<i>274</i>&nbsp;     * @param position the &lt;code&gt;Position&lt;/code&gt; corresponding to the &lt;code&gt;StackPane&lt;/code&gt;
+<i>275</i>&nbsp;     * @see #addWorkerImage(StackPane, int)
+<i>276</i>&nbsp;     */
+<i>277</i>&nbsp;
+<i>278</i>&nbsp;    public void displayWorker(StackPane cell, Position position){
+<b class="nc"><i>279</i>&nbsp;        List&lt;ViewObserver&gt; observerList = MainStage.getObserverList();</b>
+<b class="nc"><i>280</i>&nbsp;        ArrayList&lt;Object&gt; playerData = MainStage.getPlayerData();</b>
+<i>281</i>&nbsp;        //gets the clicked StackPane
+<b class="nc"><i>282</i>&nbsp;        StackPane cellWorker = cell;</b>
+<i>283</i>&nbsp;        //adds the worker image on top of the StackPane
+<b class="nc"><i>284</i>&nbsp;        addWorkerImage(cellWorker, (Integer)playerData.get(2));</b>
+<i>285</i>&nbsp;        //gets the Position of the Worker
+<b class="nc"><i>286</i>&nbsp;        Position WorkerPosition = position;</b>
+<b class="nc"><i>287</i>&nbsp;        startingWorkerPositions.add(WorkerPosition);</b>
+<i>288</i>&nbsp;        //when there are two Workers it gives them to the client
+<b class="nc"><i>289</i>&nbsp;        if (startingWorkerPositions.size() == 2){</b>
+<b class="nc"><i>290</i>&nbsp;            ArrayList&lt;Position&gt; startingWorkerPositionsWithYmirrored = new ArrayList&lt;Position&gt;();</b>
+<b class="nc"><i>291</i>&nbsp;            for (int i = 0; i &lt; startingWorkerPositions.size(); i++) {</b>
+<b class="nc"><i>292</i>&nbsp;                startingWorkerPositionsWithYmirrored.add(i, startingWorkerPositions.get(i).mirrorYCoordinate());</b>
+<i>293</i>&nbsp;            }
+<i>294</i>&nbsp;
+<b class="nc"><i>295</i>&nbsp;            for (int i = 0; i &lt; observerList.size(); i++)</b>
+<b class="nc"><i>296</i>&nbsp;                observerList.get(i).onCompletedInitializeWorkerPositions(startingWorkerPositionsWithYmirrored);</b>
+<b class="nc"><i>297</i>&nbsp;            actionsCodes.clear();</b>
+<b class="nc"><i>298</i>&nbsp;            notificationsTextFlow.getChildren().clear();</b>
+<i>299</i>&nbsp;        }
+<b class="nc"><i>300</i>&nbsp;    }</b>
+<i>301</i>&nbsp;
+<i>302</i>&nbsp;    /**
+<i>303</i>&nbsp;     * Handles the click event on a cell of the board.
+<i>304</i>&nbsp;     *
+<i>305</i>&nbsp;     * &lt;p&gt;The method behaves differently based on the &lt;code&gt;actionCode&lt;/code&gt;.
+<i>306</i>&nbsp;     * &lt;p&gt;
+<i>307</i>&nbsp;     * &lt;p&gt;&lt;b&gt;When ActionCode = 1&lt;/b&gt;
+<i>308</i>&nbsp;     * &lt;p&gt;The game is in the initial phase where the player needs to choose its workers first &lt;code&gt;Position&lt;/code&gt;. When the player clicks
+<i>309</i>&nbsp;     * on the board they position a worker immediately on the board. A check for possible already positioned workers is made.
+<i>310</i>&nbsp;     * &lt;p&gt;
+<i>311</i>&nbsp;     * &lt;p&gt;&lt;b&gt;When ActionCode = 2&lt;/b&gt;
+<i>312</i>&nbsp;     * &lt;p&gt;It&#39;s the player&#39;s turn. To help the player better visualize what cell of the board they have clicked on, an &lt;code&gt;Image&lt;/code&gt; will appear on the
+<i>313</i>&nbsp;     * selected &lt;code&gt;StackPane&lt;/code&gt;. Firstly the player needs to select the worker they want to make an action with. The worker selected is saved and a notification
+<i>314</i>&nbsp;     * of which worker has been selected is shown. When a worker is selected the Player will be notified of the types of action they can make. When the player clicks on
+<i>315</i>&nbsp;     * a Cell with a possible action the Button of the respective action will be visible and the player will be able to click it.
+<i>316</i>&nbsp;     * @param event the &lt;code&gt;MouseEvent&lt;/code&gt;
+<i>317</i>&nbsp;     * @see #displayWorker(StackPane, Position)
+<i>318</i>&nbsp;     * @see #addSelectedImageToCell(StackPane, int, ImageView) 
+<i>319</i>&nbsp;     */
+<i>320</i>&nbsp;    public void onCellClicked(javafx.scene.input.MouseEvent event) {
+<b class="nc"><i>321</i>&nbsp;        Platform.runLater(()-&gt; {</b>
+<b class="nc"><i>322</i>&nbsp;            int column = GridPane.getColumnIndex((Node) event.getSource());</b>
+<b class="nc"><i>323</i>&nbsp;            int row = GridPane.getRowIndex((Node) event.getSource());</b>
+<i>324</i>&nbsp;
+<i>325</i>&nbsp;            //if we are in the askWorkerInitialPosition phase
+<b class="nc"><i>326</i>&nbsp;            if (actionsCodes != null &amp;&amp; actionsCodes.size() &gt; 0 &amp;&amp; actionsCodes.get(0) == 1) {</b>
+<b class="nc"><i>327</i>&nbsp;                if(isContained(possiblePosition, column, row)&amp;&amp;!isContained(startingWorkerPositions, column, row)) {</b>
+<b class="nc"><i>328</i>&nbsp;                    System.out.println(String.format(&quot;Node clicked at: column=%d, row=%d&quot;, column, row));</b>
+<i>329</i>&nbsp;                    //adds the StackPane of the cell that we clicked in workerCells
+<b class="nc"><i>330</i>&nbsp;                    StackPane cell = (StackPane) getNodeFromGridPane(gridPane, column, row);</b>
+<i>331</i>&nbsp;                    //adds the Position of the cell that we clicked in workerCells
+<b class="nc"><i>332</i>&nbsp;                    Position workerPosition = new Position(column, row, 0);</b>
+<i>333</i>&nbsp;                    //asks to display the worker image and store it for the observer
+<b class="nc"><i>334</i>&nbsp;                    displayWorker(cell, workerPosition);</b>
+<i>335</i>&nbsp;                    //updates the workerNumber
+<b class="nc"><i>336</i>&nbsp;                }</b>
+<i>337</i>&nbsp;                else{
+<i>338</i>&nbsp;                    //if the cell is not available it prints a message
+<b class="nc"><i>339</i>&nbsp;                    displayNotificationsDuringTurn(textfields.getNocell() +&quot;\n&quot;);</b>
+<i>340</i>&nbsp;                }
+<i>341</i>&nbsp;            }
+<i>342</i>&nbsp;            //if we are in a normal turn
+<b class="nc"><i>343</i>&nbsp;            else if (actionsCodes != null &amp;&amp; actionsCodes.size() &gt; 0 &amp;&amp; actionsCodes.get(0) == 2) {</b>
+<i>344</i>&nbsp;                //gets the current position in terms of StackPane of the two workers
+<b class="nc"><i>345</i>&nbsp;                StackPane firstWorkerCell = (StackPane) getNodeFromPosition(gridPane, oldFirstWorkerPosition);</b>
+<b class="nc"><i>346</i>&nbsp;                StackPane secondWorkerCell = (StackPane) getNodeFromPosition(gridPane, oldSecondWorkerPosition);</b>
+<i>347</i>&nbsp;
+<i>348</i>&nbsp;                //the cell that has been clicked on
+<b class="nc"><i>349</i>&nbsp;                StackPane cell = (StackPane) getNodeFromGridPane(gridPane, column, row);</b>
+<i>350</i>&nbsp;
+<i>351</i>&nbsp;                //if the cell that has been clicked has either the first or second worker of the player
+<b class="nc"><i>352</i>&nbsp;                if (cell == firstWorkerCell || cell == secondWorkerCell) {</b>
+<b class="nc"><i>353</i>&nbsp;                    isWorkerSelected = true;</b>
+<b class="nc"><i>354</i>&nbsp;                    if (cell == firstWorkerCell) {</b>
+<b class="nc"><i>355</i>&nbsp;                        workerSelected = 1;</b>
+<b class="nc"><i>356</i>&nbsp;                        if(firstTimeWorkerOne) {</b>
+<b class="nc"><i>357</i>&nbsp;                            displayNotificationsDuringTurn(textfields.getWorker1() + &quot;\n&quot;);</b>
+<b class="nc"><i>358</i>&nbsp;                            firstTimeWorkerOne = false;</b>
+<b class="nc"><i>359</i>&nbsp;                            firstTimeWorkerTwo = true;</b>
+<i>360</i>&nbsp;                        }
+<i>361</i>&nbsp;                    }
+<i>362</i>&nbsp;
+<b class="nc"><i>363</i>&nbsp;                    if (cell == secondWorkerCell) {</b>
+<b class="nc"><i>364</i>&nbsp;                        workerSelected = 2;</b>
+<b class="nc"><i>365</i>&nbsp;                        if(firstTimeWorkerTwo) {</b>
+<b class="nc"><i>366</i>&nbsp;                            displayNotificationsDuringTurn(textfields.getWorker2() + &quot;\n&quot;);</b>
+<b class="nc"><i>367</i>&nbsp;                            firstTimeWorkerTwo = false;</b>
+<b class="nc"><i>368</i>&nbsp;                            firstTimeWorkerOne = true;</b>
+<i>369</i>&nbsp;                        }
+<i>370</i>&nbsp;                    }
+<b class="nc"><i>371</i>&nbsp;                    notifyAvailableActions();</b>
+<i>372</i>&nbsp;                }
+<i>373</i>&nbsp;
+<i>374</i>&nbsp;                //handles the image that gives the player the visual clue of which Cell they clicked on
+<i>375</i>&nbsp;                //if it&#39;s not the player turn the image will not appear
+<b class="nc"><i>376</i>&nbsp;                if (isMyTurn) {</b>
+<b class="nc"><i>377</i>&nbsp;                    if (!firstTimeSelectedCell) addSelectedImageToCell(previousCell, DELETE, selectedImage);</b>
+<b class="nc"><i>378</i>&nbsp;                    addSelectedImageToCell(cell, ADD, selectedImage);</b>
+<i>379</i>&nbsp;                }
+<b class="nc"><i>380</i>&nbsp;                if (!isMyTurn &amp;&amp; !firstTimeSelectedCell) addSelectedImageToCell(previousCell, ADD, selectedImage);</b>
+<i>381</i>&nbsp;
+<i>382</i>&nbsp;                //if a worker has been selected and a move action is possible
+<b class="nc"><i>383</i>&nbsp;                if (isWorkerSelected &amp;&amp; isMovePossible) {</b>
+<i>384</i>&nbsp;                    List&lt;StackPane&gt; workerMoves;
+<i>385</i>&nbsp;                    Set&lt;Position&gt; workerMovesPosition;
+<i>386</i>&nbsp;
+<i>387</i>&nbsp;                    //sets the information for the right worker
+<b class="nc"><i>388</i>&nbsp;                    if (workerSelected == 1) {</b>
+<b class="nc"><i>389</i>&nbsp;                        workerMoves = worker1Moves;</b>
+<b class="nc"><i>390</i>&nbsp;                        workerMovesPosition = worker1MovesPosition;</b>
+<i>391</i>&nbsp;
+<i>392</i>&nbsp;                    }else {
+<b class="nc"><i>393</i>&nbsp;                        workerMoves = worker2Moves;</b>
+<b class="nc"><i>394</i>&nbsp;                        workerMovesPosition = worker2MovesPosition;</b>
+<i>395</i>&nbsp;                    }
+<i>396</i>&nbsp;                    //converts the information into StackPane
+<b class="nc"><i>397</i>&nbsp;                    convertPositionListToStackPaneList(workerMovesPosition, workerSelected, 1);</b>
+<i>398</i>&nbsp;                    //checks if the action is possible for the clicked cell
+<b class="nc"><i>399</i>&nbsp;                    isMoveActionPossible = isCellActionPossible(cell, workerMoves);</b>
+<b class="nc"><i>400</i>&nbsp;                    newWorkerPosition = addZToPosition(column, row, workerMovesPosition);</b>
+<i>401</i>&nbsp;
+<i>402</i>&nbsp;                    //if a movement action is possible in the cell that has been clicked by the player the moveButton is available
+<b class="nc"><i>403</i>&nbsp;                    moveButton.setDisable(!isMoveActionPossible);</b>
+<b class="nc"><i>404</i>&nbsp;                    clearActionsList();</b>
+<i>405</i>&nbsp;                    //saves the last cell that the player clicked
+<b class="nc"><i>406</i>&nbsp;                    previousCell = cell;</b>
+<b class="nc"><i>407</i>&nbsp;                    firstTimeSelectedCell = false;</b>
+<i>408</i>&nbsp;                }
+<i>409</i>&nbsp;
+<i>410</i>&nbsp;                //if a movement is no longer possible, the move button is disabled
+<b class="nc"><i>411</i>&nbsp;                if (!isMovePossible) moveButton.setDisable(true);</b>
+<i>412</i>&nbsp;
+<b class="nc"><i>413</i>&nbsp;                if (isWorkerSelected &amp;&amp; isBuildPossible) {</b>
+<i>414</i>&nbsp;                    List&lt;StackPane&gt; workerBuilds;
+<i>415</i>&nbsp;                    Set&lt;Position&gt; workerBuildsPosition;
+<i>416</i>&nbsp;
+<i>417</i>&nbsp;                    //sets the information for the right worker
+<b class="nc"><i>418</i>&nbsp;                    if (workerSelected == 1) {</b>
+<b class="nc"><i>419</i>&nbsp;                        workerBuildsPosition = worker1BuildsPosition;</b>
+<i>420</i>&nbsp;                        //converts the information into StackPane
+<b class="nc"><i>421</i>&nbsp;                        convertPositionListToStackPaneList(workerBuildsPosition, workerSelected, 2);</b>
+<b class="nc"><i>422</i>&nbsp;                        workerBuilds = worker1Builds;</b>
+<i>423</i>&nbsp;
+<i>424</i>&nbsp;                    }
+<i>425</i>&nbsp;                    else {
+<b class="nc"><i>426</i>&nbsp;                        workerBuildsPosition = worker2BuildsPosition;</b>
+<i>427</i>&nbsp;                        //converts the information into StackPane
+<b class="nc"><i>428</i>&nbsp;                        convertPositionListToStackPaneList(workerBuildsPosition, workerSelected, 2);</b>
+<b class="nc"><i>429</i>&nbsp;                        workerBuilds = worker2Builds;</b>
+<i>430</i>&nbsp;                    }
+<b class="nc"><i>431</i>&nbsp;                    isBuildActionPossible = isCellActionPossible(cell, workerBuilds);</b>
+<b class="nc"><i>432</i>&nbsp;                    newBuildingPosition = addZToPosition(column, row, workerBuildsPosition);</b>
+<i>433</i>&nbsp;
+<i>434</i>&nbsp;                    //if a build action is possible in the cell that has been clicked by the player the buildButton is avalaible
+<b class="nc"><i>435</i>&nbsp;                    buildButton.setDisable(!isBuildActionPossible);</b>
+<i>436</i>&nbsp;                    //if a build action is possible in the cell that has been clicked, and the player can choose to
+<i>437</i>&nbsp;                    //build a dome wherever, the domeButton is avalaible
+<b class="nc"><i>438</i>&nbsp;                    domeButton.setDisable(!isBuildActionPossible &amp;&amp; !isDomeAtAnyLevelPossible);</b>
+<b class="nc"><i>439</i>&nbsp;                    clearActionsList();</b>
+<b class="nc"><i>440</i>&nbsp;                    previousCell = cell;</b>
+<b class="nc"><i>441</i>&nbsp;                    firstTimeSelectedCell = false;</b>
+<i>442</i>&nbsp;                }
+<i>443</i>&nbsp;
+<b class="nc"><i>444</i>&nbsp;                if (isDeclinePossible) declineButton.setDisable(false);</b>
+<i>445</i>&nbsp;                //if a build action is no longer possible, the build button is disabled
+<b class="nc"><i>446</i>&nbsp;                if (!isBuildPossible) buildButton.setDisable(true);</b>
+<i>447</i>&nbsp;                //if a dome building action is no longer possible, the build button is disabled
+<b class="nc"><i>448</i>&nbsp;                if (!isDomeAtAnyLevelPossible) domeButton.setDisable(true);</b>
+<i>449</i>&nbsp;                //if a decline action is no longer possible, the decline button is disabled
+<b class="nc"><i>450</i>&nbsp;                if (!isDeclinePossible) declineButton.setDisable(true);</b>
+<i>451</i>&nbsp;
+<i>452</i>&nbsp;            }
+<b class="nc"><i>453</i>&nbsp;        });</b>
+<b class="nc"><i>454</i>&nbsp;    }</b>
+<i>455</i>&nbsp;
+<i>456</i>&nbsp;    /** Notifies the player about all possibles moves that their workers can make.
+<i>457</i>&nbsp;     *  The different notifications are about:  movement, construction, both or no action.
+<i>458</i>&nbsp;     */
+<i>459</i>&nbsp;    private void notifyAvailableActions () {
+<i>460</i>&nbsp;        Set&lt;Position&gt; workerMovesPosition;
+<i>461</i>&nbsp;        Set&lt;Position&gt; workerBuildsPosition;
+<i>462</i>&nbsp;
+<b class="nc"><i>463</i>&nbsp;        if(workerSelected == 1) {</b>
+<b class="nc"><i>464</i>&nbsp;            workerMovesPosition = worker1MovesPosition;</b>
+<b class="nc"><i>465</i>&nbsp;            workerBuildsPosition = worker1BuildsPosition;</b>
+<i>466</i>&nbsp;        }
+<i>467</i>&nbsp;        else {
+<b class="nc"><i>468</i>&nbsp;            workerMovesPosition = worker2MovesPosition;</b>
+<b class="nc"><i>469</i>&nbsp;            workerBuildsPosition = worker2BuildsPosition;</b>
+<i>470</i>&nbsp;        }
+<b class="nc"><i>471</i>&nbsp;        if(workerBuildsPosition.isEmpty()&amp;&amp;workerMovesPosition.isEmpty())</b>
+<b class="nc"><i>472</i>&nbsp;            displayNotificationsDuringTurn(textfields.getWcantdoactions()+&quot;\n&quot;);</b>
+<i>473</i>&nbsp;
+<b class="nc"><i>474</i>&nbsp;        else if(!workerMovesPosition.isEmpty() &amp;&amp; !workerBuildsPosition.isEmpty())</b>
+<b class="nc"><i>475</i>&nbsp;            displayNotificationsDuringTurn(textfields.getWcanboth()+&quot;\n&quot;);</b>
+<i>476</i>&nbsp;
+<b class="nc"><i>477</i>&nbsp;        else if(isMovePossible) {</b>
+<b class="nc"><i>478</i>&nbsp;            if(workerMovesPosition.isEmpty())</b>
+<b class="nc"><i>479</i>&nbsp;                displayNotificationsDuringTurn(textfields.getWcantmove()+&quot;\n&quot;);</b>
+<i>480</i>&nbsp;            else
+<b class="nc"><i>481</i>&nbsp;                displayNotificationsDuringTurn(textfields.getWcanmove() +&quot;\n&quot;);</b>
+<i>482</i>&nbsp;        }
+<b class="nc"><i>483</i>&nbsp;        else if(isBuildPossible) {</b>
+<b class="nc"><i>484</i>&nbsp;            if (workerBuildsPosition.isEmpty())</b>
+<b class="nc"><i>485</i>&nbsp;                displayNotificationsDuringTurn(textfields.getWcantbuild() + &quot;\n&quot;);</b>
+<i>486</i>&nbsp;            else
+<b class="nc"><i>487</i>&nbsp;                displayNotificationsDuringTurn(textfields.getWcanbuild() + &quot;\n&quot;);</b>
+<i>488</i>&nbsp;        }
+<b class="nc"><i>489</i>&nbsp;    }</b>
+<i>490</i>&nbsp;
+<i>491</i>&nbsp;
+<i>492</i>&nbsp;    /**
+<i>493</i>&nbsp;     * Updates the &lt;code&gt;Position&lt;/code&gt; of the worker image on the board.
+<i>494</i>&nbsp;     * It removes the &lt;code&gt;Image&lt;/code&gt; of the worker from its old &lt;code&gt;Position&lt;/code&gt; and adds the new one in the new &lt;code&gt;Position&lt;/code&gt;.
+<i>495</i>&nbsp;     * The color of the worker is decided based on the playerID
+<i>496</i>&nbsp;     * @param newPosition the new Position where to put the image
+<i>497</i>&nbsp;     * @param oldPosition the old Position where to delete the image
+<i>498</i>&nbsp;     * @param playerID the player number that we need for the color of the worker
+<i>499</i>&nbsp;     * @see #addWorkerImage(StackPane, int)
+<i>500</i>&nbsp;     */
+<i>501</i>&nbsp;    public void updateWorker(Position newPosition, Position oldPosition, int playerID){
+<b class="nc"><i>502</i>&nbsp;        StackPane newCell = (StackPane)getNodeFromPosition(gridPane, newPosition);</b>
+<b class="nc"><i>503</i>&nbsp;        StackPane oldCell = (StackPane)getNodeFromPosition(gridPane, oldPosition);</b>
+<b class="nc"><i>504</i>&nbsp;        removeImage(oldCell);</b>
+<b class="nc"><i>505</i>&nbsp;        addWorkerImage(newCell,playerID);</b>
+<b class="nc"><i>506</i>&nbsp;    }</b>
+<i>507</i>&nbsp;
+<i>508</i>&nbsp;    /**
+<i>509</i>&nbsp;     * Removes the worker &lt;code&gt;Image&lt;/code&gt; from the Board.
+<i>510</i>&nbsp;     * @param workerPosition the old &lt;code&gt;Position&lt;/code&gt; where to delete the &lt;code&gt;Image&lt;/code&gt;.
+<i>511</i>&nbsp;     */
+<i>512</i>&nbsp;    public void removeWorker(Position workerPosition) {
+<b class="nc"><i>513</i>&nbsp;        StackPane cell = (StackPane)getNodeFromPosition(gridPane, workerPosition);</b>
+<b class="nc"><i>514</i>&nbsp;        removeImage(cell);</b>
+<b class="nc"><i>515</i>&nbsp;    }</b>
+<i>516</i>&nbsp;
+<i>517</i>&nbsp;    /**
+<i>518</i>&nbsp;     * Adds the &lt;code&gt;Image&lt;/code&gt; of the worker at the start of the game.
+<i>519</i>&nbsp;     * This method is exclusively used in the ActionCode=1 phase, when the Player has chosen
+<i>520</i>&nbsp;     * its workers initial &lt;code&gt;Position&lt;/code&gt;.
+<i>521</i>&nbsp;     * @param newPosition the new &lt;code&gt;Position&lt;/code&gt; where to put the image
+<i>522</i>&nbsp;     * @param playerID the player number that we need for the color of the worker
+<i>523</i>&nbsp;     * @see #addWorkerImage(StackPane, int)
+<i>524</i>&nbsp;     */
+<i>525</i>&nbsp;    public void updateWorkerInitialPosition (Position newPosition, int playerID){
+<b class="nc"><i>526</i>&nbsp;        StackPane newCell = (StackPane)getNodeFromPosition(gridPane, newPosition);</b>
+<b class="nc"><i>527</i>&nbsp;        addWorkerImage(newCell,playerID);</b>
+<b class="nc"><i>528</i>&nbsp;    }</b>
+<i>529</i>&nbsp;
+<i>530</i>&nbsp;    /**
+<i>531</i>&nbsp;     * Updates the &lt;code&gt;Image&lt;/code&gt; of the buildings.
+<i>532</i>&nbsp;     * @param newPosition &lt;code&gt;Position&lt;/code&gt; on the board where to put the image
+<i>533</i>&nbsp;     * @param dome true if the building that needs to be added is a dome, false otherwise.
+<i>534</i>&nbsp;     * @see #addBuildingImage(StackPane, String) 
+<i>535</i>&nbsp;     */
+<i>536</i>&nbsp;    public void updateBuilding(Position newPosition, boolean dome){
+<b class="nc"><i>537</i>&nbsp;        String level = &quot;level0.png&quot;;</b>
+<b class="nc"><i>538</i>&nbsp;        if (dome) level = &quot;dome.png&quot;;</b>
+<b class="nc"><i>539</i>&nbsp;        StackPane newBuildingCell = (StackPane)getNodeFromPosition(gridPane,newPosition);</b>
+<b class="nc"><i>540</i>&nbsp;        int z = newPosition.getZ();</b>
+<b class="nc"><i>541</i>&nbsp;        if (!dome) level = &quot;level&quot; + z + &quot;.png&quot;;</b>
+<b class="nc"><i>542</i>&nbsp;        addBuildingImage(newBuildingCell,level);</b>
+<b class="nc"><i>543</i>&nbsp;    }</b>
+<i>544</i>&nbsp;
+<i>545</i>&nbsp;    /**
+<i>546</i>&nbsp;     * Adds the worker &lt;code&gt;Image&lt;/code&gt; to a &lt;code&gt;StackPane&lt;/code&gt;.
+<i>547</i>&nbsp;     * &lt;p&gt;The color of the worker is &lt;i&gt;blue&lt;/i&gt; for playerID = 1, &lt;i&gt;yellow&lt;/i&gt; for playerID = 2, &lt;i&gt;green&lt;/i&gt; for PlayerID = 3.
+<i>548</i>&nbsp;     * @param cell the &lt;code&gt;StackPane&lt;/code&gt; where to add the &lt;code&gt;Image&lt;/code&gt;.
+<i>549</i>&nbsp;     * @param playerID the player number that we need for the color of the worker
+<i>550</i>&nbsp;     */
+<i>551</i>&nbsp;    public void addWorkerImage(StackPane cell, int playerID){
+<b class="nc"><i>552</i>&nbsp;        ImageView worker = new ImageView(new Image(&quot;/worker/w&quot; + playerID +&quot;.png&quot;));</b>
+<b class="nc"><i>553</i>&nbsp;        worker.setFitHeight(CELL);</b>
+<b class="nc"><i>554</i>&nbsp;        worker.setFitWidth(CELL);</b>
+<b class="nc"><i>555</i>&nbsp;        cell.getChildren().add(worker);</b>
+<b class="nc"><i>556</i>&nbsp;    }</b>
+<i>557</i>&nbsp;
+<i>558</i>&nbsp;    /**
+<i>559</i>&nbsp;     * Adds the building image in a &lt;code&gt;StackPane&lt;/code&gt;.
+<i>560</i>&nbsp;     * &lt;p&gt;The &lt;code&gt;String&lt;/code&gt; level is used to find the right image for the building.
+<i>561</i>&nbsp;     * If the building is a dome the image is a &lt;code&gt;ImageView&lt;/code&gt;, otherwise it&#39;s the &lt;code&gt;Background&lt;/code&gt; of the &lt;code&gt;StackPane&lt;/code&gt;.
+<i>562</i>&nbsp;     * @param cell the &lt;code&gt;StackPane&lt;/code&gt; where to add the building
+<i>563</i>&nbsp;     * @param level the building level
+<i>564</i>&nbsp;     */
+<i>565</i>&nbsp;    public void addBuildingImage(StackPane cell, String level){
+<b class="nc"><i>566</i>&nbsp;        Image building = new Image(&quot;/Buildings/&quot; + level);</b>
+<b class="nc"><i>567</i>&nbsp;        if (level.equals(&quot;dome.png&quot;)){</b>
+<b class="nc"><i>568</i>&nbsp;            ImageView dome = new ImageView(building);</b>
+<b class="nc"><i>569</i>&nbsp;            dome.setFitHeight(CELL);</b>
+<b class="nc"><i>570</i>&nbsp;            dome.setFitWidth(CELL);</b>
+<b class="nc"><i>571</i>&nbsp;            cell.getChildren().add(dome);</b>
+<b class="nc"><i>572</i>&nbsp;        }</b>
+<i>573</i>&nbsp;        else{
+<b class="nc"><i>574</i>&nbsp;            BackgroundSize buildingSize = new BackgroundSize(CELL,CELL, false,false, true, true);</b>
+<b class="nc"><i>575</i>&nbsp;            BackgroundImage buildingBackground = new BackgroundImage(building, BackgroundRepeat.NO_REPEAT, BackgroundRepeat.NO_REPEAT, BackgroundPosition.CENTER, buildingSize );</b>
+<b class="nc"><i>576</i>&nbsp;            cell.setBackground(new Background(buildingBackground));</b>
+<i>577</i>&nbsp;        }
+<b class="nc"><i>578</i>&nbsp;    }</b>
+<i>579</i>&nbsp;
+<i>580</i>&nbsp;    /**
+<i>581</i>&nbsp;     * Clears the &lt;code&gt;StackPane&lt;/code&gt; of its children
+<i>582</i>&nbsp;     * @param cell the &lt;code&gt;StackPane&lt;/code&gt; we want to clear
+<i>583</i>&nbsp;     */
+<i>584</i>&nbsp;    public void removeImage(StackPane cell){
+<b class="nc"><i>585</i>&nbsp;        cell.getChildren().clear();</b>
+<b class="nc"><i>586</i>&nbsp;    }</b>
+<i>587</i>&nbsp;
+<i>588</i>&nbsp;    /**
+<i>589</i>&nbsp;     * Gets the &lt;code&gt;Node&lt;/code&gt; in a &lt;code&gt;GridPane&lt;/code&gt; from (x,y) coordinates
+<i>590</i>&nbsp;     * @param gridPane the &lt;code&gt;GridPane&lt;/code&gt; used for the Board
+<i>591</i>&nbsp;     * @param x the x coordinate
+<i>592</i>&nbsp;     * @param y the y coordinate
+<i>593</i>&nbsp;     * @return the &lt;code&gt;Node&lt;/code&gt; that is positioned at (x,y)
+<i>594</i>&nbsp;     */
+<i>595</i>&nbsp;    public Node getNodeFromGridPane(GridPane gridPane, int x, int y) {
+<b class="nc"><i>596</i>&nbsp;        for (Node node : gridPane.getChildren()) {</b>
+<b class="nc"><i>597</i>&nbsp;            if (GridPane.getColumnIndex(node) == x &amp;&amp; GridPane.getRowIndex(node) == y) {</b>
+<b class="nc"><i>598</i>&nbsp;                return node;</b>
+<i>599</i>&nbsp;            }
+<b class="nc"><i>600</i>&nbsp;        }</b>
+<b class="nc"><i>601</i>&nbsp;        return null;</b>
+<i>602</i>&nbsp;    }
+<i>603</i>&nbsp;
+<i>604</i>&nbsp;    /**
+<i>605</i>&nbsp;     * Gets the &lt;code&gt;Node&lt;/code&gt; in a &lt;code&gt;GridPane&lt;/code&gt; from a &lt;code&gt;Position&lt;/code&gt;
+<i>606</i>&nbsp;     * @param gridPane the &lt;code&gt;GridPane&lt;/code&gt; used for the Board
+<i>607</i>&nbsp;     * @param position the position (x,y) of the pane we want
+<i>608</i>&nbsp;     * @return the &lt;code&gt;Node&lt;/code&gt; at the position
+<i>609</i>&nbsp;     */
+<i>610</i>&nbsp;    public Node getNodeFromPosition(GridPane gridPane, Position position){
+<b class="nc"><i>611</i>&nbsp;        int x = position.getX();</b>
+<b class="nc"><i>612</i>&nbsp;        int y = position.getY();</b>
+<b class="nc"><i>613</i>&nbsp;        for (Node node : gridPane.getChildren()) {</b>
+<b class="nc"><i>614</i>&nbsp;            if (GridPane.getColumnIndex(node) == x &amp;&amp; GridPane.getRowIndex(node) == y) {</b>
+<b class="nc"><i>615</i>&nbsp;                return node;</b>
+<i>616</i>&nbsp;            }
+<b class="nc"><i>617</i>&nbsp;        }</b>
+<b class="nc"><i>618</i>&nbsp;        return null;</b>
+<i>619</i>&nbsp;    }
+<i>620</i>&nbsp;
+<i>621</i>&nbsp;    /**
+<i>622</i>&nbsp;     * Updates the &lt;code&gt;List&amp;lt;Integer&amp;gt; ActionCode&lt;/code&gt;
+<i>623</i>&nbsp;     * @param code int number of the code
+<i>624</i>&nbsp;     * @see #actionsCodes
+<i>625</i>&nbsp;     */
+<i>626</i>&nbsp;
+<i>627</i>&nbsp;    public static void updateActionCode(int code){
+<b class="nc"><i>628</i>&nbsp;        actionsCodes.clear();</b>
+<b class="nc"><i>629</i>&nbsp;        actionsCodes.add(code);</b>
+<b class="nc"><i>630</i>&nbsp;    }</b>
+<i>631</i>&nbsp;
+<i>632</i>&nbsp;    /**
+<i>633</i>&nbsp;     * Converts a &lt;code&gt;Set&amp;lt;Position&amp;gt;&lt;/code&gt; in a &lt;code&gt;List&amp;lt;Position&amp;gt;&lt;/code&gt; and saves the data in a
+<i>634</i>&nbsp;     * &lt;code&gt;List&amp;lt;StackPane&amp;gt;&lt;/code&gt;.
+<i>635</i>&nbsp;     * @param set the &lt;code&gt;Set&lt;/code&gt; to convert
+<i>636</i>&nbsp;     * @param workerID if the &lt;code&gt;Set&lt;/code&gt; has information about the first or second worker
+<i>637</i>&nbsp;     * @param typeOfAction if the &lt;code&gt;Set&lt;/code&gt; has information about a move action (MOVE) or build action (BUILD)
+<i>638</i>&nbsp;     */
+<i>639</i>&nbsp;
+<i>640</i>&nbsp;    public void convertPositionListToStackPaneList(Set&lt;Position&gt; set, int workerID, int typeOfAction ){
+<b class="nc"><i>641</i>&nbsp;        List&lt;Position&gt; list = set.stream().collect(Collectors.toCollection(ArrayList::new));</b>
+<b class="nc"><i>642</i>&nbsp;        for(int i=0; i&lt;list.size();i++){</b>
+<b class="nc"><i>643</i>&nbsp;            StackPane convertedStackPane = (StackPane) getNodeFromPosition(gridPane,list.get(i));</b>
+<b class="nc"><i>644</i>&nbsp;            if(workerID == 1 &amp;&amp; typeOfAction == MOVE)</b>
+<b class="nc"><i>645</i>&nbsp;                worker1Moves.add(convertedStackPane);</b>
+<b class="nc"><i>646</i>&nbsp;            if(workerID == 2 &amp;&amp; typeOfAction == MOVE)</b>
+<b class="nc"><i>647</i>&nbsp;                worker2Moves.add(convertedStackPane);</b>
+<b class="nc"><i>648</i>&nbsp;            if(workerID == 1 &amp;&amp; typeOfAction == BUILD)</b>
+<b class="nc"><i>649</i>&nbsp;                worker1Builds.add(convertedStackPane);</b>
+<b class="nc"><i>650</i>&nbsp;            if(workerID == 2 &amp;&amp; typeOfAction == BUILD)</b>
+<b class="nc"><i>651</i>&nbsp;                worker2Builds.add(convertedStackPane);</b>
+<i>652</i>&nbsp;        }
+<b class="nc"><i>653</i>&nbsp;    }</b>
+<i>654</i>&nbsp;
+<i>655</i>&nbsp;    /**
+<i>656</i>&nbsp;     * Checks if a &lt;code&gt;StackPane&lt;/code&gt; is inside a &lt;code&gt;List&amp;lt;StackPane&amp;gt;&lt;/code&gt;
+<i>657</i>&nbsp;     * @param cell the &lt;code&gt;StackPane&lt;/code&gt; to check
+<i>658</i>&nbsp;     * @param list the &lt;code&gt;List&lt;/code&gt; we want to check
+<i>659</i>&nbsp;     * @return true if the cell is inside the list, false otherwise
+<i>660</i>&nbsp;     */
+<i>661</i>&nbsp;    public boolean isCellActionPossible(StackPane cell, List&lt;StackPane&gt; list){
+<b class="nc"><i>662</i>&nbsp;        boolean isStackPaneInList = false;</b>
+<b class="nc"><i>663</i>&nbsp;        if (list.contains(cell)) isStackPaneInList = true;</b>
+<b class="nc"><i>664</i>&nbsp;        return isStackPaneInList;</b>
+<i>665</i>&nbsp;    }
+<i>666</i>&nbsp;
+<i>667</i>&nbsp;    /**
+<i>668</i>&nbsp;     * Adds the Z coordinate to a &lt;code&gt;Position&lt;/code&gt;.
+<i>669</i>&nbsp;     * &lt;p&gt;The position that is saved when a player clicks on the board lacks the z coordinate. The method checks,
+<i>670</i>&nbsp;     * from the available moves/build &lt;code&gt;List&lt;/code&gt;, the &lt;code&gt;Position&lt;/code&gt; with the same x and y coordinate
+<i>671</i>&nbsp;     * to get z coordinate.
+<i>672</i>&nbsp;     * @param x the x coordinate
+<i>673</i>&nbsp;     * @param y the y coordinate
+<i>674</i>&nbsp;     * @param set the &lt;code&gt;Set&lt;/code&gt; where to check for the z coordinate
+<i>675</i>&nbsp;     * @return the &lt;code&gt;Position&lt;/code&gt; object with all the coordinates
+<i>676</i>&nbsp;     */
+<i>677</i>&nbsp;    public Position addZToPosition(int x, int y, Set&lt;Position&gt; set){
+<b class="nc"><i>678</i>&nbsp;        List&lt;Position&gt; list = set.stream().collect(Collectors.toCollection(ArrayList::new));</b>
+<b class="nc"><i>679</i>&nbsp;        Position newPosition = new Position(0,0,0);</b>
+<b class="nc"><i>680</i>&nbsp;        for(int i=0; i&lt;list.size();i++) {</b>
+<b class="nc"><i>681</i>&nbsp;            Position listPosition = list.get(i);</b>
+<b class="nc"><i>682</i>&nbsp;            if(x == listPosition.getX() &amp;&amp; y == listPosition.getY())</b>
+<b class="nc"><i>683</i>&nbsp;                newPosition = new Position (x,y,listPosition.getZ());</b>
+<i>684</i>&nbsp;        }
+<b class="nc"><i>685</i>&nbsp;        return newPosition;</b>
+<i>686</i>&nbsp;    }
+<i>687</i>&nbsp;
+<i>688</i>&nbsp;    /**
+<i>689</i>&nbsp;     * Adds or removes the &lt;code&gt;Image&lt;/code&gt; that gives the effect of a Cell of the board being clicked.
+<i>690</i>&nbsp;     * @param cell the &lt;code&gt;StackPane&lt;/code&gt; where to add the &lt;code&gt;Image&lt;/code&gt;
+<i>691</i>&nbsp;     * @param code if the &lt;code&gt;Image&lt;/code&gt; needs to be removed(DELETE) or added(ADD)
+<i>692</i>&nbsp;     * @param selectedImage the &lt;code&gt;ImageView&lt;/code&gt; to add to the StackPane
+<i>693</i>&nbsp;     */
+<i>694</i>&nbsp;    public void addSelectedImageToCell(StackPane cell, int code, ImageView selectedImage){
+<b class="nc"><i>695</i>&nbsp;        if (code == ADD &amp;&amp; !cell.getChildren().contains(selectedImage))</b>
+<b class="nc"><i>696</i>&nbsp;            cell.getChildren().add(selectedImage);</b>
+<b class="nc"><i>697</i>&nbsp;        if (code == DELETE &amp;&amp; cell.getChildren().contains(selectedImage))</b>
+<b class="nc"><i>698</i>&nbsp;            cell.getChildren().remove(selectedImage);</b>
+<b class="nc"><i>699</i>&nbsp;    }</b>
+<i>700</i>&nbsp;
+<i>701</i>&nbsp;    /**
+<i>702</i>&nbsp;     * Displays a notification in the &lt;code&gt;TextFlow&lt;/code&gt; in the bottom right
+<i>703</i>&nbsp;     * @param notification the &lt;code&gt;String&lt;/code&gt; that will be added
+<i>704</i>&nbsp;     */
+<i>705</i>&nbsp;    public void displayNotificationsDuringTurn(String notification){
+<b class="nc"><i>706</i>&nbsp;            if (notificationsTextFlow.getChildren().size() &gt;= MAX_NOTIFICATIONS) {</b>
+<b class="nc"><i>707</i>&nbsp;                notificationsTextFlow.getChildren().clear();</b>
+<i>708</i>&nbsp;            }
+<b class="nc"><i>709</i>&nbsp;            Text notificationText = new Text(notification);</b>
+<b class="nc"><i>710</i>&nbsp;            setTextFormat(notificationText, TURN_FONT_NOTIFICATIONS);</b>
+<b class="nc"><i>711</i>&nbsp;            notificationsTextFlow.getChildren().add(notificationText);</b>
+<b class="nc"><i>712</i>&nbsp;    }</b>
+<i>713</i>&nbsp;
+<i>714</i>&nbsp;
+<i>715</i>&nbsp;    /**
+<i>716</i>&nbsp;     * Displays the EndGame phase of the game.
+<i>717</i>&nbsp;     * A Victory/Lose &lt;code&gt;Image&lt;/code&gt; will be on the board and the &lt;code&gt;Buttons&lt;/code&gt; won&#39;t be visible.
+<i>718</i>&nbsp;     * @param isVictory if true displays the Victory &lt;code&gt;Image&lt;/code&gt; otherwise the Lose &lt;code&gt;Image&lt;/code&gt;
+<i>719</i>&nbsp;     * @see #addImageToBoard(Image)
+<i>720</i>&nbsp;     */
+<i>721</i>&nbsp;    public void displayEndGameImage(boolean isVictory){
+<b class="nc"><i>722</i>&nbsp;        gridPane.getChildren().clear();</b>
+<b class="nc"><i>723</i>&nbsp;        Image victoryImage = new Image(&quot;/components/VICTORY.png&quot;);</b>
+<b class="nc"><i>724</i>&nbsp;        Image loseImage = new Image(&quot;/components/LOSE.png&quot;);</b>
+<b class="nc"><i>725</i>&nbsp;        if (isVictory) addImageToBoard(victoryImage);</b>
+<b class="nc"><i>726</i>&nbsp;        else addImageToBoard(loseImage);</b>
+<b class="nc"><i>727</i>&nbsp;        moveButton.setVisible(false);</b>
+<b class="nc"><i>728</i>&nbsp;        buildButton.setVisible(false);</b>
+<b class="nc"><i>729</i>&nbsp;        domeButton.setVisible(false);</b>
+<b class="nc"><i>730</i>&nbsp;        declineButton.setVisible(false);</b>
+<b class="nc"><i>731</i>&nbsp;    }</b>
+<i>732</i>&nbsp;
+<i>733</i>&nbsp;    /**
+<i>734</i>&nbsp;     * This method adds an &lt;code&gt;Image&lt;/code&gt; in the center of the Board
+<i>735</i>&nbsp;     * @param image the &lt;code&gt;Image&lt;/code&gt; we want to add
+<i>736</i>&nbsp;     */
+<i>737</i>&nbsp;    public void addImageToBoard(Image image){
+<b class="nc"><i>738</i>&nbsp;        StackPane imageContainer = new StackPane();</b>
+<b class="nc"><i>739</i>&nbsp;        imageContainer.setMinHeight(BOARD);</b>
+<b class="nc"><i>740</i>&nbsp;        imageContainer.setMinWidth(BOARD);</b>
+<b class="nc"><i>741</i>&nbsp;        BackgroundSize buildingSize = new BackgroundSize(BOARD,BOARD, false,false, true, true);</b>
+<b class="nc"><i>742</i>&nbsp;        imageContainer.setBackground(new Background(new BackgroundImage(new Image(&quot;/Board/SantoriniBoardOnly.png&quot;), BackgroundRepeat.NO_REPEAT, BackgroundRepeat.NO_REPEAT, BackgroundPosition.CENTER, buildingSize )));</b>
+<b class="nc"><i>743</i>&nbsp;        board.setCenter(imageContainer);</b>
+<b class="nc"><i>744</i>&nbsp;        ImageView endGame = new ImageView(image);</b>
+<b class="nc"><i>745</i>&nbsp;        endGame.setFitWidth(BOARD);</b>
+<b class="nc"><i>746</i>&nbsp;        endGame.setFitHeight(BOARD);</b>
+<b class="nc"><i>747</i>&nbsp;        imageContainer.getChildren().add(endGame);</b>
+<b class="nc"><i>748</i>&nbsp;    }</b>
+<i>749</i>&nbsp;
+<b class="nc"><i>750</i>&nbsp;    public void setMovePossible (boolean isPossible) {isMovePossible = isPossible;}</b>
+<b class="nc"><i>751</i>&nbsp;    public void setBuildPossible (boolean isPossible) {isBuildPossible = isPossible;}</b>
+<b class="nc"><i>752</i>&nbsp;    public void setDomeAtAnyLevelPossible (boolean isPossible) {isDomeAtAnyLevelPossible = isPossible;}</b>
+<b class="nc"><i>753</i>&nbsp;    public void setDeclinePossible (boolean isPossible) {isDeclinePossible = isPossible;}</b>
+<b class="nc"><i>754</i>&nbsp;    public void setWorkerSelected(boolean isWorker){isWorkerSelected = isWorker;}</b>
+<b class="nc"><i>755</i>&nbsp;    public void setOldFirstWorkerPosition(Position firstWorker){oldFirstWorkerPosition = firstWorker;}</b>
+<b class="nc"><i>756</i>&nbsp;    public void setOldSecondWorkerPosition(Position secondWorker){oldSecondWorkerPosition = secondWorker;}</b>
+<b class="nc"><i>757</i>&nbsp;    public void setWorker1MovesPosition(Set&lt;Position&gt; firstWorkerMoves){worker1MovesPosition = firstWorkerMoves;}</b>
+<b class="nc"><i>758</i>&nbsp;    public void setWorker2MovesPosition(Set&lt;Position&gt; secondWorkerMoves){worker2MovesPosition = secondWorkerMoves;}</b>
+<b class="nc"><i>759</i>&nbsp;    public void setWorker1BuildPosition(Set&lt;Position&gt; firstWorkerBuilds){worker1BuildsPosition = firstWorkerBuilds;}</b>
+<b class="nc"><i>760</i>&nbsp;    public void setWorker2BuildPosition(Set&lt;Position&gt; secondWorkerBuilds){worker2BuildsPosition = secondWorkerBuilds;}</b>
+<b class="nc"><i>761</i>&nbsp;    public void setMyTurn(boolean myTurn){isMyTurn = myTurn;}</b>
+<i>762</i>&nbsp;
+<i>763</i>&nbsp;    //TODO add javadoc
+<i>764</i>&nbsp;    public void displayGameInfos(ClientBoard board){
+<b class="nc"><i>765</i>&nbsp;        Platform.runLater(()-&gt; {</b>
+<b class="nc"><i>766</i>&nbsp;            String firstText = &quot;&quot;;</b>
+<b class="nc"><i>767</i>&nbsp;            for (int i = 1; i &lt;= board.getNumOfPlayers(); i++) {</b>
+<b class="nc"><i>768</i>&nbsp;                if (i == board.getMyPlayerId())</b>
+<b class="nc"><i>769</i>&nbsp;                    firstText = firstText + &quot;- You&quot; + textfields.getChosen1() + &quot; &quot; + board.getPlayer(i).getGodPowerName() + &quot;\n&quot;;</b>
+<i>770</i>&nbsp;                else
+<b class="nc"><i>771</i>&nbsp;                    firstText = firstText + &quot;- &quot; + board.getPlayer(i).getPlayerName() + textfields.getChosen2() + board.getPlayer(i).getGodPowerName() + &quot;\n&quot;;</b>
+<i>772</i>&nbsp;            }
+<b class="nc"><i>773</i>&nbsp;            displayNotificationsDuringTurn(firstText);</b>
+<b class="nc"><i>774</i>&nbsp;        });</b>
+<b class="nc"><i>775</i>&nbsp;    }</b>
+<i>776</i>&nbsp;    //TODO add javadoc
+<i>777</i>&nbsp;    public void setPossiblePosition(List&lt;Position&gt; possiblePosition) {
+<i>778</i>&nbsp;        /*for(int i = 0; i&lt;possiblePosition.size(); i++) {
+<i>779</i>&nbsp;            this.possiblePosition.add(possiblePosition.get(i));
+<i>780</i>&nbsp;        }
+<i>781</i>&nbsp;         */
+<b class="nc"><i>782</i>&nbsp;        Platform.runLater(()-&gt; {</b>
+<b class="nc"><i>783</i>&nbsp;            displayNotificationsDuringTurn(textfields.getChooseworkerpositions() + &quot;\n&quot;);</b>
+<b class="nc"><i>784</i>&nbsp;        });</b>
+<b class="nc"><i>785</i>&nbsp;        this.possiblePosition = possiblePosition;</b>
+<b class="nc"><i>786</i>&nbsp;    }</b>
+<i>787</i>&nbsp;
+<b class="nc"><i>788</i>&nbsp;    public static Text getNotification() {return notification;}</b>
+<i>789</i>&nbsp;
+<i>790</i>&nbsp;    private boolean isContained (List&lt;Position&gt; list, int x, int y) {
+<b class="nc"><i>791</i>&nbsp;        if (list==null||list.size()&lt;1) {</b>
+<i>792</i>&nbsp;        }
+<i>793</i>&nbsp;        else {
+<b class="nc"><i>794</i>&nbsp;            for (Position position : list) {</b>
+<b class="nc"><i>795</i>&nbsp;                if (position.getX() == x &amp;&amp; position.getY() == y)</b>
+<b class="nc"><i>796</i>&nbsp;                    return true;</b>
+<b class="nc"><i>797</i>&nbsp;            }</b>
+<i>798</i>&nbsp;        }
+<b class="nc"><i>799</i>&nbsp;        return false;</b>
+<i>800</i>&nbsp;    }
+<i>801</i>&nbsp;
+<b class="nc"><i>802</i>&nbsp;    public static void setTextFormat(Text notification, int font){notification.setFont(Font.font(&quot;Verdana&quot;, FontWeight.BOLD, font)); }</b>
+<i>803</i>&nbsp;
+<b class="nc"><i>804</i>&nbsp;    public void setVisibleDomeButton(boolean visibility){ domeButton.setVisible(visibility); }</b>
+<i>805</i>&nbsp;    public void setVisibleDeclineButton(boolean visibility){
+<b class="nc"><i>806</i>&nbsp;        declineButton.setVisible(visibility);</b>
+<b class="nc"><i>807</i>&nbsp;    }</b>
+<i>808</i>&nbsp;    public void disableDeclineButton(boolean isDeclinePossible){
+<b class="nc"><i>809</i>&nbsp;        declineButton.setDisable(isDeclinePossible);</b>
+<b class="nc"><i>810</i>&nbsp;    }</b>
+<i>811</i>&nbsp;
+<i>812</i>&nbsp;    /**
+<i>813</i>&nbsp;     * Disables all &lt;code&gt;Buttons&lt;/code&gt;
+<i>814</i>&nbsp;     */
+<i>815</i>&nbsp;
+<i>816</i>&nbsp;    public void disableAllButtons () {
+<b class="nc"><i>817</i>&nbsp;        moveButton.setDisable(true);</b>
+<b class="nc"><i>818</i>&nbsp;        buildButton.setDisable(true);</b>
+<b class="nc"><i>819</i>&nbsp;        domeButton.setDisable(true);</b>
+<b class="nc"><i>820</i>&nbsp;        declineButton.setDisable(true);</b>
+<b class="nc"><i>821</i>&nbsp;    }</b>
+<i>822</i>&nbsp;
+<i>823</i>&nbsp;    /**
+<i>824</i>&nbsp;     * Resets all the indicators needed to able the buttons.
+<i>825</i>&nbsp;     */
+<i>826</i>&nbsp;    public void resetAllPossibleIndicators () {
+<b class="nc"><i>827</i>&nbsp;        isDomeAtAnyLevelPossible = false;</b>
+<b class="nc"><i>828</i>&nbsp;        isBuildActionPossible = false;</b>
+<b class="nc"><i>829</i>&nbsp;        isMoveActionPossible = false;</b>
+<b class="nc"><i>830</i>&nbsp;        isDeclinePossible = false;</b>
+<b class="nc"><i>831</i>&nbsp;    }</b>
+<i>832</i>&nbsp;
+<i>833</i>&nbsp;    /**
+<i>834</i>&nbsp;     * Clears the &lt;code&gt;List&lt;/code&gt; with the &lt;code&gt;StackPane&lt;/code&gt; where is possible to build and move
+<i>835</i>&nbsp;     */
+<i>836</i>&nbsp;    public void clearActionsList() {
+<b class="nc"><i>837</i>&nbsp;        worker1Moves.clear();</b>
+<b class="nc"><i>838</i>&nbsp;        worker2Moves.clear();</b>
+<b class="nc"><i>839</i>&nbsp;        worker1Builds.clear();</b>
+<b class="nc"><i>840</i>&nbsp;        worker2Builds.clear();</b>
+<b class="nc"><i>841</i>&nbsp;    }</b>
+<i>842</i>&nbsp;
+<i>843</i>&nbsp;    /**
+<i>844</i>&nbsp;     * Resets all indicators for the Workers
+<i>845</i>&nbsp;     */
+<i>846</i>&nbsp;    public void resetWorkerBooleans () {
+<b class="nc"><i>847</i>&nbsp;        firstTimeWorkerOne = true;</b>
+<b class="nc"><i>848</i>&nbsp;        firstTimeWorkerTwo = true;</b>
+<b class="nc"><i>849</i>&nbsp;        isWorkerSelected = false;</b>
+<b class="nc"><i>850</i>&nbsp;        isMovePossible = false;</b>
+<b class="nc"><i>851</i>&nbsp;        isBuildActionPossible = false;</b>
+<b class="nc"><i>852</i>&nbsp;        isBuildPossible = false;</b>
+<b class="nc"><i>853</i>&nbsp;    }</b>
+<i>854</i>&nbsp;}
+</div>
+</div>
+
+<div class="footer">
+    
+    <div style="float:right;">generated on 2020-07-02 19:57</div>
+</div>
+</body>
+</html>

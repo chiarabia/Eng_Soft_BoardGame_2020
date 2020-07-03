@@ -1,7 +1,7 @@
 package it.polimi.ingsw.client;
 
-// CLIENTBOARD -----> CLIENTPLAYER [3] -----------> CLIENTWORKER [2]
-//      Ͱ-----------> CLIENTBUILDING [5][5]
+/* CLIENTBOARD -----> CLIENTPLAYER [3] -----------> CLIENTWORKER [2]
+        Ͱ-----------> CLIENTBUILDING [5][5]                                 */
 
 import it.polimi.ingsw.Position;
 import it.polimi.ingsw.client.cli.Terminal;
@@ -9,8 +9,6 @@ import it.polimi.ingsw.client.gui.GUI;
 import it.polimi.ingsw.exceptions.GameEndedException;
 import it.polimi.ingsw.server.serializable.*;
 import org.json.simple.parser.ParseException;
-
-import java.io.IOException;
 import java.util.*;
 
 
@@ -20,8 +18,12 @@ public class Client implements ViewObserver {
     private ClientCommunicator communicator;
     private int port;
     private String IP;
-    private boolean isGameStarted = false;
 
+    /**Starts the client and asks the view for the player's name and the number of players in the match
+     *@param port server port
+     *@param IP server IP
+     *@param GUI true for GUI, false for CLI
+     */
     public void startClient(int port, String IP, boolean GUI) {
         try {
             this.port = port;
@@ -29,23 +31,24 @@ public class Client implements ViewObserver {
             if (GUI) view = new GUI();
             else view = new Terminal();
             view.addObserver(this);
-            view.displayStartup(); //Questo metodo fa partire la Cli e la Gui (nella cli fa partire l'ASCII Art)
-            view.askForStartupInfos();
-        } catch (Exception e) {
-            e.printStackTrace();
-            onError();
-        }
+            view.displayStartup();
+            view.askForStartupInfos(-1);
+        } catch (Exception e) { onError(); }
     }
 
+    /**Asks the view to display a fatal error message*/
     public void onError(){
-        view.displayError("Oops... something went wrong");
+        view.displayError(0, true);
     }
 
+    /**Saves and shows the workers' initial <code>Position</code>
+     *@param object received from the server; holds the information with workersPositions and the playerID
+     */
     public void onUpdateInitializeWorkerPositions(SerializableUpdateInitializeWorkerPositions object){
         int whichPlayerId = object.getPlayerId();
         Position positionWorker1 = object.getWorkerPositions().get(0);
         Position positionWorker2 = object.getWorkerPositions().get(1);
-        //setto i worker dei vari giocatori
+        //sets the players' workers
         board.getPlayer(whichPlayerId).getWorker(1).setX(positionWorker1.getX());
         board.getPlayer(whichPlayerId).getWorker(1).setY(positionWorker1.getY());
         board.getPlayer(whichPlayerId).getWorker(2).setX(positionWorker2.getX());
@@ -53,58 +56,88 @@ public class Client implements ViewObserver {
         view.displayBoard(object);
     }
 
+    /**Saves and shows the chosen godPower
+     *@param object received from the server; holds the information with the godPower and the playerID
+     */
     public void onUpdateInitializeGodPower(SerializableUpdateInitializeGodPower object){
         String godPower = object.getGodPower();
         int whichPlayerId = object.getPlayerId();
         board.getPlayer(whichPlayerId).setGodPowerName(godPower);
         view.displayGodPower(whichPlayerId);
-        if (whichPlayerId==board.numOfPlayers()) view.displayBoardScreen();
+        if (whichPlayerId==board.getNumOfPlayers()) view.displayBoardScreen();
     }
 
-    public void onRequestInitializeGodPower(SerializableRequestInitializeGodPower object) throws IOException, ParseException {
+    /**Asks the view for the godPower
+     *@param object received from the server; holds the information with the possible godPowers for the player to choose from and the playerID
+     * @throws ParseException ParseException
+     */
+    public void onRequestInitializeGodPower(SerializableRequestInitializeGodPower object) throws ParseException {
         List<GodCard> godCards = new ArrayList<>();
         for(String s : object.getGodPowers())
             godCards.add(GodCardsManager.getCard(s));
         view.askForInitialGodPower(godCards);
     }
 
-    public void onRequestInitializeWorkerPositions(){
-        view.askForInitialWorkerPositions();
+    /**Asks the view for the initial workers' <code>Position</code>
+     @param object received from the server; holds the information with the possibles workersPositions and the playerID
+     */
+    public void onRequestInitializeWorkerPositions(SerializableRequestInitializeWorkerPositions object){
+        List<Position> possiblePosition = new ArrayList<>();
+        for(int i = 0; i<object.getPossiblePositions().size(); i++) {
+            possiblePosition.add(object.getPossiblePositions().get(i).mirrorYCoordinate());
+        }
+        view.askForInitialWorkerPositions(possiblePosition);
     }
 
+    /**Handles a disconnection and terminates the game session
+     * @param object received from the server; holds the information with the playerID
+     * @throws GameEndedException if an opponent disconnected
+     * @throws Exception if server decides to throw client out of the game; this behaviour should never happen and it's symptom of unexpected error
+     */
     public void onUpdateDisconnection(SerializableUpdateDisconnection object) throws Exception {
         if ((object).getPlayerId()==board.getMyPlayerId()) throw new Exception();
         view.displayDisconnection((object.getPlayerId()));
         throw new GameEndedException();
     }
 
+    /**Asks the player to perform an action
+     *@param object received from the server; holds the information for possible moves or builds and proprieties of the workers
+     */
     public void onRequestAction(SerializableRequestAction object) {
         view.askForAction(object);
     }
 
+    /**Handles the victory of a player
+     *@param object received from the server; holds the information with the playerID
+     *@throws GameEndedException //TODO add throw
+     */
     public void onUpdateWinner(SerializableUpdateWinner object) throws GameEndedException {
         int playerId = object.getPlayerId();
         view.displayWinner(playerId);
         throw new GameEndedException();
     }
 
+    /**Handles the new turn
+     *@param object object received from the server; holds the information with the playerID and if this is the first Turn
+     */
     public void onUpdateTurn (SerializableUpdateTurn object){
         board.setPlayerTurnId( object.getPlayerId());
-        if (!isGameStarted){
-            isGameStarted = true;
-            view.displayGameStart();
-        }
-        view.displayTurn(); //mostro a schermo che il gicoatore di turno è un altro
+        if (object.getIsFirstTurn()) view.displayGameStart();
+        view.displayTurn(object.getPlayerId());
     }
 
+    /**Handles the defeat of a player
+     *@param object received from the server; holds the information with the playerID
+     */
     public void onUpdateLoser (SerializableUpdateLoser object){
         int playerId = object.getPlayerId();
         board.getPlayer(playerId).setLost(true);
-        view.displayBoard(object); //mostro la board, senza i worker del giocatore che ha perso
         view.displayLoser(playerId);
     }
 
-
+    /**This method saves and shows all the actions
+     *@param object object received from server
+     */
     public void onUpdateAction(SerializableUpdateActions object) {
         for(int i =0; i < object.getUpdateBuild().size(); i++) {
             onUpdateBuild(object.getUpdateBuild().get(i));
@@ -112,64 +145,70 @@ public class Client implements ViewObserver {
         for(int i =0; i < object.getUpdateMove().size(); i++) {
             onUpdateMove(object.getUpdateMove().get(i));
         }
-        view.displayBoard(object); //mostro le modifiche a schermo e passo alla GUI tutte le informazioni
+        view.displayBoard(object);
     }
 
+    /**Saves a new build action
+     *@param object received from the server; holds the information with the <code>Position</code> of the new Building and if it is a dome
+     */
     private void onUpdateBuild(SerializableUpdateBuild object){
         boolean isDome;
         int oldLevel, x, y;
-        x = object.getNewPosition().getX(); //estraggo informazioni
+        x = object.getNewPosition().getX();
         y = object.getNewPosition().getY();
-        isDome = object.isDome(); //controllo se il player può costruire una cupola a ogni livello
-        if (board.getCell(x, y) != null) oldLevel = board.getCell(x, y).getLevel(); //ricavo qual era la z prima di costruire
+        isDome = object.isDome();
+        if (board.getCell(x, y) != null) oldLevel = board.getCell(x, y).getLevel();
         else oldLevel = -1;
-        board.setCell(new ClientBuilding(oldLevel + 1, isDome), x, y); // costruisco sopra l'ultima casella presente
-       // view.displayBoard(object); //mostro le modifiche a schermo
+        board.setCell(new ClientBuilding(oldLevel + 1, isDome), x, y);
     }
 
+    /**Saves a new move
+     *@param object received from the server; holds the information with the playerID, workerID the new and old <code>Position</code> of the worker
+     */
     private void onUpdateMove(SerializableUpdateMove object){
         int playerId, workerId, x, y;
-        playerId = object.getPlayerId(); //estraggo le informazioni
+        playerId = object.getPlayerId();
         workerId = object.getWorkerId();
         x = object.getNewPosition().getX();
         y = object.getNewPosition().getY();
-        board.getPlayer(playerId).getWorker(workerId).setX(x); //apporto modifiche alla board del client
+        board.getPlayer(playerId).getWorker(workerId).setX(x);
         board.getPlayer(playerId).getWorker(workerId).setY(y);
-        //view.displayBoard(object); //mostro le modifiche a schermo (credo proprio che per la GUI serva un metodo che dica quali sono le caselle di
-        //partenza e arrivo
     }
 
+    /**Saves and shows the players' names
+     *@param names received from the server; holds the information with the players' names
+     */
     public void onUpdateInitializeNames (SerializableUpdateInitializeNames names){
-        for (int id = 1; id <= board.numOfPlayers(); id++)
-            board.setPlayer(new ClientPlayer(names.getPlayersNames().get(id - 1)), id);//aggiungo i nomi alla board
-        view.displayPlayerNames(names); //mostro a schermo i nomi degli altri giocatori
+        for (int id = 1; id <= board.getNumOfPlayers(); id++)
+            board.setPlayer(new ClientPlayer(names.getPlayersNames().get(id - 1)), id);
+        view.displayPlayerNames(names);
     }
 
+    /**Replies to server echo message */
     public void onHello(){
         communicator.sendMessage("HELLO");
     }
 
+    /**Records the player ID and asks view to show it
+     *@param message message received from server*/
     public void onPlayerIdAssigned(String message){
-        int playerId = (Character.getNumericValue(message.charAt(message.length()-1))); //creo il playerID
-        board.setMyPlayerId(playerId); //creo il playerID
+        int playerId = (Character.getNumericValue(message.charAt(message.length()-1)));
+        board.setMyPlayerId(playerId);
     }
 
+    /**Displays an error and then restarts the client
+     *@param error error ID
+     *@throws GameEndedException thrown to stop current ClientCommunicator process before starting a new one
+     */
     public void onRestart(int error) throws GameEndedException {
-        String message = null;
-        switch (error){
-            case 1: message = "This name is not available"; break;
-            case 2: message = "This number of players is not correct"; break;
-        }
-        view.displayError(message);
-        view.askForStartupInfos();
+        communicator.stopProcess();
+        view.askForStartupInfos(error);
         throw new GameEndedException();
     }
 
 
 
-
-
-    // metodi da lanciare una volta che l'utente ha fornito le informazioni necessarie (dopo che ha premuto OK)
+    /* ViewObserver methods */
 
     public void onCompletedStartup (String myName, int numOfPlayers) {
         try {
@@ -179,14 +218,13 @@ public class Client implements ViewObserver {
             return;
         }
         try{
-            board = new ClientBoard(numOfPlayers); //crea una board con 3 player, è copia di quella del model, ma si salva solo le informazioni della caselle con la Z maggiore, quindi al massimo mi pare 25 caselle
-            view.setBoard(board); //passa il riferimento alla board creata alla View
+            board = new ClientBoard(numOfPlayers);
+            view.setBoard(board);
             communicator.addObserver(this);
             communicator.start();
-            communicator.sendObject(new SerializableConnection(numOfPlayers, myName)); //invio al server le scelte del nome del plauyer
+            communicator.sendObject(new SerializableConnection(numOfPlayers, myName));
             view.displayWaitingRoom();
         }catch (Exception e){
-            e.printStackTrace();
             onError();
             communicator.stopProcess();
         }

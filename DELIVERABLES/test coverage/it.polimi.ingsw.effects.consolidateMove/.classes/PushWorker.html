@@ -1,0 +1,140 @@
+
+
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html id="htmlId">
+<head>
+  <title>Coverage Report :: PushWorker</title>
+  <style type="text/css">
+    @import "../../.css/coverage.css";
+  </style>
+</head>
+
+<body>
+<div class="header"></div>
+
+<div class="content">
+<div class="breadCrumbs">
+    [ <a href="../../index.html">all classes</a> ]
+    [ <a href="../index.html">it.polimi.ingsw.effects.consolidateMove</a> ]
+</div>
+
+<h1>Coverage Summary for Class: PushWorker (it.polimi.ingsw.effects.consolidateMove)</h1>
+
+<table class="coverageStats">
+<tr>
+  <th class="name">Class</th>
+<th class="coverageStat 
+">
+  Class, %
+</th>
+<th class="coverageStat 
+">
+  Method, %
+</th>
+<th class="coverageStat 
+">
+  Line, %
+</th>
+</tr>
+<tr>
+  <td class="name">PushWorker</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (1/ 1)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (3/ 3)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (17/ 17)
+  </span>
+</td>
+</tr>
+
+</table>
+
+<br/>
+<br/>
+
+
+<div class="sourceCode"><i>1</i>&nbsp;package it.polimi.ingsw.effects.consolidateMove;
+<i>2</i>&nbsp;
+<i>3</i>&nbsp;import it.polimi.ingsw.Board;
+<i>4</i>&nbsp;import it.polimi.ingsw.Cell;
+<i>5</i>&nbsp;import it.polimi.ingsw.Position;
+<i>6</i>&nbsp;import it.polimi.ingsw.server.serializable.SerializableUpdateActions;
+<i>7</i>&nbsp;
+<i>8</i>&nbsp;/**
+<i>9</i>&nbsp; * This class modifies the standard consolidate move to update the model after a PushForwardMove
+<i>10</i>&nbsp; */
+<i>11</i>&nbsp;
+<b class="fc"><i>12</i>&nbsp;public class PushWorker extends StandardConsolidateMove {</b>
+<i>13</i>&nbsp;
+<i>14</i>&nbsp;    /**
+<i>15</i>&nbsp;     * Modifies the board to move a worker in the Position chosen by the player.
+<i>16</i>&nbsp;     * If the target position is occupied by a worker, the position of the worker will also be updated.
+<i>17</i>&nbsp;     * The enemy worker will be moved one cell back.
+<i>18</i>&nbsp;     * @param destinationPosition position chosen by the player.
+<i>19</i>&nbsp;     * @param board the board.
+<i>20</i>&nbsp;     * @param workerPosition the starting position of the worker.
+<i>21</i>&nbsp;     * @return a &lt;Code&gt;SerializableUpdateActions&lt;/Code&gt; object which contains the move information of both workers for updating clients
+<i>22</i>&nbsp;     */
+<i>23</i>&nbsp;
+<i>24</i>&nbsp;    public SerializableUpdateActions moveInto(Board board, Position workerPosition, Position destinationPosition) {
+<b class="fc"><i>25</i>&nbsp;        Cell workerCell = board.getCell(workerPosition);</b>
+<b class="fc"><i>26</i>&nbsp;        Cell destinationCell = board.getCell(destinationPosition);</b>
+<i>27</i>&nbsp;        SerializableUpdateActions serializableUpdateActions;
+<i>28</i>&nbsp;
+<b class="fc"><i>29</i>&nbsp;        if (destinationCell.isFree())</b>
+<b class="fc"><i>30</i>&nbsp;           return super.moveInto(board, workerPosition, destinationPosition);</b>
+<i>31</i>&nbsp;        else {
+<b class="fc"><i>32</i>&nbsp;            int tempX = behindWorker(workerCell.getX(), destinationCell.getX());</b>
+<b class="fc"><i>33</i>&nbsp;            int tempY = behindWorker(workerCell.getY(), destinationCell.getY());</b>
+<b class="fc"><i>34</i>&nbsp;            int tempZ = board.getZoneLevel(tempX, tempY);</b>
+<b class="fc"><i>35</i>&nbsp;            Cell behind_opposite_worker = board.getCell(tempX, tempY, tempZ);</b>
+<b class="fc"><i>36</i>&nbsp;            serializableUpdateActions = super.moveInto(board, destinationPosition, behind_opposite_worker.getPosition()); // it moves the opponent&#39;s workers</b>
+<b class="fc"><i>37</i>&nbsp;            serializableUpdateActions.mergeInfos(super.moveInto(board, workerPosition, destinationPosition)); // it moves the player&#39;s worker</b>
+<b class="fc"><i>38</i>&nbsp;            return serializableUpdateActions;</b>
+<i>39</i>&nbsp;        }
+<i>40</i>&nbsp;    }
+<i>41</i>&nbsp;
+<i>42</i>&nbsp;    /**
+<i>43</i>&nbsp;     * Calculates the coordinates of the new Position of the worker.
+<i>44</i>&nbsp;     * @param myWorkerCoordinate x or y coordinate of my worker
+<i>45</i>&nbsp;     * @param opponentsWorkerCoordinate x or y coordinate of enemy worker.
+<i>46</i>&nbsp;     * @return x or y coordinate of the position behind enemy worker.
+<i>47</i>&nbsp;     */
+<i>48</i>&nbsp;
+<i>49</i>&nbsp;    protected int behindWorker(int myWorkerCoordinate, int opponentsWorkerCoordinate) {
+<b class="fc"><i>50</i>&nbsp;        if (myWorkerCoordinate == opponentsWorkerCoordinate) {</b>
+<b class="fc"><i>51</i>&nbsp;            return opponentsWorkerCoordinate;</b>
+<b class="fc"><i>52</i>&nbsp;        } else if (myWorkerCoordinate &gt; opponentsWorkerCoordinate) {</b>
+<b class="fc"><i>53</i>&nbsp;            return opponentsWorkerCoordinate - 1;</b>
+<i>54</i>&nbsp;        } else
+<b class="fc"><i>55</i>&nbsp;            return opponentsWorkerCoordinate + 1;</b>
+<i>56</i>&nbsp;    }
+<i>57</i>&nbsp;}
+</div>
+</div>
+
+<div class="footer">
+    
+    <div style="float:right;">generated on 2020-07-02 19:57</div>
+</div>
+</body>
+</html>

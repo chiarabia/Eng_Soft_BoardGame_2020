@@ -1,6 +1,7 @@
 package it.polimi.ingsw.server;
 
 import it.polimi.ingsw.Controller;
+import it.polimi.ingsw.exceptions.BadNameException;
 import it.polimi.ingsw.exceptions.ClientStoppedWorkingException;
 import it.polimi.ingsw.Game;
 import it.polimi.ingsw.server.serializable.Message;
@@ -15,9 +16,19 @@ public class ServerThread extends Thread {
     private int numOfPlayers;
     private List<Socket> playersList;
     private List<String> playersNames;
+    /**
+     * Sends a Message object to one player.
+     * @param message message
+     * @param position list index of the player
+     */
     public void sendMessage(String message, int position) {
         sendObject(new Message(message), position);
     }
+    /**
+     * Sends an object to one player.
+     * @param object object
+     * @param position list index of the player
+     */
     public void sendObject(Object object, int position) {
         try {
             ObjectOutputStream fileObjectOut = new ObjectOutputStream(playersList.get(position).getOutputStream());
@@ -25,11 +36,19 @@ public class ServerThread extends Thread {
             fileObjectOut.flush();
         } catch (Exception e){}
     }
+    /**
+     * Sends an object to all players.
+     * @param object object
+     */
     public void sendAllObject(Object object) {
         for (int i = 0; i < playersList.size(); i++){
             if (playersList.get(i)!=null) sendObject(object, i);
         }
     }
+    /**
+     * Communicates the ID number to each player, then creates
+     * the MVC structure and starts clients listeners.
+     */
     public void run(){
             for (int i = 0; i < numOfPlayers; i++) sendMessage("PLAYER_" + (i+1), i);
             ServerView serverView = new ServerView(this); // View

@@ -1,12 +1,13 @@
 package it.polimi.ingsw.client.gui.controller;
 
 import it.polimi.ingsw.client.GodCard;
+import it.polimi.ingsw.client.Textfields;
 import it.polimi.ingsw.client.ViewObserver;
 import it.polimi.ingsw.client.gui.MainStage;
-import it.polimi.ingsw.effects.GodPower;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.Node;
+import javafx.scene.control.Label;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.HBox;
@@ -14,14 +15,25 @@ import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
 import javafx.scene.text.Text;
 import javafx.scene.text.TextFlow;
+import org.json.simple.parser.ParseException;
 
-import java.io.IOException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.ResourceBundle;
 
+/**
+ * This class handles the phase of the match when the players need to choose their GodPower
+ * <p><p>The ChoosingGodSceneController is loaded from the <code>ChoosingGodScene.fxml</code> file.
+ * <p>The Scene shows either two or three gods depending on the number of players. The player can choose a god power by clicking on the
+ * respective <code>HBox</code>. When a god power is chosen its name is shown in the <code>Label topLabel</code>, the data is sent to
+ * the client and the player waits for the other players to choose their god powers.
+ */
 public class ChoosingGodSceneController implements Initializable {
+    private Textfields textfields = new Textfields();
+    private static int FIRST_GOD = 1;
+    private static int SECOND_GOD = 2;
+    private static int THIRD_GOD = 3;
 
     @FXML
     HBox HBox1;
@@ -29,6 +41,9 @@ public class ChoosingGodSceneController implements Initializable {
     HBox HBox2;
     @FXML
     HBox HBox3;
+
+    @FXML
+    Label topLabel;
 
     int numberOfPlayers;
 
@@ -51,6 +66,16 @@ public class ChoosingGodSceneController implements Initializable {
     @FXML
     ImageView godPower3;
 
+    public ChoosingGodSceneController() throws ParseException {
+    }
+
+    /**
+     * Sets the ChoosingGodScene.
+     * <p>The <code>HBox</code> are set to visible depending on the number of possible GodPowers to choose from.
+     * The <code>HBox</code> are also set with the <code>Image</code> and description of the GodPower.
+     * @param url
+     * @param resourceBundle
+     */
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
         HBox3.setVisible(false);
@@ -59,118 +84,118 @@ public class ChoosingGodSceneController implements Initializable {
         List<GodCard> godPowers = MainStage.getGodPowers();
         numberOfPlayers = (Integer)playerData.get(1);
         GodCard firstGod = godPowers.get(0);
-        setFirstGod(firstGod);
+        setGod(firstGod, FIRST_GOD);
+
         int numberOfGods = godPowers.size();
-        if(numberOfGods == 2){
+
+        if (numberOfGods > FIRST_GOD) {
             GodCard secondGod = godPowers.get(1);
-            setSecondGod(secondGod);
+            setGod(secondGod, SECOND_GOD);
             HBox2.setVisible(true);
         }
-        if (numberOfGods == 3){
+        if (numberOfGods == THIRD_GOD){
             GodCard thirdGod = godPowers.get(2);
-            setThirdGod(thirdGod);
+            setGod(thirdGod,THIRD_GOD);
             HBox3.setVisible(true);
         }
     }
 
-    void setFirstGod(GodCard firstGod){
+    /**
+     * Given a <code>GodCard</code> and the HBox number it sets the <code>HBox</code>
+     * with the <code>Image</code> and description of the <p>GodCard</p>
+     * @param God the <code>GodCard</code>
+     * @param godNumber the number of the <code>HBox</code>
+     */
+    void setGod(GodCard God, int godNumber){
+        TextFlow godDescription;
+        ImageView godPortrait;
+        ImageView godPower;
+
         //set God Name
-        String name1 = firstGod.getGodName();
-        Text godName1 = setGodNameProperties(name1);
+        String name = God.getGodName();
+        Text godName = setGodNameProperties(name);
         Text newLine = new Text("\n");
         //Set God Description
-        String text = firstGod.getGodDescription();
-        Text godDescrip1 = new Text(text);
-        godDescription1.getChildren().add(godName1);
-        godDescription1.getChildren().add(newLine);
-        godDescription1.getChildren().add(godDescrip1);
+        String text = God.getGodDescription();
+
+        if (godNumber == FIRST_GOD) {
+            godDescription = godDescription1;
+            godPortrait = godPortrait1;
+            godPower = godPower1;
+        }
+        else if (godNumber == SECOND_GOD) {
+            godDescription = godDescription2;
+            godPortrait = godPortrait2;
+            godPower = godPower2;
+        }
+        else {
+            godDescription = godDescription3;
+            godPortrait = godPortrait3;
+            godPower = godPower3;
+        }
+
+        Text godDescrip = new Text(text);
+        godDescription.getChildren().add(godName);
+        godDescription.getChildren().add(newLine);
+        godDescription.getChildren().add(godDescrip);
+
         //set Portrait
-        String godCode = firstGod.getGodImage();
-        Image godPort1 = new Image("godPortraits/" + godCode );
-        godPortrait1.setImage(godPort1);
+        String godCode = God.getGodImage();
+        Image godPort = new Image("godPortraits/" + godCode );
+        godPortrait.setImage(godPort);
+
         //set godPower Image
-        Image godPow1 = new Image("godPowers/" + godCode);
-        godPower1.setImage(godPow1);
+        Image godPow = new Image("godPowers/" + godCode);
+        godPower.setImage(godPow);
     }
 
-    void setSecondGod(GodCard secondGod){
-        //set God Name
-        String name2 = secondGod.getGodName();
-        Text godName2 = setGodNameProperties(name2);
-        Text newLine = new Text("\n");
-        //Set God Description
-        String text = secondGod.getGodDescription();
-        Text godDescrip2 = new Text(text);
-        godDescription2.getChildren().add(godName2);
-        godDescription2.getChildren().add(newLine);
-        godDescription2.getChildren().add(godDescrip2);
-        //set Portrait
-        String godCode = secondGod.getGodImage();
-        Image godPort2 = new Image("godPortraits/" + godCode );
-        godPortrait2.setImage(godPort2);
-        //set godPower Image
-        Image godPow2 = new Image("godPowers/" + godCode);
-        godPower2.setImage(godPow2);
-    }
-
-    void setThirdGod(GodCard thirdGod){
-        //set God Name
-        String name3 = thirdGod.getGodName();
-        Text godName3 = setGodNameProperties(name3);
-        Text newLine = new Text("\n");
-        //set God Description
-        String text = thirdGod.getGodDescription();
-        Text godDescrip3 = new Text(text);
-        godDescription3.getChildren().add(godName3);
-        godDescription3.getChildren().add(newLine);
-        godDescription3.getChildren().add(godDescrip3);
-        //set Portrait
-        String godCode = thirdGod.getGodImage();
-        Image godPort3 = new Image("godPortraits/" + godCode );
-        godPortrait3.setImage(godPort3);
-        //set godPower Image
-        Image godPow3 = new Image("godPowers/" + godCode);
-        godPower3.setImage(godPow3);
-    }
-
-    Text setGodNameProperties(String name){
+    /**
+     * Creates a <code>Text</code> from a <code>String</code> and sets its properties
+     * @param name the <code>String</code> to put in the <code>Text</code>
+     * @return the new <code>Text</code>
+     */
+    private Text setGodNameProperties(String name){
         Text godName = new Text(name);
         godName.setFont(Font.font("Verdana", FontWeight.BOLD, 15));
         return godName;
     }
 
+    /**
+     * Handles the event of clicking on a <code>HBox</code>
+     * @param event <code>MouseEvent</code>
+     * @see #onBoxClicked(int)
+     */
     public void clickHBox(javafx.scene.input.MouseEvent event) {
         Node clickedNode = event.getPickResult().getIntersectedNode();
         List<GodCard> godPowers = MainStage.getGodPowers();
-        List<ViewObserver> observerList = MainStage.getObserverList();
         int numberOfGods = godPowers.size();
+
         if (clickedNode == HBox1 || clickedNode == godDescription1 || clickedNode == godPortrait1 || clickedNode == godPower1) {
-            GodCard firstGod = godPowers.get(0);
-            String chosenGodPower = firstGod.getGodName();
-            System.out.print("clicked on 1 \n");
-            godPowers.clear();
-            godPowers.add(firstGod);
-            for (int i = 0; i < observerList.size(); i++)
-                observerList.get(i).onCompletedInitializeGodPower(chosenGodPower);
+            onBoxClicked(FIRST_GOD);
         }
-        else if(numberOfGods == 2 && (clickedNode == HBox2 || clickedNode == godDescription2 || clickedNode == godPortrait2 || clickedNode == godPower2)){
-            GodCard secondGod = godPowers.get(1);
-            String chosenGodPower = secondGod.getGodName();
-            System.out.print("clicked on 2 \n");
-            godPowers.clear();
-            godPowers.add(secondGod);
-            for (int i = 0; i < observerList.size(); i++)
-                observerList.get(i).onCompletedInitializeGodPower(chosenGodPower);
+        else if(numberOfGods > 1 && (clickedNode == HBox2 || clickedNode == godDescription2 || clickedNode == godPortrait2 || clickedNode == godPower2)){
+            onBoxClicked(SECOND_GOD);
         }
         else if(numberOfGods == 3 && (clickedNode == HBox3 || clickedNode == godDescription3 || clickedNode == godPortrait3 || clickedNode == godPower3)){
-            GodCard thirdGod = godPowers.get(2);
-            String chosenGodPower = thirdGod.getGodName();
-            godPowers.clear();
-            godPowers.add(thirdGod);
-                    System.out.print("clicked on 3 \n");
-            for (int i = 0; i < observerList.size(); i++)
-                observerList.get(i).onCompletedInitializeGodPower(chosenGodPower);
+            onBoxClicked(THIRD_GOD);
         }
+    }
+
+    /**
+     * Sends the chosen GodPower from a <code>HBox</code>
+     * <p>This method modifies also the <code>Label</code> at the top, to notify the player of the chosen <code>GodCard</code>
+     * @param godNumber the number of the <code>HBox</code> that was clicked
+     */
+    public void onBoxClicked(int godNumber) {
+        List<GodCard> godPowers = MainStage.getGodPowers();
+        List<ViewObserver> observerList = MainStage.getObserverList();
+        GodCard God = godPowers.get(godNumber-1);
+        String chosenGodPower = God.getGodName();
+        topLabel.setText("You"+ textfields.getChosen1() + " " + chosenGodPower);
+        godPowers.clear();
+        godPowers.add(God);
+        System.out.print("clicked on " + godNumber + " \n");
+        for (ViewObserver viewObserver : observerList) viewObserver.onCompletedInitializeGodPower(chosenGodPower);
     }
 }
 

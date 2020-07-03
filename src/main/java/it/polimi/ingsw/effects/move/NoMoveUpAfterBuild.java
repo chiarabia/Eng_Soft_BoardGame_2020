@@ -9,7 +9,7 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 /**
- * This class defines a movement that cannot be a move up action
+ * This class implements a movement that cannot be a move up action
  * after the worker made a build action
  */
 
@@ -19,11 +19,19 @@ public class NoMoveUpAfterBuild extends StandardMove{
         super(moves);
     }
 
+
+    /**Excludes positions placed at a higher height than the worker in the workerPosition, if the worker has already
+     * built in this turn.
+     * @param workerPosition the worker's Cell
+     * @param board the board
+     * @param turn the player's turn
+     * @return a <code>Set&lt;Cell&gt;</code> collect that only has the cells where the player can move
+     * without the initialPosition
+     */
     @Override
     public Set<Position> move (Position workerPosition, Board board, Turn turn) {
-        Cell workerCell = board.getCell(workerPosition);
         Set<Position> temp_positions = super.move(workerPosition, board, turn);
-        if(turn.getBuildTimes()>0 & !turn.isBuildAfterMove()) //in altri termini, se ho già costruito, ma non dopo essermi mosso, allora...
+        if(turn.getBuildTimes()>0 & !turn.isBuildAfterMove()) // if the player has built before the first move...
            return temp_positions.stream()
                     .filter(a-> heightsDifference(workerPosition.getZ(),a.getZ())<=0)
                     .collect(Collectors.toSet());

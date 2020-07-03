@@ -1,6 +1,7 @@
 package it.polimi.ingsw.client.gui.runnable;
 
 import it.polimi.ingsw.client.gui.MainStage;
+import it.polimi.ingsw.client.gui.controller.BoardSceneController;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
@@ -8,11 +9,14 @@ import javafx.stage.Stage;
 
 import java.io.IOException;
 
+/**
+ * This class loads the FXML file needed for the <code>BoardSceneController</code>
+ */
 public class BoardSceneRunnable implements Runnable {
 
 	private FXMLLoader loader;
-
-	public FXMLLoader getLoader(){return loader;}
+	public BoardSceneController boardSceneController;
+	public BoardSceneController getBoardSceneController(){return boardSceneController;}
 
 	@Override
 	public void run() {
@@ -22,6 +26,7 @@ public class BoardSceneRunnable implements Runnable {
 
 			Stage window = MainStage.getStage();
 
+			boardSceneController = loader.getController();
 			window.setScene(BoardScene);
 			window.show();
 

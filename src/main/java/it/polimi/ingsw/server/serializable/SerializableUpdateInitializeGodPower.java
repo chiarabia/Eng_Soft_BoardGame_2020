@@ -1,9 +1,5 @@
 package it.polimi.ingsw.server.serializable;
 
-import it.polimi.ingsw.Position;
-
-import java.util.List;
-
 public class SerializableUpdateInitializeGodPower implements SerializableUpdate {
     private final String godPower;
     private final int playerId;

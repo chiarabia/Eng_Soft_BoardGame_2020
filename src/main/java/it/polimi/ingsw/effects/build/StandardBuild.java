@@ -10,11 +10,12 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 /**
- * This class defines the general rules of building
+ * This class defines the general rules of building.
+ * Builds defines the number of buildings the player can make during his turn.
  */
 
 public class StandardBuild {
-    protected final int builds; //parametrizzo il metodo
+    protected final int builds;
 
     public StandardBuild(int builds) {
         this.builds = builds;
@@ -25,7 +26,7 @@ public class StandardBuild {
      * @param workerPosition the worker's Position
      * @param board the board
      * @param turn the player's turn
-     * @return a Set<Cell> collect that only has the cells where the player can build in
+     * @return a <code>Set&lt;Cell&gt;</code> collect that only has the cells where the player can build in
      */
 
     public Set<Position> build(Position workerPosition, Board board, Turn turn) {
@@ -44,11 +45,12 @@ public class StandardBuild {
     }
 
     /**
-     * This method determines if the worker can build
+     * Determines whether the chosen worker can (or still can) build this turn.
      *
      * @param workerCell the worker's Cell
      * @param turn the player's turn
-     * @return
+     * @return returns true only and only if the worker considered: is a worker of the current player,
+     * has already moved and has not already built <Code>"builds"</Code> times this turn.
      */
 
     protected boolean checkBuildConditions(Cell workerCell, Turn turn) {

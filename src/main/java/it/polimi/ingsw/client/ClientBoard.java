@@ -1,39 +1,30 @@
 package it.polimi.ingsw.client;
 
+/**
+ * This class implements a representation of the game board.
+ * It stores relevant information about the players and the buildings
+ */
+
 public class ClientBoard {
     private ClientPlayer[] players;
-    private ClientBuilding[][] cells;
-    private int playerTurnId; // mostra il playerId del giocatore che sta giocando
-    private int myPlayerId = 0;
-
-    public void setMyPlayerId(int playerId){ myPlayerId = playerId;}
+    private ClientBuilding[][] cells; /* cell[x][y]==null <==> no building is located in that cell */
+    private int playerTurnId;
+    private int myPlayerId;
 
     public int getMyPlayerId(){ return myPlayerId;}
+    public int getPlayerTurnId() { return playerTurnId; }
+    public ClientBuilding getCell (int x, int y){ return cells[x][y]; }
+    public ClientPlayer getPlayer(int playerId){ return players[playerId-1]; }
+    public int getNumOfPlayers(){ return players.length; }
 
     public void setPlayerTurnId(int playerTurnId) { this.playerTurnId = playerTurnId; }
-
-    public int getPlayerTurnId() { return playerTurnId; }
-
-    public ClientPlayer getPlayer(int playerId){
-        return players[playerId-1];
-    }
-
-    public ClientBuilding getCell (int x, int y){
-        return cells[x][y];
-    }
-
-    public void setPlayer(ClientPlayer player, int playerId){
-        players[playerId-1] = player;
-    }
-
-    public void setCell (ClientBuilding cell, int x, int y){
-        cells[x][y] = cell;
-    }
-
-    public int numOfPlayers(){ return players.length; }
+    public void setPlayer(ClientPlayer player, int playerId){ players[playerId-1] = player; }
+    public void setCell (ClientBuilding cell, int x, int y){ cells[x][y] = cell; }
+    public void setMyPlayerId(int playerId){ myPlayerId = playerId;}
 
     public ClientBoard(int numOfPlayers) {
+        this.myPlayerId = 0;
         this.players = new ClientPlayer[numOfPlayers];
-        this.cells = new ClientBuilding[5][5]; // da 0 a 3, null se nessuna costruzione
+        this.cells = new ClientBuilding[5][5];
     }
 }

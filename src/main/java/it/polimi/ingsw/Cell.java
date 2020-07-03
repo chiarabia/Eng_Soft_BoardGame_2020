@@ -30,21 +30,32 @@ public class Cell {
 
 
     /**
-     * This method checks if the Cell is occupied by a worker, a building or a dome
+     * Checks if the Cell is occupied by a worker, a building or a dome
      * @return true if the Cell is free, false otherwise
      */
-
     public boolean isFree() {
         return !(worker!=null || building || dome);
     }
+    /**
+     * Checks if the Cell is occupied by a building
+     * @return true if the Cell is occupied by a building, false otherwise
+     */
     public boolean isBuilding() {
         return building;
     }
+    /**
+     * Checks if the Cell is occupied by a dome
+     * @return true if the Cell is occupied by a dome, false otherwise
+     */
     public boolean isDome() { return dome; }
+    /**
+     * Checks if the Cell is occupied by a worker
+     * @return true if the Cell is occupied by a worker, false otherwise
+     */
     public boolean isWorker() { return worker!=null; }
 
     /**
-     * This method checks if the Cell is on the perimeter of the board
+     * Checks if the Cell is on the perimeter of the board
      * @return true if the Cell is on the perimeter, false otherwise
      */
 
@@ -82,11 +93,6 @@ public class Cell {
     public Position getPosition() {return position; }
 
 
-    /* Ridefinisco Equals guardando solo alla posizione, gli altri attributi non li
-    guardo anche perchè noi dobbiamo essere sicuri di non avere duplicati. Il set va a vedere se due
-    oggetti sono dublicati attraverso questo metodo. Se mettessi anche gli altri campi,
-     che non sono final rischierei di avere duplicati o magari più versioni della stessa cella con campi modificati.
-     */
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;

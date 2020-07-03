@@ -43,7 +43,12 @@ public class Board {
     }
 
 
-    //This method adds new Cells
+    /**
+     * Adds new Cells
+     * @param x
+     * @param y
+     * @param z
+     */
     public void newCell(int x, int y, int z) {
         //check for duplicates
         if (getCell(x, y, z) == null) {
@@ -53,8 +58,8 @@ public class Board {
     }
 
     /**
-     * @param x coordinate x of a cell
-     * @param y coordinate y of a cell
+     * @param x coordinate x of a cell of the board
+     * @param y coordinate y of a cell of the board
      * @return z coordinate that represents the building height
      */
 
@@ -66,7 +71,7 @@ public class Board {
     }
 
     /**
-     * This method tells us if a zone is free
+     * Checks if a zone is free
      *
      * @param x coordinate x of the zone
      * @param y coordinate y of the zone

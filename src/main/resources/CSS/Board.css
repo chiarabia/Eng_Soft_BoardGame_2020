@@ -20,7 +20,7 @@
     -fx-background-radius: 25px
 }
 
-#godDescriptionTextFlow{
+#godDescriptionBackground{
     -fx-background-color:#95df8f;
     -fx-background-radius: 25px;
 }
@@ -33,6 +33,18 @@
 
 #buildButton{
     -fx-background-image: url('/components/buildButtonNotSelected.png');
+    -fx-background-repeat: no-repeat;
+    -fx-background-size: cover;
+}
+
+#declineButton{
+    -fx-background-image: url('/components/declineButton.png');
+    -fx-background-repeat: no-repeat;
+    -fx-background-size: cover;
+}
+
+#domeButton{
+    -fx-background-image: url('/components/domeButton.png');
     -fx-background-repeat: no-repeat;
     -fx-background-size: cover;
 }

@@ -2,5 +2,5 @@
   "role": "client",
   "ui": "GUI",
   "ip": "localhost",
-  "port": 555
+  "port": 2072
 }
