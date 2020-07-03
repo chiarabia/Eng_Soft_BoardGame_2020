@@ -1,2 +1,2 @@
 cd %~dp0
-bash "run.sh"
+bash "ClientCLI.sh"
