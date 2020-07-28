@@ -1,13 +1,21 @@
-#gridPane{
-    -fx-background-image: url('/Board/SantoriniBoardOnly.png');
-    -fx-background-repeat: no-repeat;
-    -fx-background-size: cover;
+#flowPaneCenter{
+    -fx-background-color:#95df8f;
 }
 
-#board{
-    -fx-background-image: url('/Board/BigBoard.PNG');
-    -fx-background-repeat: no-repeat;
-    -fx-background-size: cover;
+#FlowPaneRight{
+    -fx-background-color:#37B9FD;
+}
+
+#FlowPaneTop{
+    -fx-background-color:#37B9FD;
+}
+
+#FlowPaneLeft{
+    -fx-background-color:#37B9FD;
+}
+
+#FlowPaneBottom{
+    -fx-background-color:#37B9FD
 }
 
 #NotificationsBackground{
