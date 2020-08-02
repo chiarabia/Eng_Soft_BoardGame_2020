@@ -252,9 +252,9 @@ public class BoardSceneController implements Initializable {
         setTextFormat(godDescrp,DESCRIPTION_FONT);
         godDescriptionTextFlow.getChildren().add(godDescrp);
         //set God Card
-        String godCode = card.getGodImage();
-        Image godCardImage = new Image("godCards/" + godCode);
-        godCardImageView.setImage(godCardImage);
+        //String godCode = card.getGodImage();
+        //Image godCardImage = new Image("godCards/" + godCode);
+        //godCardImageView.setImage(godCardImage);
     }
 
     /**
@@ -738,8 +738,9 @@ public class BoardSceneController implements Initializable {
         StackPane imageContainer = new StackPane();
         imageContainer.setMinHeight(BOARD);
         imageContainer.setMinWidth(BOARD);
-        BackgroundSize buildingSize = new BackgroundSize(BOARD,BOARD, false,false, true, true);
-        imageContainer.setBackground(new Background(new BackgroundImage(new Image("/Board/SantoriniBoardOnly.png"), BackgroundRepeat.NO_REPEAT, BackgroundRepeat.NO_REPEAT, BackgroundPosition.CENTER, buildingSize )));
+        imageContainer.setStyle("-fx-background-color: #95df8f");
+        //BackgroundSize buildingSize = new BackgroundSize(BOARD,BOARD, false,false, true, true);
+        //imageContainer.setBackground(new Background(new BackgroundImage(new Image("/Board/SantoriniBoardOnly.png"), BackgroundRepeat.NO_REPEAT, BackgroundRepeat.NO_REPEAT, BackgroundPosition.CENTER, buildingSize )));
         board.setCenter(imageContainer);
         ImageView endGame = new ImageView(image);
         endGame.setFitWidth(BOARD);
@@ -760,7 +761,7 @@ public class BoardSceneController implements Initializable {
     public void setWorker2BuildPosition(Set<Position> secondWorkerBuilds){worker2BuildsPosition = secondWorkerBuilds;}
     public void setMyTurn(boolean myTurn){isMyTurn = myTurn;}
 
-    //TODO add javadoc
+
     public void displayGameInfos(ClientBoard board){
         Platform.runLater(()-> {
             String firstText = "";
@@ -773,7 +774,7 @@ public class BoardSceneController implements Initializable {
             displayNotificationsDuringTurn(firstText);
         });
     }
-    //TODO add javadoc
+
     public void setPossiblePosition(List<Position> possiblePosition) {
         /*for(int i = 0; i<possiblePosition.size(); i++) {
             this.possiblePosition.add(possiblePosition.get(i));

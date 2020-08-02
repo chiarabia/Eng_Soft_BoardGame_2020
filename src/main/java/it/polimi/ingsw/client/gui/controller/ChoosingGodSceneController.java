@@ -108,7 +108,7 @@ public class ChoosingGodSceneController implements Initializable {
      */
     void setGod(GodCard God, int godNumber){
         TextFlow godDescription;
-        ImageView godPortrait;
+        //ImageView godPortrait;
         //ImageView godPower;
 
         //set God Name
@@ -120,17 +120,17 @@ public class ChoosingGodSceneController implements Initializable {
 
         if (godNumber == FIRST_GOD) {
             godDescription = godDescription1;
-            godPortrait = godPortrait1;
+            //godPortrait = godPortrait1;
             //godPower = godPower1;
         }
         else if (godNumber == SECOND_GOD) {
             godDescription = godDescription2;
-            godPortrait = godPortrait2;
+            //godPortrait = godPortrait2;
             //godPower = godPower2;
         }
         else {
             godDescription = godDescription3;
-            godPortrait = godPortrait3;
+            //godPortrait = godPortrait3;
             //godPower = godPower3;
         }
 
@@ -139,10 +139,10 @@ public class ChoosingGodSceneController implements Initializable {
         godDescription.getChildren().add(newLine);
         godDescription.getChildren().add(godDescrip);
 
-        //set Portrait
+        /*//set Portrait
         String godCode = God.getGodImage();
         Image godPort = new Image("godPortraits/" + godCode );
-        godPortrait.setImage(godPort);
+        godPortrait.setImage(godPort);*/
 
       /*  //set godPower Image
         Image godPow = new Image("godPowers/" + godCode);
