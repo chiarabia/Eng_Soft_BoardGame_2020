@@ -6,9 +6,11 @@
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.text.*?>
 
-<StackPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="774" minWidth="1386" prefHeight="774" prefWidth="1386" style="-fx-background-color:#37b9fd;" stylesheets="CSS/Board.css" xmlns="http://javafx.com/javafx/10.0.2-internal" xmlns:fx="http://javafx.com/fxml/1" fx:controller="it.polimi.ingsw.client.gui.controller.BoardSceneController">
+<StackPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="774" minWidth="1386" prefHeight="774" prefWidth="1386" style="-fx-background-color:#ace0e6;" stylesheets="CSS/Board.css" xmlns="http://javafx.com/javafx/10.0.2-internal" xmlns:fx="http://javafx.com/fxml/1" fx:controller="it.polimi.ingsw.client.gui.controller.BoardSceneController">
       <BorderPane fx:id="board" maxHeight="774" maxWidth="1386" minHeight="774" minWidth="1386" prefHeight="774" prefWidth="1386" BorderPane.alignment="CENTER">
          <center>
+            <FlowPane id="flowPaneCenter" alignment="CENTER" maxHeight="513.9" maxWidth="516.6" minHeight="513.9" minWidth="516.6" orientation="VERTICAL" prefHeight="513.9" prefWidth="516.6" BorderPane.alignment="CENTER">
+            <children>
             <GridPane fx:id="gridPane" minHeight="500" minWidth="500" prefHeight="500.9" prefWidth="500" BorderPane.alignment="CENTER">
                <columnConstraints>
                   <ColumnConstraints hgrow="SOMETIMES" minWidth="100.0" prefWidth="100.0" />
@@ -24,38 +26,40 @@
                   <RowConstraints minHeight="100" prefHeight="100" vgrow="SOMETIMES" />
                   <RowConstraints minHeight="100" prefHeight="100" vgrow="SOMETIMES" />
                </rowConstraints>
-               <StackPane onMouseClicked="#onCellClicked" prefHeight="100.0" prefWidth="100.0" GridPane.columnIndex="3" GridPane.rowIndex="2" />
-               <StackPane onMouseClicked="#onCellClicked" prefHeight="100.0" prefWidth="100.0" GridPane.columnIndex="4" GridPane.rowIndex="2" />
-               <StackPane onMouseClicked="#onCellClicked" prefHeight="100.0" prefWidth="100.0" GridPane.columnIndex="3" GridPane.rowIndex="3" />
-               <StackPane onMouseClicked="#onCellClicked" prefHeight="100.0" prefWidth="100.0" GridPane.columnIndex="4" GridPane.rowIndex="3" />
-               <StackPane onMouseClicked="#onCellClicked" prefHeight="100.0" prefWidth="100.0" GridPane.columnIndex="3" GridPane.rowIndex="4" />
-               <StackPane onMouseClicked="#onCellClicked" prefHeight="100.0" prefWidth="100.0" GridPane.columnIndex="4" GridPane.rowIndex="4" />
-               <StackPane onMouseClicked="#onCellClicked" prefHeight="100.0" prefWidth="100.0" GridPane.columnIndex="0" GridPane.rowIndex="0" />
-               <StackPane onMouseClicked="#onCellClicked" prefHeight="100.0" prefWidth="100.0" GridPane.columnIndex="1" GridPane.rowIndex="0" />
-               <StackPane onMouseClicked="#onCellClicked" prefHeight="100.0" prefWidth="100.0" GridPane.columnIndex="2" GridPane.rowIndex="0" />
-               <StackPane onMouseClicked="#onCellClicked" prefHeight="100.0" prefWidth="100.0" GridPane.columnIndex="3" GridPane.rowIndex="0" />
-               <StackPane onMouseClicked="#onCellClicked" prefHeight="100.0" prefWidth="100.0" GridPane.columnIndex="4" GridPane.rowIndex="0" />
-               <StackPane onMouseClicked="#onCellClicked" prefHeight="100.0" prefWidth="100.0" GridPane.columnIndex="0" GridPane.rowIndex="1" />
-               <StackPane onMouseClicked="#onCellClicked" prefHeight="100.0" prefWidth="100.0" GridPane.columnIndex="1" GridPane.rowIndex="1" />
-               <StackPane onMouseClicked="#onCellClicked" prefHeight="100.0" prefWidth="100.0" GridPane.columnIndex="2" GridPane.rowIndex="1" />
-               <StackPane onMouseClicked="#onCellClicked" prefHeight="100.0" prefWidth="100.0" GridPane.columnIndex="3" GridPane.rowIndex="1" />
-               <StackPane onMouseClicked="#onCellClicked" prefHeight="100.0" prefWidth="100.0" GridPane.columnIndex="4" GridPane.rowIndex="1" />
-               <StackPane onMouseClicked="#onCellClicked" prefHeight="100.0" prefWidth="100.0" GridPane.columnIndex="0" GridPane.rowIndex="2" />
-               <StackPane onMouseClicked="#onCellClicked" prefHeight="100.0" prefWidth="100.0" GridPane.columnIndex="1" GridPane.rowIndex="2" />
-               <StackPane onMouseClicked="#onCellClicked" prefHeight="100.0" prefWidth="100.0" GridPane.columnIndex="2" GridPane.rowIndex="2" />
-               <StackPane onMouseClicked="#onCellClicked" prefHeight="100.0" prefWidth="100.0" GridPane.columnIndex="0" GridPane.rowIndex="3" />
-               <StackPane onMouseClicked="#onCellClicked" prefHeight="100.0" prefWidth="100.0" GridPane.columnIndex="1" GridPane.rowIndex="3" />
-               <StackPane onMouseClicked="#onCellClicked" prefHeight="100.0" prefWidth="100.0" GridPane.columnIndex="2" GridPane.rowIndex="3" />
-               <StackPane onMouseClicked="#onCellClicked" prefHeight="100.0" prefWidth="100.0" GridPane.columnIndex="0" GridPane.rowIndex="4" />
-               <StackPane onMouseClicked="#onCellClicked" prefHeight="100.0" prefWidth="100.0" GridPane.columnIndex="1" GridPane.rowIndex="4" />
-               <StackPane onMouseClicked="#onCellClicked" prefHeight="100.0" prefWidth="100.0" GridPane.columnIndex="2" GridPane.rowIndex="4" />
+               <StackPane onMouseClicked="#onCellClicked" prefHeight="100.0" prefWidth="100.0" style="-fx-background-image: url('/Board/boardPiece.png')" GridPane.columnIndex="3" GridPane.rowIndex="2" />
+               <StackPane onMouseClicked="#onCellClicked" prefHeight="100.0" prefWidth="100.0" style="-fx-background-image: url('/Board/boardPiece.png')" GridPane.columnIndex="4" GridPane.rowIndex="2" />
+               <StackPane onMouseClicked="#onCellClicked" prefHeight="100.0" prefWidth="100.0" style="-fx-background-image: url('/Board/boardPiece.png')" GridPane.columnIndex="3" GridPane.rowIndex="3" />
+               <StackPane onMouseClicked="#onCellClicked" prefHeight="100.0" prefWidth="100.0" style="-fx-background-image: url('/Board/boardPiece.png')" GridPane.columnIndex="4" GridPane.rowIndex="3" />
+               <StackPane onMouseClicked="#onCellClicked" prefHeight="100.0" prefWidth="100.0" style="-fx-background-image: url('/Board/boardPiece.png')" GridPane.columnIndex="3" GridPane.rowIndex="4" />
+               <StackPane onMouseClicked="#onCellClicked" prefHeight="100.0" prefWidth="100.0" style="-fx-background-image: url('/Board/boardPiece.png')" GridPane.columnIndex="4" GridPane.rowIndex="4" />
+               <StackPane onMouseClicked="#onCellClicked" prefHeight="100.0" prefWidth="100.0" style="-fx-background-image: url('/Board/boardPiece.png')" GridPane.columnIndex="0" GridPane.rowIndex="0" />
+               <StackPane onMouseClicked="#onCellClicked" prefHeight="100.0" prefWidth="100.0" style="-fx-background-image: url('/Board/boardPiece.png')" GridPane.columnIndex="1" GridPane.rowIndex="0" />
+               <StackPane onMouseClicked="#onCellClicked" prefHeight="100.0" prefWidth="100.0" style="-fx-background-image: url('/Board/boardPiece.png')" GridPane.columnIndex="2" GridPane.rowIndex="0" />
+               <StackPane onMouseClicked="#onCellClicked" prefHeight="100.0" prefWidth="100.0" style="-fx-background-image: url('/Board/boardPiece.png')" GridPane.columnIndex="3" GridPane.rowIndex="0" />
+               <StackPane onMouseClicked="#onCellClicked" prefHeight="100.0" prefWidth="100.0" style="-fx-background-image: url('/Board/boardPiece.png')" GridPane.columnIndex="4" GridPane.rowIndex="0" />
+               <StackPane onMouseClicked="#onCellClicked" prefHeight="100.0" prefWidth="100.0" style="-fx-background-image: url('/Board/boardPiece.png')" GridPane.columnIndex="0" GridPane.rowIndex="1" />
+               <StackPane onMouseClicked="#onCellClicked" prefHeight="100.0" prefWidth="100.0" style="-fx-background-image: url('/Board/boardPiece.png')" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+               <StackPane onMouseClicked="#onCellClicked" prefHeight="100.0" prefWidth="100.0" style="-fx-background-image: url('/Board/boardPiece.png')" GridPane.columnIndex="2" GridPane.rowIndex="1" />
+               <StackPane onMouseClicked="#onCellClicked" prefHeight="100.0" prefWidth="100.0" style="-fx-background-image: url('/Board/boardPiece.png')" GridPane.columnIndex="3" GridPane.rowIndex="1" />
+               <StackPane onMouseClicked="#onCellClicked" prefHeight="100.0" prefWidth="100.0" style="-fx-background-image: url('/Board/boardPiece.png')" GridPane.columnIndex="4" GridPane.rowIndex="1" />
+               <StackPane onMouseClicked="#onCellClicked" prefHeight="100.0" prefWidth="100.0" style="-fx-background-image: url('/Board/boardPiece.png')" GridPane.columnIndex="0" GridPane.rowIndex="2" />
+               <StackPane onMouseClicked="#onCellClicked" prefHeight="100.0" prefWidth="100.0" style="-fx-background-image: url('/Board/boardPiece.png')" GridPane.columnIndex="1" GridPane.rowIndex="2" />
+               <StackPane onMouseClicked="#onCellClicked" prefHeight="100.0" prefWidth="100.0" style="-fx-background-image: url('/Board/boardPiece.png')" GridPane.columnIndex="2" GridPane.rowIndex="2" />
+               <StackPane onMouseClicked="#onCellClicked" prefHeight="100.0" prefWidth="100.0" style="-fx-background-image: url('/Board/boardPiece.png')" GridPane.columnIndex="0" GridPane.rowIndex="3" />
+               <StackPane onMouseClicked="#onCellClicked" prefHeight="100.0" prefWidth="100.0" style="-fx-background-image: url('/Board/boardPiece.png')" GridPane.columnIndex="1" GridPane.rowIndex="3" />
+               <StackPane onMouseClicked="#onCellClicked" prefHeight="100.0" prefWidth="100.0" style="-fx-background-image: url('/Board/boardPiece.png')" GridPane.columnIndex="2" GridPane.rowIndex="3" />
+               <StackPane onMouseClicked="#onCellClicked" prefHeight="100.0" prefWidth="100.0" style="-fx-background-image: url('/Board/boardPiece.png')" GridPane.columnIndex="0" GridPane.rowIndex="4" />
+               <StackPane onMouseClicked="#onCellClicked" prefHeight="100.0" prefWidth="100.0" style="-fx-background-image: url('/Board/boardPiece.png')" GridPane.columnIndex="1" GridPane.rowIndex="4" />
+               <StackPane onMouseClicked="#onCellClicked" prefHeight="100.0" prefWidth="100.0" style="-fx-background-image: url('/Board/boardPiece.png')" GridPane.columnIndex="2" GridPane.rowIndex="4" />
             </GridPane>
+            </children>
+            </FlowPane>
          </center>
          <right>
             <FlowPane fx:id="FlowPaneRight" minHeight="500" minWidth="428" prefHeight="200.0" prefWidth="200.0" BorderPane.alignment="CENTER">
             <VBox prefHeight="450.0" prefWidth="200.0">
                <children>
-                  <Button fx:id="moveButton" mnemonicParsing="false"  prefHeight="50.0" prefWidth="200.0" text="Move" textFill="WHITE">
+                  <Button fx:id="moveButton" mnemonicParsing="false" prefHeight="50.0" prefWidth="200.0" text="Move" textFill="WHITE">
                      <VBox.margin>
                         <Insets bottom="25.0" />
                      </VBox.margin>
@@ -117,7 +121,6 @@
                   <FlowPane.margin>
                      <Insets left="750.0" top="10.0" />
                   </FlowPane.margin>
-                  <Image url="components/santoriniLogo.png" backgroundLoading="true"/>
                </ImageView>
             </FlowPane>
          </top>
@@ -125,12 +128,12 @@
             <FlowPane fx:id="FlowPaneLeft" orientation="VERTICAL" prefHeight="500" prefWidth="427" rowValignment="BOTTOM" BorderPane.alignment="CENTER">
                <ImageView fx:id="godCardImageView" fitHeight="235.0" fitWidth="140.0">
                   <FlowPane.margin>
-                     <Insets left="75.0" top="50.0" />
+                     <Insets left="100.0" top="50.0" />
                   </FlowPane.margin>
                </ImageView>
                <VBox fx:id="godDescriptionBackground" prefHeight="100.0" prefWidth="200.0">
                   <FlowPane.margin>
-                     <Insets left="50.0" top="50.0" />
+                     <Insets left="100.0" top="50.0" />
                   </FlowPane.margin>
                   <children>
                  <TextFlow fx:id="godDescriptionTextFlow">

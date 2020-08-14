@@ -1,13 +1,13 @@
 package it.polimi.ingsw.client.gui;
 
-import it.polimi.ingsw.Position;
+import it.polimi.ingsw.controller.server.serializable.*;
+import it.polimi.ingsw.model.Position;
 import it.polimi.ingsw.client.*;
 import it.polimi.ingsw.client.gui.controller.BoardSceneController;
 import it.polimi.ingsw.client.gui.controller.ErrorSceneController;
 import it.polimi.ingsw.client.gui.controller.LoginSceneController;
 import it.polimi.ingsw.client.gui.controller.WaitingSceneController;
 import it.polimi.ingsw.client.gui.runnable.*;
-import it.polimi.ingsw.server.serializable.*;
 import javafx.application.Platform;
 import org.json.simple.parser.ParseException;
 

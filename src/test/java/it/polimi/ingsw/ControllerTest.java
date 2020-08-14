@@ -1,7 +1,9 @@
 package it.polimi.ingsw;
 
-import it.polimi.ingsw.effects.winCondition.StandardLoseCondition;
-import it.polimi.ingsw.server.ServerView;
+import it.polimi.ingsw.controller.Controller;
+import it.polimi.ingsw.model.*;
+import it.polimi.ingsw.model.effects.winCondition.StandardLoseCondition;
+import it.polimi.ingsw.controller.server.ServerView;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -79,7 +81,7 @@ public class ControllerTest {
         player2WorkerPositions.add(position22);
 
         Position position31 = new Position (3,0, 0);
-        Position position32 = new Position (0,3, 0);
+        Position position32 = new Position(0,3, 0);
         ArrayList<Position> player3WorkerPositions = new ArrayList<>();
         player3WorkerPositions.add(position31);
         player3WorkerPositions.add(position32);
@@ -140,105 +142,6 @@ public class ControllerTest {
                     playerLoseCondition.lose(worker2Moves, worker2Builds)),
             () -> assertFalse(game.getTurn().canDecline()),
             () -> assertNull(game.getPlayer(1)));
-    }
-
-    void TheLastPlayerWins() {
-        setUp3PlayerMatch();
-        selectAutomaticallyGodPowers();
-        Board board =game.getBoard();
-
-        StandardLoseCondition playerLoseCondition = game.getPlayerGodPower(1).getLoseCondition();
-
-        board.getCell(1,0,0).setDome(true);
-        board.getCell(1,1,0).setDome(true);
-        board.getCell(0,1,0).setDome(true);
-
-        board.getCell(0,3,0).setDome(true);
-        board.getCell(1,3,0).setDome(true);
-        board.getCell(1,4,0).setDome(true);
-
-        board.getCell(3,0,0).setDome(true);
-        board.getCell(3,1,0).setDome(true);
-        board.getCell(4,1,0).setDome(true);
-
-        board.getCell(3,3,0).setDome(true);
-        board.getCell(3,4,0).setDome(true);
-        board.getCell(4,3,0).setDome(true);
-
-        addworkers(0, 0, 0, 4, 1);
-        addworkers(4, 0, 4, 4, 2);
-        addworkers(4, 2, 4, 1, 3);
-
-        verify(mockedServerView).stopAllEventGenerators();
-
-        assertAll("player1ShouldLose", () ->  assertNull(game.getPlayer(1)),
-                () -> assertNull(game.getPlayer(2)));
-    }
-
-
-    void FirstPlayerWins () {
-        setUp3PlayerMatch();
-        selectAutomaticallyGodPowers();
-        Board board = game.getBoard();
-
-        System.out.println("the player1 has " + game.getGodPowers().get(0).getGodName()+ " as godpower");
-        System.out.println("the player2 has " + game.getGodPowers().get(1).getGodName()+ " as godpower");
-        System.out.println("the player3 has " + game.getGodPowers().get(2).getGodName()+ " as godpower");
-
-        board.getCell(0,1,0).setBuilding(true);
-        board.getCell(0,2,0).setBuilding(true);
-        board.getCell(0,3,0).setBuilding(true);
-
-        board.newCell(0,1,1);
-        board.newCell(0,2,1);
-        board.newCell(0,3,1);
-        board.getCell(0,2,1).setBuilding(true);
-        board.getCell(0,3,1).setBuilding(true);
-
-        board.newCell(0,2,2);
-        board.newCell(0,3,2);
-
-        board.getCell(0,2,2).setBuilding(true);
-        board.getCell(0,3,2).setBuilding(true);
-        board.newCell(0,3,3);
-
-
-        addworkers(0, 0, 1, 0, 1);
-        addworkers(4, 0, 4, 1, 2);
-        addworkers(4, 2, 4, 3, 3);
-
-        // First Turn
-        controller.onConsolidateMove(1, 1, new Position(0, 1, 1));
-        controller.onConsolidateBuild(1,1, new Position(0,0,0), false) ;
-        controller.onEndedTurn(1);
-
-        controller.onConsolidateMove(2, 1, new Position(3, 0, 0));
-        controller.onConsolidateBuild(2,2,  new Position(4,0,0), false);
-        controller.onEndedTurn(2);
-
-        controller.onConsolidateMove(3, 1, new Position(3, 2, 0));
-        controller.onConsolidateBuild(3,1,  new Position(4,2,0), false);
-        controller.onEndedTurn(3);
-
-        //Second turn
-        controller.onConsolidateMove(1, 1, new Position(0, 2, 2));
-        controller.onConsolidateBuild(1,1, new Position(0,1,1), false);
-        controller.onEndedTurn(1);
-
-        controller.onConsolidateMove(2, 1, new Position(2, 0, 0));
-        controller.onConsolidateBuild(2,1, new Position(3,0,0), false);
-        controller.onEndedTurn(2);
-
-        controller.onConsolidateMove(3, 1, new Position(2, 2, 0));
-        controller.onConsolidateBuild(3,1, new Position(3,2,0), false);
-        controller.onEndedTurn(3);
-
-        //third turn
-        controller.onConsolidateMove(1, 1, new Position(0, 3, 3));
-        controller.onConsolidateBuild(1,1, new Position(0,2,2), false);
-        controller.onEndedTurn(1);
-
-        verify(mockedServerView).stopAllEventGenerators();
     }
 
     @Test

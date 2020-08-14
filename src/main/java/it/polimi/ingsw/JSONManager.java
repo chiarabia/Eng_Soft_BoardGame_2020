@@ -26,16 +26,24 @@ import java.io.InputStreamReader;
         String line = null;
         try {
             line = buf.readLine();
+<<<<<<< HEAD
         } catch (IOException e) {e.printStackTrace();}
+=======
+        } catch (IOException e) {}
+>>>>>>> upstream/new_assets
 
         StringBuilder sb = new StringBuilder();
         while (line != null) {
             sb.append(line).append("\n");
             try {
                 line = buf.readLine();
+<<<<<<< HEAD
             } catch (IOException e) {
                 e.printStackTrace();
             }
+=======
+            } catch (IOException e) {}
+>>>>>>> upstream/new_assets
         }
 
         String fileAsString = sb.toString();

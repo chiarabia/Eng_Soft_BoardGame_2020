@@ -1,0 +1,120 @@
+
+
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html id="htmlId">
+<head>
+  <title>Coverage Report :: Server</title>
+  <style type="text/css">
+    @import "../../.css/coverage.css";
+  </style>
+</head>
+
+<body>
+<div class="header"></div>
+
+<div class="content">
+<div class="breadCrumbs">
+    [ <a href="../../index.html">all classes</a> ]
+    [ <a href="../index.html">it.polimi.ingsw.controller.server</a> ]
+</div>
+
+<h1>Coverage Summary for Class: Server (it.polimi.ingsw.controller.server)</h1>
+
+<table class="coverageStats">
+<tr>
+  <th class="name">Class</th>
+<th class="coverageStat 
+">
+  Class, %
+</th>
+<th class="coverageStat 
+">
+  Method, %
+</th>
+<th class="coverageStat 
+">
+  Line, %
+</th>
+</tr>
+<tr>
+  <td class="name">Server</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/ 1)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/ 4)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/ 15)
+  </span>
+</td>
+</tr>
+
+</table>
+
+<br/>
+<br/>
+
+
+<div class="sourceCode"><i>1</i>&nbsp;package it.polimi.ingsw.controller.server;
+<i>2</i>&nbsp;
+<i>3</i>&nbsp;import java.io.IOException;
+<i>4</i>&nbsp;import java.net.ServerSocket;
+<i>5</i>&nbsp;
+<i>6</i>&nbsp;import static java.lang.Thread.sleep;
+<i>7</i>&nbsp;
+<i>8</i>&nbsp;
+<b class="nc"><i>9</i>&nbsp;public class Server {</b>
+<i>10</i>&nbsp;    public static int serverPort;
+<b class="nc"><i>11</i>&nbsp;    private static int SLEEP_TIME = 10000;</b>
+<i>12</i>&nbsp;    /**
+<i>13</i>&nbsp;     * Generates a ServerSocket and starts a new ServerAccepter thread.
+<i>14</i>&nbsp;     * If a connection error occurs it waits 10 seconds and then restarts
+<i>15</i>&nbsp;     * @throws InterruptedException InterruptedException
+<i>16</i>&nbsp;     */
+<i>17</i>&nbsp;    public void startServer() throws InterruptedException {
+<i>18</i>&nbsp;        ServerSocket serverSocket;
+<i>19</i>&nbsp;        ServerAccepter playersAccepter;
+<i>20</i>&nbsp;        while (true) {
+<i>21</i>&nbsp;            try {
+<b class="nc"><i>22</i>&nbsp;                System.out.println(&quot;Server started&quot;);</b>
+<b class="nc"><i>23</i>&nbsp;                serverSocket = new ServerSocket(serverPort);</b>
+<b class="nc"><i>24</i>&nbsp;                playersAccepter = new ServerAccepter(serverSocket);</b>
+<b class="nc"><i>25</i>&nbsp;                playersAccepter.start();</b>
+<b class="nc"><i>26</i>&nbsp;                break;</b>
+<b class="nc"><i>27</i>&nbsp;            } catch (IOException e) {</b>
+<b class="nc"><i>28</i>&nbsp;                System.out.println(&quot;An error occurred, restarting in 10 seconds...&quot;);</b>
+<b class="nc"><i>29</i>&nbsp;                sleep(SLEEP_TIME);</b>
+<b class="nc"><i>30</i>&nbsp;            }</b>
+<i>31</i>&nbsp;        }
+<b class="nc"><i>32</i>&nbsp;    }</b>
+<i>33</i>&nbsp;    public void startServer(int port) throws InterruptedException {
+<b class="nc"><i>34</i>&nbsp;        serverPort = port;</b>
+<b class="nc"><i>35</i>&nbsp;        startServer();</b>
+<b class="nc"><i>36</i>&nbsp;    }</b>
+<i>37</i>&nbsp;}
+</div>
+</div>
+
+<div class="footer">
+    
+    <div style="float:right;">generated on 2020-07-03 19:13</div>
+</div>
+</body>
+</html>

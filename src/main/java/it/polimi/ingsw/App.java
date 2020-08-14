@@ -1,7 +1,7 @@
 package it.polimi.ingsw;
 
 import it.polimi.ingsw.client.Client;
-import it.polimi.ingsw.server.Server;
+import it.polimi.ingsw.controller.server.Server;
 import org.json.simple.JSONObject;
 
 public class App{
@@ -41,8 +41,7 @@ public class App{
 
             if (server) (new Server()).startServer(port);
             else (new Client()).startClient(port, ip, GUI);
-        }catch(Exception e){ System.out.println("An error occurred");
-        e.printStackTrace();}
+        }catch(Exception e){ System.out.println("An error occurred");}
     }
 
 

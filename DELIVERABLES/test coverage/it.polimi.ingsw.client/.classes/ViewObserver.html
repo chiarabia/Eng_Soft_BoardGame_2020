@@ -1,0 +1,79 @@
+
+
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html id="htmlId">
+<head>
+  <title>Coverage Report :: ViewObserver</title>
+  <style type="text/css">
+    @import "../../.css/coverage.css";
+  </style>
+</head>
+
+<body>
+<div class="header"></div>
+
+<div class="content">
+<div class="breadCrumbs">
+    [ <a href="../../index.html">all classes</a> ]
+    [ <a href="../index.html">it.polimi.ingsw.client</a> ]
+</div>
+
+<h1>Coverage Summary for Class: ViewObserver (it.polimi.ingsw.client)</h1>
+
+<table class="coverageStats">
+<tr>
+  <th class="name">Class</th>
+</tr>
+<tr>
+  <td class="name">ViewObserver</td>
+</tr>
+
+</table>
+
+<br/>
+<br/>
+
+
+<div class="sourceCode"><i>1</i>&nbsp;package it.polimi.ingsw.client;
+<i>2</i>&nbsp;
+<i>3</i>&nbsp;import it.polimi.ingsw.model.Position;
+<i>4</i>&nbsp;
+<i>5</i>&nbsp;import java.util.List;
+<i>6</i>&nbsp;/**
+<i>7</i>&nbsp; * This interface implements methods used by the view when the user has to send information to the client
+<i>8</i>&nbsp; */
+<i>9</i>&nbsp;
+<i>10</i>&nbsp;public interface ViewObserver {
+<i>11</i>&nbsp;    /**This method is called when the player has chosen their name and number of players
+<i>12</i>&nbsp;     *@param myName the name of the player
+<i>13</i>&nbsp;     *@param numOfPlayers number of players*/
+<i>14</i>&nbsp;    void onCompletedStartup (String myName, int numOfPlayers);
+<i>15</i>&nbsp;    /**This method is called when the player has chosen a god power
+<i>16</i>&nbsp;     *@param chosenGodPower god power&#39;s name*/
+<i>17</i>&nbsp;    void onCompletedInitializeGodPower(String chosenGodPower);
+<i>18</i>&nbsp;    /**This method is called when the player has chosen their workers initial &lt;code&gt;Position&lt;/code&gt;
+<i>19</i>&nbsp;     *@param myWorkerPositions list of positions sorted by worker ID*/
+<i>20</i>&nbsp;    void onCompletedInitializeWorkerPositions(List&lt;Position&gt; myWorkerPositions);
+<i>21</i>&nbsp;    /**This method is called when the player has chosen to build
+<i>22</i>&nbsp;     * @param position the &lt;code&gt;Position&lt;/code&gt; of the new building
+<i>23</i>&nbsp;     * @param workerId the worker ID of the worker tha built
+<i>24</i>&nbsp;     * @param isDome true if the building is a dome*/
+<i>25</i>&nbsp;    void onCompletedBuild(Position position, int workerId, boolean isDome);
+<i>26</i>&nbsp;    /**This method is called when the player has chosen to move
+<i>27</i>&nbsp;     * @param position the new &lt;code&gt;Position&lt;/code&gt; of the worker
+<i>28</i>&nbsp;     * @param workerId worker ID of the worker that moved*/
+<i>29</i>&nbsp;    void onCompletedMove(Position position, int workerId);
+<i>30</i>&nbsp;    /**This method is called when the player has chosen to end the turn*/
+<i>31</i>&nbsp;    void onCompletedDecline();
+<i>32</i>&nbsp;}
+</div>
+</div>
+
+<div class="footer">
+    
+    <div style="float:right;">generated on 2020-07-03 19:13</div>
+</div>
+</body>
+</html>

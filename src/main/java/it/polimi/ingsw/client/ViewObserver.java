@@ -1,6 +1,6 @@
 package it.polimi.ingsw.client;
 
-import it.polimi.ingsw.Position;
+import it.polimi.ingsw.model.Position;
 
 import java.util.List;
 /**

@@ -1,7 +1,10 @@
 package it.polimi.ingsw.client;
 
-import it.polimi.ingsw.Position;
-import it.polimi.ingsw.server.serializable.*;
+import it.polimi.ingsw.controller.server.serializable.SerializableRequestAction;
+import it.polimi.ingsw.controller.server.serializable.SerializableUpdateActions;
+import it.polimi.ingsw.controller.server.serializable.SerializableUpdateInitializeNames;
+import it.polimi.ingsw.controller.server.serializable.SerializableUpdateInitializeWorkerPositions;
+import it.polimi.ingsw.model.Position;
 
 import java.util.List;
 

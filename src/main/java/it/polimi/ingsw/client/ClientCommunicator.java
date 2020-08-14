@@ -1,8 +1,7 @@
 package it.polimi.ingsw.client;
 
-import it.polimi.ingsw.exceptions.ClientStoppedWorkingException;
+import it.polimi.ingsw.controller.server.serializable.*;
 import it.polimi.ingsw.exceptions.GameEndedException;
-import it.polimi.ingsw.server.serializable.*;
 
 import java.io.IOException;
 import java.io.ObjectInputStream;
@@ -69,7 +68,6 @@ public class ClientCommunicator extends Thread {
         } catch (Exception e) {
             for (Client client : observerList) client.onError();
             stopProcess();
-            e.printStackTrace();
         }
     }
 

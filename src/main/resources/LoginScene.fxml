@@ -14,7 +14,6 @@
                   <children>
                      <ImageView fitHeight="123.6" fitWidth="369.3" pickOnBounds="true" preserveRatio="true">
                          <image>
-                             <Image url="components/santoriniLogo.png" backgroundLoading="true"/>
                          </image>
                          <VBox.margin>
                              <Insets left="20.0" />
@@ -22,7 +21,7 @@
                      </ImageView>
                   <Label alignment="CENTER" contentDisplay="CENTER" text="What's your name?" textAlignment="CENTER">
                         <VBox.margin>
-                           <Insets left="123.0" top="40.0" />
+                           <Insets left="123.0" />
                         </VBox.margin>
                   </Label>
                   <TextField fx:id="playerNameTextField" onKeyReleased="#keyReleasedProperty">

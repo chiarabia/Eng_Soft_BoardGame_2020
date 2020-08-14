@@ -1,0 +1,162 @@
+
+
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html id="htmlId">
+<head>
+  <title>Coverage Report :: ServerAsyncReceiver</title>
+  <style type="text/css">
+    @import "../../.css/coverage.css";
+  </style>
+</head>
+
+<body>
+<div class="header"></div>
+
+<div class="content">
+<div class="breadCrumbs">
+    [ <a href="../../index.html">all classes</a> ]
+    [ <a href="../index.html">it.polimi.ingsw.controller.server</a> ]
+</div>
+
+<h1>Coverage Summary for Class: ServerAsyncReceiver (it.polimi.ingsw.controller.server)</h1>
+
+<table class="coverageStats">
+<tr>
+  <th class="name">Class</th>
+<th class="coverageStat 
+">
+  Class, %
+</th>
+<th class="coverageStat 
+">
+  Method, %
+</th>
+<th class="coverageStat 
+">
+  Line, %
+</th>
+</tr>
+<tr>
+  <td class="name">ServerAsyncReceiver</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/ 1)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/ 5)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/ 35)
+  </span>
+</td>
+</tr>
+
+</table>
+
+<br/>
+<br/>
+
+
+<div class="sourceCode"><i>1</i>&nbsp;package it.polimi.ingsw.controller.server;
+<i>2</i>&nbsp;
+<i>3</i>&nbsp;import it.polimi.ingsw.controller.server.serializable.*;
+<i>4</i>&nbsp;
+<i>5</i>&nbsp;
+<i>6</i>&nbsp;import java.io.ObjectInputStream;
+<i>7</i>&nbsp;import java.net.Socket;
+<i>8</i>&nbsp;import java.util.ArrayList;
+<i>9</i>&nbsp;import java.util.List;
+<i>10</i>&nbsp;
+<i>11</i>&nbsp;public class ServerAsyncReceiver extends EventGenerator {
+<i>12</i>&nbsp;    private final int playerId;
+<i>13</i>&nbsp;    private Socket socket;
+<i>14</i>&nbsp;    private List&lt;ProxyObserver&gt; observerList;
+<i>15</i>&nbsp;    public void addObserver(ProxyObserver observer){
+<b class="nc"><i>16</i>&nbsp;        observerList.add(observer);</b>
+<b class="nc"><i>17</i>&nbsp;    }</b>
+<i>18</i>&nbsp;
+<i>19</i>&nbsp;    /**
+<i>20</i>&nbsp;     * Closes the connection to the client, generates an error for the Controller
+<i>21</i>&nbsp;     * and closes the application
+<i>22</i>&nbsp;     */
+<i>23</i>&nbsp;    public void stopProcess(){
+<b class="nc"><i>24</i>&nbsp;        try { socket.close(); } catch(Exception e){}</b>
+<b class="nc"><i>25</i>&nbsp;    }</b>
+<i>26</i>&nbsp;
+<i>27</i>&nbsp;    /**
+<i>28</i>&nbsp;     * Waits for the received objects from the client or for connection errors
+<i>29</i>&nbsp;     * and reports them to the Controller.
+<i>30</i>&nbsp;     * After an error the process stops, otherwise it continues to listen to the client
+<i>31</i>&nbsp;     */
+<i>32</i>&nbsp;    public void run() {
+<i>33</i>&nbsp;            try {
+<i>34</i>&nbsp;                while (true) {
+<b class="nc"><i>35</i>&nbsp;                    ObjectInputStream fileObjectIn = new ObjectInputStream(socket.getInputStream());</b>
+<b class="nc"><i>36</i>&nbsp;                    reactToClient(fileObjectIn.readObject());</b>
+<b class="nc"><i>37</i>&nbsp;                }</b>
+<b class="nc"><i>38</i>&nbsp;            } catch (Exception e) { reactToClient( new Message(&quot;Error&quot;));}</b>
+<b class="nc"><i>39</i>&nbsp;    }</b>
+<i>40</i>&nbsp;
+<i>41</i>&nbsp;    /**
+<i>42</i>&nbsp;     * Notifies the Controller about an error or a received object from the client
+<i>43</i>&nbsp;     * @param fromClient object from client
+<i>44</i>&nbsp;     */
+<i>45</i>&nbsp;    public void reactToClient(Object fromClient) {
+<b class="nc"><i>46</i>&nbsp;        if (fromClient instanceof SerializableConsolidateMove) {</b>
+<b class="nc"><i>47</i>&nbsp;            SerializableConsolidateMove serializableFromClient = (SerializableConsolidateMove) fromClient;</b>
+<b class="nc"><i>48</i>&nbsp;            for (int i = 0; i &lt; observerList.size(); i++)</b>
+<b class="nc"><i>49</i>&nbsp;                observerList.get(i).onConsolidateMove(playerId, serializableFromClient.getWorkerId(), serializableFromClient.getNewPosition());</b>
+<i>50</i>&nbsp;        }
+<b class="nc"><i>51</i>&nbsp;        if (fromClient instanceof SerializableConsolidateBuild) {</b>
+<b class="nc"><i>52</i>&nbsp;            SerializableConsolidateBuild serializableFromClient = (SerializableConsolidateBuild) fromClient;</b>
+<b class="nc"><i>53</i>&nbsp;            for (int i = 0; i &lt; observerList.size(); i++)</b>
+<b class="nc"><i>54</i>&nbsp;                observerList.get(i).onConsolidateBuild(playerId, serializableFromClient.getWorkerId(), serializableFromClient.getNewPosition(), serializableFromClient.isForceDome());</b>
+<i>55</i>&nbsp;        }
+<b class="nc"><i>56</i>&nbsp;        if (fromClient instanceof SerializableInitializeGodPower) {</b>
+<b class="nc"><i>57</i>&nbsp;            SerializableInitializeGodPower serializableFromClient = (SerializableInitializeGodPower) fromClient;</b>
+<b class="nc"><i>58</i>&nbsp;            for (int i = 0; i &lt; observerList.size(); i++)</b>
+<b class="nc"><i>59</i>&nbsp;                observerList.get(i).onGodPowerInitialization(playerId, serializableFromClient.getGodPower());</b>
+<i>60</i>&nbsp;        }
+<b class="nc"><i>61</i>&nbsp;        if (fromClient instanceof SerializableInitializeWorkerPositions) {</b>
+<b class="nc"><i>62</i>&nbsp;            SerializableInitializeWorkerPositions serializableFromClient = (SerializableInitializeWorkerPositions) fromClient;</b>
+<b class="nc"><i>63</i>&nbsp;            for (int i = 0; i &lt; observerList.size(); i++)</b>
+<b class="nc"><i>64</i>&nbsp;                observerList.get(i).onWorkerPositionsInitialization(playerId, serializableFromClient.getWorkerPositions());</b>
+<i>65</i>&nbsp;        }
+<b class="nc"><i>66</i>&nbsp;        if (fromClient instanceof SerializableDeclineLastAction) {</b>
+<b class="nc"><i>67</i>&nbsp;            for (int i = 0; i &lt; observerList.size(); i++) observerList.get(i).onEndedTurn(playerId);</b>
+<i>68</i>&nbsp;        }
+<b class="nc"><i>69</i>&nbsp;        if (fromClient instanceof Message &amp;&amp; ((Message) fromClient).getMessage().equals(&quot;Error&quot;)) {</b>
+<b class="nc"><i>70</i>&nbsp;            for (int i = 0; i &lt; observerList.size(); i++) observerList.get(i).onPlayerDisconnection(playerId);</b>
+<i>71</i>&nbsp;        }
+<b class="nc"><i>72</i>&nbsp;    }</b>
+<i>73</i>&nbsp;
+<b class="nc"><i>74</i>&nbsp;    public ServerAsyncReceiver(Socket socket, int playerId){</b>
+<b class="nc"><i>75</i>&nbsp;        this.socket = socket;</b>
+<b class="nc"><i>76</i>&nbsp;        this.playerId = playerId;</b>
+<b class="nc"><i>77</i>&nbsp;        this.observerList = new ArrayList&lt;&gt;();</b>
+<b class="nc"><i>78</i>&nbsp;    }</b>
+<i>79</i>&nbsp;}
+</div>
+</div>
+
+<div class="footer">
+    
+    <div style="float:right;">generated on 2020-07-03 19:13</div>
+</div>
+</body>
+</html>

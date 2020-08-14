@@ -1,0 +1,130 @@
+
+
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html id="htmlId">
+<head>
+  <title>Coverage Report :: SwapMove</title>
+  <style type="text/css">
+    @import "../../.css/coverage.css";
+  </style>
+</head>
+
+<body>
+<div class="header"></div>
+
+<div class="content">
+<div class="breadCrumbs">
+    [ <a href="../../index.html">all classes</a> ]
+    [ <a href="../index.html">it.polimi.ingsw.effects.move</a> ]
+</div>
+
+<h1>Coverage Summary for Class: SwapMove (it.polimi.ingsw.effects.move)</h1>
+
+<table class="coverageStats">
+<tr>
+  <th class="name">Class</th>
+<th class="coverageStat 
+">
+  Class, %
+</th>
+<th class="coverageStat 
+">
+  Method, %
+</th>
+<th class="coverageStat 
+">
+  Line, %
+</th>
+</tr>
+<tr>
+  <td class="name">SwapMove</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (1/ 1)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (2/ 2)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (14/ 14)
+  </span>
+</td>
+</tr>
+
+</table>
+
+<br/>
+<br/>
+
+
+<div class="sourceCode"><i>1</i>&nbsp;package it.polimi.ingsw.effects.move;
+<i>2</i>&nbsp;
+<i>3</i>&nbsp;import it.polimi.ingsw.model.Board;
+<i>4</i>&nbsp;import it.polimi.ingsw.model.Cell;
+<i>5</i>&nbsp;import it.polimi.ingsw.model.Position;
+<i>6</i>&nbsp;import it.polimi.ingsw.model.Turn;
+<i>7</i>&nbsp;
+<i>8</i>&nbsp;import java.util.HashSet;
+<i>9</i>&nbsp;import java.util.Set;
+<i>10</i>&nbsp;import java.util.stream.Collectors;
+<i>11</i>&nbsp;
+<i>12</i>&nbsp;
+<i>13</i>&nbsp;/**
+<i>14</i>&nbsp; * this class implements a movement into cells occupied by an enemy worker.
+<i>15</i>&nbsp; */
+<i>16</i>&nbsp;public class SwapMove extends StandardMove {
+<i>17</i>&nbsp;    public SwapMove(int moves) {
+<b class="fc"><i>18</i>&nbsp;        super(moves);</b>
+<b class="fc"><i>19</i>&nbsp;    }</b>
+<i>20</i>&nbsp;
+<i>21</i>&nbsp;
+<i>22</i>&nbsp;    /**
+<i>23</i>&nbsp;     *  Adds to the possible cells to move into the  cells with an enemy workers.
+<i>24</i>&nbsp;     * @param workerPosition the worker&#39;s Position
+<i>25</i>&nbsp;     * @param board the board
+<i>26</i>&nbsp;     * @param turn the player&#39;s turn
+<i>27</i>&nbsp;     * @return a &lt;code&gt;Set&amp;lt;Cell&amp;gt;&lt;/code&gt; collect that only has the cells where the player can move to or
+<i>28</i>&nbsp;     * a &lt;code&gt;HashSet&amp;lt;Cell&amp;gt;&lt;/code&gt; if the worker can&#39;t move
+<i>29</i>&nbsp;     */
+<i>30</i>&nbsp;    @Override
+<i>31</i>&nbsp;    public Set&lt;Position&gt; move (Position workerPosition, Board board, Turn turn) {
+<b class="fc"><i>32</i>&nbsp;        Cell workerCell = board.getCell(workerPosition);</b>
+<b class="fc"><i>33</i>&nbsp;        if (!checkMoveConditions(workerCell, turn)) return new HashSet&lt;&gt;();</b>
+<i>34</i>&nbsp;        else {
+<b class="fc"><i>35</i>&nbsp;            return board.getStream()</b>
+<b class="fc"><i>36</i>&nbsp;                    .filter(a -&gt; a.isFree() || (a.isWorker()&amp;&amp;!(a.getPlayerId() == workerCell.getPlayerId())))</b>
+<b class="fc"><i>37</i>&nbsp;                    .filter(a -&gt; !a.equals(workerCell))</b>
+<b class="fc"><i>38</i>&nbsp;                    .filter(a -&gt; a.getX() &lt;= workerCell.getX() + 1)</b>
+<b class="fc"><i>39</i>&nbsp;                    .filter(a -&gt; a.getX() &gt;= workerCell.getX() - 1)</b>
+<b class="fc"><i>40</i>&nbsp;                    .filter(a -&gt; a.getY() &lt;= workerCell.getY() + 1)</b>
+<b class="fc"><i>41</i>&nbsp;                    .filter(a -&gt; a.getY() &gt;= workerCell.getY() - 1)</b>
+<b class="fc"><i>42</i>&nbsp;                    .filter(a -&gt; heightsDifference(workerCell.getZ(), a.getZ()) &lt;= 1)</b>
+<b class="fc"><i>43</i>&nbsp;                    .map(Cell::getPosition)</b>
+<b class="fc"><i>44</i>&nbsp;                    .collect(Collectors.toSet());</b>
+<i>45</i>&nbsp;        }
+<i>46</i>&nbsp;    }
+<i>47</i>&nbsp;}
+</div>
+</div>
+
+<div class="footer">
+    
+    <div style="float:right;">generated on 2020-07-02 19:57</div>
+</div>
+</body>
+</html>
