@@ -2,7 +2,7 @@
 
 ### Gruppo AM11
 
-- ###   **Bianchimani**     Chiara ([@chiara011]( https://github.com/chiara011))            888297  10567718  <br>chiara.bianchimani@mail.polimi.it   
+- ###   **Bianchimani**     Chiara ([@chiarabia]( https://github.com/chiarabia))            888297  10567718  <br>chiara.bianchimani@mail.polimi.it   
 - ###   **Dani**            Vittorio ([@vittoriodani]( https://github.com/vittoriodani))         886818  10614148  <br>vittorio.dani@mail.polimi.it  
 - ###   **Declich**         Marcello Matteo ([@MarcelloMatteoDeclich](https://github.com/MarcelloMatteoDeclich))  887492  10579567  <br>marcellomatteodeclich@mail.polimi.it  
 
